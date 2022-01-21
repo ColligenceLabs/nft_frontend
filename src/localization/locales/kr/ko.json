@@ -1,0 +1,28 @@
+{
+  "startPage":"Start Page",
+  "Hi": "안녕",
+  "Dashboard": "데시보드",
+  "AirDrop": "에어드랍",
+  "User": "사용자",
+  "User Information": "사용자 정보",
+  "Company" : "회사",
+  "Company Information" : "회사 정보",
+  "NFTs" : "엔에프티",
+  "NFTs Information" : "NFTs 정보",
+  "AirDrop": "에어드롭",
+  "AirDrop Information": "에어드롭 정보",
+  "Serials" : "시리얼즈",
+  "Serials Information" : "Serials 정보",
+  "Transaction": "트랜젝션",
+  "Transaction Information": "Transaction 정보",
+  "Collections" : "컬렉션",
+  "Collections Information" : "Collections 정보",
+  "Reward" : "보상",
+  "Reward Information" : "보상 정보",
+  "Status": "상태",
+  "Created at": "생성일",
+  "Actions": "액션",
+  "Name": "이름"
+
+
+}
