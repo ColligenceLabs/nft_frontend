@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import Spinner from './components/spinner/Spinner';
 import './localization';
 
+import NotistackProvider from './components/NotistackProvider';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 
@@ -22,9 +23,11 @@ ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <Provider store={configureStore()}>
       <Suspense fallback={<Spinner />}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <NotistackProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </NotistackProvider>
       </Suspense>
     </Provider>
   </Web3ReactProvider>,

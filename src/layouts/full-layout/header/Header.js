@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWeb3React } from '@web3-react/core';
 import FeatherIcon from 'feather-icons-react';
@@ -30,16 +30,93 @@ import LanguageSelector from '../../../components/LanguageSelector/LanguageSelec
 import ThemeSelector from '../../../components/ThemeSelector/ThemeSelector';
 import WalletDialog from '../../../components/WalletDialog';
 import WalletInfo from '../../../components/WalletInfo';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import { getWalletBalance, setActivatingConnector, setBalance } from '../../../redux/slices/wallet';
+import { useEagerConnect, useInactiveListener } from '../../../hooks/useWallet';
+
+import { targetNetwork, targetNetworkMsg } from '../../../config';
+import { setupNetwork } from '../../../utils/wallet';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
-  const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
   const { t } = useTranslation();
+
+  const { wallet, from } = useSelector((state) => state.nft);
+  const dispatch = useDispatch();
   const context = useWeb3React();
   const { connector, library, activate, account } = context;
   const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
+
+  useEffect(() => {
+    async function login() {
+      // console.log('1----------> ', activatingConnector);
+      // console.log('1----------> ', connector);
+      // console.log('1----------> ', active);
+      // console.log('1----------> ', activate);
+      // console.log('os', os);
+      // console.log('wallet', wallet);
+      // console.log('from', from);
+      if (activatingConnector && activatingConnector === connector) {
+        dispatch(setActivatingConnector(undefined));
+      }
+      if (!!library && !!account) {
+        if (
+          library.provider.chainId !== parseInt(targetNetwork) &&
+          library.provider.chainId !== targetNetwork &&
+          library.provider.chainId !== undefined
+        ) {
+          // chainId 가 2 가 아니고 알파월렛이 아니면
+          // enqueueSnackbar(targetNetworkMsg, {
+          //   variant: 'warning',
+          //   autoHideDuration: 3000,
+          //   anchorOrigin: {
+          //     vertical: 'top',
+          //     horizontal: 'center',
+          //   },
+          // });
+          // TODO: 네트워크 전환
+          const changeNet = setupNetwork(parseInt(targetNetwork));
+        } else {
+          dispatch(getWalletBalance(account, library));
+
+          // dispatch(getContractDecimals(account, library));
+
+          // tal 표시 이상해서 제거
+          // const taalswap = new Taalswap({
+          //   account,
+          //   library,
+          //   tokenAddress: TAL_TOKEN_ADDRESS
+          // });
+          //
+          // const talBalance = await taalswap
+          //   .balanceOf(account)
+          //   .catch((error) => console.log(error));
+          // dispatch(setTalBalance(talBalance));
+        }
+      } else if (from !== null) {
+        // const taalswap = new Taalswap({ notConnected: true });
+        try {
+          // const walletBalance = await taalswap.getBalance(wallet);
+          const walletBalance = await library.getBalance(account);
+          console.log('balance', walletBalance);
+          dispatch(setBalance(walletBalance));
+        } catch (e) {
+          console.log(e);
+        }
+      } else if (window.klayton) {
+        console.log('test=====', window.klayton);
+      }
+    }
+    login();
+  }, [activatingConnector, connector, account, library]);
+
+  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+  const triedEager = useEagerConnect();
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector);
 
   const handleCloseModal = async (name) => {
     setIsOpenConnectModal(false);
