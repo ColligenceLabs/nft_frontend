@@ -10,14 +10,25 @@ import reportWebVitals from './reportWebVitals';
 import Spinner from './components/spinner/Spinner';
 import './localization';
 
+import { Web3ReactProvider } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
+
+function getLibrary(provider) {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
+}
+
 ReactDOM.render(
-  <Provider store={configureStore()}>
-    <Suspense fallback={<Spinner />}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Suspense>
-  </Provider>,
+  <Web3ReactProvider getLibrary={getLibrary}>
+    <Provider store={configureStore()}>
+      <Suspense fallback={<Spinner />}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Suspense>
+    </Provider>
+  </Web3ReactProvider>,
   document.getElementById('root'),
 );
 
