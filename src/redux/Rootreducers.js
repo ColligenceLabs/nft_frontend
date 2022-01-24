@@ -1,14 +1,12 @@
 import { combineReducers } from 'redux';
 import CustomizerReducer from './customizer/CustomizerReducer';
-import chatReducer from './chats/ChatReducer';
-import notesReducer from './notes/NotesReducer';
-import emailReducer from './email/EmailReducer';
+
+import wallet from './slices/wallet';
 
 const RootReducers = combineReducers({
   CustomizerReducer,
-  chatReducer,
-  notesReducer,
-  emailReducer,
+
+  wallet,
 });
 
 export default RootReducers;

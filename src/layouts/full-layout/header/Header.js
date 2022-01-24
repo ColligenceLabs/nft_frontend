@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useWeb3React } from '@web3-react/core';
 import FeatherIcon from 'feather-icons-react';
+import { useTranslation } from 'react-i18next';
+
 import {
   AppBar,
   Badge,
@@ -14,15 +17,33 @@ import {
   Button,
   Drawer,
   SvgIcon,
+  MenuItem,
+  ListItemIcon,
+  Icon,
+  ListItemText,
 } from '@mui/material';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
 import ProfileDropdown from './ProfileDropdown';
 import userimg from '../../../assets/images/users/user2.jpg';
 import LanguageSelector from '../../../components/LanguageSelector/LanguageSelector';
 import ThemeSelector from '../../../components/ThemeSelector/ThemeSelector';
+import WalletDialog from '../../../components/WalletDialog';
+import WalletInfo from '../../../components/WalletInfo';
+import { useSelector } from 'react-redux';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [isOpenInfoModal, setIsOpenInfoModal] = useState(false);
+  const { t } = useTranslation();
+  const context = useWeb3React();
+  const { connector, library, activate, account } = context;
+  const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
+
+  const handleCloseModal = async (name) => {
+    setIsOpenConnectModal(false);
+  };
 
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
@@ -50,7 +71,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="menu" />
         </IconButton>
-
         <IconButton
           size="large"
           color="inherit"
@@ -65,11 +85,35 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         >
           <FeatherIcon icon="menu" width="20" height="20" />
         </IconButton>
-
         <Box flexGrow={1} />
         <LanguageSelector />
         <ThemeSelector />
 
+        {connector ? (
+          <>
+            <IconButton>
+              <AccountBalanceWalletIcon color="primary" />
+            </IconButton>
+            {!!library && (
+              <WalletInfo
+                walletAddress={account}
+                balance={balance}
+                talBalance={talBalance}
+                disconnect={true}
+              />
+            )}
+          </>
+        ) : (
+          <IconButton onClick={() => setIsOpenConnectModal(true)}>
+            <AccountBalanceWalletIcon />
+          </IconButton>
+        )}
+
+        <WalletDialog
+          isOpenConnectModal={isOpenConnectModal}
+          handleCloseModal={handleCloseModal}
+          activate={activate}
+        />
         <Box
           sx={{
             width: '1px',
