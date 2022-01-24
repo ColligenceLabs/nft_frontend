@@ -24,7 +24,7 @@ const LanguageSelector = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const storageLang = localStorage.getItem('cur_language');
+  const storageLang = localStorage.getItem('cur_language') || 'en';
   let currentLang = LANGS.find((_lang) => _lang.value === storageLang);
 
   const handleClick = (event) => {
