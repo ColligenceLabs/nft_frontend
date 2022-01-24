@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
 import { configureStore } from './redux/Store';
-import './data';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import Spinner from './components/spinner/Spinner';
