@@ -115,7 +115,7 @@ const addNetwork = async (chainId: number) => {
  * @returns {boolean} true if the setup succeeded, false otherwise
  */
 export const setupNetwork = async (chainId: number) => {
-  provider = await detectEthereumProvider();
+  provider = await detectEthereumProvider(true);
 
   let result;
   result = await addNetwork(chainId);
@@ -158,19 +158,23 @@ export const registerToken = async (
   tokenDecimals: number,
   tokenImage: string,
 ) => {
-  provider = await detectEthereumProvider();
-  const tokenAdded = await provider.request({
-    method: 'wallet_watchAsset',
-    params: {
-      type: 'ERC20',
-      options: {
-        address: tokenAddress,
-        symbol: tokenSymbol,
-        decimals: tokenDecimals,
-        image: tokenImage,
+  let tokenAdded;
+  provider = await detectEthereumProvider(true);
+
+  if (provider && provider.request) {
+    tokenAdded = await provider.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: tokenAddress,
+          symbol: tokenSymbol,
+          decimals: tokenDecimals,
+          image: tokenImage,
+        },
       },
-    },
-  });
+    });
+  }
 
   return tokenAdded;
 };
