@@ -68,17 +68,15 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           library.provider.chainId !== targetNetwork &&
           library.provider.chainId !== undefined
         ) {
-          // chainId 가 2 가 아니고 알파월렛이 아니면
-          // enqueueSnackbar(targetNetworkMsg, {
-          //   variant: 'warning',
-          //   autoHideDuration: 3000,
-          //   anchorOrigin: {
-          //     vertical: 'top',
-          //     horizontal: 'center',
-          //   },
-          // });
-          // TODO: 네트워크 전환
-          const changeNet = setupNetwork(parseInt(targetNetwork));
+          // chainId가 targetNetwork가 아니고 알파월렛이 아니면
+          enqueueSnackbar(targetNetworkMsg, {
+            variant: 'warning',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'center',
+            },
+          });
         } else {
           dispatch(getWalletBalance(account, library));
 
@@ -107,7 +105,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           console.log(e);
         }
       } else if (window.klayton) {
+        // Kaikas 지갑이 연결된 경우
         console.log('test=====', window.klayton);
+      } else {
+        // 네트워크 전환
+        const changeNet = setupNetwork(parseInt(targetNetwork));
+        console.log('=====', changeNet);
       }
     }
     login();
