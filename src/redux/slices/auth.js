@@ -3,7 +3,8 @@ import { setMessage } from './message';
 
 import AuthService from '../../services/auth.service';
 
-// Todo 추후 기능 추가
+const user = JSON.parse(localStorage.getItem('user'));
+
 export const register = createAsyncThunk(
   'auth/register',
   async ({ username, email, password }, thunkAPI) => {
@@ -40,7 +41,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   await AuthService.logout();
 });
 
-const initialState = { isLoggedIn: false, user: null };
+const initialState = user ? { isLoggedIn: true, user } : { isLoggedIn: false, user: null };
 
 const authSlice = createSlice({
   name: 'auth',

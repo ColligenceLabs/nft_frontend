@@ -25,7 +25,7 @@ const Register = () => (
               }}
             >
               <Typography fontWeight="700" variant="h2">
-                Welcome to Flexy
+                Welcome to NFT Management System
               </Typography>
               <Box display="flex" alignItems="center">
                 <Typography

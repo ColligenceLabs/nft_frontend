@@ -18,9 +18,7 @@ const login = (email, password) => {
     })
     .then((response) => {
       if (response.data.data.accessToken) {
-        localStorage.setItem('accessToken', response.data.data.accessToken || null);
-        localStorage.setItem('refreshToken', response.data.data.refreshToken || null);
-        localStorage.setItem('infor', JSON.stringify(response.data.data.infor) || null);
+        localStorage.setItem('user', JSON.stringify(response.data.data || null));
       }
 
       return response.data;
@@ -29,9 +27,7 @@ const login = (email, password) => {
 
 // Todo logout
 const logout = () => {
-  localStorage.removeItem('accessToken');
-  localStorage.removeItem('refreshToken');
-  localStorage.removeItem('infor');
+  localStorage.removeItem('user');
 };
 
 const authService = {
