@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Typography, Box, Breadcrumbs, Link } from '@mui/material';
+import { Grid, Typography, Box, Breadcrumbs, Link, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -11,7 +11,7 @@ const Breadcrumb = ({ subtitle, items, title, children }) => (
       p: '15px',
     }}
   >
-    <Grid item xs={12} sm={6} lg={8}>
+    <Grid item xs={6} sm={6} lg={8}>
       <Typography color="textSecondary" fontWeight="400" variant="h4">
         {subtitle}
       </Typography>
@@ -41,16 +41,26 @@ const Breadcrumb = ({ subtitle, items, title, children }) => (
         {title}
       </Typography>
     </Grid>
-    <Grid item xs={12} sm={6} lg={4} display="flex" alignItems="flex-end">
+    <Grid
+      item
+      xs={6}
+      sm={6}
+      lg={4}
+      display="flex"
+      alignItems="flex-end"
+      style={{ border: '1px solid red' }}
+    >
       <Box
         sx={{
-          display: { xs: 'none', md: 'block', lg: 'flex' },
-          alignItems: 'center',
-          justifyContent: 'flex-end',
+          // display: { xs: 'none', md: 'flex', lg: 'flex' },
+          // alignItems: 'center',
+          // justifyContent: 'flex-end',
+          textAlign: 'right',
           width: '100%',
         }}
       >
         {children}
+        <Button variant="contained">asdf</Button>
       </Box>
     </Grid>
   </Grid>
