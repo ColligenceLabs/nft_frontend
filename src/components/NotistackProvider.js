@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme) => {
     contentRoot: {
       width: '100%',
       padding: theme.spacing(1.5),
-      // TODO: taalIDO-frontend 와 Theme 차이 확인 필요
-      // boxShadow: theme.shadows[25].z8,
+      boxShadow: '0px 7px 30px 0px rgb(113 122 131 / 11%)',
       borderRadius: theme.shape.borderRadius,
       color: theme.palette.grey[isLight ? 0 : 800],
       backgroundColor: theme.palette.grey[isLight ? 900 : 0],
