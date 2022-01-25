@@ -4,24 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  AppBar,
-  Badge,
-  Box,
-  IconButton,
-  Toolbar,
-  Menu,
-  Typography,
-  Chip,
-  Avatar,
-  Button,
-  Drawer,
-  SvgIcon,
-  MenuItem,
-  ListItemIcon,
-  Icon,
-  ListItemText,
-} from '@mui/material';
+import { AppBar, Box, IconButton, Toolbar, Menu, Typography, Avatar, Button } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
 import ProfileDropdown from './ProfileDropdown';
@@ -37,6 +20,7 @@ import { useEagerConnect, useInactiveListener } from '../../../hooks/useWallet';
 
 import { targetNetwork, targetNetworkMsg } from '../../../config';
 import { setupNetwork } from '../../../utils/wallet';
+import { logout } from '../../../redux/slices/auth';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { enqueueSnackbar } = useSnackbar();
@@ -49,16 +33,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const context = useWeb3React();
   const { connector, library, activate, account } = context;
   const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
+  const {
+    user: {
+      infor: { full_name, email },
+    },
+  } = useSelector((state) => state.auth);
 
   useEffect(() => {
     async function login() {
-      // console.log('1----------> ', activatingConnector);
-      // console.log('1----------> ', connector);
-      // console.log('1----------> ', active);
-      // console.log('1----------> ', activate);
-      // console.log('os', os);
-      // console.log('wallet', wallet);
-      // console.log('from', from);
       if (activatingConnector && activatingConnector === connector) {
         dispatch(setActivatingConnector(undefined));
       }
@@ -79,20 +61,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           });
         } else {
           dispatch(getWalletBalance(account, library));
-
-          // dispatch(getContractDecimals(account, library));
-
-          // tal 표시 이상해서 제거
-          // const taalswap = new Taalswap({
-          //   account,
-          //   library,
-          //   tokenAddress: TAL_TOKEN_ADDRESS
-          // });
-          //
-          // const talBalance = await taalswap
-          //   .balanceOf(account)
-          //   .catch((error) => console.log(error));
-          // dispatch(setTalBalance(talBalance));
         }
       } else if (from !== null) {
         // const taalswap = new Taalswap({ notConnected: true });
@@ -110,7 +78,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       } else {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));
-        console.log('=====', changeNet);
       }
     }
     login();
@@ -205,7 +172,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         />
         {/* ------------------------------------------- */}
         {/* Profile Dropdown */}
-        {/* ------------------------------------------- */}
         <Button
           aria-label="menu"
           color="inherit"
@@ -241,12 +207,13 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
                   ml: 1,
                 }}
               >
-                Julia
+                {full_name}
               </Typography>
               <FeatherIcon icon="chevron-down" width="20" height="20" />
             </Box>
           </Box>
         </Button>
+
         <Menu
           id="profile-menu"
           anchorEl={anchorEl4}
@@ -276,7 +243,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             </Box>
           </Box>
 
-          <ProfileDropdown />
+          <ProfileDropdown fullName={full_name} email={email} />
           <Link
             style={{
               textDecoration: 'none',
@@ -292,9 +259,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               variant="contained"
               color="primary"
               onClick={() => {
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('infor');
+                dispatch(logout());
               }}
             >
               Logout

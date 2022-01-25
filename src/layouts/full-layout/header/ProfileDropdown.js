@@ -4,7 +4,7 @@ import FeatherIcon from 'feather-icons-react';
 
 import userimg from '../../../assets/images/users/user2.jpg';
 
-const ProfileDropdown = () => (
+const ProfileDropdown = ({ fullName, email }) => (
   <Box>
     <Box
       sx={{
@@ -32,7 +32,7 @@ const ProfileDropdown = () => (
               lineHeight: '1.235',
             }}
           >
-            Julia Roberts
+            {fullName}
           </Typography>
           <Typography color="textSecondary" variant="h6" fontWeight="400">
             Administrator
@@ -50,7 +50,7 @@ const ProfileDropdown = () => (
               <FeatherIcon icon="mail" width="18" />
             </Typography>
             <Typography color="textSecondary" variant="h6">
-              info@flexy.com
+              {email}
             </Typography>
           </Box>
         </Box>
@@ -109,90 +109,6 @@ const ProfileDropdown = () => (
           marginBottom: 0,
         }}
       />
-      <MenuItem
-        sx={{
-          pt: 3,
-          pb: 3,
-        }}
-      >
-        <Box display="flex" alignItems="center">
-          <Button
-            sx={{
-              backgroundColor: (theme) => theme.palette.success.light,
-              color: (theme) => theme.palette.success.main,
-              boxShadow: 'none',
-              minWidth: '50px',
-              width: '45px',
-              height: '40px',
-              borderRadius: '10px',
-            }}
-          >
-            <FeatherIcon icon="shield" width="18" height="18" />
-          </Button>
-          <Box
-            sx={{
-              ml: 2,
-            }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                lineHeight: '1.235',
-              }}
-            >
-              My Inbox
-            </Typography>
-            <Typography color="textSecondary" variant="h6" fontWeight="400">
-              Messages & Emails
-            </Typography>
-          </Box>
-        </Box>
-      </MenuItem>
-      <Divider
-        style={{
-          marginTop: 0,
-          marginBottom: 0,
-        }}
-      />
-      <MenuItem
-        sx={{
-          pt: 3,
-          pb: 3,
-        }}
-      >
-        <Box display="flex" alignItems="center">
-          <Button
-            sx={{
-              backgroundColor: (theme) => theme.palette.error.light,
-              color: (theme) => theme.palette.error.main,
-              boxShadow: 'none',
-              minWidth: '50px',
-              width: '45px',
-              height: '40px',
-              borderRadius: '10px',
-            }}
-          >
-            <FeatherIcon icon="credit-card" width="18" height="18" />
-          </Button>
-          <Box
-            sx={{
-              ml: 2,
-            }}
-          >
-            <Typography
-              variant="h5"
-              sx={{
-                lineHeight: '1.235',
-              }}
-            >
-              My Tasks
-            </Typography>
-            <Typography color="textSecondary" variant="h6" fontWeight="400">
-              To-do and Daily Tasks
-            </Typography>
-          </Box>
-        </Box>
-      </MenuItem>
     </Box>
   </Box>
 );
