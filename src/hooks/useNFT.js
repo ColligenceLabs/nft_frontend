@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import request from 'request';
-import { parseUnits } from 'ethers/lib/utils'
-import testMeta from '../config/constants/test.json'
+import { parseUnits } from 'ethers/lib/utils';
+import testMeta from '../config/constants/test.json';
 import { BigNumber } from 'ethers';
-
+import useActiveWeb3React from './useActiveWeb3React';
 
 // add 10%
 export function calculateGasMargin(value: BigNumber): BigNumber {
@@ -14,9 +14,9 @@ const addJsonToIPFS = async function (metadata) {
   // console.log("start json upload to ipfs...")
   const auth =
     'Basic ' +
-    Buffer.from('adb9c847d7114ee7bf83995e8f22e098' + ':' + 'b4619e7f713241ea8732a30405cb482e').toString(
-      'base64',
-    );
+    Buffer.from(
+      'adb9c847d7114ee7bf83995e8f22e098' + ':' + 'b4619e7f713241ea8732a30405cb482e',
+    ).toString('base64');
 
   const options = {
     method: 'GET',
@@ -42,10 +42,12 @@ const addJsonToIPFS = async function (metadata) {
 
   getResponse = JSON.parse(getResponse);
   return getResponse;
-}
+};
 
 const useNFT = (contract, account) => {
-  const createNFT = useCallback( async () => {
+  // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
+  const { library } = useActiveWeb3React();
+  const createNFT = useCallback(async () => {
     // content ipfs 업로드
 
     // thumbnail 서버 업로드
@@ -61,9 +63,16 @@ const useNFT = (contract, account) => {
     const gasPrice = parseUnits('25', 'gwei').toString();
     console.log('=====>', contract);
     // mint 요청
-    const gasLimit = await contract.estimateGas.mint('0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73', 2);
+    const gasLimit = await contract.estimateGas.mint(
+      '0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73',
+      2,
+    );
     console.log(gasPrice, contract);
-    const tx = await contract.mint('0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73', 2, { from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit) });
+    const tx = await contract.mint('0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73', 2, {
+      from: account,
+      gasPrice,
+      gasLimit: calculateGasMargin(gasLimit),
+    });
     let receipt;
     try {
       receipt = await tx.wait();
@@ -73,8 +82,8 @@ const useNFT = (contract, account) => {
     console.log(tx, receipt);
 
     // rest api 호출(db 저장)
-  }, [])
-  return {createNFT};
-}
+  }, [library, account]);
+  return { createNFT };
+};
 
 export default useNFT;
