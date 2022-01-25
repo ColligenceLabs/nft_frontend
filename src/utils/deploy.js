@@ -38,7 +38,8 @@ async function deployKIP17(name, symbol, account, library) {
     const { address } = contract;
     ret.address = address;
 
-    // 신규 스마트코트랙 주소 등 DB에 입력
+    // TODO: 신규 스마트코트랙 주소 등 DB에 입력
+    // ...
   } else {
     ret.err = receipt;
     console.log(JSON.stringify(receipt));
@@ -82,7 +83,8 @@ async function deployKIP37(tokenUri, account, library) {
     const { address } = contract;
     ret.address = address;
 
-    // 신규 스마트코트랙 주소 등 DB에 입력
+    // TODO: 신규 스마트코트랙 주소 등 DB에 입력
+    // ...
   } else {
     ret.err = receipt;
     console.log(JSON.stringify(receipt));
