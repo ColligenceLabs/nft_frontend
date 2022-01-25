@@ -18,6 +18,12 @@ function getLibrary(provider) {
   return library;
 }
 
+// export const getLibrary = (provider): ethers.providers.Web3Provider => {
+//   const library = new ethers.providers.Web3Provider(provider);
+//   library.pollingInterval = POLLING_INTERVAL;
+//   return library;
+// };
+
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>
     <Provider store={configureStore()}>
