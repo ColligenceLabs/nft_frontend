@@ -56,7 +56,7 @@ const Login = () => {
                 }}
               >
                 <Typography fontWeight="700" variant="h2">
-                  Welcome to Flexy
+                  NFT Management System
                 </Typography>
                 <Box display="flex" alignItems="center">
                   <Typography
@@ -67,7 +67,7 @@ const Login = () => {
                       mr: 1,
                     }}
                   >
-                    New to Flexy?
+                    New to this system?
                   </Typography>
                   <Typography
                     component={Link}
