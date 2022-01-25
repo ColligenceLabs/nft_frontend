@@ -291,6 +291,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               }}
               variant="contained"
               color="primary"
+              onClick={() => {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('infor');
+              }}
             >
               Logout
             </Button>

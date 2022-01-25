@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Box, Typography, FormGroup, FormControlLabel, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import testService from '../../services/test.service';
 
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -10,15 +10,11 @@ import PageContainer from '../../components/container/PageContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMessage } from '../../redux/slices/message';
 import { login } from '../../redux/slices/auth';
+import { useNavigate } from 'react-router';
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
-
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { message } = useSelector((state) => state.message);
-
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -29,7 +25,7 @@ const Login = () => {
   const onChangePassword = (e) => {
     setPassword(e.target.value);
   };
-  const onSignin = () => {
+  const loginHandler = () => {
     const data = {
       email,
       password,
@@ -40,13 +36,15 @@ const Login = () => {
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
-        console.log('success');
-        props.history.push('/dashboard');
-        window.location.reload();
+        navigate('/dashboard');
       })
       .catch(() => {
         setLoading(false);
       });
+  };
+
+  const getData = async () => {
+    await testService.getTestData();
   };
 
   useEffect(() => {
@@ -175,7 +173,7 @@ const Login = () => {
                     variant="contained"
                     size="large"
                     fullWidth
-                    onClick={onSignin}
+                    onClick={loginHandler}
                     to="/"
                     sx={{
                       mt: '10px',
@@ -184,6 +182,40 @@ const Login = () => {
                     }}
                   >
                     Sign In (JTW Test)
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    onClick={() => {
+                      localStorage.removeItem('accessToken');
+                      localStorage.removeItem('refreshToken');
+                      localStorage.removeItem('infor');
+                    }}
+                    to="/"
+                    sx={{
+                      mt: '10px',
+                      pt: '10px',
+                      pb: '10px',
+                    }}
+                  >
+                    logout
+                  </Button>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    onClick={getData}
+                    to="/"
+                    sx={{
+                      mt: '10px',
+                      pt: '10px',
+                      pb: '10px',
+                    }}
+                  >
+                    Get Data (Text)
                   </Button>
                 </Box>
               </Box>

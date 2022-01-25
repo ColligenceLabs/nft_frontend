@@ -17,18 +17,19 @@ const login = (email, password) => {
       password,
     })
     .then((response) => {
-      console.log(response.data);
-      console.log(response.data.data.accessToken);
       if (response.data.data.accessToken) {
-        localStorage.setItem('user', JSON.stringify(response.data.data));
+        localStorage.setItem('accessToken', response.data.data.accessToken || null);
+        localStorage.setItem('refreshToken', response.data.data.refreshToken || null);
+        localStorage.setItem('infor', JSON.stringify(response.data.data.infor) || null);
       }
 
       return response.data;
     });
 };
 
+// Todo logout
 const logout = () => {
-  localStorage.removeItem('user');
+  // localStorage.removeItem('user');
 };
 
 const authService = {
