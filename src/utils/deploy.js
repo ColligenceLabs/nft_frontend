@@ -1,99 +1,11 @@
+import { ContractFactory } from '@ethersproject/contracts';
 import { kip17Data, kip37Data } from 'src/contracts';
+// import { useWeb3React } from '@web3-react/core';
 
-async function deployKIP17(name, symbol, library) {
-  // console.log('application : ' + JSON.stringify(application));
-  // console.log('account : ' + account);
-  // console.log('library : ' + library);
+async function deployKIP17(name, symbol, account, library) {
+  // hooks can not be called from inside a function
+  // const { account, library } = useWeb3React();
 
-  const factory = new ContractFactory(
-    kip17Data.abi,
-    kip17Data.bytecode,
-    library.getSigner(account),
-  );
-
-  // console.log('taalDeploy start!');
-  const ret = {};
-  const contract = await factory
-    .deploy(name, symbol, {
-      gasLimit: 7000000,
-    })
-    .catch(function (err) {
-      console.log(err);
-      ret.err = err;
-    });
-
-  if (!!ret.err) return ret;
-
-  console.log('test========');
-  const receipt = await contract.deployTransaction.wait().catch(function (err) {
-    console.log(err);
-    ret.err = err;
-  });
-  if (!!ret.err) return ret;
-  const { confirmations } = receipt;
-  console.log('receipt', receipt);
-  ret.confirmations = confirmations;
-  if (confirmations > 0) {
-    console.log('fixedSwap contract deploy... confirmed!!', contract);
-    const { address } = contract;
-    ret.address = address;
-  } else {
-    ret.err = receipt;
-    console.log(JSON.stringify(receipt));
-  }
-  return ret;
-}
-
-async function deployKIP17(application, account, library) {
-  // console.log('application : ' + JSON.stringify(application));
-  // console.log('account : ' + account);
-  // console.log('library : ' + library);
-
-  const factory = new ContractFactory(
-    kip17Data.abi,
-    kip17Data.bytecode,
-    library.getSigner(account),
-  );
-
-  // console.log('taalDeploy start!');
-  const ret = {};
-  const contract = await factory
-    .deploy('DDVerse', 'DDC', {
-      gasLimit: 7000000,
-    })
-    .catch(function (err) {
-      console.log(err);
-      ret.err = err;
-    });
-
-  if (!!ret.err) return ret;
-
-  console.log('test========');
-  const receipt = await contract.deployTransaction.wait().catch(function (err) {
-    console.log(err);
-    ret.err = err;
-  });
-  if (!!ret.err) return ret;
-  const { confirmations } = receipt;
-  console.log('receipt', receipt);
-  ret.confirmations = confirmations;
-  if (confirmations > 0) {
-    console.log('fixedSwap contract deploy... confirmed!!', contract);
-    const { address } = contract;
-    ret.address = address;
-  } else {
-    ret.err = receipt;
-    console.log(JSON.stringify(receipt));
-  }
-  return ret;
-}
-
-async function deployKIP17(name, symbol, library) {
-  // console.log('application : ' + JSON.stringify(application));
-  // console.log('account : ' + account);
-  // console.log('library : ' + library);
-
-  // TODO: class -> hooks 사용으로 변환 좀 ...
   const factory = new ContractFactory(
     kip17Data.abi,
     kip17Data.bytecode,
@@ -122,9 +34,11 @@ async function deployKIP17(name, symbol, library) {
   console.log('receipt', receipt);
   ret.confirmations = confirmations;
   if (confirmations > 0) {
-    console.log('KIP17 contract deploy... confirmed!!', contract);
+    console.log('ㅏㅑㅖ17 contract deploy... confirmed!!', contract);
     const { address } = contract;
     ret.address = address;
+
+    // 신규 스마트코트랙 주소 등 DB에 입력
   } else {
     ret.err = receipt;
     console.log(JSON.stringify(receipt));
@@ -133,11 +47,9 @@ async function deployKIP17(name, symbol, library) {
 }
 
 async function deployKIP37(tokenUri, account, library) {
-  // console.log('application : ' + JSON.stringify(application));
-  // console.log('account : ' + account);
-  // console.log('library : ' + library);
+  // hooks can not be called from inside a function
+  // const { account, library } = useWeb3React();
 
-  // TODO: class -> hooks 사용으로 변환 좀 ...
   const factory = new ContractFactory(
     kip37Data.abi,
     kip37Data.bytecode,
@@ -169,6 +81,8 @@ async function deployKIP37(tokenUri, account, library) {
     console.log('KIP37 contract deploy... confirmed!!', contract);
     const { address } = contract;
     ret.address = address;
+
+    // 신규 스마트코트랙 주소 등 DB에 입력
   } else {
     ret.err = receipt;
     console.log(JSON.stringify(receipt));
