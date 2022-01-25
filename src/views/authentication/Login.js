@@ -9,7 +9,7 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import PageContainer from '../../components/container/PageContainer';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearMessage } from '../../redux/slices/message';
-import { login } from '../../redux/slices/auth';
+import { login, logout } from '../../redux/slices/auth';
 import { useNavigate } from 'react-router';
 
 const Login = () => {
@@ -31,7 +31,7 @@ const Login = () => {
       password,
     };
 
-    setLoading(true);
+    // setLoading(true);
 
     dispatch(login({ email, password }))
       .unwrap()
@@ -39,7 +39,7 @@ const Login = () => {
         navigate('/dashboard');
       })
       .catch(() => {
-        setLoading(false);
+        // setLoading(false);
       });
   };
 
@@ -153,21 +153,6 @@ const Login = () => {
                       </Typography>
                     </Box>
                   </Box>
-
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    component={Link}
-                    to="/"
-                    sx={{
-                      pt: '10px',
-                      pb: '10px',
-                    }}
-                  >
-                    Sign In
-                  </Button>
                   <Button
                     color="secondary"
                     variant="contained"
@@ -181,42 +166,41 @@ const Login = () => {
                       pb: '10px',
                     }}
                   >
-                    Sign In (JTW Test)
+                    Login
                   </Button>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    onClick={() => {
-                      localStorage.removeItem('accessToken');
-                      localStorage.removeItem('refreshToken');
-                      localStorage.removeItem('infor');
-                    }}
-                    to="/"
-                    sx={{
-                      mt: '10px',
-                      pt: '10px',
-                      pb: '10px',
-                    }}
-                  >
-                    logout
-                  </Button>
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    size="large"
-                    fullWidth
-                    onClick={getData}
-                    to="/"
-                    sx={{
-                      mt: '10px',
-                      pt: '10px',
-                      pb: '10px',
-                    }}
-                  >
-                    Get Data (Text)
-                  </Button>
+                  {/*Todo 테스트 버튼 추후 삭제*/}
+                  {/*<Button*/}
+                  {/*  color="secondary"*/}
+                  {/*  variant="contained"*/}
+                  {/*  size="large"*/}
+                  {/*  fullWidth*/}
+                  {/*  onClick={() => {*/}
+                  {/*    dispatch(logout());*/}
+                  {/*  }}*/}
+                  {/*  to="/"*/}
+                  {/*  sx={{*/}
+                  {/*    mt: '10px',*/}
+                  {/*    pt: '10px',*/}
+                  {/*    pb: '10px',*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  logout*/}
+                  {/*</Button>*/}
+                  {/*<Button*/}
+                  {/*  color="secondary"*/}
+                  {/*  variant="contained"*/}
+                  {/*  size="large"*/}
+                  {/*  fullWidth*/}
+                  {/*  onClick={getData}*/}
+                  {/*  to="/"*/}
+                  {/*  sx={{*/}
+                  {/*    mt: '10px',*/}
+                  {/*    pt: '10px',*/}
+                  {/*    pb: '10px',*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  Get Data (Text)*/}
+                  {/*</Button>*/}
                 </Box>
               </Box>
             </Grid>

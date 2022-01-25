@@ -29,7 +29,9 @@ const login = (email, password) => {
 
 // Todo logout
 const logout = () => {
-  // localStorage.removeItem('user');
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('infor');
 };
 
 const authService = {

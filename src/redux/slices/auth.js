@@ -3,8 +3,7 @@ import { setMessage } from './message';
 
 import AuthService from '../../services/auth.service';
 
-const user = JSON.parse(localStorage.getItem('user'));
-
+// Todo 추후 기능 추가
 export const register = createAsyncThunk(
   'auth/register',
   async ({ username, email, password }, thunkAPI) => {
@@ -26,7 +25,6 @@ export const register = createAsyncThunk(
 export const login = createAsyncThunk('auth/login', async ({ email, password }, thunkAPI) => {
   try {
     const data = await AuthService.login(email, password);
-    console.log(data.data);
     return { user: data.data };
   } catch (error) {
     const message =
@@ -42,7 +40,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   await AuthService.logout();
 });
 
-const initialState = user ? { isLoggedIn: true, user } : { isLoggedIn: false, user: null };
+const initialState = { isLoggedIn: false, user: null };
 
 const authSlice = createSlice({
   name: 'auth',
