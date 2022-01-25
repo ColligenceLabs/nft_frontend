@@ -38,6 +38,7 @@ import img5 from '../../assets/images/users/5.jpg';
 
 import { rows } from './data';
 import { useKip17Contract } from '../../hooks/useContract';
+import { useWeb3React } from '@web3-react/core';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -262,11 +263,12 @@ const NFTs = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
+  const { account } = useWeb3React();
   const kip17Contract = useKip17Contract();
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const {createNFT} = useNFT(kip17Contract);
+  console.log('555555', kip17Contract);
+  const {createNFT} = useNFT(kip17Contract, account);
 
   return (
     <PageContainer title="NFTs" description="this is NFTs page">

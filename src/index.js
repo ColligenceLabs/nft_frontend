@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import {ethers} from 'ethers';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -12,17 +13,17 @@ import './localization';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
 
-function getLibrary(provider) {
-  const library = new Web3Provider(provider);
+// function getLibrary(provider) {
+//   const library = new Web3Provider(provider);
+//   library.pollingInterval = 12000;
+//   return library;
+// }
+
+export const getLibrary = (provider): ethers.providers.Web3Provider => {
+  const library = new ethers.providers.Web3Provider(provider);
   library.pollingInterval = 12000;
   return library;
-}
-
-// export const getLibrary = (provider): ethers.providers.Web3Provider => {
-//   const library = new ethers.providers.Web3Provider(provider);
-//   library.pollingInterval = POLLING_INTERVAL;
-//   return library;
-// };
+};
 
 ReactDOM.render(
   <Web3ReactProvider getLibrary={getLibrary}>

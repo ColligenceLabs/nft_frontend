@@ -2,6 +2,13 @@ import { useCallback } from 'react';
 import request from 'request';
 import { parseUnits } from 'ethers/lib/utils'
 import testMeta from '../config/constants/test.json'
+import { BigNumber } from 'ethers';
+
+
+// add 10%
+export function calculateGasMargin(value: BigNumber): BigNumber {
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000));
+}
 
 const addJsonToIPFS = async function (metadata) {
   // console.log("start json upload to ipfs...")
@@ -37,7 +44,7 @@ const addJsonToIPFS = async function (metadata) {
   return getResponse;
 }
 
-const useNFT = (contract) => {
+const useNFT = (contract, account) => {
   const createNFT = useCallback( async () => {
     // content ipfs 업로드
 
@@ -52,15 +59,18 @@ const useNFT = (contract) => {
     // gasLimit 계산?
 
     const gasPrice = parseUnits('25', 'gwei').toString();
+    console.log('=====>', contract);
     // mint 요청
-    // const tx = await contract.mint(to, tokenId, { from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit) });
-    // let receipt;
-    // try {
-    //   receipt = await tx.wait();
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    const gasLimit = await contract.estimateGas.mint('0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73', 2);
     console.log(gasPrice, contract);
+    const tx = await contract.mint('0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73', 2, { from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit) });
+    let receipt;
+    try {
+      receipt = await tx.wait();
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(tx, receipt);
 
     // rest api 호출(db 저장)
   }, [])
