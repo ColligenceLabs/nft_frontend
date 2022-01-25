@@ -16,6 +16,7 @@ const Dashboard = Loadable(lazy(() => import('../views/Dashboard')));
 const User = Loadable(lazy(() => import('../views/User')));
 const Company = Loadable(lazy(() => import('../views/Company')));
 const NFTs = Loadable(lazy(() => import('../views/NFTs')));
+const NFTMint = Loadable(lazy(() => import('../views/NFTs/NFTMint')));
 const AirDrop = Loadable(lazy(() => import('../views/AirDrop')));
 const Serials = Loadable(lazy(() => import('../views/Serials')));
 const Transaction = Loadable(lazy(() => import('../views/Transaction')));
@@ -33,6 +34,7 @@ const Router = [
       { path: '/user', exact: true, element: <User /> },
       { path: '/company', exact: true, element: <Company /> },
       { path: '/nfts', exact: true, element: <NFTs /> },
+      { path: '/nfts/mint', exact: true, element: <NFTMint /> },
       { path: '/airdrop', exact: true, element: <AirDrop /> },
       { path: '/serials', exact: true, element: <Serials /> },
       { path: '/transaction', exact: true, element: <Transaction /> },
