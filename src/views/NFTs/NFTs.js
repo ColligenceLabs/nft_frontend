@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
+import useNFT from '../../hooks/useNFT';
 import {
   Box,
   Table,
@@ -36,6 +37,7 @@ import img4 from '../../assets/images/users/4.jpg';
 import img5 from '../../assets/images/users/5.jpg';
 
 import { rows } from './data';
+import { useKip17Contract } from '../../hooks/useContract';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -260,9 +262,11 @@ const NFTs = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
+  const kip17Contract = useKip17Contract();
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const {createNFT} = useNFT(kip17Contract);
 
   return (
     <PageContainer title="NFTs" description="this is NFTs page">
@@ -275,7 +279,7 @@ const NFTs = () => {
         variant="contained"
         size="large"
         fullWidth
-        onClick={() => console.log('on click')}
+        onClick={createNFT}
       >
         test
       </Button>
