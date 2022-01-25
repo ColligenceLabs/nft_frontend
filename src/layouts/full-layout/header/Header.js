@@ -4,7 +4,18 @@ import { useWeb3React } from '@web3-react/core';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 
-import { AppBar, Box, IconButton, Toolbar, Menu, Typography, Avatar, Button } from '@mui/material';
+import {
+  AppBar,
+  Box,
+  IconButton,
+  Toolbar,
+  Menu,
+  Typography,
+  Avatar,
+  Button,
+  Snackbar,
+  Alert,
+} from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
 import ProfileDropdown from './ProfileDropdown';
@@ -14,18 +25,26 @@ import ThemeSelector from '../../../components/ThemeSelector/ThemeSelector';
 import WalletDialog from '../../../components/WalletDialog';
 import WalletInfo from '../../../components/WalletInfo';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
 import { getWalletBalance, setActivatingConnector, setBalance } from '../../../redux/slices/wallet';
 import { useEagerConnect, useInactiveListener } from '../../../hooks/useWallet';
 
 import { targetNetwork, targetNetworkMsg } from '../../../config';
 import { setupNetwork } from '../../../utils/wallet';
 import { logout } from '../../../redux/slices/auth';
+import { makeStyles, useTheme } from '@mui/styles';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
-  const { enqueueSnackbar } = useSnackbar();
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [isOpenSnackbar, setIsOpenSnackbar] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal, open } = isOpenSnackbar;
+  const theme = useTheme();
+
   const { t } = useTranslation();
 
   const { wallet, from } = useSelector((state) => state.nft);
@@ -51,14 +70,8 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           library.provider.chainId !== undefined
         ) {
           // chainId가 targetNetwork가 아니고 알파월렛이 아니면
-          enqueueSnackbar(targetNetworkMsg, {
-            variant: 'warning',
-            autoHideDuration: 3000,
-            anchorOrigin: {
-              vertical: 'top',
-              horizontal: 'center',
-            },
-          });
+
+          setIsOpenSnackbar({ open: true, vertical: 'top', horizontal: 'center' });
         } else {
           dispatch(getWalletBalance(account, library));
         }
@@ -98,6 +111,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const handleClose4 = () => {
     setAnchorEl4(null);
+  };
+
+  const handleSnackbarClose = () => {
+    setIsOpenSnackbar({ ...isOpenSnackbar, open: false });
   };
 
   return (
@@ -267,6 +284,22 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           </Link>
         </Menu>
       </Toolbar>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          severity="error"
+          style={{
+            background: `${theme.palette.error.main}`,
+            color: `${theme.palette.error.light}`,
+          }}
+        >
+          {targetNetworkMsg}
+        </Alert>
+      </Snackbar>
     </AppBar>
   );
 };
