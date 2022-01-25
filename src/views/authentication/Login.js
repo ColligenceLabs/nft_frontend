@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Box, Typography, FormGroup, FormControlLabel, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -7,8 +7,18 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import PageContainer from '../../components/container/PageContainer';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearMessage } from '../../redux/slices/message';
+import { login } from '../../redux/slices/auth';
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
+
+  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { message } = useSelector((state) => state.message);
+
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -25,17 +35,23 @@ const Login = () => {
       password,
     };
 
-    const apiUrl = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/login`;
-    console.log(data);
-    console.log(apiUrl);
+    setLoading(true);
 
-    axios
-      .post(apiUrl, data)
-      .then((response) => {
-        console.log(response.data);
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        console.log('success');
+        props.history.push('/dashboard');
+        window.location.reload();
       })
-      .catch((err) => console.log(err));
+      .catch(() => {
+        setLoading(false);
+      });
   };
+
+  useEffect(() => {
+    dispatch(clearMessage());
+  }, [dispatch]);
 
   return (
     <PageContainer title="Login" description="this is Login page">
