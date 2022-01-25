@@ -21,6 +21,7 @@ import {
   CardContent,
   Typography,
   Avatar,
+  Button,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
@@ -33,6 +34,7 @@ import img2 from '../../assets/images/users/2.jpg';
 import img3 from '../../assets/images/users/3.jpg';
 import img4 from '../../assets/images/users/4.jpg';
 import img5 from '../../assets/images/users/5.jpg';
+
 import { rows } from './data';
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -267,6 +269,16 @@ const NFTs = () => {
       {/* breadcrumb */}
       <Breadcrumb title={t('NFTs')} subtitle={t('NFTs Information')} />
       {/* end breadcrumb */}
+      <Button
+        Button
+        color="secondary"
+        variant="contained"
+        size="large"
+        fullWidth
+        onClick={() => console.log('on click')}
+      >
+        test
+      </Button>
       <Card>
         <CardContent>
           <Box>
