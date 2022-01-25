@@ -26,13 +26,6 @@ const Login = () => {
     setPassword(e.target.value);
   };
   const loginHandler = () => {
-    const data = {
-      email,
-      password,
-    };
-
-    // setLoading(true);
-
     dispatch(login({ email, password }))
       .unwrap()
       .then(() => {
