@@ -64,7 +64,6 @@ const AirDropMint = () => {
     });
   };
   const handleCompanyChange = (event) => {
-    console.log(event.target);
     const { name, value } = event.target;
     setMintData({
       ...mintData,
