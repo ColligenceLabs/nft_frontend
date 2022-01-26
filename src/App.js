@@ -9,16 +9,16 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import Login from './views/authentication/Login';
 
 const App = () => {
-  const routing = useRoutes(Router);
   const theme = ThemeSettings();
   const customizer = useSelector((state) => state.CustomizerReducer);
   const { isLoggedIn } = useSelector((state) => state.auth);
+  const routing = useRoutes(Router(isLoggedIn));
 
   return (
     <ThemeProvider theme={theme}>
       <RTL direction={customizer.activeDir}>
         <CssBaseline />
-        {isLoggedIn ? routing : <Login />}
+        {routing}
       </RTL>
     </ThemeProvider>
   );
