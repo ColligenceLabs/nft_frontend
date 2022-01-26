@@ -95,7 +95,7 @@ const LinkButton = ({ title }) => {
       case 'airdrop':
         setButtonProps({
           label: 'AirDrop Mint',
-          url: '',
+          url: '/airdrop/mint',
         });
         break;
       case 'serials':
