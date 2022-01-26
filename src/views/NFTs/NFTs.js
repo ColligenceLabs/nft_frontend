@@ -23,6 +23,8 @@ import {
   Typography,
   Avatar,
   Button,
+  Chip,
+  Switch,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
@@ -30,15 +32,14 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import img1 from '../../assets/images/users/1.jpg';
-import img2 from '../../assets/images/users/2.jpg';
-import img3 from '../../assets/images/users/3.jpg';
-import img4 from '../../assets/images/users/4.jpg';
-import img5 from '../../assets/images/users/5.jpg';
 
 import { rows } from './data';
 import { useKip17Contract } from '../../hooks/useContract';
 import { useWeb3React } from '@web3-react/core';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -67,40 +68,88 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+    id: 'no',
+    numeric: false,
+    disablePadding: false,
+    label: 'No',
+    width: 10,
+  },
+  {
+    id: 'id',
+    numeric: false,
+    disablePadding: false,
+    label: 'ID',
+    width: 10,
+  },
+  {
     id: 'name',
     numeric: false,
     disablePadding: false,
-    label: 'Team Lead',
+    label: 'Name',
+    width: 10,
   },
   {
-    id: 'pname',
+    id: 'description',
     numeric: false,
     disablePadding: false,
-    label: 'Project Name',
+    label: 'Description',
+    width: 10,
   },
   {
-    id: 'team',
+    id: 'collection',
     numeric: false,
     disablePadding: false,
-    label: 'Team',
+    label: 'Collection',
+    width: 10,
+  },
+  {
+    id: 'sellingQuantity',
+    numeric: false,
+    disablePadding: false,
+    label: 'Selling Quantity',
+    width: 10,
+  },
+  {
+    id: 'company',
+    numeric: false,
+    disablePadding: false,
+    label: 'Company',
+    width: 10,
   },
   {
     id: 'status',
     numeric: false,
     disablePadding: false,
     label: 'Status',
+    width: 10,
   },
   {
-    id: 'weeks',
+    id: 'stopSelling',
     numeric: false,
     disablePadding: false,
-    label: 'Weeks',
+    label: 'Stop Selling',
+    width: 10,
   },
   {
-    id: 'budget',
+    id: 'saleDate',
     numeric: false,
     disablePadding: false,
-    label: 'Budget',
+    label: 'Sale Date',
+    width: 10,
+  },
+  {
+    id: 'saleDate',
+    numeric: false,
+    disablePadding: false,
+    label: 'Sale Date',
+    width: 10,
+  },
+  {
+    id: 'createdAt',
+    numeric: false,
+    disablePadding: false,
+    label: 'Created at',
+    width: 10,
   },
 ];
 
@@ -129,6 +178,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
+            // style={{ width: `${headCell.width}`, background: 'red' }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -317,90 +367,134 @@ const NFTs = () => {
                               />
                             </TableCell>
                             <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Avatar
-                                  src={row.imgsrc}
-                                  alt={row.imgsrc}
-                                  width="35"
-                                  sx={{
-                                    borderRadius: '100%',
-                                  }}
-                                />
-                                <Box
-                                  sx={{
-                                    ml: 2,
-                                  }}
-                                >
-                                  <Typography variant="h6" fontWeight="600">
-                                    {row.name}
-                                  </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    {row.email}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {row.pname}
+                              <Typography color="textSecondary" variant="h6">
+                                {index}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Box display="flex" alignItems="center">
-                                {row.teams.map((team) => (
-                                  <Avatar
-                                    key={team.id}
+                              <Typography color="textSecondary" variant="h6">
+                                {row.id}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.name}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.description}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.collection}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              {row.sellingQuantity.onSale === 1 ? (
+                                <Chip
+                                  label="On sale"
+                                  color="primary"
+                                  size={'small'}
+                                  style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="Off sale"
+                                  color={'secondary'}
+                                  size={'small'}
+                                  style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                                />
+                              )}
+                              <Chip
+                                label={`Total Mint : ${row.sellingQuantity.totalMint}`}
+                                color={'error'}
+                                size={'small'}
+                                style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                              />
+                              <Chip
+                                label={`Selling Quantity : ${row.sellingQuantity.sellingQuantity}`}
+                                color={'success'}
+                                size={'small'}
+                                style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                              />
+                              <Chip
+                                label={`Prices : ${row.sellingQuantity.price}`}
+                                color={'warning'}
+                                size={'small'}
+                                style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.company}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Typography color="textSecondary" variant="h6">
+                                <Box display="flex" alignItems="center">
+                                  <Box
                                     sx={{
-                                      backgroundColor: team.color,
-                                      width: '35px',
-                                      height: '35px',
-                                      color: '#fff',
-                                      ml: '-8px',
+                                      backgroundColor:
+                                        row.status === 'Active'
+                                          ? (theme) => theme.palette.success.main
+                                          : row.status === 'Pending'
+                                          ? (theme) => theme.palette.warning.main
+                                          : row.status === 'Completed'
+                                          ? (theme) => theme.palette.primary.main
+                                          : row.status === 'Cancel'
+                                          ? (theme) => theme.palette.error.main
+                                          : (theme) => theme.palette.secondary.main,
+                                      borderRadius: '100%',
+                                      height: '10px',
+                                      width: '10px',
+                                    }}
+                                  />
+                                  <Typography
+                                    color="textSecondary"
+                                    variant="h6"
+                                    sx={{
+                                      ml: 0.5,
                                     }}
                                   >
-                                    {team.text}
-                                  </Avatar>
-                                ))}
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.status === 'Active'
-                                        ? (theme) => theme.palette.success.main
-                                        : row.status === 'Pending'
-                                        ? (theme) => theme.palette.warning.main
-                                        : row.status === 'Completed'
-                                        ? (theme) => theme.palette.primary.main
-                                        : row.status === 'Cancel'
-                                        ? (theme) => theme.palette.error.main
-                                        : (theme) => theme.palette.secondary.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
-                                  }}
-                                />
-                                <Typography
-                                  color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
-                                  sx={{
-                                    ml: 1,
-                                  }}
-                                >
-                                  {row.status}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.weeks}
+                                    {row.status}
+                                  </Typography>
+                                </Box>
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">${row.budget}k</Typography>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.stopSelling}
+                                <Switch
+                                  checked={row.stopSelling}
+                                  // onChange={handleChange}
+                                  inputProps={{ 'aria-label': 'controlled' }}
+                                />
+                              </Typography>
+                            </TableCell>
+                            <TableCell style={{ minWidth: 200 }}>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.saleDate[0]}
+                              </Typography>
+                            </TableCell>
+                            <TableCell style={{ minWidth: 200 }}>
+                              <Typography color="textSecondary" variant="h6">
+                                {row.createdAt}
+                              </Typography>
+                            </TableCell>
+                            <TableCell style={{ minWidth: 200 }}>
+                              {/*<Box display="flex" justifyContent={'space-around'}>*/}
+                              <IconButton size={'small'}>
+                                <RefreshOutlinedIcon />
+                              </IconButton>
+                              <IconButton size={'small'}>
+                                <AlbumOutlinedIcon />
+                              </IconButton>
+                              <IconButton size={'small'}>
+                                <DeleteOutlinedIcon />
+                              </IconButton>
+                              {/*</Box>*/}
                             </TableCell>
                           </TableRow>
                         );
