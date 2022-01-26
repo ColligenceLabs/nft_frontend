@@ -268,21 +268,14 @@ const NFTs = () => {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
   console.log('555555', kip17Contract);
-  const {createNFT} = useNFT(kip17Contract, account);
+  const { createNFT } = useNFT(kip17Contract, account);
 
   return (
     <PageContainer title="NFTs" description="this is NFTs page">
       {/* breadcrumb */}
       <Breadcrumb title={t('NFTs')} subtitle={t('NFTs Information')} />
       {/* end breadcrumb */}
-      <Button
-        Button
-        color="secondary"
-        variant="contained"
-        size="large"
-        fullWidth
-        onClick={createNFT}
-      >
+      <Button color="secondary" variant="contained" size="large" fullWidth onClick={createNFT}>
         test
       </Button>
       <Card>
