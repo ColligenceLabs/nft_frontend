@@ -81,8 +81,10 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                           }),
                         }}
                       >
-                        <FeatherIcon icon={item.icon} width="20" height="20" />
+                        {/*<FeatherIcon icon={item.icon} width="20" height="20" />*/}
+                        {item.icon}
                       </ListItemIcon>
+
                       <ListItemText>{t(`${item.title}`)}</ListItemText>
                       {index === open || pathWithoutLastPart === item.href ? (
                         <FeatherIcon icon="chevron-down" size="16" />
@@ -117,7 +119,8 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                                   }),
                                 }}
                               >
-                                <FeatherIcon icon={child.icon} width="20" height="20" />
+                                {/*<FeatherIcon icon={child.icon} width="20" height="20" />*/}
+                                {child.icon}
                               </ListItemIcon>
                               <ListItemText>{child.title}</ListItemText>
                             </ListItem>
@@ -150,7 +153,8 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                           ...(pathDirect === item.href && { color: 'white' }),
                         }}
                       >
-                        <FeatherIcon icon={item.icon} width="20" height="20" />
+                        {/*<FeatherIcon icon={item.icon} width="20" height="20" />*/}
+                        {item.icon}
                       </ListItemIcon>
                       <ListItemText onClick={onSidebarClose}>{t(`${item.title}`)}</ListItemText>
                     </ListItem>
