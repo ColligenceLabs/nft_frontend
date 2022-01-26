@@ -25,10 +25,10 @@ const Collection = Loadable(lazy(() => import('../views/Collection')));
 const Reward = Loadable(lazy(() => import('../views/Reward')));
 
 /* ****Routes***** */
-const Router = [
+const Router = (isLoggedIn) => [
   {
     path: '/',
-    element: <FullLayout />,
+    element: isLoggedIn ? <FullLayout /> : <Navigate to="/auth/login" />,
     children: [
       { path: '/', element: <Navigate to="/dashboard" /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
