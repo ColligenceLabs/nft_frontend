@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { alpha } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import {
   Box,
   Table,
@@ -21,6 +21,7 @@ import {
   CardContent,
   Typography,
   Avatar,
+  InputBase,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
@@ -31,6 +32,7 @@ import PageContainer from '../../components/container/PageContainer';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 
 const rows = [
   {
@@ -195,6 +197,40 @@ const rows = [
   },
 ];
 
+const Search = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  backgroundColor: alpha(theme.palette.primary.main, 0.15),
+  width: '80%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+}));
+
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -319,7 +355,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, searchQuery, onChangeSearchQuery } = props;
 
   return (
     <Toolbar
@@ -331,36 +367,55 @@ const EnhancedTableToolbar = (props) => {
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
       {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
-          {numSelected} selected
-        </Typography>
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography color="inherit" variant="subtitle2" component="div">
+            {numSelected} selected
+          </Typography>
+          <Tooltip title="Delete">
+            <IconButton>
+              <FeatherIcon icon="trash-2" width="18" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography variant="h6" id="tableTitle" component="div" marginRight="5px">
           Filter
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Search>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          value={searchQuery}
+          onChange={onChangeSearchQuery}
+          placeholder="Search…"
+          inputProps={{ 'aria-label': 'search' }}
+        />
+      </Search>
     </Toolbar>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  onChangeSearchQuery: PropTypes.func.isRequired,
 };
 
 const User = () => {
@@ -372,6 +427,11 @@ const User = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -421,6 +481,10 @@ const User = () => {
     setDense(event.target.checked);
   };
 
+  const handleChangeSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -435,7 +499,11 @@ const User = () => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar
+                numSelected={selected.length}
+                searchQuery={searchQuery}
+                onChangeSearchQuery={handleChangeSearchQuery}
+              />
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}
@@ -452,6 +520,7 @@ const User = () => {
                   />
                   <TableBody>
                     {stableSort(rows, getComparator(order, orderBy))
+                      // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.uid);
