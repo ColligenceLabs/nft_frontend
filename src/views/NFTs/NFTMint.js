@@ -16,6 +16,10 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
+import { useWeb3React } from '@web3-react/core';
+import { useKip17Contract } from '../../hooks/useContract';
+import { rows } from './data';
+import useNFT from '../../hooks/useNFT';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -83,9 +87,9 @@ const NFTMint = () => {
     setType(event.target.value);
   };
 
-  const onSubmitData = () => {
-    console.log(mintData);
-  };
+  const { account } = useWeb3React();
+  const kip17Contract = useKip17Contract();
+  const { createNFT } = useNFT(kip17Contract, account, mintData);
 
   return (
     <PageContainer title="NFT Mint" description="this is NFT Mint Form page">
@@ -280,7 +284,7 @@ const NFTMint = () => {
                 <StyledButton variant="outlined" size="small">
                   Cancel
                 </StyledButton>
-                <StyledButton variant="contained" onClick={onSubmitData}>
+                <StyledButton variant="contained" onClick={createNFT}>
                   Confirm
                 </StyledButton>
               </div>

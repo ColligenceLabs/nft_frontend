@@ -44,10 +44,11 @@ const addJsonToIPFS = async function (metadata) {
   return getResponse;
 };
 
-const useNFT = (contract, account) => {
+const useNFT = (contract, account, mintData) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
   const { library } = useActiveWeb3React();
   const createNFT = useCallback(async () => {
+    console.log('====>', mintData);
     // content ipfs 업로드
 
     // thumbnail 서버 업로드
@@ -82,7 +83,7 @@ const useNFT = (contract, account) => {
     console.log(tx, receipt);
 
     // rest api 호출(db 저장)
-  }, [library, account]);
+  }, [library, account, mintData]);
   return { createNFT };
 };
 
