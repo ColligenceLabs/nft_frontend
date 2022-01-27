@@ -7,7 +7,7 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
-import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
+import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 
 const Menuitems = [
   {
@@ -17,7 +17,7 @@ const Menuitems = [
   },
   {
     title: 'Admins',
-    icon: <PeopleAltOutlinedIcon width="20" height="20" />,
+    icon: <SupervisorAccountOutlinedIcon width="20" height="20" />,
     href: '/admins',
   },
   {
