@@ -5,8 +5,8 @@ import { Helmet } from 'react-helmet';
 const PageContainer = ({ title, description, children }) => (
   <div>
     <Helmet>
-      <title>{title}</title>
-      <meta name="description" content={description} />
+      <title>{process.env.REACT_APP_SITE_TITLE}</title>
+      <meta name="description" content={process.env.REACT_APP_SITE_DSCRIPTION} />
     </Helmet>
     {children}
   </div>

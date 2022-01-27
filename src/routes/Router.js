@@ -22,6 +22,7 @@ const NFTMint = Loadable(lazy(() => import('../views/NFTs/NFTMint')));
 const AirDrop = Loadable(lazy(() => import('../views/AirDrop')));
 const AirDropMint = Loadable(lazy(() => import('../views/AirDrop/AirDropMint')));
 const Serials = Loadable(lazy(() => import('../views/Serials')));
+const SerialsCreate = Loadable(lazy(() => import('../views/Serials/SerialsCreate')));
 const Transaction = Loadable(lazy(() => import('../views/Transaction')));
 const Collection = Loadable(lazy(() => import('../views/Collection')));
 const Reward = Loadable(lazy(() => import('../views/Reward')));
@@ -43,6 +44,7 @@ const Router = (isLoggedIn) => [
       { path: '/airdrop', exact: true, element: <AirDrop /> },
       { path: '/airdrop/mint', exact: true, element: <AirDropMint /> },
       { path: '/serials', exact: true, element: <Serials /> },
+      { path: '/serials/create', exact: true, element: <SerialsCreate /> },
       { path: '/transaction', exact: true, element: <Transaction /> },
       { path: '/collection', exact: true, element: <Collection /> },
       { path: '/reward', exact: true, element: <Reward /> },

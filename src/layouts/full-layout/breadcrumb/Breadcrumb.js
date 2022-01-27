@@ -85,19 +85,19 @@ const LinkButton = ({ title }) => {
       case 'serials':
         setButtonProps({
           label: 'Create',
-          url: '',
+          url: '/serials/create',
         });
         break;
-      case 'collection':
+      case 'collections':
         setButtonProps({
           label: 'Create',
-          url: '',
+          url: '/collection/create',
         });
         break;
       case 'reward':
         setButtonProps({
           label: 'Create',
-          url: '',
+          url: '/reward/create',
         });
         break;
     }

@@ -415,7 +415,7 @@ const Creator = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <PageContainer title="Creator" description="this is Creator page">
+    <PageContainer title={t('Service Title')} description={t('Service Description')}>
       {/* breadcrumb */}
       <Breadcrumb title={t('Creator')} subtitle={t('Creator Information')} />
       {/* end breadcrumb */}
