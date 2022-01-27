@@ -14,6 +14,7 @@ const ResetPassword = Loadable(lazy(() => import('../views/authentication/ResetP
 
 const Dashboard = Loadable(lazy(() => import('../views/Dashboard')));
 const User = Loadable(lazy(() => import('../views/User')));
+const Admins = Loadable(lazy(() => import('../views/Admins')));
 const Company = Loadable(lazy(() => import('../views/Company')));
 const NFTs = Loadable(lazy(() => import('../views/NFTs')));
 const NFTMint = Loadable(lazy(() => import('../views/NFTs/NFTMint')));
@@ -33,6 +34,7 @@ const Router = (isLoggedIn) => [
       { path: '/', element: <Navigate to="/dashboard" /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
       { path: '/user', exact: true, element: <User /> },
+      { path: '/admins', exact: true, element: <Admins /> },
       { path: '/company', exact: true, element: <Company /> },
       { path: '/nfts', exact: true, element: <NFTs /> },
       { path: '/nfts/mint', exact: true, element: <NFTMint /> },
