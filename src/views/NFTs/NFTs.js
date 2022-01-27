@@ -32,6 +32,7 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
+import Search from '../../components/Search/Search';
 
 import { rows } from './data';
 import { useKip17Contract } from '../../hooks/useContract';
@@ -39,6 +40,7 @@ import { useWeb3React } from '@web3-react/core';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import { useState } from 'react';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -211,7 +213,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, searchQuery, onChangeSearchQuery } = props;
 
   return (
     <Toolbar
@@ -223,36 +225,45 @@ const EnhancedTableToolbar = (props) => {
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
       {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
-          {numSelected} selected
-        </Typography>
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography color="inherit" variant="subtitle2" component="div">
+            {numSelected} selected
+          </Typography>
+          <Tooltip title="Delete">
+            <IconButton>
+              <FeatherIcon icon="trash-2" width="18" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography variant="h6" id="tableTitle" component="div" marginRight="5px">
           Filter
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
     </Toolbar>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  onChangeSearchQuery: PropTypes.func.isRequired,
 };
 
 const NFTs = () => {
@@ -263,6 +274,12 @@ const NFTs = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
+  console.log(searchQuery);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -312,6 +329,10 @@ const NFTs = () => {
     setDense(event.target.checked);
   };
 
+  const handleChangeSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -325,7 +346,11 @@ const NFTs = () => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar
+                numSelected={selected.length}
+                searchQuery={searchQuery}
+                onChangeSearchQuery={handleChangeSearchQuery}
+              />
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}
