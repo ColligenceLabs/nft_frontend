@@ -112,10 +112,10 @@ const headCells = [
     width: 10,
   },
   {
-    id: 'company',
+    id: 'creator',
     numeric: false,
     disablePadding: false,
-    label: 'Company',
+    label: 'Creator',
     width: 10,
   },
   {
@@ -453,7 +453,7 @@ const NFTs = () => {
                             </TableCell>
                             <TableCell>
                               <Typography color="textSecondary" variant="h6">
-                                {row.company}
+                                {row.creator}
                               </Typography>
                             </TableCell>
                             <TableCell>

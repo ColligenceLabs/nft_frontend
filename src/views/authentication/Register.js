@@ -156,7 +156,6 @@ const Register = () => {
                       name="level"
                       onChange={handleRegisterDataChange}
                       value={registerData.level}
-                      // onChange={handleCompanyChange}
                       fullWidth
                       sx={{
                         mb: 4,

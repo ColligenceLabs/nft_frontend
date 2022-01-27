@@ -28,7 +28,7 @@ const StyledButton = styled(Button)`
 const NFTMint = () => {
   const [mintData, setMintData] = useState({
     name: '',
-    company: '',
+    creator: '',
     category: '',
     externalURL: '',
     content: '',
@@ -43,7 +43,7 @@ const NFTMint = () => {
   const [selectedContent, setSelectedContent] = useState();
   const [selectedThumbnail, setSelectedThumbnail] = useState();
 
-  const [company, setCompany] = useState(0);
+  const [creator, setCreator] = useState(0);
   const [type, setType] = useState('KIP17');
 
   const contentFileHandler = (event) => {
@@ -71,14 +71,14 @@ const NFTMint = () => {
       [name]: value,
     });
   };
-  const handleCompanyChange = (event) => {
+  const handleCreatorChange = (event) => {
     console.log(event.target);
     const { name, value } = event.target;
     setMintData({
       ...mintData,
       [name]: value,
     });
-    setCompany(event.target.value);
+    setCreator(event.target.value);
   };
 
   const handleTypeChange = (event) => {
@@ -117,17 +117,17 @@ const NFTMint = () => {
               />
             </Grid>
             <Grid item lg={6} md={12} sm={12} xs={12}>
-              <CustomFormLabel htmlFor="company">Company</CustomFormLabel>
+              <CustomFormLabel htmlFor="creator">Creator</CustomFormLabel>
               <CustomSelect
                 labelId="demo-simple-select-label"
-                id="company"
-                name="company"
-                value={company}
-                onChange={handleCompanyChange}
+                id="creator"
+                name="creator"
+                value={creator}
+                onChange={handleCreatorChange}
                 fullWidth
                 size="small"
               >
-                <MenuItem value={0}>Select Company</MenuItem>
+                <MenuItem value={0}>Select Creator</MenuItem>
                 <MenuItem value={1}>Own</MenuItem>
                 <MenuItem value={2}>Two</MenuItem>
                 <MenuItem value={3}>Three</MenuItem>

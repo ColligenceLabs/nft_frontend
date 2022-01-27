@@ -15,7 +15,8 @@ const ResetPassword = Loadable(lazy(() => import('../views/authentication/ResetP
 const Dashboard = Loadable(lazy(() => import('../views/Dashboard')));
 const User = Loadable(lazy(() => import('../views/User')));
 const Admins = Loadable(lazy(() => import('../views/Admins')));
-const Company = Loadable(lazy(() => import('../views/Company')));
+const Creator = Loadable(lazy(() => import('../views/Creator/Creator')));
+const CreatorRegister = Loadable(lazy(() => import('../views/Creator/CreatorRegister')));
 const NFTs = Loadable(lazy(() => import('../views/NFTs')));
 const NFTMint = Loadable(lazy(() => import('../views/NFTs/NFTMint')));
 const AirDrop = Loadable(lazy(() => import('../views/AirDrop')));
@@ -35,7 +36,8 @@ const Router = (isLoggedIn) => [
       { path: '/dashboard', exact: true, element: <Dashboard /> },
       { path: '/user', exact: true, element: <User /> },
       { path: '/admins', exact: true, element: <Admins /> },
-      { path: '/company', exact: true, element: <Company /> },
+      { path: '/creator', exact: true, element: <Creator /> },
+      { path: '/creator/register', exact: true, element: <CreatorRegister /> },
       { path: '/nfts', exact: true, element: <NFTs /> },
       { path: '/nfts/mint', exact: true, element: <NFTMint /> },
       { path: '/airdrop', exact: true, element: <AirDrop /> },

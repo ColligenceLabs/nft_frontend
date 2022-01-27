@@ -51,22 +51,6 @@ const Breadcrumb = ({ subtitle, items, title, children }) => {
             width: '100%',
           }}
         >
-          {/*{children}*/}
-          {/*{title.toLowerCase() === 'company' && (*/}
-          {/*  <Button variant="contained">*/}
-          {/*    <AddIcon />*/}
-          {/*    {t('Register Company')}*/}
-          {/*  </Button>*/}
-          {/*)}*/}
-          {/*{title.toLowerCase() === 'nfts' && <Button variant="contained">{t('NFT Mint')}</Button>}*/}
-          {/*{title.toLowerCase() === 'airdrop' && (*/}
-          {/*  <Button variant="contained">{t('AirDrop Mint')}</Button>*/}
-          {/*)}*/}
-          {/*{title.toLowerCase() === 'serials' && <Button variant="contained">{t('Create')}</Button>}*/}
-          {/*{title.toLowerCase() === 'collection' && (*/}
-          {/*  <Button variant="contained">{t('Create')}</Button>*/}
-          {/*)}*/}
-          {/*{title.toLowerCase() === 'reward' && <Button variant="contained">{t('Create')}</Button>}*/}
           <LinkButton title={title} />
         </Box>
       </Grid>
@@ -80,10 +64,10 @@ const LinkButton = ({ title }) => {
 
   useEffect(() => {
     switch (title.toLowerCase()) {
-      case 'company':
+      case 'creator':
         setButtonProps({
-          label: 'Register Company',
-          url: '',
+          label: 'Register Creator',
+          url: '/creator/register',
         });
         break;
       case 'nfts':

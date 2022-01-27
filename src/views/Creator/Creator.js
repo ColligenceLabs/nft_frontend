@@ -341,7 +341,7 @@ EnhancedTableToolbar.propTypes = {
   onChangeSearchQuery: PropTypes.func.isRequired,
 };
 
-const Company = () => {
+const Creator = () => {
   const { t } = useTranslation();
 
   const [order, setOrder] = React.useState('asc');
@@ -415,9 +415,9 @@ const Company = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <PageContainer title="Company" description="this is Company page">
+    <PageContainer title="Creator" description="this is Creator page">
       {/* breadcrumb */}
-      <Breadcrumb title={t('Company')} subtitle={t('Company Information')} />
+      <Breadcrumb title={t('Creator')} subtitle={t('Creator Information')} />
       {/* end breadcrumb */}
       <Card>
         <CardContent>
@@ -558,4 +558,4 @@ const Company = () => {
   );
 };
 
-export default Company;
+export default Creator;

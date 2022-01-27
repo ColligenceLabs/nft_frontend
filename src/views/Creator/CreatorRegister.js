@@ -21,7 +21,7 @@ const StyledButton = styled(Button)`
   width: 100px;
 `;
 
-const AirDropMint = () => {
+const CreatorRegister = () => {
   const [mintData, setMintData] = useState({
     name: '',
     creator: '',
@@ -87,9 +87,9 @@ const AirDropMint = () => {
   };
 
   return (
-    <PageContainer title="AirDrop Mint" description="this is AirDrop Mint Form page">
+    <PageContainer title="Creator Register" description="this is Creator Register Form page">
       {/* breadcrumb */}
-      <Breadcrumb title="AirDrop Mint" subtitle="AirDrop Mint Information" />
+      <Breadcrumb title="Creator Register" subtitle="Creator Register Information" />
       {/* end breadcrumb */}
 
       <Card>
@@ -107,23 +107,7 @@ const AirDropMint = () => {
                 onChange={handleMintDataChange}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
-              <CustomFormLabel htmlFor="creator">Creator</CustomFormLabel>
-              <CustomSelect
-                labelId="demo-simple-select-label"
-                id="creator"
-                name="creator"
-                value={creator}
-                onChange={handleCreatorChange}
-                fullWidth
-                size="small"
-              >
-                <MenuItem value={0}>Select Creator</MenuItem>
-                <MenuItem value={1}>Own</MenuItem>
-                <MenuItem value={2}>Two</MenuItem>
-                <MenuItem value={3}>Three</MenuItem>
-              </CustomSelect>
-            </Grid>
+
             <Grid item lg={6} md={12} sm={12} xs={12}>
               <CustomFormLabel htmlFor="content">Content</CustomFormLabel>
               <CustomTextField
@@ -158,86 +142,6 @@ const AirDropMint = () => {
                 }}
               />
             </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
-              <CustomFormLabel htmlFor="externalURL">External URL</CustomFormLabel>
-              <CustomTextField
-                id="externalURL"
-                name="externalURL"
-                placeholder="External URL"
-                variant="outlined"
-                fullWidth
-                size="small"
-                onChange={handleMintDataChange}
-              />
-            </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
-              <CustomFormLabel htmlFor="thumbnail">Thumbnail</CustomFormLabel>
-              <CustomTextField
-                id="thumbnail"
-                name="thumbnail"
-                value={mintData.thumbnail}
-                placeholder="Select File"
-                variant="outlined"
-                fullWidth
-                size="small"
-                onChange={handleMintDataChange}
-                InputProps={{
-                  startAdornment: (
-                    <Button
-                      variant="contained"
-                      component="label"
-                      variant="contained"
-                      size="small"
-                      style={{ marginRight: '1rem' }}
-                    >
-                      <DriveFileMoveOutlinedIcon fontSize="small" />
-                      <input
-                        id={'file-input'}
-                        style={{ display: 'none' }}
-                        type="file"
-                        name="imageFile"
-                        onChange={thumbnailFileHandler}
-                      />
-                    </Button>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item lg={6} md={12} sm={12} xs={12}>
-              <Grid container spacing={2}>
-                <Grid item lg={4} sm={4} xs={12}>
-                  <CustomFormLabel>Type</CustomFormLabel>
-                  <RadioGroup
-                    aria-label="gender"
-                    defaultValue="radio1"
-                    name="type"
-                    value={type}
-                    onChange={handleTypeChange}
-                  >
-                    <Grid container>
-                      <Grid item lg={6} sm={6} xs={6}>
-                        <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
-                      </Grid>
-                      <Grid item lg={6} sm={6} xs={6}>
-                        <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
-                      </Grid>
-                    </Grid>
-                  </RadioGroup>
-                </Grid>
-                <Grid item lg={8} sm={8} xs={12}>
-                  <CustomFormLabel htmlFor="quantity">Quantity</CustomFormLabel>
-                  <CustomTextField
-                    id="quantity"
-                    name="quantity"
-                    placeholder="Enter Quantity"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    onChange={handleMintDataChange}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
 
             <Grid item lg={6} md={12} sm={12} xs={12}>
               <CustomFormLabel htmlFor="description">Description</CustomFormLabel>
@@ -269,4 +173,4 @@ const AirDropMint = () => {
   );
 };
 
-export default AirDropMint;
+export default CreatorRegister;

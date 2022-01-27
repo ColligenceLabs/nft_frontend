@@ -57,8 +57,8 @@ const useNFT = (contract, account, mintData) => {
       attributes: [],
       minted_by: 'securit',
       thumbnail: '',
-      creator_name: mintData.company.name,
-      creator_icon: mintData.company.image,
+      creator_name: mintData.creator.name,
+      creator_icon: mintData.creator.image,
       category: [],
     };
 

@@ -26,10 +26,10 @@ const Menuitems = [
     href: '/user',
   },
   {
-    title: 'Company',
+    title: 'Creator',
     // icon: 'hard-drive',
     icon: <BusinessIcon width="20" height="20" />,
-    href: '/company',
+    href: '/creator',
   },
   {
     title: 'NFTs',
