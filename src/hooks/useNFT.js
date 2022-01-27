@@ -9,7 +9,7 @@ import { IPFS_URL, ALT_URL } from '../config/constants/consts';
 import { create } from 'ipfs-http-client';
 
 // add 10%
-export function calculateGasMargin(value: BigNumber): BigNumber {
+export function calculateGasMargin(value) {
   return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000));
 }
 
@@ -25,12 +25,12 @@ const addToIPFS = async function (file) {
     port: 5001,
     protocol: 'https',
     headers: {
-      authorization: auth
-    }
+      authorization: auth,
+    },
   });
   const result = await client.add(file);
   return result;
-}
+};
 
 const useNFT = (contract, account, mintData) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
@@ -45,29 +45,30 @@ const useNFT = (contract, account, mintData) => {
     // form json 파일 생성
     let imgName = mintData.content.split('.');
     const metadata = {
-        name: mintData.name,
-        description: mintData.description,
-        image: IPFS_URL + result.path,
-        alt_url: ALT_URL + result.path + '.' + imgName[imgName.length -1],
-        content_Type: imgName[imgName.length -1],
-        cid: result.path,
-        tokenId: 2,
-        total_minted: "",
-        external_url: mintData.external_url,
-        attributes: [],
-        minted_by: "securit",
-        thumbnail: "",
-        creator_name: mintData.company.name,
-        creator_icon: mintData.company.image,
-        category: [],
-    }
+      name: mintData.name,
+      description: mintData.description,
+      image: IPFS_URL + result.path,
+      alt_url: ALT_URL + result.path + '.' + imgName[imgName.length - 1],
+      content_Type: imgName[imgName.length - 1],
+      cid: result.path,
+      tokenId: 2,
+      total_minted: '',
+      external_url: mintData.external_url,
+      attributes: [],
+      minted_by: 'securit',
+      thumbnail: '',
+      creator_name: mintData.company.name,
+      creator_icon: mintData.company.image,
+      category: [],
+    };
 
     if (typeof mintData.thumbnailFile !== 'undefined' && mintData.thumbnail !== '') {
       let thumbName = mintData.thumbnail.split('.');
       // let thumbnailInput = my_thumbnail.filename;
       // let thumbnailOutput = result.Hash + '_thumbnail.' + thumbName[thumbName.length -1];
       // await imageRename(consts.UPLOAD_PATH + thumbnailInput, consts.UPLOAD_PATH + 'thumbnail/' + thumbnailOutput);
-      metadata.thumbnail = ALT_URL + 'thumbnail/' + result.Hash + '_thumbnail.' + thumbName[thumbName.length -1]
+      metadata.thumbnail =
+        ALT_URL + 'thumbnail/' + result.Hash + '_thumbnail.' + thumbName[thumbName.length - 1];
     }
     console.log('22222', metadata);
 
@@ -81,14 +82,19 @@ const useNFT = (contract, account, mintData) => {
     const gasLimit = await contract.estimateGas.mintWithTokenURI(
       '0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73',
       2,
-      IPFS_URL + metadata_ipfs_link.path
+      IPFS_URL + metadata_ipfs_link.path,
     );
     console.log(gasPrice, contract);
-    const tx = await contract.mintWithTokenURI('0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73', 2, IPFS_URL + metadata_ipfs_link.path, {
-      from: account,
-      gasPrice,
-      gasLimit: calculateGasMargin(gasLimit),
-    });
+    const tx = await contract.mintWithTokenURI(
+      '0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73',
+      2,
+      IPFS_URL + metadata_ipfs_link.path,
+      {
+        from: account,
+        gasPrice,
+        gasLimit: calculateGasMargin(gasLimit),
+      },
+    );
     let receipt;
     try {
       receipt = await tx.wait();
