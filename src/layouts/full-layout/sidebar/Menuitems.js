@@ -1,5 +1,4 @@
 import TokenOutlinedIcon from '@mui/icons-material/TokenOutlined';
-import BusinessIcon from '@mui/icons-material/Business';
 import InvertColorsIcon from '@mui/icons-material/InvertColors';
 import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
 import NumbersIcon from '@mui/icons-material/Numbers';
@@ -8,6 +7,7 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
+import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
 
 const Menuitems = [
   {
@@ -28,7 +28,7 @@ const Menuitems = [
   {
     title: 'Creator',
     // icon: 'hard-drive',
-    icon: <BusinessIcon width="20" height="20" />,
+    icon: <GestureOutlinedIcon width="20" height="20" />,
     href: '/creator',
   },
   {
