@@ -31,6 +31,8 @@ import PageContainer from '../../components/container/PageContainer';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+import Search from '../../components/Search/Search';
+import { useState } from 'react';
 
 const rows = [
   {
@@ -306,7 +308,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, searchQuery, onChangeSearchQuery } = props;
 
   return (
     <Toolbar
@@ -328,26 +330,15 @@ const EnhancedTableToolbar = (props) => {
           Filter
         </Typography>
       )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
     </Toolbar>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  onChangeSearchQuery: PropTypes.func.isRequired,
 };
 
 const Company = () => {
@@ -359,6 +350,12 @@ const Company = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
+  console.log(searchQuery);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -408,6 +405,10 @@ const Company = () => {
     setDense(event.target.checked);
   };
 
+  const handleChangeSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -422,7 +423,11 @@ const Company = () => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar
+                numSelected={selected.length}
+                searchQuery={searchQuery}
+                onChangeSearchQuery={handleChangeSearchQuery}
+              />
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}

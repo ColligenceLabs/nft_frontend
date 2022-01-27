@@ -20,8 +20,6 @@ import {
   Card,
   CardContent,
   Typography,
-  Avatar,
-  InputBase,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
@@ -32,7 +30,7 @@ import PageContainer from '../../components/container/PageContainer';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
-import SearchIcon from '@mui/icons-material/Search';
+import Search from '../../components/Search/Search';
 
 const rows = [
   {
@@ -42,40 +40,6 @@ const rows = [
     status: 'OK',
   },
 ];
-
-const Search = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  backgroundColor: alpha(theme.palette.primary.main, 0.15),
-  width: '80%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -105,7 +69,7 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    name: 'name',
+    id: 'name',
     numeric: false,
     disablePadding: false,
     label: 'Name',
@@ -237,17 +201,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
 
-      <Search>
-        <SearchIconWrapper>
-          <SearchIcon />
-        </SearchIconWrapper>
-        <StyledInputBase
-          value={searchQuery}
-          onChange={onChangeSearchQuery}
-          placeholder="Search…"
-          inputProps={{ 'aria-label': 'search' }}
-        />
-      </Search>
+      <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
     </Toolbar>
   );
 };
@@ -272,6 +226,7 @@ const Admins = () => {
   const onFilterName = (e) => {
     setFilterName(e.target.value);
   };
+  console.log(searchQuery);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
