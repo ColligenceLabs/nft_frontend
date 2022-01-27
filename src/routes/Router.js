@@ -25,7 +25,9 @@ const Serials = Loadable(lazy(() => import('../views/Serials')));
 const SerialsCreate = Loadable(lazy(() => import('../views/Serials/SerialsCreate')));
 const Transaction = Loadable(lazy(() => import('../views/Transaction')));
 const Collection = Loadable(lazy(() => import('../views/Collection')));
+const CollectionCreate = Loadable(lazy(() => import('../views/Collection/CollectionCreate')));
 const Reward = Loadable(lazy(() => import('../views/Reward')));
+const RewardCreate = Loadable(lazy(() => import('../views/Reward/RewardCreate')));
 
 /* ****Routes***** */
 const Router = (isLoggedIn) => [
@@ -47,7 +49,9 @@ const Router = (isLoggedIn) => [
       { path: '/serials/create', exact: true, element: <SerialsCreate /> },
       { path: '/transaction', exact: true, element: <Transaction /> },
       { path: '/collection', exact: true, element: <Collection /> },
+      { path: '/collection/create', exact: true, element: <CollectionCreate /> },
       { path: '/reward', exact: true, element: <Reward /> },
+      { path: '/reward/create', exact: true, element: <RewardCreate /> },
 
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

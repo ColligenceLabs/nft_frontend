@@ -1,8 +1,9 @@
 import React from 'react';
-import { Toolbar, Typography } from '@mui/material';
+import { Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import Search from '../Search/Search';
 import PropTypes from 'prop-types';
+import FeatherIcon from 'feather-icons-react';
 
 const EnhancedTableToolbar = (props) => {
   const { numSelected, searchQuery, onChangeSearchQuery } = props;
@@ -17,16 +18,36 @@ const EnhancedTableToolbar = (props) => {
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
       {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
-          {numSelected} selected
-        </Typography>
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography color="inherit" variant="subtitle2" component="div">
+            {numSelected} selected
+          </Typography>
+          <Tooltip title="Delete">
+            <IconButton>
+              <FeatherIcon icon="trash-2" width="18" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography variant="h6" id="tableTitle" component="div" marginRight="5px">
           Filter
         </Typography>
       )}
+
       <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
     </Toolbar>
   );
