@@ -355,7 +355,6 @@ const Creator = () => {
   const onFilterName = (e) => {
     setFilterName(e.target.value);
   };
-  console.log(searchQuery);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';

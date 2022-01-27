@@ -51,7 +51,6 @@ export function getWalletBalance(account, library) {
         library
           .getBalance(account)
           .then((balance) => {
-            console.log('wallet account = ', account);
             dispatch(slice.actions.setBalance(balance));
           })
           .catch(() => {
