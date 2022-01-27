@@ -32,9 +32,11 @@ const NFTMint = () => {
     category: '',
     externalURL: '',
     content: '',
+    contentFile: '',
     type: '',
     quantity: '',
     thumbnail: '',
+    thumbnailFile: '',
     price: '',
     description: '',
   });
@@ -49,6 +51,7 @@ const NFTMint = () => {
     setMintData({
       ...mintData,
       content: event.target.files[0].name,
+      contentFile: event.target.files[0],
     });
   };
 
@@ -57,6 +60,7 @@ const NFTMint = () => {
     setMintData({
       ...mintData,
       thumbnail: event.target.files[0].name,
+      thumbnailFile: event.target.files[0],
     });
   };
 
