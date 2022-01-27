@@ -6,10 +6,14 @@ import { InputBase } from '@mui/material';
 const SearchContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  backgroundColor: alpha(theme.palette.primary.main, 0.15),
+  border: '1px',
+  borderRadius: '7px',
+  borderStyle: 'solid',
+  // borderColor: alpha(theme.palette.primary.main, 0.15),
+  // backgroundColor: alpha(theme.palette.primary.main, 0.15),
   width: '80%',
   [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(0.5),
     marginBlock: theme.spacing(3),
     width: 'auto',
   },
@@ -23,10 +27,12 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  color: theme.palette.primary.main,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
+
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,

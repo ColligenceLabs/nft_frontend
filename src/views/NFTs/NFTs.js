@@ -41,6 +41,7 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useState } from 'react';
+import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -210,60 +211,6 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
-};
-
-const EnhancedTableToolbar = (props) => {
-  const { numSelected, searchQuery, onChangeSearchQuery } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      {numSelected > 0 ? (
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Typography color="inherit" variant="subtitle2" component="div">
-            {numSelected} selected
-          </Typography>
-          <Tooltip title="Delete">
-            <IconButton>
-              <FeatherIcon icon="trash-2" width="18" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      ) : (
-        <Typography variant="h6" id="tableTitle" component="div" marginRight="5px">
-          Filter
-        </Typography>
-      )}
-
-      <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  onChangeSearchQuery: PropTypes.func.isRequired,
 };
 
 const NFTs = () => {
