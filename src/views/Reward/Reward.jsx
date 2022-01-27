@@ -34,6 +34,7 @@ import img3 from '../../assets/images/users/3.jpg';
 import img4 from '../../assets/images/users/4.jpg';
 import img5 from '../../assets/images/users/5.jpg';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
+import { useState } from 'react';
 
 const rows = [
   {
@@ -378,6 +379,7 @@ const Reward = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -427,6 +429,10 @@ const Reward = () => {
     setDense(event.target.checked);
   };
 
+  const handleChangeSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -441,7 +447,11 @@ const Reward = () => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar
+                numSelected={selected.length}
+                searchQuery={searchQuery}
+                onChangeSearchQuery={handleChangeSearchQuery}
+              />
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}
