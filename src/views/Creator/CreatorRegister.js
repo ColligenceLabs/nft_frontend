@@ -22,51 +22,34 @@ const StyledButton = styled(Button)`
 `;
 
 const CreatorRegister = () => {
-  const [mintData, setMintData] = useState({
+  const [creatorData, setCreatorData] = useState({
     name: '',
-    creator: '',
-    externalURL: '',
     content: '',
-    type: '',
-    quantity: '',
-    thumbnail: '',
     description: '',
   });
 
   const [selectedContent, setSelectedContent] = useState();
-  const [selectedThumbnail, setSelectedThumbnail] = useState();
-
-  const [creator, setCreator] = useState(0);
-  const [type, setType] = useState('KIP17');
 
   const contentFileHandler = (event) => {
     setSelectedContent(event.target.files[0]);
-    setMintData({
-      ...mintData,
+    setCreatorData({
+      ...creatorData,
       content: event.target.files[0].name,
-    });
-  };
-
-  const thumbnailFileHandler = (event) => {
-    setSelectedThumbnail(event.target.files[0]);
-    setMintData({
-      ...mintData,
-      thumbnail: event.target.files[0].name,
     });
   };
 
   const handleMintDataChange = (event) => {
     const { name, value } = event.target;
 
-    setMintData({
-      ...mintData,
+    setCreatorData({
+      ...creatorData,
       [name]: value,
     });
   };
   const handleCreatorChange = (event) => {
     const { name, value } = event.target;
-    setMintData({
-      ...mintData,
+    setCreatorData({
+      ...creatorData,
       [name]: value,
     });
     setCreator(event.target.value);
@@ -75,15 +58,15 @@ const CreatorRegister = () => {
   const handleTypeChange = (event) => {
     console.log(event.target.name);
     const { name, value } = event.target;
-    setMintData({
-      ...mintData,
+    setCreatorData({
+      ...creatorData,
       [name]: value,
     });
     setType(event.target.value);
   };
 
   const onSubmitData = () => {
-    console.log(mintData);
+    console.log(creatorData);
   };
 
   return (
@@ -117,7 +100,7 @@ const CreatorRegister = () => {
                 variant="outlined"
                 fullWidth
                 size="small"
-                value={mintData.content}
+                value={creatorData.content}
                 onChange={handleMintDataChange}
                 InputProps={{
                   startAdornment: (
@@ -131,7 +114,6 @@ const CreatorRegister = () => {
                       <DriveFileMoveOutlinedIcon fontSize="small" />
                       <input
                         id={'file-input'}
-                        disabled
                         style={{ display: 'none' }}
                         type="file"
                         name="imageFile"
