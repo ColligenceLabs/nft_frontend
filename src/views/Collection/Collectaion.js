@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { alpha } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import {
   Box,
   Table,
@@ -21,6 +21,7 @@ import {
   CardContent,
   Typography,
   Avatar,
+  InputBase,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import FeatherIcon from 'feather-icons-react';
@@ -28,223 +29,171 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import img1 from '../../assets/images/users/1.jpg';
-import img2 from '../../assets/images/users/2.jpg';
-import img3 from '../../assets/images/users/3.jpg';
-import img4 from '../../assets/images/users/4.jpg';
-import img5 from '../../assets/images/users/5.jpg';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+import Search from '../../components/Search/Search';
 
 const rows = [
   {
-    id: '1',
-    imgsrc: img1,
-    name: 'Sunil Joshi',
-    email: 'sunil@gmail.com',
-    pname: 'Elite Admin',
-    teams: [
-      {
-        id: '1.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-      {
-        id: '1.2',
-        color: 'error.main',
-        text: 'D',
-      },
-    ],
-    status: 'Active',
-    weeks: '11',
-    budget: '3.9',
+    _id: {
+      $oid: '61b59c13af06080b8a7aa0b8',
+    },
+    address: null,
+    uid: 'wLdOowqA',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-12T06:52:03.696Z',
+    },
+    updatedAt: {
+      $date: '2021-12-12T06:52:03.696Z',
+    },
+    __v: 0,
   },
   {
-    id: '2',
-    imgsrc: img2,
-    name: 'Andrew McDownland',
-    email: 'andrew@gmail.com',
-    pname: 'Real Homes WP Theme',
-    teams: [
-      {
-        id: '2.1',
-        color: 'primary.main',
-        text: 'A',
-      },
-      {
-        id: '2.2',
-        color: 'warning.main',
-        text: 'X',
-      },
-      {
-        id: '2.3',
-        color: 'secondary.main',
-        text: 'N',
-      },
-    ],
-    status: 'Pending',
-    weeks: '19',
-    budget: '24.5',
+    _id: {
+      $oid: '61b59e53af06080b8a7aa0eb',
+    },
+    address: null,
+    uid: 'tuZwDA3u',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-12T07:01:39.231Z',
+    },
+    updatedAt: {
+      $date: '2021-12-12T07:01:39.231Z',
+    },
+    __v: 0,
   },
   {
-    id: '3',
-    imgsrc: img3,
-    name: 'Christopher Jamil',
-    email: 'jamil@gmail.com',
-    pname: 'MedicalPro WP Theme',
-    teams: [
-      {
-        id: '3.1',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Completed',
-    weeks: '30',
-    budget: '12.8',
+    _id: {
+      $oid: '61b5b0f1275f260e293d6bdb',
+    },
+    address: null,
+    uid: 'WOhZ4nHm',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-12T08:21:05.208Z',
+    },
+    updatedAt: {
+      $date: '2021-12-12T08:21:05.208Z',
+    },
+    __v: 0,
   },
   {
-    id: '4',
-    imgsrc: img4,
-    name: 'Nirav Joshi',
-    email: 'nirav@gmail.com',
-    pname: 'Hosting Press HTML',
-    teams: [
-      {
-        id: '4.1',
-        color: 'primary.main',
-        text: 'Y',
-      },
-      {
-        id: '4.2',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Active',
-    weeks: '40',
-    budget: '2.4',
+    _id: {
+      $oid: '61b5b2fba80c7f0ea25112f7',
+    },
+    address: null,
+    uid: 'M3WzZgn5',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-12T08:29:47.700Z',
+    },
+    updatedAt: {
+      $date: '2021-12-12T08:29:47.700Z',
+    },
+    __v: 0,
   },
   {
-    id: '5',
-    imgsrc: img5,
-    name: 'Micheal Doe',
-    email: 'micheal@gmail.com',
-    pname: 'Helping Hands WP Theme',
-    teams: [
-      {
-        id: '5.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-    ],
-    status: 'Cancel',
-    weeks: '1',
-    budget: '9.3',
+    _id: {
+      $oid: '61b7142542f5221b36768fdc',
+    },
+    address: null,
+    uid: '9v4R6Tbd',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-13T09:36:37.762Z',
+    },
+    updatedAt: {
+      $date: '2021-12-13T09:36:37.762Z',
+    },
+    __v: 0,
   },
   {
-    id: '6',
-    imgsrc: img4,
-    name: 'Nirav Joshi',
-    email: 'nirav@gmail.com',
-    pname: 'Hosting Press HTML',
-    teams: [
-      {
-        id: '6.1',
-        color: 'primary.main',
-        text: 'Y',
-      },
-      {
-        id: '6.2',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Active',
-    weeks: '16',
-    budget: '2.4',
+    _id: {
+      $oid: '61ca6fc50004484790afcb05',
+    },
+    address: null,
+    uid: '6oFbRNqG',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-28T02:00:37.324Z',
+    },
+    updatedAt: {
+      $date: '2021-12-28T02:00:37.324Z',
+    },
+    __v: 0,
   },
   {
-    id: '7',
-    imgsrc: img1,
-    name: 'Sunil Joshi',
-    email: 'sunil@gmail.com',
-    pname: 'Elite Admin',
-    teams: [
-      {
-        id: '7.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-      {
-        id: '7.2',
-        color: 'error.main',
-        text: 'D',
-      },
-    ],
-    status: 'Active',
-    weeks: '12',
-    budget: '3.9',
+    _id: {
+      $oid: '61cc41056279987120f2258b',
+    },
+    address: null,
+    uid: 'C8QQHXIG',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2021-12-29T11:05:41.597Z',
+    },
+    updatedAt: {
+      $date: '2021-12-29T11:05:41.597Z',
+    },
+    __v: 0,
   },
   {
-    id: '8',
-    imgsrc: img2,
-    name: 'Andrew McDownland',
-    email: 'andrew@gmail.com',
-    pname: 'Real Homes WP Theme',
-    teams: [
-      {
-        id: '8.1',
-        color: 'primary.main',
-        text: 'A',
-      },
-      {
-        id: '8.2',
-        color: 'warning.main',
-        text: 'X',
-      },
-      {
-        id: '8.3',
-        color: 'secondary.main',
-        text: 'N',
-      },
-    ],
-    status: 'Pending',
-    weeks: '14',
-    budget: '24.5',
+    _id: {
+      $oid: '61dcf0f76279987120f24157',
+    },
+    address: null,
+    uid: 'me7RXb5T',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2022-01-11T02:52:39.713Z',
+    },
+    updatedAt: {
+      $date: '2022-01-11T02:52:39.713Z',
+    },
+    __v: 0,
   },
   {
-    id: '9',
-    imgsrc: img3,
-    name: 'Christopher Jamil',
-    email: 'jamil@gmail.com',
-    pname: 'MedicalPro WP Theme',
-    teams: [
-      {
-        id: '9.1',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Completed',
-    weeks: '12',
-    budget: '12.8',
+    _id: {
+      $oid: '61de804fbbcbd4f3c48bf3cc',
+    },
+    address: null,
+    uid: '7Mvbqzz9',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2022-01-12T07:16:31.301Z',
+    },
+    updatedAt: {
+      $date: '2022-01-12T07:16:31.301Z',
+    },
+    __v: 0,
   },
-
   {
-    id: '10',
-    imgsrc: img5,
-    name: 'Micheal Doe',
-    email: 'micheal@gmail.com',
-    pname: 'Helping Hands WP Theme',
-    teams: [
-      {
-        id: '10.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-    ],
-    status: 'Cancel',
-    weeks: '9',
-    budget: '9.3',
+    _id: {
+      $oid: '61e52d2ef77a7ffb39dafb1b',
+    },
+    address: null,
+    uid: 'tsPMqOLm',
+    status: 'active',
+    tp_amount: 0,
+    createdAt: {
+      $date: '2022-01-17T08:47:42.991Z',
+    },
+    updatedAt: {
+      $date: '2022-01-17T08:47:42.991Z',
+    },
+    __v: 0,
   },
 ];
 
@@ -276,22 +225,10 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'uid',
     numeric: false,
     disablePadding: false,
-    label: 'Team Lead',
-  },
-  {
-    id: 'pname',
-    numeric: false,
-    disablePadding: false,
-    label: 'Project Name',
-  },
-  {
-    id: 'team',
-    numeric: false,
-    disablePadding: false,
-    label: 'Team',
+    label: 'UID',
   },
   {
     id: 'status',
@@ -300,20 +237,33 @@ const headCells = [
     label: 'Status',
   },
   {
-    id: 'weeks',
+    id: 'createdAt',
     numeric: false,
     disablePadding: false,
-    label: 'Weeks',
+    label: 'Created at',
   },
   {
-    id: 'budget',
+    id: 'actions',
     numeric: false,
     disablePadding: false,
-    label: 'Budget',
+    label: 'Actions',
   },
+  // {
+  //   id: 'weeks',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'Weeks',
+  // },
+  // {
+  //   id: 'budget',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'Budget',
+  // },
 ];
 
 function EnhancedTableHead(props) {
+  const { t } = useTranslation();
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -345,7 +295,8 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               <Typography variant="subtitle1" fontWeight="500">
-                {headCell.label}
+                {/*{t`${headCell.label}`}*/}
+                {t(`${headCell.label}`)}
               </Typography>
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -370,7 +321,7 @@ EnhancedTableHead.propTypes = {
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, searchQuery, onChangeSearchQuery } = props;
 
   return (
     <Toolbar
@@ -382,46 +333,62 @@ const EnhancedTableToolbar = (props) => {
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
     >
       {numSelected > 0 ? (
-        <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle2" component="div">
-          {numSelected} selected
-        </Typography>
+        <Box
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography color="inherit" variant="subtitle2" component="div">
+            {numSelected} selected
+          </Typography>
+          <Tooltip title="Delete">
+            <IconButton>
+              <FeatherIcon icon="trash-2" width="18" />
+            </IconButton>
+          </Tooltip>
+        </Box>
       ) : (
-        <Typography sx={{ flex: '1 1 100%' }} variant="h6" id="tableTitle" component="div">
+        <Typography variant="h6" id="tableTitle" component="div" marginRight="5px">
           Filter
         </Typography>
       )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <FeatherIcon icon="trash-2" width="18" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FeatherIcon icon="filter" width="18" />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
     </Toolbar>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  onChangeSearchQuery: PropTypes.func.isRequired,
 };
 
-const Collectaion = () => {
+const Collections = () => {
   const { t } = useTranslation();
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const onFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
+  console.log(searchQuery);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -431,7 +398,7 @@ const Collectaion = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.uid);
       setSelected(newSelecteds);
       return;
     }
@@ -471,13 +438,17 @@ const Collectaion = () => {
     setDense(event.target.checked);
   };
 
+  const handleChangeSearchQuery = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <PageContainer title="Collections" description="this is Collections page">
+    <PageContainer title="Collections" description="this is collections page">
       {/* breadcrumb */}
       <Breadcrumb title={t('Collections')} subtitle={t('Collections Information')} />
       {/* end breadcrumb */}
@@ -485,7 +456,11 @@ const Collectaion = () => {
         <CardContent>
           <Box>
             <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar numSelected={selected.length} />
+              <EnhancedTableToolbar
+                numSelected={selected.length}
+                searchQuery={searchQuery}
+                onChangeSearchQuery={handleChangeSearchQuery}
+              />
               <TableContainer>
                 <Table
                   sx={{ minWidth: 750 }}
@@ -502,19 +477,20 @@ const Collectaion = () => {
                   />
                   <TableBody>
                     {stableSort(rows, getComparator(order, orderBy))
+                      // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
-                        const isItemSelected = isSelected(row.name);
+                        const isItemSelected = isSelected(row.uid);
                         const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
                           <TableRow
                             hover
-                            onClick={(event) => handleClick(event, row.name)}
+                            // onClick={(event) => handleClick(event, row.uid)}
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}
-                            key={row.id}
+                            key={row.uid}
                             selected={isItemSelected}
                           >
                             <TableCell padding="checkbox">
@@ -524,54 +500,13 @@ const Collectaion = () => {
                                 inputprops={{
                                   'aria-labelledby': labelId,
                                 }}
+                                onClick={(event) => handleClick(event, row.uid)}
                               />
                             </TableCell>
                             <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Avatar
-                                  src={row.imgsrc}
-                                  alt={row.imgsrc}
-                                  width="35"
-                                  sx={{
-                                    borderRadius: '100%',
-                                  }}
-                                />
-                                <Box
-                                  sx={{
-                                    ml: 2,
-                                  }}
-                                >
-                                  <Typography variant="h6" fontWeight="600">
-                                    {row.name}
-                                  </Typography>
-                                  <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                    {row.email}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {row.pname}
+                              <Typography color="textSecondary" variant="h6">
+                                {row.uid}
                               </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                {row.teams.map((team) => (
-                                  <Avatar
-                                    key={team.id}
-                                    sx={{
-                                      backgroundColor: team.color,
-                                      width: '35px',
-                                      height: '35px',
-                                      color: '#fff',
-                                      ml: '-8px',
-                                    }}
-                                  >
-                                    {team.text}
-                                  </Avatar>
-                                ))}
-                              </Box>
                             </TableCell>
                             <TableCell>
                               <Box display="flex" alignItems="center">
@@ -594,10 +529,9 @@ const Collectaion = () => {
                                 />
                                 <Typography
                                   color="textSecondary"
-                                  variant="body1"
-                                  fontWeight="400"
+                                  variant="h6"
                                   sx={{
-                                    ml: 1,
+                                    ml: 0.5,
                                   }}
                                 >
                                   {row.status}
@@ -605,12 +539,22 @@ const Collectaion = () => {
                               </Box>
                             </TableCell>
                             <TableCell>
-                              <Typography color="textSecondary" variant="body1" fontWeight="400">
-                                {row.weeks}
+                              <Typography color="textSecondary" variant="h6">
+                                {new Date(row.createdAt.$date).toLocaleString()}
                               </Typography>
                             </TableCell>
                             <TableCell>
-                              <Typography variant="h6">${row.budget}k</Typography>
+                              <Box>
+                                <IconButton>
+                                  <RefreshOutlinedIcon />
+                                </IconButton>
+                                <IconButton>
+                                  <AlbumOutlinedIcon />
+                                </IconButton>
+                                <IconButton>
+                                  <DeleteOutlinedIcon />
+                                </IconButton>
+                              </Box>
                             </TableCell>
                           </TableRow>
                         );
@@ -648,4 +592,4 @@ const Collectaion = () => {
   );
 };
 
-export default Collectaion;
+export default Collections;
