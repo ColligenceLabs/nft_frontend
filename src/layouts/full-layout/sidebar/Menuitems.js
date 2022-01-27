@@ -16,6 +16,11 @@ const Menuitems = [
     href: '/dashboard',
   },
   {
+    title: 'Admins',
+    icon: <PeopleAltOutlinedIcon width="20" height="20" />,
+    href: '/admins',
+  },
+  {
     title: 'User',
     icon: <PeopleAltOutlinedIcon width="20" height="20" />,
     href: '/user',
