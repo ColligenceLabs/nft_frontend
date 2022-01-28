@@ -143,6 +143,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
+  const { t } = useTranslation();
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -175,7 +176,7 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               <Typography variant="subtitle1" fontWeight="500">
-                {headCell.label}
+                {t(`${headCell.label}`)}
               </Typography>
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -270,7 +271,7 @@ const NFTs = () => {
 
   return (
     <PageContainer title="NFTs" description="this is NFTs page">
-      <Breadcrumb title={t('NFTs')} subtitle={t('NFTs Information')} />
+      <Breadcrumb title="NFTs" subtitle="NFTs Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar

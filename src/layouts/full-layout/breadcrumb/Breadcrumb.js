@@ -7,6 +7,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import AddIcon from '@mui/icons-material/Add';
 
 const Breadcrumb = ({ subtitle, items, title, children }) => {
+  const { t } = useTranslation();
   return (
     <Grid
       container
@@ -17,7 +18,7 @@ const Breadcrumb = ({ subtitle, items, title, children }) => {
     >
       <Grid item xs={6} sm={6} lg={8}>
         <Typography color="textSecondary" fontWeight="400" variant="h4">
-          {subtitle}
+          {t(`${subtitle}`)}
         </Typography>
 
         <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
@@ -42,7 +43,7 @@ const Breadcrumb = ({ subtitle, items, title, children }) => {
             lineHeight: '1.235',
           }}
         >
-          {title}
+          {t(`${title}`)}
         </Typography>
       </Grid>
       <Grid item xs={6} sm={6} lg={4} display="flex" alignItems="flex-end">
@@ -115,7 +116,6 @@ const LinkButton = ({ title }) => {
         <Button variant="contained" component={Link} to={{ pathname: buttonProps.url }}>
           <AddIcon style={{ marginRight: '5px' }} />
           {t(`${buttonProps.label}`)}
-          {/*<Link to={buttonProps.url}>{t(`${buttonProps.label}`)}</Link>*/}
         </Button>
       )}
     </>

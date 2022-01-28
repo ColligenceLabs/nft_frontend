@@ -223,7 +223,7 @@ const Admins = () => {
 
   return (
     <PageContainer title="Admins" description="this is admins page">
-      <Breadcrumb title={t('Admins')} subtitle={t('Admins Information')} />
+      <Breadcrumb title="Admins" subtitle={t('Admins Information')} />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar

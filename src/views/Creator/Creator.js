@@ -359,7 +359,7 @@ const Creator = () => {
 
   return (
     <PageContainer title={t('Service Title')} description={t('Service Description')}>
-      <Breadcrumb title={t('Creator')} subtitle={t('Creator Information')} />
+      <Breadcrumb title={'Creator'} subtitle={'Creator Information'} />
 
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>

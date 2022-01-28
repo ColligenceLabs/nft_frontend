@@ -237,7 +237,7 @@ const AirDropMint = () => {
             <CustomTextField
               id="description"
               name="description"
-              placeholder="Enter Description"
+              placeholder="Enter description"
               variant="outlined"
               fullWidth
               size="small"

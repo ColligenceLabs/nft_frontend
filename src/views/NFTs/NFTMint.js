@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { Grid, MenuItem, RadioGroup, FormControlLabel, Button, Paper } from '@mui/material';
+import { Grid, MenuItem, Button, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useWeb3React } from '@web3-react/core';
 import { useKip17Contract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
+import { useTranslation } from 'react-i18next';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -22,6 +22,7 @@ const Container = styled(Paper)(({ theme }) => ({
 }));
 
 const NFTMint = () => {
+  const { t } = useTranslation();
   const [mintData, setMintData] = useState({
     name: '',
     creator: '',
@@ -111,11 +112,11 @@ const NFTMint = () => {
       <Container>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="name">Name</CustomFormLabel>
+            <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
             <CustomTextField
               id="name"
               name="name"
-              placeholder="Enter name"
+              placeholder={t('Enter name')}
               variant="outlined"
               fullWidth
               size="small"
@@ -123,7 +124,7 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="creator">Creator</CustomFormLabel>
+            <CustomFormLabel htmlFor="creator">{t('Creator')}</CustomFormLabel>
             <CustomSelect
               labelId="demo-simple-select-label"
               id="creator"
@@ -133,18 +134,18 @@ const NFTMint = () => {
               fullWidth
               size="small"
             >
-              <MenuItem value={0}>Select Creator</MenuItem>
+              <MenuItem value={0}>{t('Select Creator')}</MenuItem>
               <MenuItem value={1}>Own</MenuItem>
               <MenuItem value={2}>Two</MenuItem>
               <MenuItem value={3}>Three</MenuItem>
             </CustomSelect>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="category">Category</CustomFormLabel>
+            <CustomFormLabel htmlFor="category">{t('Category')}</CustomFormLabel>
             <CustomTextField
               id="category"
               name="category"
-              placeholder="Enter Category"
+              placeholder={t('Enter category')}
               variant="outlined"
               fullWidth
               size="small"
@@ -152,7 +153,7 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="collection">Collection</CustomFormLabel>
+            <CustomFormLabel htmlFor="collection">{t('Collection')}</CustomFormLabel>
             <CustomSelect
               labelId="demo-simple-select-label"
               id="collection"
@@ -162,7 +163,7 @@ const NFTMint = () => {
               fullWidth
               size="small"
             >
-              <MenuItem value={0}>Select collection</MenuItem>
+              <MenuItem value={0}>{t('Select Collection')}</MenuItem>
               <MenuItem value={1}>Own</MenuItem>
               <MenuItem value={2}>Two</MenuItem>
               <MenuItem value={3}>Three</MenuItem>
@@ -170,11 +171,11 @@ const NFTMint = () => {
           </Grid>
 
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="content">Content</CustomFormLabel>
+            <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
             <CustomTextField
               id="content"
               name="content"
-              placeholder="Select File"
+              placeholder={t('Select File')}
               variant="outlined"
               fullWidth
               size="small"
@@ -238,11 +239,11 @@ const NFTMint = () => {
           {/*  </Grid>*/}
           {/*</Grid>*/}
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="amount">Amount</CustomFormLabel>
+            <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
             <CustomTextField
               id="amount"
               name="amount"
-              placeholder="Enter Amount"
+              placeholder={t('Enter amount')}
               variant="outlined"
               fullWidth
               size="small"
@@ -250,12 +251,12 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="thumbnail">Thumbnail</CustomFormLabel>
+            <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
             <CustomTextField
               id="thumbnail"
               name="thumbnail"
               value={mintData.thumbnail}
-              placeholder="Select File"
+              placeholder={t('Select File')}
               variant="outlined"
               fullWidth
               size="small"
@@ -283,11 +284,11 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="externalURL">External URL</CustomFormLabel>
+            <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>
             <CustomTextField
               id="externalURL"
               name="externalURL"
-              placeholder="Enter External URL"
+              placeholder={t('Enter external URL')}
               variant="outlined"
               fullWidth
               size="small"
@@ -295,11 +296,11 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="description">Description</CustomFormLabel>
+            <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
             <CustomTextField
               id="description"
               name="description"
-              placeholder="Enter Description"
+              placeholder={t('Enter description')}
               variant="outlined"
               fullWidth
               size="small"
@@ -307,11 +308,11 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="price">Price</CustomFormLabel>
+            <CustomFormLabel htmlFor="price">{t('Price')}</CustomFormLabel>
             <CustomTextField
               id="price"
               name="price"
-              placeholder="Enter Price"
+              placeholder={t('Enter price')}
               variant="outlined"
               fullWidth
               size="small"
@@ -322,10 +323,10 @@ const NFTMint = () => {
           <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
               <StyledButton variant="outlined" size="small">
-                Cancel
+                {t('Cancel')}
               </StyledButton>
               <StyledButton variant="contained" onClick={createNFT}>
-                Confirm
+                {t('Confirm')}
               </StyledButton>
             </div>
           </Grid>
