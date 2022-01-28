@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Grid, MenuItem, RadioGroup, FormControlLabel, Button, Paper } from '@mui/material';
+import { Grid, MenuItem, Button, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +13,7 @@ const StyledButton = styled(Button)`
   width: 100px;
 `;
 
-const Container = styled(Paper)(({ theme }) => ({
+const Container = styled(Paper)(() => ({
   padding: '20px',
   borderRadius: '7px',
 }));
@@ -26,17 +25,17 @@ const AirDropMint = () => {
     creator: '',
     externalURL: '',
     content: '',
-    type: '',
-    quantity: '',
     thumbnail: '',
+    amount: '',
+    collection: '',
     description: '',
   });
 
+  const [collection, setCollection] = useState(0);
   const [selectedContent, setSelectedContent] = useState();
   const [selectedThumbnail, setSelectedThumbnail] = useState();
 
   const [creator, setCreator] = useState(0);
-  const [type, setType] = useState('KIP17');
 
   const contentFileHandler = (event) => {
     setSelectedContent(event.target.files[0]);
@@ -54,6 +53,16 @@ const AirDropMint = () => {
     });
   };
 
+  const handleCollectionChange = (event) => {
+    console.log(event.target);
+    const { name, value } = event.target;
+    setMintData({
+      ...mintData,
+      [name]: value,
+    });
+    setCollection(event.target.value);
+  };
+
   const handleMintDataChange = (event) => {
     const { name, value } = event.target;
 
@@ -69,16 +78,6 @@ const AirDropMint = () => {
       [name]: value,
     });
     setCreator(event.target.value);
-  };
-
-  const handleTypeChange = (event) => {
-    console.log(event.target.name);
-    const { name, value } = event.target;
-    setMintData({
-      ...mintData,
-      [name]: value,
-    });
-    setType(event.target.value);
   };
 
   const onSubmitData = () => {
@@ -124,16 +123,15 @@ const AirDropMint = () => {
             <CustomTextField
               id="content"
               name="content"
+              value={mintData.content}
               placeholder={t('Select File')}
               variant="outlined"
               fullWidth
               size="small"
-              value={mintData.content}
               onChange={handleMintDataChange}
               InputProps={{
                 startAdornment: (
                   <Button
-                    variant="contained"
                     component="label"
                     variant="contained"
                     size="small"
@@ -142,7 +140,6 @@ const AirDropMint = () => {
                     <DriveFileMoveOutlinedIcon fontSize="small" />
                     <input
                       id={'file-input'}
-                      disabled
                       style={{ display: 'none' }}
                       type="file"
                       name="imageFile"
@@ -153,6 +150,7 @@ const AirDropMint = () => {
               }}
             />
           </Grid>
+
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>
             <CustomTextField
@@ -179,7 +177,6 @@ const AirDropMint = () => {
               InputProps={{
                 startAdornment: (
                   <Button
-                    variant="contained"
                     component="label"
                     variant="contained"
                     size="small"
@@ -199,40 +196,69 @@ const AirDropMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <Grid container spacing={2}>
-              <Grid item lg={4} sm={4} xs={12}>
-                <CustomFormLabel>{t('Type')}</CustomFormLabel>
-                <RadioGroup
-                  aria-label="gender"
-                  defaultValue="radio1"
-                  name="type"
-                  value={type}
-                  onChange={handleTypeChange}
-                >
-                  <Grid container>
-                    <Grid item lg={6} sm={6} xs={6}>
-                      <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
-                    </Grid>
-                    <Grid item lg={6} sm={6} xs={6}>
-                      <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
-                    </Grid>
-                  </Grid>
-                </RadioGroup>
-              </Grid>
-              <Grid item lg={8} sm={8} xs={12}>
-                <CustomFormLabel htmlFor="quantity">{t('Quantity')}</CustomFormLabel>
-                <CustomTextField
-                  id="quantity"
-                  name="quantity"
-                  placeholder={t('Enter Quantity')}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  onChange={handleMintDataChange}
-                />
-              </Grid>
-            </Grid>
+            <CustomFormLabel htmlFor="collection">{t('Collection')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="collection"
+              name="collection"
+              value={collection}
+              onChange={handleCollectionChange}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value={0}>{t('Select Collection')}</MenuItem>
+              <MenuItem value={1}>Own</MenuItem>
+              <MenuItem value={2}>Two</MenuItem>
+              <MenuItem value={3}>Three</MenuItem>
+            </CustomSelect>
           </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
+            <CustomTextField
+              id="amount"
+              name="amount"
+              placeholder={t('Enter amount')}
+              variant="outlined"
+              fullWidth
+              size="small"
+              onChange={handleMintDataChange}
+            />
+          </Grid>
+          {/*<Grid item lg={6} md={12} sm={12} xs={12}>*/}
+          {/*  <Grid container spacing={2}>*/}
+          {/*    <Grid item lg={4} sm={4} xs={12}>*/}
+          {/*      <CustomFormLabel>{t('Type')}</CustomFormLabel>*/}
+          {/*      <RadioGroup*/}
+          {/*        aria-label="gender"*/}
+          {/*        defaultValue="radio1"*/}
+          {/*        name="type"*/}
+          {/*        value={type}*/}
+          {/*        onChange={handleTypeChange}*/}
+          {/*      >*/}
+          {/*        <Grid container>*/}
+          {/*          <Grid item lg={6} sm={6} xs={6}>*/}
+          {/*            <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />*/}
+          {/*          </Grid>*/}
+          {/*          <Grid item lg={6} sm={6} xs={6}>*/}
+          {/*            <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />*/}
+          {/*          </Grid>*/}
+          {/*        </Grid>*/}
+          {/*      </RadioGroup>*/}
+          {/*    </Grid>*/}
+          {/*    <Grid item lg={8} sm={8} xs={12}>*/}
+          {/*      <CustomFormLabel htmlFor="quantity">{t('Quantity')}</CustomFormLabel>*/}
+          {/*      <CustomTextField*/}
+          {/*        id="quantity"*/}
+          {/*        name="quantity"*/}
+          {/*        placeholder={t('Enter Quantity')}*/}
+          {/*        variant="outlined"*/}
+          {/*        fullWidth*/}
+          {/*        size="small"*/}
+          {/*        onChange={handleMintDataChange}*/}
+          {/*      />*/}
+          {/*    </Grid>*/}
+          {/*  </Grid>*/}
+          {/*</Grid>*/}
 
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
