@@ -25,8 +25,8 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
-
-const rows = [];
+import { headCells } from './tableConfig';
+import { rows } from './mockData';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -53,39 +53,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-const headCells = [
-  {
-    id: 'no',
-    numeric: false,
-    disablePadding: false,
-    label: 'No',
-  },
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Name',
-  },
-  {
-    id: 'creator',
-    numeric: false,
-    disablePadding: false,
-    label: 'Creator',
-  },
-  {
-    id: 'createdAt',
-    numeric: false,
-    disablePadding: false,
-    label: 'Created at',
-  },
-  {
-    id: 'actions',
-    numeric: false,
-    disablePadding: false,
-    label: 'Actions',
-  },
-];
 
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
@@ -243,7 +210,7 @@ const Collections = () => {
                   // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.uid);
+                    const isItemSelected = isSelected(row.no);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -253,7 +220,7 @@ const Collections = () => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.uid}
+                        key={row.no}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -263,12 +230,27 @@ const Collections = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
-                            onClick={(event) => handleClick(event, row.uid)}
+                            onClick={(event) => handleClick(event, row.no)}
                           />
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.uid}
+                            {row.no}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.creator}
+                          </Typography>
+                        </TableCell>
+                        <TableCell style={{ minWidth: 200 }}>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.createdAt}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -301,12 +283,7 @@ const Collections = () => {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            {new Date(row.createdAt.$date).toLocaleString()}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 200 }}>
                           <Box>
                             <IconButton>
                               <RefreshOutlinedIcon />
