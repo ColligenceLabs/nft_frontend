@@ -26,8 +26,8 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
-
-const rows = [];
+import { headCells } from './tableConfig';
+import { rows } from './mockData';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -54,63 +54,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-const headCells = [
-  {
-    id: 'no',
-    numeric: false,
-    disablePadding: false,
-    label: 'No',
-  },
-  {
-    id: 'seller',
-    numeric: false,
-    disablePadding: false,
-    label: 'Seller',
-  },
-  {
-    id: 'buyer',
-    numeric: false,
-    disablePadding: false,
-    label: 'Buyer',
-  },
-  {
-    id: 'tokenId',
-    numeric: false,
-    disablePadding: false,
-    label: 'Token ID',
-  },
-  {
-    id: 'price',
-    numeric: false,
-    disablePadding: false,
-    label: 'Price',
-  },
-  {
-    id: 'transactionId',
-    numeric: false,
-    disablePadding: false,
-    label: 'Transaction ID',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-  },
-  {
-    id: 'createdAt',
-    numeric: false,
-    disablePadding: false,
-    label: 'Created at',
-  },
-  {
-    id: 'actions',
-    numeric: false,
-    disablePadding: false,
-    label: 'Actions',
-  },
-];
 
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
@@ -268,7 +211,7 @@ const Transaction = () => {
                   // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.uid);
+                    const isItemSelected = isSelected(row.no);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -278,7 +221,7 @@ const Transaction = () => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.uid}
+                        key={row.no}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -288,12 +231,37 @@ const Transaction = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
-                            onClick={(event) => handleClick(event, row.uid)}
+                            onClick={(event) => handleClick(event, row.no)}
                           />
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.uid}
+                            {row.no}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.seller}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.buyer}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.tokenId}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.price}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.transactionId}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -301,14 +269,8 @@ const Transaction = () => {
                             <Box
                               sx={{
                                 backgroundColor:
-                                  row.status === 'Active'
+                                  row.status === 'SUCCESS'
                                     ? (theme) => theme.palette.success.main
-                                    : row.status === 'Pending'
-                                    ? (theme) => theme.palette.warning.main
-                                    : row.status === 'Completed'
-                                    ? (theme) => theme.palette.primary.main
-                                    : row.status === 'Cancel'
-                                    ? (theme) => theme.palette.error.main
                                     : (theme) => theme.palette.secondary.main,
                                 borderRadius: '100%',
                                 height: '10px',
@@ -326,21 +288,15 @@ const Transaction = () => {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 200 }}>
                           <Typography color="textSecondary" variant="h6">
-                            {new Date(row.createdAt.$date).toLocaleString()}
+                            {row.createdAt}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Box>
                             <IconButton>
-                              <RefreshOutlinedIcon />
-                            </IconButton>
-                            <IconButton>
                               <AlbumOutlinedIcon />
-                            </IconButton>
-                            <IconButton>
-                              <DeleteOutlinedIcon />
                             </IconButton>
                           </Box>
                         </TableCell>
