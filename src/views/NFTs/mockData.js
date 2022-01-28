@@ -6,6 +6,7 @@ import img5 from '../../assets/images/users/5.jpg';
 
 export const rows = [
   {
+    no: 1,
     id: '61e647fdf77a7ffb39db13b1',
     name: 'BTWL21 - Dropical [Normal Card]',
     description:
@@ -24,6 +25,7 @@ export const rows = [
     createdAt: '2022. 1. 18. 오후 1:54:21',
   },
   {
+    no: 2,
     id: '61dd0baf6279987120f242f8',
     name: 'POCKETMON Collection',
     description: '파이리',
@@ -41,6 +43,7 @@ export const rows = [
     createdAt: '2022. 1. 18. 오후 1:54:21',
   },
   {
+    no: 3,
     id: '61dfe6fcf77a7ffb39dae3cf',
     name: 'Digimon Colletcion',
     description: 'MetalGreymon',
@@ -58,6 +61,7 @@ export const rows = [
     createdAt: '2022. 1. 18. 오후 1:54:21',
   },
   {
+    no: 4,
     id: '61e62a86f77a7ffb39db0cc0',
     name: 'BTWL21 - Dropical [Normal Card]',
     description:

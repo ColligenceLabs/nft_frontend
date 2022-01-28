@@ -233,9 +233,9 @@ const NFTs = () => {
                             }}
                           />
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6">
-                            {index}
+                            {row.no}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -293,7 +293,7 @@ const NFTs = () => {
                             style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
                           />
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 130 }}>
                           <Typography color="textSecondary" variant="h6">
                             {row.creator}
                           </Typography>
@@ -330,7 +330,7 @@ const NFTs = () => {
                             </Box>
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 130 }}>
                           <Typography color="textSecondary" variant="h6">
                             {row.stopSelling}
                             <Switch
