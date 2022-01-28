@@ -29,8 +29,10 @@ const NFTMint = () => {
     externalURL: '',
     content: '',
     contentFile: '',
-    type: '',
-    quantity: '',
+    // type: '',
+    // quantity: '',
+    collection: '',
+    amount: '',
     thumbnail: '',
     thumbnailFile: '',
     price: '',
@@ -40,6 +42,8 @@ const NFTMint = () => {
   const [selectedThumbnail, setSelectedThumbnail] = useState();
 
   const [creator, setCreator] = useState(0);
+  const [collection, setCollection] = useState(0);
+
   const [type, setType] = useState('KIP17');
 
   const contentFileHandler = (event) => {
@@ -75,6 +79,16 @@ const NFTMint = () => {
       [name]: value,
     });
     setCreator(event.target.value);
+  };
+
+  const handleCollectionChange = (event) => {
+    console.log(event.target);
+    const { name, value } = event.target;
+    setMintData({
+      ...mintData,
+      [name]: value,
+    });
+    setCollection(event.target.value);
   };
 
   const handleTypeChange = (event) => {
@@ -138,17 +152,23 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="externalURL">External URL</CustomFormLabel>
-            <CustomTextField
-              id="externalURL"
-              name="externalURL"
-              placeholder="External URL"
-              variant="outlined"
+            <CustomFormLabel htmlFor="collection">Collection</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="collection"
+              name="collection"
+              value={collection}
+              onChange={handleCollectionChange}
               fullWidth
               size="small"
-              onChange={handleMintDataChange}
-            />
+            >
+              <MenuItem value={0}>Select collection</MenuItem>
+              <MenuItem value={1}>Own</MenuItem>
+              <MenuItem value={2}>Two</MenuItem>
+              <MenuItem value={3}>Three</MenuItem>
+            </CustomSelect>
           </Grid>
+
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel htmlFor="content">Content</CustomFormLabel>
             <CustomTextField
@@ -182,40 +202,52 @@ const NFTMint = () => {
               }}
             />
           </Grid>
+          {/*<Grid item lg={6} md={12} sm={12} xs={12}>*/}
+          {/*  <Grid container spacing={2}>*/}
+          {/*    <Grid item lg={4} sm={4} xs={12}>*/}
+          {/*      <CustomFormLabel>Type</CustomFormLabel>*/}
+          {/*      <RadioGroup*/}
+          {/*        aria-label="gender"*/}
+          {/*        defaultValue="radio1"*/}
+          {/*        name="type"*/}
+          {/*        value={type}*/}
+          {/*        onChange={handleTypeChange}*/}
+          {/*      >*/}
+          {/*        <Grid container>*/}
+          {/*          <Grid item lg={6} sm={6} xs={6}>*/}
+          {/*            <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />*/}
+          {/*          </Grid>*/}
+          {/*          <Grid item lg={6} sm={6} xs={6}>*/}
+          {/*            <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />*/}
+          {/*          </Grid>*/}
+          {/*        </Grid>*/}
+          {/*      </RadioGroup>*/}
+          {/*    </Grid>*/}
+          {/*    <Grid item lg={8} sm={8} xs={12}>*/}
+          {/*      <CustomFormLabel htmlFor="quantity">Quantity</CustomFormLabel>*/}
+          {/*      <CustomTextField*/}
+          {/*        id="quantity"*/}
+          {/*        name="quantity"*/}
+          {/*        placeholder="Enter Quantity"*/}
+          {/*        variant="outlined"*/}
+          {/*        fullWidth*/}
+          {/*        size="small"*/}
+          {/*        onChange={handleMintDataChange}*/}
+          {/*      />*/}
+          {/*    </Grid>*/}
+          {/*  </Grid>*/}
+          {/*</Grid>*/}
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <Grid container spacing={2}>
-              <Grid item lg={4} sm={4} xs={12}>
-                <CustomFormLabel>Type</CustomFormLabel>
-                <RadioGroup
-                  aria-label="gender"
-                  defaultValue="radio1"
-                  name="type"
-                  value={type}
-                  onChange={handleTypeChange}
-                >
-                  <Grid container>
-                    <Grid item lg={6} sm={6} xs={6}>
-                      <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
-                    </Grid>
-                    <Grid item lg={6} sm={6} xs={6}>
-                      <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
-                    </Grid>
-                  </Grid>
-                </RadioGroup>
-              </Grid>
-              <Grid item lg={8} sm={8} xs={12}>
-                <CustomFormLabel htmlFor="quantity">Quantity</CustomFormLabel>
-                <CustomTextField
-                  id="quantity"
-                  name="quantity"
-                  placeholder="Enter Quantity"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  onChange={handleMintDataChange}
-                />
-              </Grid>
-            </Grid>
+            <CustomFormLabel htmlFor="amount">Amount</CustomFormLabel>
+            <CustomTextField
+              id="amount"
+              name="amount"
+              placeholder="Enter Amount"
+              variant="outlined"
+              fullWidth
+              size="small"
+              onChange={handleMintDataChange}
+            />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel htmlFor="thumbnail">Thumbnail</CustomFormLabel>
@@ -251,11 +283,11 @@ const NFTMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="price">Price</CustomFormLabel>
+            <CustomFormLabel htmlFor="externalURL">External URL</CustomFormLabel>
             <CustomTextField
-              id="price"
-              name="price"
-              placeholder="Enter Price"
+              id="externalURL"
+              name="externalURL"
+              placeholder="Enter External URL"
               variant="outlined"
               fullWidth
               size="small"
@@ -268,6 +300,18 @@ const NFTMint = () => {
               id="description"
               name="description"
               placeholder="Enter Description"
+              variant="outlined"
+              fullWidth
+              size="small"
+              onChange={handleMintDataChange}
+            />
+          </Grid>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
+            <CustomFormLabel htmlFor="price">Price</CustomFormLabel>
+            <CustomTextField
+              id="price"
+              name="price"
+              placeholder="Enter Price"
               variant="outlined"
               fullWidth
               size="small"
