@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { styled, alpha } from '@mui/material/styles';
 import {
   Box,
   Table,
@@ -12,17 +11,12 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Toolbar,
   Paper,
   IconButton,
-  Tooltip,
   FormControlLabel,
-  Card,
-  CardContent,
   Typography,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import FeatherIcon from 'feather-icons-react';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -30,7 +24,6 @@ import PageContainer from '../../components/container/PageContainer';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
-import Search from '../../components/Search/Search';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 
 const rows = [
@@ -134,7 +127,6 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               <Typography variant="subtitle1" fontWeight="500">
-                {/*{t`${headCell.label}`}*/}
                 {t(`${headCell.label}`)}
               </Typography>
               {orderBy === headCell.id ? (
@@ -227,133 +219,125 @@ const Admins = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <PageContainer title="Admins" description="this is admins page">
-      {/* breadcrumb */}
       <Breadcrumb title={t('Admins')} subtitle={t('Admins Information')} />
-      {/* end breadcrumb */}
-      <Card>
-        <CardContent>
-          <Box>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar
+      <Box>
+        <Paper sx={{ width: '100%', mb: 2 }}>
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            searchQuery={searchQuery}
+            onChangeSearchQuery={handleChangeSearchQuery}
+          />
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={dense ? 'small' : 'medium'}
+            >
+              <EnhancedTableHead
                 numSelected={selected.length}
-                searchQuery={searchQuery}
-                onChangeSearchQuery={handleChangeSearchQuery}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
               />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? 'small' : 'medium'}
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
-                  />
-                  <TableBody>
-                    {stableSort(rows, getComparator(order, orderBy))
-                      // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.name);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+              <TableBody>
+                {stableSort(rows, getComparator(order, orderBy))
+                  // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            // onClick={(event) => handleClick(event, row.name)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.name}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <CustomCheckbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputprops={{
-                                  'aria-labelledby': labelId,
-                                }}
-                                onClick={(event) => handleClick(event, row.name)}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                {row.name}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                {row.email}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                {row.level}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                {row.status}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                <Box>
-                                  <IconButton>
-                                    <RefreshOutlinedIcon />
-                                  </IconButton>
-                                  <IconButton>
-                                    <AlbumOutlinedIcon />
-                                  </IconButton>
-                                  <IconButton>
-                                    <DeleteOutlinedIcon />
-                                  </IconButton>
-                                </Box>
-                              </Typography>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {emptyRows > 0 && (
+                    return (
                       <TableRow
-                        style={{
-                          height: (dense ? 33 : 53) * emptyRows,
-                        }}
+                        hover
+                        // onClick={(event) => handleClick(event, row.name)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.name}
+                        selected={isItemSelected}
                       >
-                        <TableCell colSpan={6} />
+                        <TableCell padding="checkbox">
+                          <CustomCheckbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputprops={{
+                              'aria-labelledby': labelId,
+                            }}
+                            onClick={(event) => handleClick(event, row.name)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.email}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.level}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.status}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            <Box>
+                              <IconButton>
+                                <RefreshOutlinedIcon />
+                              </IconButton>
+                              <IconButton>
+                                <AlbumOutlinedIcon />
+                              </IconButton>
+                              <IconButton>
+                                <DeleteOutlinedIcon />
+                              </IconButton>
+                            </Box>
+                          </Typography>
+                        </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Paper>
-            <FormControlLabel
-              control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
-            />
-          </Box>
-        </CardContent>
-      </Card>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
+        />
+      </Box>
     </PageContainer>
   );
 };

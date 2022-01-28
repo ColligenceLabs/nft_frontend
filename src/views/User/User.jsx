@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { styled, alpha } from '@mui/material/styles';
 import {
   Box,
   Table,
@@ -12,19 +11,12 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Toolbar,
   Paper,
   IconButton,
-  Tooltip,
   FormControlLabel,
-  Card,
-  CardContent,
   Typography,
-  Avatar,
-  InputBase,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import FeatherIcon from 'feather-icons-react';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -32,7 +24,6 @@ import PageContainer from '../../components/container/PageContainer';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
-import Search from '../../components/Search/Search';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 
 const rows = [
@@ -389,151 +380,143 @@ const User = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <PageContainer title="User" description="this is users page">
-      {/* breadcrumb */}
       <Breadcrumb title={t('User')} subtitle={t('User Information')} />
-      {/* end breadcrumb */}
-      <Card>
-        <CardContent>
-          <Box>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-              <EnhancedTableToolbar
+      <Box>
+        <Paper sx={{ width: '100%', mb: 2 }}>
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            searchQuery={searchQuery}
+            onChangeSearchQuery={handleChangeSearchQuery}
+          />
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={dense ? 'small' : 'medium'}
+            >
+              <EnhancedTableHead
                 numSelected={selected.length}
-                searchQuery={searchQuery}
-                onChangeSearchQuery={handleChangeSearchQuery}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
               />
-              <TableContainer>
-                <Table
-                  sx={{ minWidth: 750 }}
-                  aria-labelledby="tableTitle"
-                  size={dense ? 'small' : 'medium'}
-                >
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
-                  />
-                  <TableBody>
-                    {stableSort(rows, getComparator(order, orderBy))
-                      // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
-                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.uid);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+              <TableBody>
+                {stableSort(rows, getComparator(order, orderBy))
+                  // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.uid);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            // onClick={(event) => handleClick(event, row.uid)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.uid}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <CustomCheckbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputprops={{
-                                  'aria-labelledby': labelId,
-                                }}
-                                onClick={(event) => handleClick(event, row.uid)}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                {row.uid}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Box display="flex" alignItems="center">
-                                <Box
-                                  sx={{
-                                    backgroundColor:
-                                      row.status === 'Active'
-                                        ? (theme) => theme.palette.success.main
-                                        : row.status === 'Pending'
-                                        ? (theme) => theme.palette.warning.main
-                                        : row.status === 'Completed'
-                                        ? (theme) => theme.palette.primary.main
-                                        : row.status === 'Cancel'
-                                        ? (theme) => theme.palette.error.main
-                                        : (theme) => theme.palette.secondary.main,
-                                    borderRadius: '100%',
-                                    height: '10px',
-                                    width: '10px',
-                                  }}
-                                />
-                                <Typography
-                                  color="textSecondary"
-                                  variant="h6"
-                                  sx={{
-                                    ml: 0.5,
-                                  }}
-                                >
-                                  {row.status}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>
-                              <Typography color="textSecondary" variant="h6">
-                                {new Date(row.createdAt.$date).toLocaleString()}
-                              </Typography>
-                            </TableCell>
-                            <TableCell>
-                              <Box>
-                                <IconButton>
-                                  <RefreshOutlinedIcon />
-                                </IconButton>
-                                <IconButton>
-                                  <AlbumOutlinedIcon />
-                                </IconButton>
-                                <IconButton>
-                                  <DeleteOutlinedIcon />
-                                </IconButton>
-                              </Box>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {emptyRows > 0 && (
+                    return (
                       <TableRow
-                        style={{
-                          height: (dense ? 33 : 53) * emptyRows,
-                        }}
+                        hover
+                        // onClick={(event) => handleClick(event, row.uid)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.uid}
+                        selected={isItemSelected}
                       >
-                        <TableCell colSpan={6} />
+                        <TableCell padding="checkbox">
+                          <CustomCheckbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputprops={{
+                              'aria-labelledby': labelId,
+                            }}
+                            onClick={(event) => handleClick(event, row.uid)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {row.uid}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box display="flex" alignItems="center">
+                            <Box
+                              sx={{
+                                backgroundColor:
+                                  row.status === 'Active'
+                                    ? (theme) => theme.palette.success.main
+                                    : row.status === 'Pending'
+                                    ? (theme) => theme.palette.warning.main
+                                    : row.status === 'Completed'
+                                    ? (theme) => theme.palette.primary.main
+                                    : row.status === 'Cancel'
+                                    ? (theme) => theme.palette.error.main
+                                    : (theme) => theme.palette.secondary.main,
+                                borderRadius: '100%',
+                                height: '10px',
+                                width: '10px',
+                              }}
+                            />
+                            <Typography
+                              color="textSecondary"
+                              variant="h6"
+                              sx={{
+                                ml: 0.5,
+                              }}
+                            >
+                              {row.status}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {new Date(row.createdAt.$date).toLocaleString()}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Box>
+                            <IconButton>
+                              <RefreshOutlinedIcon />
+                            </IconButton>
+                            <IconButton>
+                              <AlbumOutlinedIcon />
+                            </IconButton>
+                            <IconButton>
+                              <DeleteOutlinedIcon />
+                            </IconButton>
+                          </Box>
+                        </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, 25]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-              />
-            </Paper>
-            <FormControlLabel
-              control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
-              label="Dense padding"
-            />
-          </Box>
-        </CardContent>
-      </Card>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<CustomSwitch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
+        />
+      </Box>
     </PageContainer>
   );
 };
