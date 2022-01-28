@@ -23,11 +23,12 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import { rows } from './data';
+import { rows } from './mockData';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
+import { headCells } from './tableConfig';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -54,93 +55,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-const headCells = [
-  {
-    id: 'no',
-    numeric: false,
-    disablePadding: false,
-    label: 'No',
-    width: 10,
-  },
-  {
-    id: 'id',
-    numeric: false,
-    disablePadding: false,
-    label: 'ID',
-    width: 10,
-  },
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Name',
-    width: 10,
-  },
-  {
-    id: 'description',
-    numeric: false,
-    disablePadding: false,
-    label: 'Description',
-    width: 10,
-  },
-  {
-    id: 'collection',
-    numeric: false,
-    disablePadding: false,
-    label: 'Collection',
-    width: 10,
-  },
-  {
-    id: 'sellingQuantity',
-    numeric: false,
-    disablePadding: false,
-    label: 'Selling Quantity',
-    width: 10,
-  },
-  {
-    id: 'creator',
-    numeric: false,
-    disablePadding: false,
-    label: 'Creator',
-    width: 10,
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-    width: 10,
-  },
-  {
-    id: 'stopSelling',
-    numeric: false,
-    disablePadding: false,
-    label: 'Stop Selling',
-    width: 10,
-  },
-  {
-    id: 'saleDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Sale Date',
-    width: 10,
-  },
-  {
-    id: 'saleDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Sale Date',
-    width: 10,
-  },
-  {
-    id: 'createdAt',
-    numeric: false,
-    disablePadding: false,
-    label: 'Created at',
-    width: 10,
-  },
-];
 
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
