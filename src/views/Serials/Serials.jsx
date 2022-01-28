@@ -232,27 +232,27 @@ const Serials = () => {
                           />
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.no}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 150 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.nftName}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 170 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.serialIndex}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 100 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.owner}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 150 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.tokenId}
                           </Typography>
