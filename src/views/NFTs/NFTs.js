@@ -300,46 +300,41 @@ const NFTs = () => {
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            <Box display="flex" alignItems="center">
-                              <Box
-                                sx={{
-                                  backgroundColor:
-                                    row.status === 'Active'
-                                      ? (theme) => theme.palette.success.main
-                                      : row.status === 'Pending'
-                                      ? (theme) => theme.palette.warning.main
-                                      : row.status === 'Completed'
-                                      ? (theme) => theme.palette.primary.main
-                                      : row.status === 'Cancel'
-                                      ? (theme) => theme.palette.error.main
-                                      : (theme) => theme.palette.secondary.main,
-                                  borderRadius: '100%',
-                                  height: '10px',
-                                  width: '10px',
-                                }}
-                              />
-                              <Typography
-                                color="textSecondary"
-                                variant="h6"
-                                sx={{
-                                  ml: 0.5,
-                                }}
-                              >
-                                {row.status}
-                              </Typography>
-                            </Box>
-                          </Typography>
+                          <Box display="flex" alignItems="center">
+                            <Box
+                              sx={{
+                                backgroundColor:
+                                  row.status === 'Active'
+                                    ? (theme) => theme.palette.success.main
+                                    : row.status === 'Pending'
+                                    ? (theme) => theme.palette.warning.main
+                                    : row.status === 'Completed'
+                                    ? (theme) => theme.palette.primary.main
+                                    : row.status === 'Cancel'
+                                    ? (theme) => theme.palette.error.main
+                                    : (theme) => theme.palette.secondary.main,
+                                borderRadius: '100%',
+                                height: '10px',
+                                width: '10px',
+                              }}
+                            />
+                            <Typography
+                              color="textSecondary"
+                              variant="h6"
+                              sx={{
+                                ml: 0.5,
+                              }}
+                            >
+                              {row.status}
+                            </Typography>
+                          </Box>
                         </TableCell>
                         <TableCell style={{ minWidth: 130 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.stopSelling}
-                            <Switch
-                              checked={row.stopSelling}
-                              // onChange={handleChange}
-                              inputProps={{ 'aria-label': 'controlled' }}
-                            />
-                          </Typography>
+                          <Switch
+                            checked={row.stopSelling}
+                            // onChange={handleChange}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                          />
                         </TableCell>
                         <TableCell style={{ minWidth: 200 }}>
                           <Typography color="textSecondary" variant="h6">

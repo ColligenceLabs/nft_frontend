@@ -70,17 +70,17 @@ export const headCells = [
     width: 10,
   },
   {
-    id: 'saleDate',
-    numeric: false,
-    disablePadding: false,
-    label: 'Sale Date',
-    width: 10,
-  },
-  {
     id: 'createdAt',
     numeric: false,
     disablePadding: false,
     label: 'Created at',
+    width: 10,
+  },
+  {
+    id: 'actions',
+    numeric: false,
+    disablePadding: false,
+    label: 'Actions',
     width: 10,
   },
 ];
