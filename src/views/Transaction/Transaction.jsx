@@ -234,7 +234,7 @@ const Transaction = () => {
                             onClick={(event) => handleClick(event, row.no)}
                           />
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6">
                             {row.no}
                           </Typography>
@@ -249,12 +249,12 @@ const Transaction = () => {
                             {row.buyer}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 150 }}>
                           <Typography color="textSecondary" variant="h6">
                             {row.tokenId}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6">
                             {row.price}
                           </Typography>
@@ -293,7 +293,7 @@ const Transaction = () => {
                             {row.createdAt}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Box>
                             <IconButton>
                               <AlbumOutlinedIcon />
