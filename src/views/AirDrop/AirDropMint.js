@@ -8,6 +8,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
+import { useTranslation } from 'react-i18next';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -19,6 +20,7 @@ const Container = styled(Paper)(({ theme }) => ({
 }));
 
 const AirDropMint = () => {
+  const { t } = useTranslation();
   const [mintData, setMintData] = useState({
     name: '',
     creator: '',
@@ -89,11 +91,11 @@ const AirDropMint = () => {
       <Container>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="name">Name</CustomFormLabel>
+            <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
             <CustomTextField
               id="name"
               name="name"
-              placeholder="Enter name"
+              placeholder={t('Enter name')}
               variant="outlined"
               fullWidth
               size="small"
@@ -101,7 +103,7 @@ const AirDropMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="creator">Creator</CustomFormLabel>
+            <CustomFormLabel htmlFor="creator">{t('Creator')}</CustomFormLabel>
             <CustomSelect
               labelId="demo-simple-select-label"
               id="creator"
@@ -111,18 +113,18 @@ const AirDropMint = () => {
               fullWidth
               size="small"
             >
-              <MenuItem value={0}>Select Creator</MenuItem>
+              <MenuItem value={0}>{t('Select Creator')}</MenuItem>
               <MenuItem value={1}>Own</MenuItem>
               <MenuItem value={2}>Two</MenuItem>
               <MenuItem value={3}>Three</MenuItem>
             </CustomSelect>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="content">Content</CustomFormLabel>
+            <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
             <CustomTextField
               id="content"
               name="content"
-              placeholder="Select File"
+              placeholder={t('Select File')}
               variant="outlined"
               fullWidth
               size="small"
@@ -152,11 +154,11 @@ const AirDropMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="externalURL">External URL</CustomFormLabel>
+            <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>
             <CustomTextField
               id="externalURL"
               name="externalURL"
-              placeholder="External URL"
+              placeholder={t('External URL')}
               variant="outlined"
               fullWidth
               size="small"
@@ -164,12 +166,12 @@ const AirDropMint = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="thumbnail">Thumbnail</CustomFormLabel>
+            <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
             <CustomTextField
               id="thumbnail"
               name="thumbnail"
               value={mintData.thumbnail}
-              placeholder="Select File"
+              placeholder={t('Select File')}
               variant="outlined"
               fullWidth
               size="small"
@@ -199,7 +201,7 @@ const AirDropMint = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <Grid container spacing={2}>
               <Grid item lg={4} sm={4} xs={12}>
-                <CustomFormLabel>Type</CustomFormLabel>
+                <CustomFormLabel>{t('Type')}</CustomFormLabel>
                 <RadioGroup
                   aria-label="gender"
                   defaultValue="radio1"
@@ -218,11 +220,11 @@ const AirDropMint = () => {
                 </RadioGroup>
               </Grid>
               <Grid item lg={8} sm={8} xs={12}>
-                <CustomFormLabel htmlFor="quantity">Quantity</CustomFormLabel>
+                <CustomFormLabel htmlFor="quantity">{t('Quantity')}</CustomFormLabel>
                 <CustomTextField
                   id="quantity"
                   name="quantity"
-                  placeholder="Enter Quantity"
+                  placeholder={t('Enter Quantity')}
                   variant="outlined"
                   fullWidth
                   size="small"
@@ -233,11 +235,11 @@ const AirDropMint = () => {
           </Grid>
 
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="description">Description</CustomFormLabel>
+            <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
             <CustomTextField
               id="description"
               name="description"
-              placeholder="Enter description"
+              placeholder={t('Enter description')}
               variant="outlined"
               fullWidth
               size="small"
@@ -248,10 +250,10 @@ const AirDropMint = () => {
           <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
               <StyledButton variant="outlined" size="small">
-                Cancel
+                {t('Cancel')}
               </StyledButton>
               <StyledButton variant="contained" onClick={onSubmitData}>
-                Confirm
+                {t('Confirm')}
               </StyledButton>
             </div>
           </Grid>

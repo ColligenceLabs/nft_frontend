@@ -1,7 +1,8 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { InputBase } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const SearchContainer = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -45,6 +46,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Search = ({ searchQuery, onChangeSearchQuery }) => {
+  const { t } = useTranslation();
   return (
     <SearchContainer>
       <SearchIconWrapper>
@@ -53,7 +55,7 @@ const Search = ({ searchQuery, onChangeSearchQuery }) => {
       <StyledInputBase
         value={searchQuery}
         onChange={onChangeSearchQuery}
-        placeholder="Search…"
+        placeholder={t('Search…')}
         inputProps={{ 'aria-label': 'search' }}
       />
     </SearchContainer>

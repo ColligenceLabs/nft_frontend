@@ -255,7 +255,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           >
             <Box display="flex" alignItems="center">
               <Typography variant="h4" fontWeight="500">
-                User Profile
+                {t('User Profile')}
               </Typography>
             </Box>
           </Box>
@@ -279,7 +279,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
                 dispatch(logout());
               }}
             >
-              Logout
+              {t('Logout')}
             </Button>
           </Link>
         </Menu>

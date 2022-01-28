@@ -21,226 +21,9 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import img1 from '../../assets/images/users/1.jpg';
-import img2 from '../../assets/images/users/2.jpg';
-import img3 from '../../assets/images/users/3.jpg';
-import img4 from '../../assets/images/users/4.jpg';
-import img5 from '../../assets/images/users/5.jpg';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 
-const rows = [
-  {
-    id: '1',
-    imgsrc: img1,
-    name: 'Sunil Joshi',
-    email: 'sunil@gmail.com',
-    pname: 'Elite Admin',
-    teams: [
-      {
-        id: '1.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-      {
-        id: '1.2',
-        color: 'error.main',
-        text: 'D',
-      },
-    ],
-    status: 'Active',
-    weeks: '11',
-    budget: '3.9',
-  },
-  {
-    id: '2',
-    imgsrc: img2,
-    name: 'Andrew McDownland',
-    email: 'andrew@gmail.com',
-    pname: 'Real Homes WP Theme',
-    teams: [
-      {
-        id: '2.1',
-        color: 'primary.main',
-        text: 'A',
-      },
-      {
-        id: '2.2',
-        color: 'warning.main',
-        text: 'X',
-      },
-      {
-        id: '2.3',
-        color: 'secondary.main',
-        text: 'N',
-      },
-    ],
-    status: 'Pending',
-    weeks: '19',
-    budget: '24.5',
-  },
-  {
-    id: '3',
-    imgsrc: img3,
-    name: 'Christopher Jamil',
-    email: 'jamil@gmail.com',
-    pname: 'MedicalPro WP Theme',
-    teams: [
-      {
-        id: '3.1',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Completed',
-    weeks: '30',
-    budget: '12.8',
-  },
-  {
-    id: '4',
-    imgsrc: img4,
-    name: 'Nirav Joshi',
-    email: 'nirav@gmail.com',
-    pname: 'Hosting Press HTML',
-    teams: [
-      {
-        id: '4.1',
-        color: 'primary.main',
-        text: 'Y',
-      },
-      {
-        id: '4.2',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Active',
-    weeks: '40',
-    budget: '2.4',
-  },
-  {
-    id: '5',
-    imgsrc: img5,
-    name: 'Micheal Doe',
-    email: 'micheal@gmail.com',
-    pname: 'Helping Hands WP Theme',
-    teams: [
-      {
-        id: '5.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-    ],
-    status: 'Cancel',
-    weeks: '1',
-    budget: '9.3',
-  },
-  {
-    id: '6',
-    imgsrc: img4,
-    name: 'Nirav Joshi',
-    email: 'nirav@gmail.com',
-    pname: 'Hosting Press HTML',
-    teams: [
-      {
-        id: '6.1',
-        color: 'primary.main',
-        text: 'Y',
-      },
-      {
-        id: '6.2',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Active',
-    weeks: '16',
-    budget: '2.4',
-  },
-  {
-    id: '7',
-    imgsrc: img1,
-    name: 'Sunil Joshi',
-    email: 'sunil@gmail.com',
-    pname: 'Elite Admin',
-    teams: [
-      {
-        id: '7.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-      {
-        id: '7.2',
-        color: 'error.main',
-        text: 'D',
-      },
-    ],
-    status: 'Active',
-    weeks: '12',
-    budget: '3.9',
-  },
-  {
-    id: '8',
-    imgsrc: img2,
-    name: 'Andrew McDownland',
-    email: 'andrew@gmail.com',
-    pname: 'Real Homes WP Theme',
-    teams: [
-      {
-        id: '8.1',
-        color: 'primary.main',
-        text: 'A',
-      },
-      {
-        id: '8.2',
-        color: 'warning.main',
-        text: 'X',
-      },
-      {
-        id: '8.3',
-        color: 'secondary.main',
-        text: 'N',
-      },
-    ],
-    status: 'Pending',
-    weeks: '14',
-    budget: '24.5',
-  },
-  {
-    id: '9',
-    imgsrc: img3,
-    name: 'Christopher Jamil',
-    email: 'jamil@gmail.com',
-    pname: 'MedicalPro WP Theme',
-    teams: [
-      {
-        id: '9.1',
-        color: 'error.main',
-        text: 'X',
-      },
-    ],
-    status: 'Completed',
-    weeks: '12',
-    budget: '12.8',
-  },
-
-  {
-    id: '10',
-    imgsrc: img5,
-    name: 'Micheal Doe',
-    email: 'micheal@gmail.com',
-    pname: 'Helping Hands WP Theme',
-    teams: [
-      {
-        id: '10.1',
-        color: 'secondary.main',
-        text: 'S',
-      },
-    ],
-    status: 'Cancel',
-    weeks: '9',
-    budget: '9.3',
-  },
-];
+const rows = [];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -270,22 +53,34 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'no',
     numeric: false,
     disablePadding: false,
-    label: 'Team Lead',
+    label: 'No',
   },
   {
-    id: 'pname',
+    id: 'nftName',
     numeric: false,
     disablePadding: false,
-    label: 'Project Name',
+    label: 'NFT Name',
   },
   {
-    id: 'team',
+    id: 'serialIndex',
     numeric: false,
     disablePadding: false,
-    label: 'Team',
+    label: 'Serial Index',
+  },
+  {
+    id: 'owner',
+    numeric: false,
+    disablePadding: false,
+    label: 'Owner',
+  },
+  {
+    id: 'tokenId',
+    numeric: false,
+    disablePadding: false,
+    label: 'Token ID',
   },
   {
     id: 'status',
@@ -294,20 +89,21 @@ const headCells = [
     label: 'Status',
   },
   {
-    id: 'weeks',
+    id: 'createdAt',
     numeric: false,
     disablePadding: false,
-    label: 'Weeks',
+    label: 'Created at',
   },
   {
-    id: 'budget',
+    id: 'actions',
     numeric: false,
     disablePadding: false,
-    label: 'Budget',
+    label: 'Actions',
   },
 ];
 
 function EnhancedTableHead(props) {
+  const { t } = useTranslation();
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -339,7 +135,7 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               <Typography variant="subtitle1" fontWeight="500">
-                {headCell.label}
+                {t(`${headCell.label}`)}
               </Typography>
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -434,7 +230,7 @@ const Serials = () => {
 
   return (
     <PageContainer title="Serials" description="this is Serials page">
-      <Breadcrumb title={t('Serials')} subtitle={t('Serials Information')} />
+      <Breadcrumb title="Serials" subtitle="Serials Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar

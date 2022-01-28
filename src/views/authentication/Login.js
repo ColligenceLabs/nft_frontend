@@ -7,9 +7,9 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import PageContainer from '../../components/container/PageContainer';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { clearMessage } from '../../redux/slices/message';
-import { login, logout } from '../../redux/slices/auth';
+import { login } from '../../redux/slices/auth';
 import { useNavigate } from 'react-router';
 
 const Login = () => {

@@ -8,9 +8,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
-import { useWeb3React } from '@web3-react/core';
-import { useKip17Contract } from '../../hooks/useContract';
-import useNFT from '../../hooks/useNFT';
+import { useTranslation } from 'react-i18next';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -22,6 +20,7 @@ const Container = styled(Paper)(({ theme }) => ({
 }));
 
 const CollectionCreate = () => {
+  const { t } = useTranslation();
   const [collectionData, setCollectionData] = useState({
     name: '',
     creator: '',
@@ -33,10 +32,7 @@ const CollectionCreate = () => {
     symbol: '',
   });
   const [selectedCoverImage, setSelectedCoverImage] = useState();
-
   const [creator, setCreator] = useState(0);
-  const [collection, setCollection] = useState(0);
-
   const [type, setType] = useState('KIP17');
 
   const contentFileHandler = (event) => {
@@ -75,20 +71,17 @@ const CollectionCreate = () => {
     setType(event.target.value);
   };
 
-  const { account } = useWeb3React();
-  const kip17Contract = useKip17Contract();
-
   return (
     <PageContainer title="Collection Create" description="this is Collection Create Form page">
       <Breadcrumb title="Collection Create" subtitle="Collection Create Information" />
       <Container>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="name">Name</CustomFormLabel>
+            <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
             <CustomTextField
               id="name"
               name="name"
-              placeholder="Enter name"
+              placeholder={t('Enter name')}
               variant="outlined"
               fullWidth
               size="small"
@@ -96,7 +89,7 @@ const CollectionCreate = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="creator">Creator</CustomFormLabel>
+            <CustomFormLabel htmlFor="creator">{t('Creator')}</CustomFormLabel>
             <CustomSelect
               labelId="demo-simple-select-label"
               id="creator"
@@ -106,18 +99,18 @@ const CollectionCreate = () => {
               fullWidth
               size="small"
             >
-              <MenuItem value={0}>Select Creator</MenuItem>
+              <MenuItem value={0}>{t('Select Creator')}</MenuItem>
               <MenuItem value={1}>Own</MenuItem>
               <MenuItem value={2}>Two</MenuItem>
               <MenuItem value={3}>Three</MenuItem>
             </CustomSelect>
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="category">Category</CustomFormLabel>
+            <CustomFormLabel htmlFor="category">{t('Category')}</CustomFormLabel>
             <CustomTextField
               id="category"
               name="category"
-              placeholder="Enter Category"
+              placeholder={t('Enter category')}
               variant="outlined"
               fullWidth
               size="small"
@@ -126,11 +119,11 @@ const CollectionCreate = () => {
           </Grid>
 
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="coverImage">Cover Image</CustomFormLabel>
+            <CustomFormLabel htmlFor="coverImage">{t('Cover Image')}</CustomFormLabel>
             <CustomTextField
               id="coverImage"
               name="coverImage"
-              placeholder="Select File"
+              placeholder={t('Select File')}
               variant="outlined"
               fullWidth
               size="small"
@@ -162,7 +155,7 @@ const CollectionCreate = () => {
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <Grid container spacing={2}>
               <Grid item lg={4} sm={4} xs={12}>
-                <CustomFormLabel>Type</CustomFormLabel>
+                <CustomFormLabel>{t('Type')}</CustomFormLabel>
                 <RadioGroup
                   aria-label="gender"
                   defaultValue="radio1"
@@ -181,11 +174,11 @@ const CollectionCreate = () => {
                 </RadioGroup>
               </Grid>
               <Grid item lg={8} sm={8} xs={12}>
-                <CustomFormLabel htmlFor="quantity">Quantity</CustomFormLabel>
+                <CustomFormLabel htmlFor="quantity">{t('Quantity')}</CustomFormLabel>
                 <CustomTextField
                   id="quantity"
                   name="quantity"
-                  placeholder="Enter Quantity"
+                  placeholder={t('Enter quantity')}
                   variant="outlined"
                   fullWidth
                   size="small"
@@ -196,11 +189,11 @@ const CollectionCreate = () => {
           </Grid>
 
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="contractName">Contract Name</CustomFormLabel>
+            <CustomFormLabel htmlFor="contractName">{t('Contract Name')}</CustomFormLabel>
             <CustomTextField
               id="contractName"
               name="contractName"
-              placeholder="Enter Contract Name"
+              placeholder={t('Enter contract name')}
               variant="outlined"
               fullWidth
               size="small"
@@ -208,11 +201,11 @@ const CollectionCreate = () => {
             />
           </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="symbol">Symbol</CustomFormLabel>
+            <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
             <CustomTextField
               id="symbol"
               name="symbol"
-              placeholder="Enter Symbol"
+              placeholder={t('Enter symbol')}
               variant="outlined"
               fullWidth
               size="small"
@@ -223,10 +216,10 @@ const CollectionCreate = () => {
           <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
               <StyledButton variant="outlined" size="small">
-                Cancel
+                {t('Cancel')}
               </StyledButton>
               <StyledButton variant="contained" onClick={() => console.log()}>
-                Confirm
+                {t('Confirm')}
               </StyledButton>
             </div>
           </Grid>

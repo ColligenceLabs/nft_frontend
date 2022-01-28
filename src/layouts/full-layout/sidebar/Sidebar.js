@@ -52,7 +52,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                       fontWeight="500"
                       sx={{ my: 2, mt: 4, opacity: '0.4' }}
                     >
-                      {item.subheader}
+                      {t(`${item.subheader}`)}
                     </Typography>
                   </li>
                 );
@@ -122,7 +122,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
                                 {/*<FeatherIcon icon={child.icon} width="20" height="20" />*/}
                                 {child.icon}
                               </ListItemIcon>
-                              <ListItemText>{child.title}</ListItemText>
+                              <ListItemText>{t(`${child.title}`)}</ListItemText>
                             </ListItem>
                           );
                         })}

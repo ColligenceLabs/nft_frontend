@@ -4,8 +4,10 @@ import { alpha } from '@mui/material/styles';
 import Search from '../Search/Search';
 import PropTypes from 'prop-types';
 import FeatherIcon from 'feather-icons-react';
+import { useTranslation } from 'react-i18next';
 
 const EnhancedTableToolbar = (props) => {
+  const { t } = useTranslation();
   const { numSelected, searchQuery, onChangeSearchQuery } = props;
 
   return (
@@ -34,7 +36,7 @@ const EnhancedTableToolbar = (props) => {
           }}
         >
           <Typography color="inherit" variant="subtitle2" component="div">
-            {numSelected} selected
+            {numSelected} {t('selected')}
           </Typography>
           <Tooltip title="Delete">
             <IconButton>
@@ -44,7 +46,7 @@ const EnhancedTableToolbar = (props) => {
         </Box>
       ) : (
         <Typography variant="h6" id="tableTitle" component="div" marginRight="5px">
-          Filter
+          {t('Filter')}
         </Typography>
       )}
 
