@@ -228,12 +228,12 @@ const Reward = () => {
                           />
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.no}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.name}
                           </Typography>
@@ -243,22 +243,22 @@ const Reward = () => {
                             {row.description}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 120 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.tpAmount}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.quantity}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 150 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.remainingAmount}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.type}
                           </Typography>
@@ -294,7 +294,7 @@ const Reward = () => {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 200 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.createdAt}
                           </Typography>
