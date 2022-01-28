@@ -215,7 +215,7 @@ const Serials = () => {
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.no)}
+                        // onClick={(event) => handleClick(event, row.no)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -229,6 +229,7 @@ const Serials = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
+                            onClick={(event) => handleClick(event, row.no)}
                           />
                         </TableCell>
 

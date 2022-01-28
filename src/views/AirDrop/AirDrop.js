@@ -213,7 +213,7 @@ const AirDrop = () => {
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.no)}
+                        // onClick={(event) => handleClick(event, row.no)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -227,6 +227,7 @@ const AirDrop = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
+                            onClick={(event) => handleClick(event, row.no)}
                           />
                         </TableCell>
                         <TableCell style={{ minWidth: 90 }}>
