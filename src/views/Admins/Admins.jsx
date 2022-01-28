@@ -25,15 +25,8 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
-
-const rows = [
-  {
-    name: 'admin',
-    email: 'admin@google.com',
-    level: 'admin',
-    status: 'OK',
-  },
-];
+import { headCells } from './tableConfig';
+import { rows } from './mockData';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -60,39 +53,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-const headCells = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Name',
-  },
-  {
-    id: 'email',
-    numeric: false,
-    disablePadding: false,
-    label: 'Email',
-  },
-  {
-    id: 'level',
-    numeric: false,
-    disablePadding: false,
-    label: 'Level',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-  },
-  {
-    id: 'actions',
-    numeric: false,
-    disablePadding: false,
-    label: 'Actions',
-  },
-];
 
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
