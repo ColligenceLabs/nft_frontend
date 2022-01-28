@@ -15,6 +15,7 @@ import {
   FormControlLabel,
   Typography,
   Avatar,
+  IconButton,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
@@ -22,8 +23,11 @@ import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
-
-const rows = [];
+import { headCells } from './tableConfig';
+import { rows } from './mockData';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -50,57 +54,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-
-const headCells = [
-  {
-    id: 'no',
-    numeric: false,
-    disablePadding: false,
-    label: 'No',
-  },
-  {
-    id: 'nftName',
-    numeric: false,
-    disablePadding: false,
-    label: 'NFT Name',
-  },
-  {
-    id: 'serialIndex',
-    numeric: false,
-    disablePadding: false,
-    label: 'Serial Index',
-  },
-  {
-    id: 'owner',
-    numeric: false,
-    disablePadding: false,
-    label: 'Owner',
-  },
-  {
-    id: 'tokenId',
-    numeric: false,
-    disablePadding: false,
-    label: 'Token ID',
-  },
-  {
-    id: 'status',
-    numeric: false,
-    disablePadding: false,
-    label: 'Status',
-  },
-  {
-    id: 'createdAt',
-    numeric: false,
-    disablePadding: false,
-    label: 'Created at',
-  },
-  {
-    id: 'actions',
-    numeric: false,
-    disablePadding: false,
-    label: 'Actions',
-  },
-];
 
 function EnhancedTableHead(props) {
   const { t } = useTranslation();
@@ -256,17 +209,17 @@ const Serials = () => {
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row.no);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={(event) => handleClick(event, row.no)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.id}
+                        key={row.no}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -278,53 +231,33 @@ const Serials = () => {
                             }}
                           />
                         </TableCell>
-                        <TableCell>
-                          <Box display="flex" alignItems="center">
-                            <Avatar
-                              src={row.imgsrc}
-                              alt={row.imgsrc}
-                              width="35"
-                              sx={{
-                                borderRadius: '100%',
-                              }}
-                            />
-                            <Box
-                              sx={{
-                                ml: 2,
-                              }}
-                            >
-                              <Typography variant="h6" fontWeight="600">
-                                {row.name}
-                              </Typography>
-                              <Typography color="textSecondary" variant="h6" fontWeight="400">
-                                {row.email}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </TableCell>
+
                         <TableCell>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
-                            {row.pname}
+                            {row.no}
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Box display="flex" alignItems="center">
-                            {row.teams.map((team) => (
-                              <Avatar
-                                key={team.id}
-                                sx={{
-                                  backgroundColor: team.color,
-                                  width: '35px',
-                                  height: '35px',
-                                  color: '#fff',
-                                  ml: '-8px',
-                                }}
-                              >
-                                {team.text}
-                              </Avatar>
-                            ))}
-                          </Box>
+                          <Typography color="textSecondary" variant="h6" fontWeight="400">
+                            {row.nftName}
+                          </Typography>
                         </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6" fontWeight="400">
+                            {row.serialIndex}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6" fontWeight="400">
+                            {row.owner}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6" fontWeight="400">
+                            {row.tokenId}
+                          </Typography>
+                        </TableCell>
+
                         <TableCell>
                           <Box display="flex" alignItems="center">
                             <Box
@@ -356,13 +289,25 @@ const Serials = () => {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>
-                          <Typography color="textSecondary" variant="body1" fontWeight="400">
-                            {row.weeks}
+                        <TableCell style={{ minWidth: 200 }}>
+                          <Typography color="textSecondary" variant="h6" fontWeight="400">
+                            {row.createdAt}
                           </Typography>
                         </TableCell>
-                        <TableCell>
-                          <Typography variant="h6">${row.budget}k</Typography>
+                        <TableCell style={{ minWidth: 200 }}>
+                          <Typography color="textSecondary" variant="h6">
+                            <Box>
+                              <IconButton>
+                                <RefreshOutlinedIcon />
+                              </IconButton>
+                              <IconButton>
+                                <AlbumOutlinedIcon />
+                              </IconButton>
+                              <IconButton>
+                                <DeleteOutlinedIcon />
+                              </IconButton>
+                            </Box>
+                          </Typography>
                         </TableCell>
                       </TableRow>
                     );
