@@ -229,7 +229,7 @@ const AirDrop = () => {
                             }}
                           />
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.no}
                           </Typography>
@@ -239,23 +239,23 @@ const AirDrop = () => {
                             {row.name}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.description}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 130 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.sellingQuantity}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 150 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.creator}
                           </Typography>
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell style={{ minWidth: 90 }}>
                           <Box display="flex" alignItems="center">
                             <Box
                               sx={{
@@ -279,7 +279,7 @@ const AirDrop = () => {
                             </Typography>
                           </Box>
                         </TableCell>
-                        <TableCell>
+                        <TableCell style={{ minWidth: 130 }}>
                           <Typography color="textSecondary" variant="h6" fontWeight="400">
                             {row.stopSelling}
                           </Typography>
