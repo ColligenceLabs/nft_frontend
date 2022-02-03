@@ -93,6 +93,7 @@
   "User detail": "사용자 상세",
   "User id" : "사용자 아이디",
   "UID": "유아이디",
-  "Close": "닫기"
+  "Close": "닫기",
+  "Name (Smart Contract Name)": "이름 (Smart Contract 이름)"
 
 }

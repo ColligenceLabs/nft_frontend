@@ -36,7 +36,7 @@ const WarningBox = styled(Box)(({ theme }) => ({
   borderStyle: 'solid',
   borderColor: theme.palette.error.main,
   color: theme.palette.error.main,
-  margin: '15px 0px',
+  margin: '20px 0px',
 }));
 
 const CollectionCreate = () => {
@@ -97,7 +97,7 @@ const CollectionCreate = () => {
       <Container>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
+            <CustomFormLabel htmlFor="name">{t('Name (Smart Contract Name)')}</CustomFormLabel>
             <CustomTextField
               id="name"
               name="name"
@@ -181,59 +181,44 @@ const CollectionCreate = () => {
               {t('Smart Contract Information')}
             </Typography>
           </Grid>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <Grid container spacing={2}>
-              <Grid item lg={4} sm={4} xs={12}>
-                <CustomFormLabel>{t('Type')}</CustomFormLabel>
-                <RadioGroup
-                  aria-label="gender"
-                  defaultValue="radio1"
-                  name="type"
-                  value={type}
-                  onChange={handleTypeChange}
-                >
-                  <Grid container>
-                    <Grid item lg={6} sm={6} xs={6}>
-                      <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
-                    </Grid>
-                    <Grid item lg={6} sm={6} xs={6}>
-                      <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
-                    </Grid>
-                  </Grid>
-                </RadioGroup>
+          <Grid item lg={4} md={12} sm={12} xs={12}>
+            <CustomFormLabel>{t('Type')}</CustomFormLabel>
+            <RadioGroup
+              aria-label="gender"
+              defaultValue="radio1"
+              name="type"
+              value={type}
+              sx={{ pl: 2 }}
+              onChange={handleTypeChange}
+            >
+              <Grid container>
+                <Grid item lg={6} sm={6} xs={6}>
+                  <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
+                </Grid>
+                <Grid item lg={6} sm={6} xs={6}>
+                  <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
+                </Grid>
               </Grid>
-              <Grid item lg={8} sm={8} xs={12}>
-                <CustomFormLabel htmlFor="quantity">{t('Quantity')}</CustomFormLabel>
-                <CustomTextField
-                  id="quantity"
-                  name="quantity"
-                  placeholder={t('Enter quantity')}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  onChange={handleCollectionDataChange}
-                />
-              </Grid>
-            </Grid>
+            </RadioGroup>
           </Grid>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="contractName">{t('Contract Name')}</CustomFormLabel>
+          <Grid item lg={4} md={12} sm={12} xs={12}>
+            <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
             <CustomTextField
-              id="contractName"
-              name="contractName"
-              placeholder={t('Enter contract name')}
+              id="symbol"
+              name="symbol"
+              placeholder={t('Enter symbol')}
               variant="outlined"
               fullWidth
               size="small"
               onChange={handleCollectionDataChange}
             />
           </Grid>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
+          <Grid item lg={4} md={12} sm={12} xs={12}>
+            <CustomFormLabel htmlFor="symbol">{t('Token uri')}</CustomFormLabel>
             <CustomTextField
               id="symbol"
               name="symbol"
-              placeholder={t('Enter symbol')}
+              placeholder={t('Token uri')}
               variant="outlined"
               fullWidth
               size="small"
