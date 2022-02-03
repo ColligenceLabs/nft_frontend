@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Grid, MenuItem, RadioGroup, FormControlLabel, Button, Paper } from '@mui/material';
+import {
+  Grid,
+  MenuItem,
+  RadioGroup,
+  FormControlLabel,
+  Button,
+  Paper,
+  Divider,
+  Typography,
+  Box,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
@@ -17,6 +27,16 @@ const StyledButton = styled(Button)`
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
   borderRadius: '7px',
+}));
+
+const WarningBox = styled(Box)(({ theme }) => ({
+  padding: '20px',
+  borderRadius: '7px',
+  border: '1px',
+  borderStyle: 'solid',
+  borderColor: theme.palette.error.main,
+  color: theme.palette.error.main,
+  margin: '15px 0px',
 }));
 
 const CollectionCreate = () => {
@@ -117,7 +137,6 @@ const CollectionCreate = () => {
               onChange={handleCollectionDataChange}
             />
           </Grid>
-
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel htmlFor="coverImage">{t('Cover Image')}</CustomFormLabel>
             <CustomTextField
@@ -151,7 +170,17 @@ const CollectionCreate = () => {
               }}
             />
           </Grid>
-
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <Divider
+              sx={{
+                mt: 5,
+                mb: 3,
+              }}
+            />
+            <Typography color="primary" variant="subtitle2">
+              {t('Smart Contract Information')}
+            </Typography>
+          </Grid>
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <Grid container spacing={2}>
               <Grid item lg={4} sm={4} xs={12}>
@@ -187,7 +216,6 @@ const CollectionCreate = () => {
               </Grid>
             </Grid>
           </Grid>
-
           <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel htmlFor="contractName">{t('Contract Name')}</CustomFormLabel>
             <CustomTextField
@@ -212,7 +240,15 @@ const CollectionCreate = () => {
               onChange={handleCollectionDataChange}
             />
           </Grid>
-
+          <Grid item lg={12} md={12} sm={12} xs={12}>
+            <WarningBox>
+              <Typography color="error" variant="subtitle2">
+                {t(
+                  'Note: In the middle of creating a collection it is included deploying one NFT smart contract on to the blockchain which requires a small gas fee.',
+                )}
+              </Typography>
+            </WarningBox>
+          </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
               <StyledButton variant="outlined" size="small">
