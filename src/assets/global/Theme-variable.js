@@ -105,7 +105,7 @@ const themesOptions = [
     name: BLUE_THEME,
     palette: {
       primary: {
-        main: '#1a97f5',
+        main: '#283D82',
         light: '#e6f4ff',
         dark: '#1682d4',
       },
