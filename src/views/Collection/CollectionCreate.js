@@ -46,15 +46,16 @@ const CollectionCreate = () => {
     creator: '',
     category: '',
     coverImage: '',
-    type: '',
-    quantity: '',
-    contractName: '',
+    type: 'KIP17',
     symbol: '',
   });
   const [selectedCoverImage, setSelectedCoverImage] = useState();
   const [creator, setCreator] = useState(0);
-  const [type, setType] = useState('KIP17');
+  const [type, setType] = useState(collectionData.type);
 
+  const onSubmit = () => {
+    console.log(collectionData);
+  };
   const contentFileHandler = (event) => {
     setSelectedCoverImage(event.target.files[0]);
     setCollectionData({
@@ -72,7 +73,6 @@ const CollectionCreate = () => {
     });
   };
   const handleCreatorChange = (event) => {
-    console.log(event.target);
     const { name, value } = event.target;
     setCollectionData({
       ...collectionData,
@@ -82,7 +82,6 @@ const CollectionCreate = () => {
   };
 
   const handleTypeChange = (event) => {
-    console.log(event.target.name);
     const { name, value } = event.target;
     setCollectionData({
       ...collectionData,
@@ -181,14 +180,14 @@ const CollectionCreate = () => {
               {t('Smart Contract Information')}
             </Typography>
           </Grid>
-          <Grid item lg={4} md={12} sm={12} xs={12}>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
             <CustomFormLabel>{t('Type')}</CustomFormLabel>
             <RadioGroup
               aria-label="gender"
               defaultValue="radio1"
               name="type"
               value={type}
-              sx={{ pl: 2 }}
+              // sx={{ pl: 2 }}
               onChange={handleTypeChange}
             >
               <Grid container>
@@ -201,30 +200,37 @@ const CollectionCreate = () => {
               </Grid>
             </RadioGroup>
           </Grid>
-          <Grid item lg={4} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
-            <CustomTextField
-              id="symbol"
-              name="symbol"
-              placeholder={t('Enter symbol')}
-              variant="outlined"
-              fullWidth
-              size="small"
-              onChange={handleCollectionDataChange}
-            />
-          </Grid>
-          <Grid item lg={4} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="symbol">{t('Token uri')}</CustomFormLabel>
-            <CustomTextField
-              id="symbol"
-              name="symbol"
-              placeholder={t('Token uri')}
-              variant="outlined"
-              fullWidth
-              size="small"
-              onChange={handleCollectionDataChange}
-            />
-          </Grid>
+
+          {type === 'KIP17' && (
+            <Grid item lg={6} md={12} sm={12} xs={12}>
+              <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
+              <CustomTextField
+                id="symbol"
+                name="symbol"
+                placeholder={t('Enter symbol')}
+                variant="outlined"
+                fullWidth
+                size="small"
+                onChange={handleCollectionDataChange}
+              />
+            </Grid>
+          )}
+
+          {type === 'KIP37' && (
+            <Grid item lg={6} md={12} sm={12} xs={12}>
+              <CustomFormLabel htmlFor="symbol">{t('Token uri')}</CustomFormLabel>
+              <CustomTextField
+                id="symbol"
+                name="symbol"
+                placeholder={t('Enter token uri')}
+                variant="outlined"
+                fullWidth
+                size="small"
+                onChange={handleCollectionDataChange}
+              />
+            </Grid>
+          )}
+
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <WarningBox>
               <Typography color="error" variant="subtitle2">
@@ -239,7 +245,7 @@ const CollectionCreate = () => {
               <StyledButton variant="outlined" size="small">
                 {t('Cancel')}
               </StyledButton>
-              <StyledButton variant="contained" onClick={() => console.log()}>
+              <StyledButton variant="contained" onClick={onSubmit}>
                 {t('Confirm')}
               </StyledButton>
             </div>
