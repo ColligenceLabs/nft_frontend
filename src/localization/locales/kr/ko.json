@@ -89,5 +89,10 @@
   "Logout": "로그아웃",
   "Login": "로그인",
   "Note: In the middle of creating a collection it is included deploying one NFT smart contract on to the blockchain which requires a small gas fee.": "주의:  컬렉션을 생성하면 NFT 스마트 컨트랙 하나가 블록체인으로 배포가 됩니다. 이 과정은 소정의 Gas 수수료를 필요로 합니다. 참고하세요.",
-  "Smart Contract Information": "Smart Contract 정보"
+  "Smart Contract Information": "Smart Contract 정보",
+  "User detail": "사용자 상세",
+  "User id" : "사용자 아이디",
+  "UID": "유아이디",
+  "Close": "닫기"
+
 }

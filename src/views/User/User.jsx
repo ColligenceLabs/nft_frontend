@@ -27,6 +27,7 @@ import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import { headCells } from './tableConfig';
 import { rows } from './mockData';
+import UserDetailModal from './UserDetailModal';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -122,6 +123,8 @@ const User = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = useState('');
+  const [userDetailModal, setUserDetailModal] = useState(false);
+  const [selectedUserDetail, setSelectedUserDetail] = useState({});
 
   const onFilterName = (e) => {
     setFilterName(e.target.value);
@@ -177,6 +180,15 @@ const User = () => {
 
   const handleChangeSearchQuery = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleUserDetailModal = (row) => {
+    setSelectedUserDetail(row);
+    setUserDetailModal(true);
+  };
+
+  const closeUserDetailModal = () => {
+    setUserDetailModal(false);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -279,7 +291,7 @@ const User = () => {
                             <IconButton>
                               <RefreshOutlinedIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton onClick={() => handleUserDetailModal(row)}>
                               <AlbumOutlinedIcon />
                             </IconButton>
                             <IconButton>
@@ -317,6 +329,11 @@ const User = () => {
           label="Dense padding"
         />
       </Box>
+      <UserDetailModal
+        open={userDetailModal}
+        closeUserDetailModal={closeUserDetailModal}
+        row={selectedUserDetail}
+      />
     </PageContainer>
   );
 };
