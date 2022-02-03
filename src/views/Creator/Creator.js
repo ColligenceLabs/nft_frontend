@@ -134,7 +134,10 @@ const Creator = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .map((n) => n.name);
+      console.log(newSelecteds);
       setSelected(newSelecteds);
       return;
     }
@@ -144,7 +147,7 @@ const Creator = () => {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-
+    console.log(selectedIndex);
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -204,7 +207,7 @@ const Creator = () => {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length}
               />
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
