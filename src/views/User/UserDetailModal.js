@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import { useTranslation } from 'react-i18next';
@@ -15,14 +7,12 @@ import { useTranslation } from 'react-i18next';
 const UserDetailModal = (props) => {
   const { open, closeUserDetailModal, row } = props;
 
-  console.log(row);
   const { t } = useTranslation();
   return (
     <Dialog
       open={open}
       onClose={closeUserDetailModal}
       BackdropProps={{ style: { opacity: 0.2 }, transitionDuration: 1000 }}
-      // PaperProps={{ style: { width: '500px', marginBlock: '10px' } }}
     >
       <DialogTitle>{t('User detail')}</DialogTitle>
       <DialogContent dividers>
