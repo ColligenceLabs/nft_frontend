@@ -55,6 +55,9 @@ const CollectionCreate = () => {
 
   const onSubmit = () => {
     console.log(collectionData);
+    // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
+
+    // TODO: Collection 생성 API 호출
   };
   const contentFileHandler = (event) => {
     setSelectedCoverImage(event.target.files[0]);
