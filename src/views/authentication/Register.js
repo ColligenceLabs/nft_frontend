@@ -101,15 +101,15 @@ const Register = () => {
                     mt: 4,
                   }}
                 >
-                  <form onSubmit={formik.handleSubmit}>
+                  <form onSubmit={registerHandler}>
                     <CustomFormLabel htmlFor="name">Name</CustomFormLabel>
                     <CustomTextField
                       id="name"
                       name="name"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.name}
-                      onChange={formik.handleChange}
+                      value={registerData.name}
+                      onChange={handleRegisterDataChange}
                       error={formik.touched.name && Boolean(formik.errors.name)}
                       helperText={formik.touched.name && formik.errors.name}
                     />
@@ -119,8 +119,8 @@ const Register = () => {
                       name="email"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
+                      value={registerData.email}
+                      onChange={handleRegisterDataChange}
                       error={formik.touched.email && Boolean(formik.errors.email)}
                       helperText={formik.touched.email && formik.errors.email}
                     />
@@ -131,8 +131,8 @@ const Register = () => {
                       type="password"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.password}
-                      onChange={formik.handleChange}
+                      value={registerData.password}
+                      onChange={handleRegisterDataChange}
                       error={formik.touched.password && Boolean(formik.errors.password)}
                       helperText={formik.touched.password && formik.errors.password}
                     />
@@ -143,8 +143,8 @@ const Register = () => {
                       type="password"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.repeatPassword}
-                      onChange={formik.handleChange}
+                      value={registerData.repeatPassword}
+                      onChange={handleRegisterDataChange}
                       error={formik.touched.repeatPassword && Boolean(formik.errors.repeatPassword)}
                       helperText={formik.touched.repeatPassword && formik.errors.repeatPassword}
                     />
