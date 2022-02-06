@@ -9,6 +9,9 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import PageContainer from '../../components/container/PageContainer';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 
+import AuthService from '../../services/auth.service';
+import authService from '../../services/auth.service';
+
 const validationSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
   email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
@@ -54,8 +57,16 @@ const Register = () => {
     });
   };
 
-  const registerHandler = () => {
-    console.log(registerData);
+  const registerHandler = async () => {
+    console.log('--->', registerData);
+    // TODO: 사용자 등록
+    await authService.register(
+      registerData.name,
+      registerData.email,
+      registerData.password,
+      registerData.level,
+    );
+    // TODO: Move to Sign In page...
   };
 
   return (
