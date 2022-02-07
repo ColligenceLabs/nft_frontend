@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import {
@@ -26,7 +26,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import { headCells } from './tableConfig';
-import { rows } from './mockData';
+import { getAdminsData } from '../../services/admins.service';
+import AdminsDetailModal from './AdminsDetailModal';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -114,6 +115,13 @@ EnhancedTableHead.propTypes = {
 const Admins = () => {
   const { t } = useTranslation();
 
+  useEffect(async () => {
+    const { data } = await getAdminsData();
+    console.log(data);
+    setRows(data.items);
+  }, [getAdminsData]);
+
+  const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -121,6 +129,8 @@ const Admins = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = useState('');
+  const [adminDetailModal, setAdminDetailModal] = useState(false);
+  const [selectedAdminDetail, setSelectedAdminDetail] = useState({});
 
   const onFilterName = (e) => {
     setFilterName(e.target.value);
@@ -134,15 +144,18 @@ const Admins = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.uid);
+      const newSelecteds = rows
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .map((n) => n._id);
+      console.log(newSelecteds);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
@@ -178,7 +191,16 @@ const Admins = () => {
     setSearchQuery(event.target.value);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const handleUserDetailModal = (row) => {
+    setSelectedAdminDetail(row);
+    setAdminDetailModal(true);
+  };
+
+  const closeUserDetailModal = () => {
+    setAdminDetailModal(false);
+  };
+
+  const isSelected = (_id) => selected.indexOf(_id) !== -1;
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
@@ -203,24 +225,24 @@ const Admins = () => {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows.length}
+                rowCount={rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length}
               />
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                   // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row._id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                       <TableRow
                         hover
-                        // onClick={(event) => handleClick(event, row.name)}
+                        // onClick={(event) => handleClick(event, row.full_name)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row._id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -230,12 +252,12 @@ const Admins = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
-                            onClick={(event) => handleClick(event, row.name)}
+                            onClick={(event) => handleClick(event, row._id)}
                           />
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.name}
+                            {row.full_name}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -250,7 +272,30 @@ const Admins = () => {
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.status}
+                            <Box display="flex" alignItems="center">
+                              <Box
+                                sx={{
+                                  backgroundColor:
+                                    row.status === 'active'
+                                      ? (theme) => theme.palette.success.main
+                                      : row.status === 'inactive'
+                                      ? (theme) => theme.palette.warning.main
+                                      : (theme) => theme.palette.secondary.main,
+                                  borderRadius: '100%',
+                                  height: '10px',
+                                  width: '10px',
+                                }}
+                              />
+                              <Typography
+                                color="textSecondary"
+                                variant="h6"
+                                sx={{
+                                  ml: 0.5,
+                                }}
+                              >
+                                {row.status}
+                              </Typography>
+                            </Box>
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -259,7 +304,7 @@ const Admins = () => {
                               <IconButton>
                                 <RefreshOutlinedIcon />
                               </IconButton>
-                              <IconButton>
+                              <IconButton onClick={() => handleUserDetailModal(row)}>
                                 <AlbumOutlinedIcon />
                               </IconButton>
                               <IconButton>
@@ -298,6 +343,11 @@ const Admins = () => {
           label="Dense padding"
         />
       </Box>
+      <AdminsDetailModal
+        open={adminDetailModal}
+        closeUserDetailModal={closeUserDetailModal}
+        row={selectedAdminDetail}
+      />
     </PageContainer>
   );
 };

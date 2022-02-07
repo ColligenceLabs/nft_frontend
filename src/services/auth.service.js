@@ -18,10 +18,9 @@ const login = (email, password) => {
       password,
     })
     .then((response) => {
-      if (response.data.data.accessToken) {
+      if (response.data.status === 1) {
         localStorage.setItem('user', JSON.stringify(response.data.data || null));
       }
-
       return response.data;
     });
 };

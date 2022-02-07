@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Grid, Box, Typography, FormGroup, FormControlLabel, Button } from '@mui/material';
+import { Grid, Box, Typography, FormGroup, FormControlLabel, Button, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
-import testService from '../../services/test.service';
-
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -17,6 +15,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -28,16 +27,19 @@ const Login = () => {
   const loginHandler = () => {
     dispatch(login({ email, password }))
       .unwrap()
-      .then(() => {
-        navigate('/dashboard');
+      .then((res) => {
+        console.log(res);
+        if (res.status === 1) {
+          setErrorMessage('');
+          navigate('/dashboard');
+        } else {
+          setErrorMessage(res.message);
+        }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log(error);
         // setLoading(false);
       });
-  };
-
-  const getData = async () => {
-    await testService.getTestData();
   };
 
   useEffect(() => {
@@ -107,6 +109,17 @@ const Login = () => {
                       mb: 3,
                     }}
                   />
+                  {errorMessage && (
+                    <Alert
+                      sx={{
+                        mb: 4,
+                      }}
+                      variant="filled"
+                      severity="error"
+                    >
+                      {errorMessage}
+                    </Alert>
+                  )}
                   <Box
                     sx={{
                       display: {
