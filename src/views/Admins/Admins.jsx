@@ -117,7 +117,6 @@ const Admins = () => {
 
   useEffect(async () => {
     const { data } = await getAdminsData();
-    console.log(data);
     setRows(data.items);
   }, [getAdminsData]);
 
@@ -147,7 +146,7 @@ const Admins = () => {
       const newSelecteds = rows
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((n) => n._id);
-      console.log(newSelecteds);
+
       setSelected(newSelecteds);
       return;
     }

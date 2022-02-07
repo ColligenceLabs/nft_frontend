@@ -114,7 +114,7 @@ const Register = () => {
                             data.password,
                             data.level,
                           );
-                          console.log(res);
+
                           if (res.data.status === 1) {
                             setErrorMessage(null);
                             setSuccessRegister(true);
