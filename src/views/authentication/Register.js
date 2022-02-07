@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Grid, Box, Typography, Button, MenuItem } from '@mui/material';
+import { Grid, Box, Typography, Button, MenuItem, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
+import { register } from '../../services/auth.service';
 import * as yup from 'yup';
 
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -23,40 +24,7 @@ const validationSchema = yup.object({
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState();
-  const [registerData, setRegisterData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    repeatPassword: '',
-    level: '',
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      password: '',
-      repeatPassword: '',
-      level: '',
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
-
-  const handleRegisterDataChange = (event) => {
-    const { name, value } = event.target;
-
-    setRegisterData({
-      ...registerData,
-      [name]: value,
-    });
-  };
-
-  const registerHandler = () => {
-    console.log(registerData);
-  };
+  const [successRegister, setSuccessRegister] = useState(false);
 
   return (
     <PageContainer title="Register" description="this is Register page">
@@ -72,115 +40,197 @@ const Register = () => {
                 <Typography fontWeight="700" variant="h2">
                   Welcome to NFT Management System
                 </Typography>
-                <Box display="flex" alignItems="center">
-                  <Typography
-                    color="textSecondary"
-                    variant="h6"
-                    fontWeight="400"
-                    sx={{
-                      mr: 1,
-                    }}
-                  >
-                    Already have an Account?
-                  </Typography>
-                  <Typography
-                    component={Link}
-                    to="/auth/login"
-                    fontWeight="500"
-                    sx={{
-                      display: 'block',
-                      textDecoration: 'none',
-                      color: 'primary.main',
-                    }}
-                  >
-                    Sign In
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    mt: 4,
-                  }}
-                >
-                  <form onSubmit={formik.handleSubmit}>
-                    <CustomFormLabel htmlFor="name">Name</CustomFormLabel>
-                    <CustomTextField
-                      id="name"
-                      name="name"
-                      variant="outlined"
-                      fullWidth
-                      value={formik.values.name}
-                      onChange={formik.handleChange}
-                      error={formik.touched.name && Boolean(formik.errors.name)}
-                      helperText={formik.touched.name && formik.errors.name}
-                    />
-                    <CustomFormLabel htmlFor="email">Email Address</CustomFormLabel>
-                    <CustomTextField
-                      id="email"
-                      name="email"
-                      variant="outlined"
-                      fullWidth
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
-                      error={formik.touched.email && Boolean(formik.errors.email)}
-                      helperText={formik.touched.email && formik.errors.email}
-                    />
-                    <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
-                    <CustomTextField
-                      id="password"
-                      name="password"
-                      type="password"
-                      variant="outlined"
-                      fullWidth
-                      value={formik.values.password}
-                      onChange={formik.handleChange}
-                      error={formik.touched.password && Boolean(formik.errors.password)}
-                      helperText={formik.touched.password && formik.errors.password}
-                    />
-                    <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>
-                    <CustomTextField
-                      id="repeatPassword"
-                      name="repeatPassword"
-                      type="password"
-                      variant="outlined"
-                      fullWidth
-                      value={formik.values.repeatPassword}
-                      onChange={formik.handleChange}
-                      error={formik.touched.repeatPassword && Boolean(formik.errors.repeatPassword)}
-                      helperText={formik.touched.repeatPassword && formik.errors.repeatPassword}
-                    />
-
-                    <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
-                    <CustomSelect
-                      labelId="demo-simple-select-label"
-                      id="level"
-                      name="level"
-                      onChange={handleRegisterDataChange}
-                      value={registerData.level}
-                      fullWidth
+                {successRegister ? (
+                  <Box display="flex" alignItems="center">
+                    <Typography
+                      color="textSecondary"
+                      variant="h6"
+                      fontWeight="400"
                       sx={{
-                        mb: 4,
+                        mr: 1,
                       }}
                     >
-                      <MenuItem value="administrator">Administrator</MenuItem>
-                      <MenuItem value="creator">Creator</MenuItem>
-                      <MenuItem value="operator">Operator</MenuItem>
-                    </CustomSelect>
-
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      size="large"
-                      fullWidth
-                      type="submit"
+                      Success in sign up
+                    </Typography>
+                    <Typography
+                      component={Link}
+                      to="/auth/login"
+                      fontWeight="500"
                       sx={{
-                        pt: '10px',
-                        pb: '10px',
+                        display: 'block',
+                        textDecoration: 'none',
+                        color: 'primary.main',
                       }}
                     >
-                      Register
-                    </Button>
-                  </form>
-                </Box>
+                      Sign In
+                    </Typography>
+                  </Box>
+                ) : (
+                  <div>
+                    <Box display="flex" alignItems="center">
+                      <Typography
+                        color="textSecondary"
+                        variant="h6"
+                        fontWeight="400"
+                        sx={{
+                          mr: 1,
+                        }}
+                      >
+                        Already have an Account?
+                      </Typography>
+                      <Typography
+                        component={Link}
+                        to="/auth/login"
+                        fontWeight="500"
+                        sx={{
+                          display: 'block',
+                          textDecoration: 'none',
+                          color: 'primary.main',
+                        }}
+                      >
+                        Sign In
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        mt: 4,
+                      }}
+                    >
+                      <Formik
+                        validationSchema={validationSchema}
+                        initialValues={{
+                          name: '',
+                          email: '',
+                          password: '',
+                          repeatPassword: '',
+                          level: '',
+                        }}
+                        onSubmit={async (data, { setSubmitting }) => {
+                          setSubmitting(true);
+
+                          const res = await register(
+                            data.name,
+                            data.email,
+                            data.password,
+                            data.level,
+                          );
+                          console.log(res);
+                          if (res.data.status === 1) {
+                            setErrorMessage(null);
+                            setSuccessRegister(true);
+                          } else {
+                            setErrorMessage(res.data.message);
+                          }
+                        }}
+                      >
+                        {({
+                          values,
+                          handleChange,
+                          handleBlur,
+                          handleSubmit,
+                          isSubmitting,
+                          touched,
+                          errors,
+                        }) => (
+                          <form onSubmit={handleSubmit}>
+                            <CustomFormLabel htmlFor="name">Name</CustomFormLabel>
+                            <CustomTextField
+                              id="name"
+                              name="name"
+                              variant="outlined"
+                              fullWidth
+                              value={values.name}
+                              onChange={handleChange}
+                              error={touched.name && Boolean(errors.name)}
+                              helperText={touched.name && errors.name}
+                            />
+                            <CustomFormLabel htmlFor="email">Email Address</CustomFormLabel>
+                            <CustomTextField
+                              id="email"
+                              name="email"
+                              variant="outlined"
+                              fullWidth
+                              value={values.email}
+                              onChange={handleChange}
+                              error={touched.email && Boolean(errors.email)}
+                              helperText={touched.email && errors.email}
+                            />
+                            <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
+                            <CustomTextField
+                              id="password"
+                              name="password"
+                              type="password"
+                              variant="outlined"
+                              fullWidth
+                              value={values.password}
+                              onChange={handleChange}
+                              error={touched.password && Boolean(errors.password)}
+                              helperText={touched.password && errors.password}
+                            />
+                            <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>
+                            <CustomTextField
+                              id="repeatPassword"
+                              name="repeatPassword"
+                              type="password"
+                              variant="outlined"
+                              fullWidth
+                              value={values.repeatPassword}
+                              onChange={handleChange}
+                              error={touched.repeatPassword && Boolean(errors.repeatPassword)}
+                              helperText={touched.repeatPassword && errors.repeatPassword}
+                            />
+
+                            <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
+                            <CustomSelect
+                              labelId="demo-simple-select-label"
+                              id="level"
+                              name="level"
+                              onChange={handleChange}
+                              value={values.level}
+                              fullWidth
+                              sx={{
+                                mb: 4,
+                              }}
+                              error={touched.level && Boolean(errors.level)}
+                              // helperText={touched.repeatPassword && errors.repeatPassword}
+                            >
+                              <MenuItem value="administrator">Administrator</MenuItem>
+                              <MenuItem value="creator">Creator</MenuItem>
+                              <MenuItem value="operator">Operator</MenuItem>
+                            </CustomSelect>
+
+                            {errorMessage && (
+                              <Alert
+                                sx={{
+                                  mb: 4,
+                                }}
+                                variant="filled"
+                                severity="error"
+                              >
+                                {errorMessage}
+                              </Alert>
+                            )}
+
+                            <Button
+                              type="submit"
+                              color="secondary"
+                              variant="contained"
+                              size="large"
+                              fullWidth
+                              sx={{
+                                pt: '10px',
+                                pb: '10px',
+                              }}
+                              disabled={isSubmitting}
+                            >
+                              Register
+                            </Button>
+                          </form>
+                        )}
+                      </Formik>
+                    </Box>
+                  </div>
+                )}
               </Box>
             </Grid>
           </Grid>
