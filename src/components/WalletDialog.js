@@ -4,7 +4,7 @@ import { Box, Card, Chip, Dialog, DialogContent, DialogTitle, Typography } from 
 import { makeStyles } from '@mui/styles';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { injected, walletconnect } from '../connectors';
+import { injected, kaikas, walletconnect } from '../connectors';
 import { setActivatingConnector } from '../redux/slices/wallet';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import talkenIcon from '../assets/images/wallet_icons/wallet_icon_talk.png';
@@ -64,6 +64,10 @@ const walletAllList = [
 const walletEBHList = [
   {
     name: 'MetaMask',
+    icons: metamaskIcon,
+  },
+  {
+    name: 'Kaikas',
     icons: metamaskIcon,
   },
 ];
@@ -141,11 +145,15 @@ const WalletDialog = ({ isOpenConnectModal, handleCloseModal, activate }) => {
       if (wallet.name === 'MetaMask') {
         await activate(injected, null, true);
         dispatch(setActivatingConnector(injected));
-        window.localStorage.setItem('chainId', 'injected');
+        window.localStorage.setItem('wallet', 'injected');
+      } else if (wallet.name === 'Kaikas') {
+        await activate(kaikas, null, true);
+        dispatch(setActivatingConnector(kaikas));
+        window.localStorage.setItem('wallet', 'kaikas');
       } else if (wallet.name === 'WalletConnect') {
         const wc = walletconnect(true);
         await activate(wc, undefined, true);
-        window.localStorage.setItem('chainId', 'walletconnect');
+        window.localStorage.setItem('wallet', 'walletconnect');
       }
     } catch (e) {
       console.log('connect wallet error', e);

@@ -5,6 +5,7 @@
   "author": "WrapPixel",
   "private": true,
   "dependencies": {
+    "@colligence/klaytn-connector": "^6.2.21",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",

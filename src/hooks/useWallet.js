@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
-import { injected, walletconnect } from '../connectors';
+import { injected, kaikas, walletconnect } from '../connectors';
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
@@ -9,18 +9,30 @@ export function useEagerConnect() {
   const [tried, setTried] = useState(false);
 
   useEffect(() => {
-    const connectorId = window.localStorage.getItem('chainId');
-    if (!connectorId || connectorId === 'klayton') {
-      if (!window.klayton) {
-        window.localStorage.removeItem('chainId');
-        return;
-      }
-      window.klayton.enable();
-    }
+    const connectorId = window.localStorage.getItem('wallet');
+    // TODO: 이거 뭐지?
+    // if (!connectorId || connectorId === 'klayton') {
+    //   if (!window.klayton) {
+    //     window.localStorage.removeItem('chainId');
+    //     return;
+    //   }
+    //   window.klayton.enable();
+    // }
     if (!connectorId || connectorId === 'injected') {
       injected.isAuthorized().then((isAuthorized: boolean) => {
         if (isAuthorized) {
           activate(injected, undefined, true).catch(() => {
+            setTried(true);
+          });
+        } else {
+          setTried(true);
+        }
+      });
+    }
+    if (!connectorId || connectorId === 'kaikas') {
+      injected.isAuthorized().then((isAuthorized: boolean) => {
+        if (isAuthorized) {
+          activate(kaikas, undefined, true).catch(() => {
             setTried(true);
           });
         } else {

@@ -24,11 +24,6 @@ const SCAN_URL = {
   [ChainId.BAOBAB]: 'https://baobab.scope.klaytn.com',
 };
 
-// const recoverChainId = () => {
-//   const prevChainId = window.localStorage.getItem('prevChainId');
-//   window.localStorage.setItem('chainId', prevChainId);
-// };
-
 let provider;
 
 const addNetwork = async (chainId: number) => {

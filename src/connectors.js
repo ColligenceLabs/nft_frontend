@@ -11,6 +11,7 @@ import { FortmaticConnector } from '@web3-react/fortmatic-connector';
 import { MagicConnector } from '@web3-react/magic-connector';
 import { PortisConnector } from '@web3-react/portis-connector';
 import { TorusConnector } from '@web3-react/torus-connector';
+import { KlaytnConnector } from '@colligence/klaytn-connector';
 import { targetNetwork, infuraApiKey } from './config';
 
 const RPC_URL_1 = `https://mainnet.infura.io/v3/${infuraApiKey}`;
@@ -26,6 +27,10 @@ const RPC_URLS = {
 
 export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 56, 97, 1001, 8217],
+});
+
+export const kaikas = new KlaytnConnector({
+  supportedChainIds: [1001, 8217],
 });
 
 export const network = new NetworkConnector({
