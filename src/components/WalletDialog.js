@@ -66,10 +66,6 @@ const walletEBHList = [
     name: 'MetaMask',
     icons: metamaskIcon,
   },
-  {
-    name: 'Kaikas',
-    icons: metamaskIcon,
-  },
 ];
 const walletETHList = [
   {
