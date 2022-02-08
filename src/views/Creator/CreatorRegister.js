@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Button, Paper } from '@mui/material';
+import { Formik } from 'formik';
+import { Grid, Button, Paper, MenuItem, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -7,6 +8,9 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
+import * as yup from 'yup';
+import { register } from '../../services/auth.service';
+import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -17,6 +21,17 @@ const Container = styled(Paper)(({ theme }) => ({
   borderRadius: '7px',
 }));
 
+const validationSchema = yup.object({
+  full_name: yup.string('Enter your name').required('Name is required'),
+  email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
+  password: yup
+    .string('Enter your password')
+    .min(8, 'Password should be of minimum 8 characters length')
+    .required('Password is required'),
+  repeatPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  level: yup.string('Enter your name').required('Name is required'),
+});
+
 const CreatorRegister = () => {
   const { t } = useTranslation();
   const [creatorData, setCreatorData] = useState({
@@ -24,43 +39,8 @@ const CreatorRegister = () => {
     content: '',
     description: '',
   });
-
-  const [selectedContent, setSelectedContent] = useState();
-
-  const contentFileHandler = (event) => {
-    setSelectedContent(event.target.files[0]);
-    setCreatorData({
-      ...creatorData,
-      content: event.target.files[0].name,
-    });
-  };
-
-  const handleMintDataChange = (event) => {
-    const { name, value } = event.target;
-
-    setCreatorData({
-      ...creatorData,
-      [name]: value,
-    });
-  };
-  const handleCreatorChange = (event) => {
-    const { name, value } = event.target;
-    setCreatorData({
-      ...creatorData,
-      [name]: value,
-    });
-    setCreator(event.target.value);
-  };
-
-  const handleTypeChange = (event) => {
-    console.log(event.target.name);
-    const { name, value } = event.target;
-    setCreatorData({
-      ...creatorData,
-      [name]: value,
-    });
-    setType(event.target.value);
-  };
+  const [errorMessage, setErrorMessage] = useState();
+  const [successRegister, setSuccessRegister] = useState(false);
 
   const onSubmitData = () => {
     console.log(creatorData);
@@ -70,78 +50,224 @@ const CreatorRegister = () => {
     <PageContainer title="Creator Register" description="this is Creator Register Form page">
       <Breadcrumb title="Creator Register" subtitle="Creator Register Information" />
       <Container>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
-            <CustomTextField
-              id="name"
-              name="name"
-              placeholder={t('Enter name')}
-              variant="outlined"
-              fullWidth
-              size="small"
-              onChange={handleMintDataChange}
-            />
-          </Grid>
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={{
+            full_name: '',
+            email: '',
+            password: '',
+            repeatPassword: '',
+            level: '',
+            image: null,
+            description: '',
+          }}
+          onSubmit={async (data, { setSubmitting }) => {
+            setSubmitting(true);
+            console.log(data);
+            let formData = new FormData();
+            for (let value in data) {
+              formData.append(value, data[value]);
+            }
 
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
-            <CustomTextField
-              id="content"
-              name="content"
-              placeholder={t('Select File')}
-              variant="outlined"
-              fullWidth
-              size="small"
-              value={creatorData.content}
-              onChange={handleMintDataChange}
-              InputProps={{
-                startAdornment: (
-                  <Button
-                    variant="contained"
-                    component="label"
-                    variant="contained"
+            const res = await register(formData);
+
+            if (res.data.status === 1) {
+              setErrorMessage(null);
+              setSuccessRegister(true);
+            } else {
+              setErrorMessage(res.data.message);
+              setSuccessRegister(false);
+            }
+            setSubmitting(false);
+          }}
+        >
+          {({
+            values,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            touched,
+            errors,
+            setFieldValue,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
+                  <CustomTextField
+                    id="full_name"
+                    name="full_name"
+                    variant="outlined"
+                    fullWidth
                     size="small"
-                    style={{ marginRight: '1rem' }}
+                    value={values.full_name}
+                    onChange={handleChange}
+                    error={touched.full_name && Boolean(errors.full_name)}
+                    helperText={touched.full_name && errors.full_name}
+                  />
+                </Grid>
+
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="email">Email Address</CustomFormLabel>
+                  <CustomTextField
+                    id="email"
+                    name="email"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={values.email}
+                    onChange={handleChange}
+                    error={touched.email && Boolean(errors.email)}
+                    helperText={touched.email && errors.email}
+                  />
+                </Grid>
+
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
+                  <CustomTextField
+                    id="password"
+                    name="password"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={values.password}
+                    onChange={handleChange}
+                    error={touched.password && Boolean(errors.password)}
+                    helperText={touched.password && errors.password}
+                  />
+                </Grid>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>
+                  <CustomTextField
+                    id="repeatPassword"
+                    name="repeatPassword"
+                    type="password"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={values.repeatPassword}
+                    onChange={handleChange}
+                    error={touched.repeatPassword && Boolean(errors.repeatPassword)}
+                    helperText={touched.repeatPassword && errors.repeatPassword}
+                  />
+                </Grid>
+                <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
+                  <CustomSelect
+                    labelId="demo-simple-select-label"
+                    id="level"
+                    name="level"
+                    onChange={handleChange}
+                    value={values.level}
+                    fullWidth
+                    size="small"
+                    error={touched.level && Boolean(errors.level)}
+                    // helperText={touched.repeatPassword && errors.repeatPassword}
                   >
-                    <DriveFileMoveOutlinedIcon fontSize="small" />
-                    <input
-                      id={'file-input'}
-                      style={{ display: 'none' }}
-                      type="file"
-                      name="imageFile"
-                      onChange={contentFileHandler}
-                    />
-                  </Button>
-                ),
-              }}
-            />
-          </Grid>
+                    <MenuItem value="creator">Creator</MenuItem>
+                  </CustomSelect>
+                </Grid>
 
-          <Grid item lg={6} md={12} sm={12} xs={12}>
-            <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-            <CustomTextField
-              id="description"
-              name="description"
-              placeholder={t('Enter description')}
-              variant="outlined"
-              fullWidth
-              size="small"
-              onChange={handleMintDataChange}
-            />
-          </Grid>
+                <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
+                  <CustomTextField
+                    id="image"
+                    name="image"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={values.image == null ? '' : values.image.name}
+                    // onChange={handleChange}
+                    InputProps={{
+                      startAdornment: (
+                        <Button
+                          variant="contained"
+                          component="label"
+                          variant="contained"
+                          size="small"
+                          style={{ marginRight: '1rem' }}
+                        >
+                          <DriveFileMoveOutlinedIcon fontSize="small" />
+                          <input
+                            id="image"
+                            style={{ display: 'none' }}
+                            type="file"
+                            name="image"
+                            onChange={(event) => {
+                              setFieldValue('image', event.currentTarget.files[0]);
+                            }}
+                          />
+                        </Button>
+                      ),
+                    }}
+                  />
+                </Grid>
 
-          <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-              <StyledButton variant="outlined" size="small">
-                {t('Cancel')}
-              </StyledButton>
-              <StyledButton variant="contained" onClick={onSubmitData}>
-                {t('Confirm')}
-              </StyledButton>
-            </div>
-          </Grid>
-        </Grid>
+                <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
+                  <CustomTextField
+                    id="description"
+                    name="description"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={values.description}
+                    onChange={handleChange}
+                    error={touched.description && Boolean(errors.description)}
+                    helperText={touched.description && errors.description}
+                  />
+                </Grid>
+
+                {successRegister && (
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Alert
+                      sx={{
+                        mt: 2,
+                        mb: 2,
+                      }}
+                      variant="filled"
+                      severity="success"
+                    >
+                      Success in Creator register.
+                    </Alert>
+                  </Grid>
+                )}
+
+                {errorMessage && (
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Alert
+                      sx={{
+                        mt: 2,
+                        mb: 2,
+                      }}
+                      variant="filled"
+                      severity="error"
+                    >
+                      {errorMessage}
+                    </Alert>
+                  </Grid>
+                )}
+
+                <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
+                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+                    <StyledButton variant="outlined" size="small">
+                      {t('Cancel')}
+                    </StyledButton>
+                    <StyledButton
+                      type="submit"
+                      variant="contained"
+                      onClick={onSubmitData}
+                      disabled={isSubmitting}
+                    >
+                      {t('Confirm')}
+                    </StyledButton>
+                  </div>
+                </Grid>
+              </Grid>
+            </form>
+          )}
+        </Formik>
       </Container>
     </PageContainer>
   );
