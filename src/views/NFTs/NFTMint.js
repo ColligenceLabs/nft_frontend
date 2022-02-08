@@ -11,6 +11,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useKip17Contract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
+import collectionsService from '../../services/collections.service';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -44,6 +45,7 @@ const NFTMint = () => {
 
   const [creator, setCreator] = useState(0);
   const [collection, setCollection] = useState(0);
+  const [contract, setContract] = useState(null);
 
   const [type, setType] = useState('KIP17');
 
@@ -82,7 +84,7 @@ const NFTMint = () => {
     setCreator(event.target.value);
   };
 
-  const handleCollectionChange = (event) => {
+  const handleCollectionChange = async (event) => {
     console.log(event.target);
     const { name, value } = event.target;
     setMintData({
@@ -90,6 +92,11 @@ const NFTMint = () => {
       [name]: value,
     });
     setCollection(event.target.value);
+
+    // TODO: collection id로 DB에서 Smart Contract 주소를 읽어 와야함.
+    await collectionsService.getDetailCollection(collection).then(({ data }) => {
+      setCollection(data.item[0].contract_address);
+    });
   };
 
   const handleTypeChange = (event) => {
@@ -103,7 +110,7 @@ const NFTMint = () => {
   };
 
   const { account } = useWeb3React();
-  const kip17Contract = useKip17Contract();
+  const kip17Contract = useKip17Contract(contract);
   const { createNFT } = useNFT(kip17Contract, account, mintData);
 
   return (
