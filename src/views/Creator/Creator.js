@@ -23,6 +23,7 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
+import StatusDialog from '../../components/StatusDialog';
 import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { getCreatorData } from '../../services/creator.service';
@@ -40,6 +41,8 @@ const Creator = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedAdmin, setSelectedAdmin] = useState({});
+  const [statusOpen, setStatusOpen] = useState(false);
 
   const onFilterName = (e) => {
     setFilterName(e.target.value);
@@ -96,6 +99,15 @@ const Creator = () => {
     setSearchQuery(event.target.value);
   };
 
+  const handleStatusOpen = (row) => {
+    setSelectedAdmin(row);
+    setStatusOpen(true);
+  };
+
+  const handleStatusClose = () => {
+    setStatusOpen(false);
+  };
+
   const updateStatus = async (id, status) => {
     const newStatus = status === 'active' ? 'inactive' : 'active';
     await updateAdminsStatus(id, newStatus).then((res) => {
@@ -103,6 +115,7 @@ const Creator = () => {
         setRows(rows.map((row) => (row._id === id ? { ...row, status: newStatus } : row)));
       }
     });
+    setStatusOpen(false);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -178,7 +191,7 @@ const Creator = () => {
                         <Typography color="textSecondary" variant="h6">
                           <Box display="flex" alignItems="center">
                             <Switch
-                              onClick={() => updateStatus(row._id, row.status)}
+                              onClick={() => handleStatusOpen(row)}
                               checked={row.status === 'active'}
                             />
                             <Typography
@@ -241,6 +254,11 @@ const Creator = () => {
           label="Dense padding"
         />
       </Box>
+      <StatusDialog
+        open={statusOpen}
+        handleStatusClose={handleStatusClose}
+        updateStatus={() => updateStatus(selectedAdmin._id, selectedAdmin.status)}
+      />
     </PageContainer>
   );
 };
