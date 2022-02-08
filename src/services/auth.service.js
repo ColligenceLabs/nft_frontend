@@ -2,13 +2,8 @@ import axios from 'axios';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/`;
 
-export const register = (username, email, password, level) => {
-  return axios.post(API_URL + 'register', {
-    full_name: username,
-    email,
-    password,
-    level,
-  });
+export const register = (formData) => {
+  return axios.post(API_URL + 'register', formData);
 };
 
 const login = (email, password) => {
