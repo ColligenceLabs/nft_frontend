@@ -12,6 +12,7 @@ import {
   IconButton,
   FormControlLabel,
   Typography,
+  Switch,
 } from '@mui/material';
 
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
@@ -25,8 +26,58 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
-import { getAdminsData } from '../../services/admins.service';
+import { getAdminsData, updateAdminsStatus } from '../../services/admins.service';
 import AdminsDetailModal from './AdminsDetailModal';
+import { styled } from '@mui/styles';
+
+const IOSSwitch = styled((props) => (
+  <Switch focusVisibleClassName=".Mui-focusVisible" size="small" disableRipple {...props} />
+))(({ theme }) => ({
+  width: 28,
+  height: 16,
+  padding: 0,
+  '& .MuiSwitch-switchBase': {
+    padding: 0,
+    margin: 2,
+    transitionDuration: '300ms',
+    '&.Mui-checked': {
+      transform: 'translateX(16px)',
+      color: '#fff',
+      '& + .MuiSwitch-track': {
+        backgroundColor:
+          theme.palette.mode === 'dark' ? theme.palette.primary : theme.palette.primary,
+        opacity: 1,
+        border: 0,
+      },
+      '&.Mui-disabled + .MuiSwitch-track': {
+        opacity: 0.5,
+      },
+    },
+    '&.Mui-focusVisible .MuiSwitch-thumb': {
+      color: '#33cf4d',
+      border: '6px solid #fff',
+    },
+    '&.Mui-disabled .MuiSwitch-thumb': {
+      color: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[600],
+    },
+    '&.Mui-disabled + .MuiSwitch-track': {
+      opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+    },
+  },
+  '& .MuiSwitch-thumb': {
+    boxSizing: 'border-box',
+    width: 10,
+    height: 10,
+  },
+  '& .MuiSwitch-track': {
+    borderRadius: 26 / 2,
+    backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+    opacity: 1,
+    transition: theme.transitions.create(['background-color'], {
+      duration: 500,
+    }),
+  },
+}));
 
 const Admins = () => {
   const { t } = useTranslation();
@@ -106,6 +157,15 @@ const Admins = () => {
 
   const closeUserDetailModal = () => {
     setAdminDetailModal(false);
+  };
+
+  const updateStatus = async (id, status) => {
+    const newStatus = status === 'active' ? 'inactive' : 'active';
+    await updateAdminsStatus(id, newStatus).then((res) => {
+      if (res.status === 1) {
+        setRows(rows.map((row) => (row._id === id ? { ...row, status: newStatus } : row)));
+      }
+    });
   };
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
@@ -188,18 +248,9 @@ const Admins = () => {
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
                           <Box display="flex" alignItems="center">
-                            <Box
-                              sx={{
-                                backgroundColor:
-                                  row.status === 'active'
-                                    ? (theme) => theme.palette.success.main
-                                    : row.status === 'inactive'
-                                    ? (theme) => theme.palette.warning.main
-                                    : (theme) => theme.palette.secondary.main,
-                                borderRadius: '100%',
-                                height: '10px',
-                                width: '10px',
-                              }}
+                            <Switch
+                              onClick={() => updateStatus(row._id, row.status)}
+                              checked={row.status === 'active'}
                             />
                             <Typography
                               color="textSecondary"

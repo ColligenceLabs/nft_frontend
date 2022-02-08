@@ -12,6 +12,7 @@ import {
   IconButton,
   FormControlLabel,
   Typography,
+  Switch,
 } from '@mui/material';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
@@ -25,6 +26,7 @@ import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { getCreatorData } from '../../services/creator.service';
+import { updateAdminsStatus } from '../../services/admins.service';
 
 const Creator = () => {
   const { t } = useTranslation();
@@ -92,6 +94,15 @@ const Creator = () => {
 
   const handleChangeSearchQuery = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+  const updateStatus = async (id, status) => {
+    const newStatus = status === 'active' ? 'inactive' : 'active';
+    await updateAdminsStatus(id, newStatus).then((res) => {
+      if (res.status === 1) {
+        setRows(rows.map((row) => (row._id === id ? { ...row, status: newStatus } : row)));
+      }
+    });
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -164,30 +175,23 @@ const Creator = () => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Box display="flex" alignItems="center">
-                          <Box
-                            sx={{
-                              backgroundColor:
-                                row.status === 'active'
-                                  ? (theme) => theme.palette.success.main
-                                  : row.status === 'inactive'
-                                  ? (theme) => theme.palette.warning.main
-                                  : (theme) => theme.palette.secondary.main,
-                              borderRadius: '100%',
-                              height: '10px',
-                              width: '10px',
-                            }}
-                          />
-                          <Typography
-                            color="textSecondary"
-                            variant="h6"
-                            sx={{
-                              ml: 0.5,
-                            }}
-                          >
-                            {row.status}
-                          </Typography>
-                        </Box>
+                        <Typography color="textSecondary" variant="h6">
+                          <Box display="flex" alignItems="center">
+                            <Switch
+                              onClick={() => updateStatus(row._id, row.status)}
+                              checked={row.status === 'active'}
+                            />
+                            <Typography
+                              color="textSecondary"
+                              variant="h6"
+                              sx={{
+                                ml: 0.5,
+                              }}
+                            >
+                              {row.status}
+                            </Typography>
+                          </Box>
+                        </Typography>
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
