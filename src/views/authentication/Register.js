@@ -3,25 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Grid, Box, Typography, Button, MenuItem, Alert, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import { register } from '../../services/auth.service';
-import * as yup from 'yup';
+import { register, validationSchema } from '../../services/auth.service';
 
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import PageContainer from '../../components/container/PageContainer';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
-
-const validationSchema = yup.object({
-  full_name: yup.string('Enter your name').required('Name is required'),
-  email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
-  password: yup
-    .string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
-  repeatPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  level: yup.string('Enter your name').required('Name is required'),
-});
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState();

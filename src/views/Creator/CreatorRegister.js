@@ -8,8 +8,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
-import * as yup from 'yup';
-import { register } from '../../services/auth.service';
+import { register, validationSchema } from '../../services/auth.service';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 
 const StyledButton = styled(Button)`
@@ -21,17 +20,6 @@ const Container = styled(Paper)(({ theme }) => ({
   borderRadius: '7px',
 }));
 
-const validationSchema = yup.object({
-  full_name: yup.string('Enter your name').required('Name is required'),
-  email: yup.string('Enter your email').email('Enter a valid email').required('Email is required'),
-  password: yup
-    .string('Enter your password')
-    .min(8, 'Password should be of minimum 8 characters length')
-    .required('Password is required'),
-  repeatPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  level: yup.string('Enter your name').required('Name is required'),
-});
-
 const CreatorRegister = () => {
   const { t } = useTranslation();
   const [creatorData, setCreatorData] = useState({
@@ -41,10 +29,6 @@ const CreatorRegister = () => {
   });
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
-
-  const onSubmitData = () => {
-    console.log(creatorData);
-  };
 
   return (
     <PageContainer title="Creator Register" description="this is Creator Register Form page">
@@ -57,13 +41,13 @@ const CreatorRegister = () => {
             email: '',
             password: '',
             repeatPassword: '',
-            level: '',
+            level: 'Creator',
             image: null,
             description: '',
           }}
           onSubmit={async (data, { setSubmitting }) => {
             setSubmitting(true);
-            console.log(data);
+
             let formData = new FormData();
             for (let value in data) {
               formData.append(value, data[value]);
@@ -159,7 +143,8 @@ const CreatorRegister = () => {
                     id="level"
                     name="level"
                     onChange={handleChange}
-                    value={values.level}
+                    // value={values.level}
+                    defaultValue="creator"
                     fullWidth
                     size="small"
                     error={touched.level && Boolean(errors.level)}
@@ -172,8 +157,8 @@ const CreatorRegister = () => {
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
                   <CustomTextField
-                    id="image"
-                    name="image"
+                    id="imageFiled"
+                    name="imageFiled"
                     variant="outlined"
                     fullWidth
                     size="small"
@@ -254,12 +239,7 @@ const CreatorRegister = () => {
                     <StyledButton variant="outlined" size="small">
                       {t('Cancel')}
                     </StyledButton>
-                    <StyledButton
-                      type="submit"
-                      variant="contained"
-                      onClick={onSubmitData}
-                      disabled={isSubmitting}
-                    >
+                    <StyledButton type="submit" variant="contained" disabled={isSubmitting}>
                       {t('Confirm')}
                     </StyledButton>
                   </div>
