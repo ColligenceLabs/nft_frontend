@@ -3,9 +3,9 @@ import authHeader from './auth-header';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/indexs`;
 
-export const getAdminsData = () => {
+export const getAdminsData = (page, rowsPerPage) => {
   return axios
-    .get(API_URL, { headers: authHeader() })
+    .get(`${API_URL}?page=${page + 1}&perPage=${rowsPerPage}`, { headers: authHeader() })
     .then((response) => {
       return response.data;
     })
