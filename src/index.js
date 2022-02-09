@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { ethers } from 'ethers';
+import { ethers } from 'taalswap-ethers';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
