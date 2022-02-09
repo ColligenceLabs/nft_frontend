@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { Grid, Button, Paper, MenuItem, Alert, FormHelperText } from '@mui/material';
+import { Grid, Button, Paper, MenuItem, Alert, FormHelperText, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -10,10 +10,7 @@ import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined
 import { useTranslation } from 'react-i18next';
 import { register, validationSchema } from '../../services/auth.service';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
-
-const StyledButton = styled(Button)`
-  width: 100px;
-`;
+import { LoadingButton } from '@mui/lab';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -69,6 +66,7 @@ const CreatorRegister = () => {
             touched,
             errors,
             setFieldValue,
+            resetForm,
           }) => (
             <form onSubmit={handleSubmit}>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -229,20 +227,27 @@ const CreatorRegister = () => {
                   />
                 </Grid>
 
-                {successRegister && (
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Alert
-                      sx={{
-                        mt: 2,
-                        mb: 2,
-                      }}
-                      variant="filled"
-                      severity="success"
-                    >
-                      Success in Creator register.
-                    </Alert>
-                  </Grid>
-                )}
+                <Snackbar
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  open={successRegister}
+                  autoHideDuration={2000}
+                  onClose={() => {
+                    setSuccessRegister(false);
+                    resetForm();
+                  }}
+                >
+                  <Alert
+                    onClose={() => {
+                      setSuccessRegister(false);
+                      resetForm();
+                    }}
+                    variant="filled"
+                    severity="success"
+                    sx={{ width: '100%' }}
+                  >
+                    Success in Collection create!
+                  </Alert>
+                </Snackbar>
 
                 {errorMessage && (
                   <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -260,14 +265,14 @@ const CreatorRegister = () => {
                 )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                    <StyledButton variant="outlined" size="small">
-                      {t('Cancel')}
-                    </StyledButton>
-                    <StyledButton type="submit" variant="contained" disabled={isSubmitting}>
-                      {t('Confirm')}
-                    </StyledButton>
-                  </div>
+                  <LoadingButton
+                    type="submit"
+                    loading={isSubmitting}
+                    variant="outlined"
+                    variant="contained"
+                  >
+                    {t('Confirm')}
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>
