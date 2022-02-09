@@ -12,6 +12,7 @@ import { useKip17Contract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
 import collectionsService from '../../services/collections.service';
+import contracts from '../../config/constants/contracts';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -45,7 +46,10 @@ const NFTMint = () => {
 
   const [creator, setCreator] = useState(0);
   const [collection, setCollection] = useState(0);
-  const [contract, setContract] = useState(null);
+  const [contract, setContract] = useState(
+    // 구 버전에서 발행된 전체 NFTs
+    contracts.kip17[parseInt(process.env.REACT_APP_CHAIN_ID, 10)],
+  );
 
   const [type, setType] = useState('KIP17');
 
