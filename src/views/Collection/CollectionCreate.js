@@ -11,6 +11,8 @@ import {
   Box,
   Alert,
   FormHelperText,
+  Snackbar,
+  CircularProgress,
 } from '@mui/material';
 import { Formik } from 'formik';
 import { styled } from '@mui/material/styles';
@@ -27,6 +29,7 @@ import {
   createCollection,
   validationCollectionCreateSchema,
 } from '../../services/collections.service';
+import { LoadingButton } from '@mui/lab';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -98,9 +101,7 @@ const CollectionCreate = () => {
               if (['name', 'creator_id', 'image', 'contract_address'].includes(value)) {
                 formData.append(value, values[value]);
               } else if (['category'].includes(value)) {
-                const categories = values[value].toString().split();
-                console.log(categories);
-                formData.append(value, categories);
+                values[value].forEach((category) => formData.append(value, category));
               }
             }
 
@@ -128,6 +129,7 @@ const CollectionCreate = () => {
             touched,
             errors,
             setFieldValue,
+            resetForm,
           }) => (
             <form onSubmit={handleSubmit}>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -138,7 +140,6 @@ const CollectionCreate = () => {
                   <CustomTextField
                     id="name"
                     name="name"
-                    placeholder={t('Enter name')}
                     variant="outlined"
                     fullWidth
                     size="small"
@@ -161,8 +162,6 @@ const CollectionCreate = () => {
                     onChange={(event) => {
                       setFieldValue('creator_id', event.target.value);
                     }}
-                    // error={touched.creator && Boolean(errors.creator)}
-                    // helperText={touched.creator && errors.creator}
                     fullWidth
                     size="small"
                   >
@@ -178,31 +177,6 @@ const CollectionCreate = () => {
                       {errors.creator_id}
                     </FormHelperText>
                   )}
-
-                  {/*<CustomTextField*/}
-                  {/*  select*/}
-                  {/*  id="creator_id"*/}
-                  {/*  name="creator_id"*/}
-                  {/*  SelectProps={{*/}
-                  {/*    value: values.creator_id,*/}
-                  {/*    onChange: (event) => {*/}
-                  {/*      setFieldValue('creator_id', event.target.value);*/}
-                  {/*    },*/}
-                  {/*  }}*/}
-                  {/*  error={touched.creator_id && Boolean(errors.creator_id)}*/}
-                  {/*  helperText={touched.creator_id && errors.creator_id}*/}
-                  {/*  fullWidth*/}
-                  {/*  size="small"*/}
-                  {/*>*/}
-                  {/*  <MenuItem value="">None</MenuItem>*/}
-                  {/*  {creatorList &&*/}
-                  {/*    creatorList.map((creator, index) => (*/}
-                  {/*      <MenuItem key={index} value={creator._id}>*/}
-                  {/*        {creator.full_name}*/}
-                  {/*      </MenuItem>*/}
-                  {/*    ))}*/}
-                  {/*  /!*<MenuItem>asdf</MenuItem>*!/*/}
-                  {/*</CustomTextField>*/}
                 </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="category">{t('Category')}</CustomFormLabel>
@@ -216,11 +190,7 @@ const CollectionCreate = () => {
                       onChange: (event) => {
                         setFieldValue('category', event.target.value);
                       },
-                      // error: touched.name && Boolean(errors.name),
-                      // helperText: touched.name && errors.name,
                     }}
-                    // error={touched.category && Boolean(errors.category)}
-                    // helperText={touched.category && errors.category}
                     fullWidth
                     size="small"
                   >
@@ -245,7 +215,6 @@ const CollectionCreate = () => {
                     fullWidth
                     size="small"
                     value={values.image == null ? '' : values.image.name}
-                    // onChange={handleChange}
                     InputProps={{
                       startAdornment: (
                         <Button
@@ -311,7 +280,6 @@ const CollectionCreate = () => {
                     <CustomTextField
                       id="symbol"
                       name="symbol"
-                      placeholder={t('Enter symbol')}
                       variant="outlined"
                       fullWidth
                       size="small"
@@ -329,7 +297,6 @@ const CollectionCreate = () => {
                     <CustomTextField
                       id="tokenUri"
                       name="tokenUri"
-                      placeholder={t('Enter token uri')}
                       variant="outlined"
                       fullWidth
                       size="small"
@@ -350,20 +317,28 @@ const CollectionCreate = () => {
                     </Typography>
                   </WarningBox>
                 </Grid>
-                {successRegister && (
-                  <Grid item lg={12} md={12} sm={12} xs={12}>
-                    <Alert
-                      sx={{
-                        mt: 2,
-                        mb: 2,
-                      }}
-                      variant="filled"
-                      severity="success"
-                    >
-                      Success in Collection create.
-                    </Alert>
-                  </Grid>
-                )}
+
+                <Snackbar
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  open={successRegister}
+                  autoHideDuration={2000}
+                  onClose={() => {
+                    setSuccessRegister(false);
+                    resetForm();
+                  }}
+                >
+                  <Alert
+                    onClose={() => {
+                      setSuccessRegister(false);
+                      resetForm();
+                    }}
+                    variant="filled"
+                    severity="success"
+                    sx={{ width: '100%' }}
+                  >
+                    Success in Collection create!
+                  </Alert>
+                </Snackbar>
 
                 {errorMessage && (
                   <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -380,14 +355,14 @@ const CollectionCreate = () => {
                   </Grid>
                 )}
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-                    <StyledButton variant="outlined" size="small">
-                      {t('Cancel')}
-                    </StyledButton>
-                    <StyledButton type="submit" variant="contained" disabled={isSubmitting}>
-                      {t('Confirm')}
-                    </StyledButton>
-                  </div>
+                  <LoadingButton
+                    type="submit"
+                    loading={isSubmitting}
+                    variant="outlined"
+                    variant="contained"
+                  >
+                    {t('Confirm')}
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </form>
