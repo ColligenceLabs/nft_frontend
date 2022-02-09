@@ -42,6 +42,9 @@ const useNFT = (contract, account, mintData) => {
     console.log('11111', result);
     // thumbnail 서버 업로드
 
+    // TODO : tokenId가 중복되지 않도록 처리해야함. 발행할 tokenId를 자동으로 가지고 오기 위한 API 필요
+    const tokenId = 3;
+
     // form json 파일 생성
     let imgName = mintData.content.split('.');
     const metadata = {
@@ -51,7 +54,7 @@ const useNFT = (contract, account, mintData) => {
       alt_url: ALT_URL + result.path + '.' + imgName[imgName.length - 1],
       content_Type: imgName[imgName.length - 1],
       cid: result.path,
-      tokenId: 2,
+      tokenId: tokenId,
       total_minted: '',
       external_url: mintData.external_url,
       attributes: [],
@@ -81,13 +84,13 @@ const useNFT = (contract, account, mintData) => {
     // mint 요청
     const gasLimit = await contract.estimateGas.mintWithTokenURI(
       '0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73',
-      2,
+      tokenId,
       IPFS_URL + metadata_ipfs_link.path,
     );
     console.log(gasPrice, contract);
     const tx = await contract.mintWithTokenURI(
       '0x1716c4d49e9d81c17608cd9a45b1023ac9df6c73',
-      2,
+      tokenId,
       IPFS_URL + metadata_ipfs_link.path,
       {
         from: account,
