@@ -30,6 +30,8 @@ import {
   validationCollectionCreateSchema,
 } from '../../services/collections.service';
 import { LoadingButton } from '@mui/lab';
+import { deployKIP17, deployKIP37 } from '../../utils/deploy';
+import { useWeb3React } from '@web3-react/core';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -58,6 +60,7 @@ const WarningBox = styled(Box)(({ theme }) => ({
 }));
 
 const CollectionCreate = () => {
+  const { library, account } = useWeb3React();
   const { t } = useTranslation();
 
   const [errorMessage, setErrorMessage] = useState();
@@ -88,7 +91,7 @@ const CollectionCreate = () => {
             creator_id: '',
             image: null,
             category: [],
-            contract_address: '0x37981dad0ac880c072a926dc04aa747a2289b998',
+            contract_address: '',
             type: 'KIP17',
             tokenUri: '',
             symbol: '',
@@ -98,12 +101,22 @@ const CollectionCreate = () => {
 
             let formData = new FormData();
             for (let value in values) {
-              if (['name', 'creator_id', 'image', 'contract_address'].includes(value)) {
+              if (['name', 'creator_id', 'image'].includes(value)) {
                 formData.append(value, values[value]);
               } else if (['category'].includes(value)) {
                 values[value].forEach((category) => formData.append(value, category));
               }
             }
+
+            // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
+            let result;
+            if (values.type === 'KIP17') {
+              result = await deployKIP17(values.name, values.symbol, account, library);
+            } else if (values.type === 'KIP37') {
+              result = await deployKIP37(values.tokenUri, account, library);
+            }
+            formData.append('contract_address', result.address);
+            console.log('======>', result.address);
 
             await createCollection(formData)
               .then((res) => {

@@ -1,8 +1,8 @@
 import { ContractFactory } from '@ethersproject/contracts';
-import { kip17Data, kip37Data } from 'src/contracts';
+import { kip17Data, kip37Data } from '../contracts';
 // import { useWeb3React } from '@web3-react/core';
 
-async function deployKIP17(name, symbol, account, library) {
+export async function deployKIP17(name, symbol, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
@@ -47,7 +47,7 @@ async function deployKIP17(name, symbol, account, library) {
   return ret;
 }
 
-async function deployKIP37(tokenUri, account, library) {
+export async function deployKIP37(tokenUri, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
