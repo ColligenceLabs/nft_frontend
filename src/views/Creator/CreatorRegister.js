@@ -22,11 +22,7 @@ const Container = styled(Paper)(({ theme }) => ({
 
 const CreatorRegister = () => {
   const { t } = useTranslation();
-  const [creatorData, setCreatorData] = useState({
-    name: '',
-    content: '',
-    description: '',
-  });
+
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
 
@@ -167,7 +163,6 @@ const CreatorRegister = () => {
                     InputProps={{
                       startAdornment: (
                         <Button
-                          variant="contained"
                           component="label"
                           variant="contained"
                           size="small"
