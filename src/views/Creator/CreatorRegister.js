@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { Grid, Button, Paper, MenuItem, Alert } from '@mui/material';
+import { Grid, Button, Paper, MenuItem, Alert, FormHelperText } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -82,9 +82,14 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.full_name}
                     onChange={handleChange}
-                    error={touched.full_name && Boolean(errors.full_name)}
-                    helperText={touched.full_name && errors.full_name}
+                    // error={touched.full_name && Boolean(errors.full_name)}
+                    // helperText={touched.full_name && errors.full_name}
                   />
+                  {touched.full_name && errors.full_name && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.full_name}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -97,9 +102,14 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.email}
                     onChange={handleChange}
-                    error={touched.email && Boolean(errors.email)}
-                    helperText={touched.email && errors.email}
+                    // error={touched.email && Boolean(errors.email)}
+                    // helperText={touched.email && errors.email}
                   />
+                  {touched.email && errors.email && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.email}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
@@ -113,9 +123,14 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.password}
                     onChange={handleChange}
-                    error={touched.password && Boolean(errors.password)}
-                    helperText={touched.password && errors.password}
+                    // error={touched.password && Boolean(errors.password)}
+                    // helperText={touched.password && errors.password}
                   />
+                  {touched.password && errors.password && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.password}
+                    </FormHelperText>
+                  )}
                 </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>
@@ -128,9 +143,14 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.repeatPassword}
                     onChange={handleChange}
-                    error={touched.repeatPassword && Boolean(errors.repeatPassword)}
-                    helperText={touched.repeatPassword && errors.repeatPassword}
+                    // error={touched.repeatPassword && Boolean(errors.repeatPassword)}
+                    // helperText={touched.repeatPassword && errors.repeatPassword}
                   />
+                  {touched.repeatPassword && errors.repeatPassword && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.repeatPassword}
+                    </FormHelperText>
+                  )}
                 </Grid>
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
@@ -143,11 +163,16 @@ const CreatorRegister = () => {
                     defaultValue="creator"
                     fullWidth
                     size="small"
-                    error={touched.level && Boolean(errors.level)}
+                    // error={touched.level && Boolean(errors.level)}
                     // helperText={touched.repeatPassword && errors.repeatPassword}
                   >
                     <MenuItem value="creator">Creator</MenuItem>
                   </CustomSelect>
+                  {touched.level && errors.level && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.level}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
@@ -182,6 +207,11 @@ const CreatorRegister = () => {
                       ),
                     }}
                   />
+                  {touched.image && errors.image && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.image}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>

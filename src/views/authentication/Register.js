@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Grid, Box, Typography, Button, MenuItem, Alert, TextField } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Typography,
+  Button,
+  MenuItem,
+  Alert,
+  TextField,
+  FormHelperText,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
 import { register, validationSchema } from '../../services/auth.service';
@@ -139,9 +148,12 @@ const Register = () => {
                                   size="small"
                                   value={values.full_name}
                                   onChange={handleChange}
-                                  error={touched.full_name && Boolean(errors.full_name)}
-                                  helperText={touched.full_name && errors.full_name}
                                 />
+                                {touched.full_name && errors.full_name && (
+                                  <FormHelperText htmlFor="render-select" error>
+                                    {errors.full_name}
+                                  </FormHelperText>
+                                )}
                               </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="email">Email Address</CustomFormLabel>
@@ -153,9 +165,12 @@ const Register = () => {
                                   size="small"
                                   value={values.email}
                                   onChange={handleChange}
-                                  error={touched.email && Boolean(errors.email)}
-                                  helperText={touched.email && errors.email}
                                 />
+                                {touched.email && errors.email && (
+                                  <FormHelperText htmlFor="render-select" error>
+                                    {errors.email}
+                                  </FormHelperText>
+                                )}
                               </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
@@ -168,9 +183,12 @@ const Register = () => {
                                   size="small"
                                   value={values.password}
                                   onChange={handleChange}
-                                  error={touched.password && Boolean(errors.password)}
-                                  helperText={touched.password && errors.password}
                                 />
+                                {touched.password && errors.password && (
+                                  <FormHelperText htmlFor="render-select" error>
+                                    {errors.password}
+                                  </FormHelperText>
+                                )}
                               </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="password">
@@ -185,9 +203,12 @@ const Register = () => {
                                   size="small"
                                   value={values.repeatPassword}
                                   onChange={handleChange}
-                                  error={touched.repeatPassword && Boolean(errors.repeatPassword)}
-                                  helperText={touched.repeatPassword && errors.repeatPassword}
                                 />
+                                {touched.repeatPassword && errors.repeatPassword && (
+                                  <FormHelperText htmlFor="render-select" error>
+                                    {errors.repeatPassword}
+                                  </FormHelperText>
+                                )}
                               </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
@@ -199,13 +220,16 @@ const Register = () => {
                                   value={values.level}
                                   fullWidth
                                   size="small"
-                                  error={touched.level && Boolean(errors.level)}
-                                  // helperText={touched.repeatPassword && errors.repeatPassword}
                                 >
                                   <MenuItem value="administrator">Administrator</MenuItem>
                                   <MenuItem value="creator">Creator</MenuItem>
                                   <MenuItem value="operator">Operator</MenuItem>
                                 </CustomSelect>
+                                {touched.level && errors.level && (
+                                  <FormHelperText htmlFor="render-select" error>
+                                    {errors.level}
+                                  </FormHelperText>
+                                )}
                               </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
@@ -240,6 +264,11 @@ const Register = () => {
                                     ),
                                   }}
                                 />
+                                {touched.image && errors.image && (
+                                  <FormHelperText htmlFor="render-select" error>
+                                    {errors.image}
+                                  </FormHelperText>
+                                )}
                               </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="description">

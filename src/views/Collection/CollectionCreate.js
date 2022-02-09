@@ -60,21 +60,12 @@ const CollectionCreate = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const [creatorList, setCreatorList] = useState();
-  const [collectionData, setCollectionData] = useState({
-    name: '',
-    creator: '',
-    category: '',
-    coverImage: '',
-    type: 'KIP17',
-    symbol: '',
-  });
 
   useEffect(() => {
     const fetchCreator = async () => {
       await getCreatorData().then(({ data: { items } }) => {
-        console.log(items);
         let creatorArray = items.map((item) => ({
-          _id: item._id.toString(),
+          _id: item._id,
           full_name: item.full_name,
         }));
         setCreatorList(creatorArray);
@@ -393,12 +384,7 @@ const CollectionCreate = () => {
                     <StyledButton variant="outlined" size="small">
                       {t('Cancel')}
                     </StyledButton>
-                    <StyledButton
-                      type="submit"
-                      variant="contained"
-                      disabled={isSubmitting}
-                      // onClick={() => console.log('aaa')}
-                    >
+                    <StyledButton type="submit" variant="contained" disabled={isSubmitting}>
                       {t('Confirm')}
                     </StyledButton>
                   </div>

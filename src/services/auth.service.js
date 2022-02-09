@@ -9,7 +9,9 @@ export const validationSchema = yup.object({
     .min(8, 'Password should be of minimum 8 characters length')
     .required('Password is required'),
   repeatPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  level: yup.string('Enter your name').required('Name is required'),
+  level: yup.string('Select level').required('Level is required'),
+  image: yup.mixed().required('Image is required'),
+  description: yup.string('Enter your name'),
 });
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/`;
