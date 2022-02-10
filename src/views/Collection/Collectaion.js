@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import {
   Box,
@@ -7,16 +6,13 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
   Paper,
   IconButton,
   FormControlLabel,
   Typography,
 } from '@mui/material';
-import { visuallyHidden } from '@mui/utils';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -32,7 +28,6 @@ import { stableSort, getComparator } from '../../utils/tableUtils';
 import CollectionDetailModal from './CollectionDetailModal';
 import { getCollectionData } from '../../services/collections.service';
 import { getCreatorData } from '../../services/creator.service';
-import useCreator from '../../hooks/useCreator';
 
 const Collections = () => {
   const { t } = useTranslation();
@@ -49,8 +44,6 @@ const Collections = () => {
   const [selectedDetailRow, setSelectedDetailRow] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
 
-  const creatorList = useCreator();
-
   const onFilterName = (e) => {
     setFilterName(e.target.value);
   };
@@ -63,7 +56,7 @@ const Collections = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.uid);
+      const newSelecteds = rows.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -121,6 +114,10 @@ const Collections = () => {
 
   useEffect(async () => {
     const fetchCollections = async () => {
+      const {
+        data: { items: creatorList },
+      } = await getCreatorData();
+
       await getCollectionData(page, rowsPerPage).then(({ data }) => {
         const collectionArray = data.items.map((item) => {
           let temp = creatorList?.find((creator) => creator._id === item.creator_id);
@@ -164,7 +161,6 @@ const Collections = () => {
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                   // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     const isItemSelected = isSelected(row._id);
                     const labelId = `enhanced-table-checkbox-${index}`;
@@ -172,7 +168,6 @@ const Collections = () => {
                     return (
                       <TableRow
                         hover
-                        // onClick={(event) => handleClick(event, row.uid)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -206,7 +201,7 @@ const Collections = () => {
                         </TableCell>
                         <TableCell style={{ minWidth: 200 }}>
                           <Typography color="textSecondary" variant="h6">
-                            {row.createdAt}
+                            {new Date(row.createdAt).toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -270,7 +265,7 @@ const Collections = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={totalCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
