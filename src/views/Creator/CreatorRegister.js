@@ -8,9 +8,10 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
-import { register, validationSchema } from '../../services/auth.service';
+import { register } from '../../services/auth.service';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { LoadingButton } from '@mui/lab';
+import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -28,7 +29,7 @@ const CreatorRegister = () => {
       <Breadcrumb title="Creator Register" subtitle="Creator Register Information" />
       <Container>
         <Formik
-          validationSchema={validationSchema}
+          validationSchema={adminRegisterSchema}
           initialValues={{
             full_name: '',
             email: '',

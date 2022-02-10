@@ -12,13 +12,14 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import { register, validationSchema } from '../../services/auth.service';
+import { register } from '../../services/auth.service';
 
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import PageContainer from '../../components/container/PageContainer';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
+import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState();
@@ -98,7 +99,7 @@ const Register = () => {
                       }}
                     >
                       <Formik
-                        validationSchema={validationSchema}
+                        validationSchema={adminRegisterSchema}
                         initialValues={{
                           full_name: '',
                           email: '',

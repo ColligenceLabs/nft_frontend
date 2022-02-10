@@ -25,13 +25,11 @@ import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
 import { getCreatorData } from '../../services/creator.service';
-import {
-  createCollection,
-  validationCollectionCreateSchema,
-} from '../../services/collections.service';
+import { createCollection } from '../../services/collections.service';
 import { LoadingButton } from '@mui/lab';
 import { deployKIP17, deployKIP37 } from '../../utils/deploy';
 import { useWeb3React } from '@web3-react/core';
+import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -85,7 +83,7 @@ const CollectionCreate = () => {
       <Breadcrumb title="Collection Create" subtitle="Collection Create Information" />
       <Container>
         <Formik
-          validationSchema={validationCollectionCreateSchema}
+          validationSchema={collectionCreateSchema}
           initialValues={{
             name: '',
             creator_id: '',
