@@ -17,6 +17,15 @@ export const validationCollectionCreateSchema = yup.object({
   image: yup.mixed().required('You need to provide a file'),
 });
 
+export const getCollectionData = (page, rowsPerPage) => {
+  return axios
+    .get(`${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => console.log(error));
+};
+
 export const getDetailCollection = () => {
   return axios
     .get(`${API_URL}/detail/id`, { headers: authHeader() })
@@ -34,6 +43,7 @@ export const createCollection = (formData) => {
 const collectionsService = {
   getDetailCollection,
   createCollection,
+  getCollectionData,
 };
 
 export default collectionsService;
