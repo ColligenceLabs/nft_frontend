@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
-import { Grid, MenuItem, Button, Paper, FormHelperText } from '@mui/material';
+import { Grid, MenuItem, Button, Paper, FormHelperText, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
@@ -14,15 +14,10 @@ import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
 import collectionsService, { getCollectionsByCreatorId } from '../../services/collections.service';
 import contracts from '../../config/constants/contracts';
-import { register, validationSchema } from '../../services/auth.service';
 import { LoadingButton } from '@mui/lab';
-import { getCreatorData } from '../../services/creator.service';
 import useCreator from '../../hooks/useCreator';
 import adminRegisterSchema from '../../config/schema/nftMintSchema';
-
-const StyledButton = styled(Button)`
-  width: 100px;
-`;
+import { registerNFT } from '../../services/nft.service';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -47,81 +42,18 @@ const NFTMint = () => {
     price: '',
     description: '',
   });
-  const [selectedContent, setSelectedContent] = useState();
-  const [selectedThumbnail, setSelectedThumbnail] = useState();
 
-  const [creator, setCreator] = useState(0);
-  const [collection, setCollection] = useState(0);
   const [contract, setContract] = useState(
     // 구 버전에서 발행된 전체 NFTs
     contracts.kip17[parseInt(process.env.REACT_APP_CHAIN_ID, 10)],
   );
 
-  const [type, setType] = useState('KIP17');
   //--------------- formik
   // const [creatorList, setCreatorList] = useState();
   const [collectionList, setCollectionList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState();
+  const [successRegister, setSuccessRegister] = useState(false);
   const creatorList = useCreator();
-
-  const contentFileHandler = (event) => {
-    setSelectedContent(event.target.files[0]);
-    setMintData({
-      ...mintData,
-      content: event.target.files[0].name,
-      contentFile: event.target.files[0],
-    });
-  };
-
-  const thumbnailFileHandler = (event) => {
-    setSelectedThumbnail(event.target.files[0]);
-    setMintData({
-      ...mintData,
-      thumbnail: event.target.files[0].name,
-      thumbnailFile: event.target.files[0],
-    });
-  };
-
-  const handleMintDataChange = (event) => {
-    const { name, value } = event.target;
-    setMintData({
-      ...mintData,
-      [name]: value,
-    });
-  };
-  const handleCreatorChange = (event) => {
-    console.log(event.target);
-    const { name, value } = event.target;
-    setMintData({
-      ...mintData,
-      [name]: value,
-    });
-    setCreator(event.target.value);
-  };
-
-  const handleCollectionChange = async (event) => {
-    console.log(event.target);
-    const { name, value } = event.target;
-    setMintData({
-      ...mintData,
-      [name]: value,
-    });
-    setCollection(event.target.value);
-
-    // TODO: collection id로 DB에서 Smart Contract 주소를 읽어 와야함.
-    await collectionsService.getDetailCollection(collection).then(({ data }) => {
-      setCollection(data.item[0].contract_address);
-    });
-  };
-
-  const handleTypeChange = (event) => {
-    console.log(event.target.name);
-    const { name, value } = event.target;
-    setMintData({
-      ...mintData,
-      [name]: value,
-    });
-    setType(event.target.value);
-  };
 
   const getCollectionList = async (id) => {
     await getCollectionsByCreatorId(id)
@@ -152,13 +84,37 @@ const NFTMint = () => {
             externalURL: '',
             description: '',
             price: '',
+            contract_type: '',
+            auto: 'false',
+            type: '0',
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
+            let formData = new FormData();
+            for (let value in values) {
+              if (
+                ['name', 'price', 'external_url', 'contract_type', 'auto', 'type'].includes(value)
+              ) {
+                formData.append(value, values[value]);
+              }
+            }
+            formData.append('quantity', values['amount']);
+            formData.append('collection_id', values['collection']);
+            formData.append('files', values['content']);
+            formData.append('files', values['thumbnail']);
 
-            // todo mint login
-            console.log(values);
-
+            await registerNFT(formData)
+              .then((res) => {
+                console.log(res.data);
+                if (res.data.status === 1) {
+                  setErrorMessage(null);
+                  setSuccessRegister(true);
+                } else {
+                  setErrorMessage(res.data.message);
+                  setSuccessRegister(false);
+                }
+              })
+              .catch((error) => console.log(error));
             setSubmitting(false);
           }}
         >
@@ -233,7 +189,7 @@ const NFTMint = () => {
                       collectionList.filter((collection) =>
                         collection._id === event.target.value
                           ? setFieldValue('category', collection.category.toString())
-                          : console.log('miss'),
+                          : null,
                       );
                     }}
                     fullWidth
@@ -418,7 +374,42 @@ const NFTMint = () => {
                     </FormHelperText>
                   )}
                 </Grid>
+                <Snackbar
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  open={successRegister}
+                  autoHideDuration={2000}
+                  onClose={() => {
+                    setSuccessRegister(false);
+                    resetForm();
+                  }}
+                >
+                  <Alert
+                    onClose={() => {
+                      setSuccessRegister(false);
+                      resetForm();
+                    }}
+                    variant="filled"
+                    severity="success"
+                    sx={{ width: '100%' }}
+                  >
+                    Success in Collection nfts!
+                  </Alert>
+                </Snackbar>
 
+                {errorMessage && (
+                  <Grid item lg={12} md={12} sm={12} xs={12}>
+                    <Alert
+                      sx={{
+                        mt: 2,
+                        mb: 2,
+                      }}
+                      variant="filled"
+                      severity="error"
+                    >
+                      {errorMessage}
+                    </Alert>
+                  </Grid>
+                )}
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
                   {/*<div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>*/}
                   {/*  <StyledButton variant="outlined" size="small">*/}
@@ -431,7 +422,6 @@ const NFTMint = () => {
                   <LoadingButton
                     type="submit"
                     loading={isSubmitting}
-                    variant="outlined"
                     variant="contained"
                     sx={{ mt: 2 }}
                   >
