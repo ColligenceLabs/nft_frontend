@@ -4,19 +4,6 @@ import * as yup from 'yup';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/collection`;
 
-export const validationCollectionCreateSchema = yup.object({
-  name: yup.string('Enter your name').required('Name is required'),
-  creator_id: yup.string('Select creator').required('Creator is required'),
-  category: yup
-    .array('Select category')
-    .nullable()
-    .label('Category')
-    .min(1)
-    .of(yup.string())
-    .required('Category is required'),
-  image: yup.mixed().required('You need to provide a file'),
-});
-
 export const getCollectionData = (page, rowsPerPage) => {
   return axios
     .get(`${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`, { headers: authHeader() })
@@ -40,10 +27,20 @@ export const createCollection = (formData) => {
   return axios.post(`${API_URL}/create`, formData, { headers: authHeader() });
 };
 
+export const getCollectionsByCreatorId = (id) => {
+  return axios
+    .get(`${API_URL}/creator/${id}`, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => console.log(error));
+};
+
 const collectionsService = {
   getDetailCollection,
   createCollection,
   getCollectionData,
+  getCollectionsByCreatorId,
 };
 
 export default collectionsService;
