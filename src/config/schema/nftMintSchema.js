@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const adminRegisterSchema = yup.object({
+const nftRegisterSchema = yup.object({
   name: yup.string('Enter your name').required('Name is required'),
   creator_id: yup.string('Select creator').required('Creator is required'),
   collection: yup.string('Select collection').required('Collection is required'),
@@ -13,4 +13,4 @@ const adminRegisterSchema = yup.object({
   price: yup.number('Enter price').required('Price is required'),
 });
 
-export default adminRegisterSchema;
+export default nftRegisterSchema;

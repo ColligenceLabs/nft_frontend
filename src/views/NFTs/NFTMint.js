@@ -16,7 +16,7 @@ import collectionsService, { getCollectionsByCreatorId } from '../../services/co
 import contracts from '../../config/constants/contracts';
 import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
-import adminRegisterSchema from '../../config/schema/nftMintSchema';
+import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT } from '../../services/nft.service';
 
 const Container = styled(Paper)(({ theme }) => ({
@@ -72,7 +72,7 @@ const NFTMint = () => {
       <Breadcrumb title="NFT Mint" subtitle="NFT Mint Information" />
       <Container>
         <Formik
-          validationSchema={adminRegisterSchema}
+          validationSchema={nftRegisterSchema}
           initialValues={{
             name: '',
             creator_id: '',
@@ -93,7 +93,15 @@ const NFTMint = () => {
             let formData = new FormData();
             for (let value in values) {
               if (
-                ['name', 'price', 'external_url', 'contract_type', 'auto', 'type'].includes(value)
+                [
+                  'name',
+                  'price',
+                  'external_url',
+                  'contract_type',
+                  'auto',
+                  'type',
+                  'description',
+                ].includes(value)
               ) {
                 formData.append(value, values[value]);
               }

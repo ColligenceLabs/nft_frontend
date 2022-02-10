@@ -177,7 +177,7 @@ const NFTs = () => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
-                          no filed
+                          {row.description}
                         </Typography>
                       </TableCell>
                       <TableCell>
@@ -202,7 +202,7 @@ const NFTs = () => {
                           />
                         )}
                         <Chip
-                          label={`Total Mint : no filed`}
+                          label={`Total Mint : ${row.quantity}`}
                           color={'error'}
                           size={'small'}
                           style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
