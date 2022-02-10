@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import {
   Box,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
   Paper,
   IconButton,
   FormControlLabel,
@@ -18,109 +15,29 @@ import {
   Chip,
   Switch,
 } from '@mui/material';
-import { visuallyHidden } from '@mui/utils';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import { rows } from './mockData';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
+import EnhancedTableHead from '../../components/EnhancedTableHead';
+import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-function EnhancedTableHead(props) {
-  const { t } = useTranslation();
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <CustomCheckbox
-            color="primary"
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputprops={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ width: `${headCell.width}`, background: 'red' }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <Typography variant="subtitle1" fontWeight="500">
-                {t(`${headCell.label}`)}
-              </Typography>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
+import { getNFTData } from '../../services/nft.service';
 
 const NFTs = () => {
   const { t } = useTranslation();
+
+  const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
+  const [totalCount, setTotalCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -181,7 +98,17 @@ const NFTs = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = rowsPerPage - rows.length;
+
+  useEffect(() => {
+    const fetchNFTs = async () => {
+      await getNFTData(page, rowsPerPage).then(({ data }) => {
+        setRows(data.items);
+        setTotalCount(data.headers.x_total_count);
+      });
+    };
+    fetchNFTs();
+  }, [getNFTData, page, rowsPerPage]);
 
   return (
     <PageContainer title="NFTs" description="this is NFTs page">
@@ -200,6 +127,7 @@ const NFTs = () => {
               size={dense ? 'small' : 'medium'}
             >
               <EnhancedTableHead
+                headCells={headCells}
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
@@ -208,160 +136,163 @@ const NFTs = () => {
                 rowCount={rows.length}
               />
               <TableBody>
-                {stableSort(rows, getComparator(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.no);
-                    const labelId = `enhanced-table-checkbox-${index}`;
+                {stableSort(rows, getComparator(order, orderBy)).map((row, index) => {
+                  const isItemSelected = isSelected(row._id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                    return (
-                      <TableRow
-                        hover
-                        // onClick={(event) => handleClick(event, row.name)}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.no}
-                        selected={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <CustomCheckbox
+                  return (
+                    <TableRow
+                      hover
+                      // onClick={(event) => handleClick(event, row.name)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row._id}
+                      selected={isItemSelected}
+                    >
+                      <TableCell padding="checkbox">
+                        <CustomCheckbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputprops={{
+                            'aria-labelledby': labelId,
+                          }}
+                          onClick={(event) => handleClick(event, row._id)}
+                        />
+                      </TableCell>
+                      {/*<TableCell style={{ minWidth: 90 }}>*/}
+                      {/*  <Typography color="textSecondary" variant="h6">*/}
+                      {/*    {row.no}*/}
+                      {/*  </Typography>*/}
+                      {/*</TableCell>*/}
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row._id}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.metadata.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          no filed
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.collection_id?.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        {row.selling_status === 1 ? (
+                          <Chip
+                            label="On sale"
                             color="primary"
-                            checked={isItemSelected}
-                            inputprops={{
-                              'aria-labelledby': labelId,
+                            size={'small'}
+                            style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                          />
+                        ) : (
+                          <Chip
+                            label="Off sale"
+                            color={'secondary'}
+                            size={'small'}
+                            style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                          />
+                        )}
+                        <Chip
+                          label={`Total Mint : no filed`}
+                          color={'error'}
+                          size={'small'}
+                          style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                        />
+                        <Chip
+                          label={`Selling Quantity : ${row.quantity_selling}`}
+                          color={'success'}
+                          size={'small'}
+                          style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                        />
+                        <Chip
+                          label={`Prices : ${row.price}`}
+                          color={'warning'}
+                          size={'small'}
+                          style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                        />
+                      </TableCell>
+                      <TableCell style={{ minWidth: 130 }}>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.creator_id?.full_name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Box display="flex" alignItems="center">
+                          <Box
+                            sx={{
+                              backgroundColor:
+                                row.status === 'active'
+                                  ? (theme) => theme.palette.success.main
+                                  : row.status === 'inactive'
+                                  ? (theme) => theme.palette.warning.main
+                                  : (theme) => theme.palette.secondary.main,
+                              borderRadius: '100%',
+                              height: '10px',
+                              width: '10px',
                             }}
-                            onClick={(event) => handleClick(event, row.no)}
                           />
-                        </TableCell>
-                        <TableCell style={{ minWidth: 90 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.no}
+                          <Typography
+                            color="textSecondary"
+                            variant="h6"
+                            sx={{
+                              ml: 0.5,
+                            }}
+                          >
+                            {row.status}
                           </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.id}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.name}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.description}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.collection}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {row.sellingQuantity.onSale === 1 ? (
-                            <Chip
-                              label="On sale"
-                              color="primary"
-                              size={'small'}
-                              style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
-                            />
-                          ) : (
-                            <Chip
-                              label="Off sale"
-                              color={'secondary'}
-                              size={'small'}
-                              style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
-                            />
-                          )}
-                          <Chip
-                            label={`Total Mint : ${row.sellingQuantity.totalMint}`}
-                            color={'error'}
-                            size={'small'}
-                            style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
-                          />
-                          <Chip
-                            label={`Selling Quantity : ${row.sellingQuantity.sellingQuantity}`}
-                            color={'success'}
-                            size={'small'}
-                            style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
-                          />
-                          <Chip
-                            label={`Prices : ${row.sellingQuantity.price}`}
-                            color={'warning'}
-                            size={'small'}
-                            style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
-                          />
-                        </TableCell>
-                        <TableCell style={{ minWidth: 130 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.creator}
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          <Box display="flex" alignItems="center">
-                            <Box
-                              sx={{
-                                backgroundColor:
-                                  row.status === 'Active'
-                                    ? (theme) => theme.palette.success.main
-                                    : row.status === 'Pending'
-                                    ? (theme) => theme.palette.warning.main
-                                    : row.status === 'Completed'
-                                    ? (theme) => theme.palette.primary.main
-                                    : row.status === 'Cancel'
-                                    ? (theme) => theme.palette.error.main
-                                    : (theme) => theme.palette.secondary.main,
-                                borderRadius: '100%',
-                                height: '10px',
-                                width: '10px',
-                              }}
-                            />
-                            <Typography
-                              color="textSecondary"
-                              variant="h6"
-                              sx={{
-                                ml: 0.5,
-                              }}
-                            >
-                              {row.status}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell style={{ minWidth: 130 }}>
-                          <Switch
-                            checked={row.stopSelling}
-                            // onChange={handleChange}
-                            inputProps={{ 'aria-label': 'controlled' }}
-                          />
-                        </TableCell>
-                        <TableCell style={{ minWidth: 200 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.saleDate[0]}
-                          </Typography>
-                        </TableCell>
-                        <TableCell style={{ minWidth: 200 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.createdAt}
-                          </Typography>
-                        </TableCell>
-                        <TableCell style={{ minWidth: 200 }}>
-                          {/*<Box display="flex" justifyContent={'space-around'}>*/}
-                          <IconButton size={'small'}>
-                            <RefreshOutlinedIcon />
-                          </IconButton>
-                          <IconButton size={'small'}>
-                            <AlbumOutlinedIcon />
-                          </IconButton>
-                          <IconButton size={'small'}>
-                            <DeleteOutlinedIcon />
-                          </IconButton>
-                          {/*</Box>*/}
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
+                        </Box>
+                      </TableCell>
+                      <TableCell style={{ minWidth: 130 }}>
+                        <Switch
+                          checked={row.selling}
+                          // onChange={handleChange}
+                          inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                      </TableCell>
+                      <TableCell style={{ minWidth: 200 }}>
+                        <Chip
+                          label={new Date(row.start_date).toLocaleString()}
+                          color={'success'}
+                          size={'small'}
+                          style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                        />
+                        <Chip
+                          label={new Date(row.end_date).toLocaleString()}
+                          color={'error'}
+                          size={'small'}
+                          style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
+                        />
+                      </TableCell>
+                      <TableCell style={{ minWidth: 200 }}>
+                        <Typography color="textSecondary" variant="h6">
+                          {new Date(row.createdAt).toLocaleString()}
+                        </Typography>
+                      </TableCell>
+                      <TableCell style={{ minWidth: 200 }}>
+                        {/*<Box display="flex" justifyContent={'space-around'}>*/}
+                        <IconButton size={'small'}>
+                          <RefreshOutlinedIcon />
+                        </IconButton>
+                        <IconButton size={'small'}>
+                          <AlbumOutlinedIcon />
+                        </IconButton>
+                        <IconButton size={'small'}>
+                          <DeleteOutlinedIcon />
+                        </IconButton>
+                        {/*</Box>*/}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
                 {emptyRows > 0 && (
                   <TableRow
                     style={{
@@ -377,7 +308,7 @@ const NFTs = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={totalCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

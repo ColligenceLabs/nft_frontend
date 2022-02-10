@@ -1,11 +1,11 @@
 export const headCells = [
-  {
-    id: 'no',
-    numeric: false,
-    disablePadding: false,
-    label: 'No',
-    width: 10,
-  },
+  // {
+  //   id: 'no',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'No',
+  //   width: 10,
+  // },
   {
     id: 'id',
     numeric: false,
