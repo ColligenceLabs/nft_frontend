@@ -131,6 +131,7 @@ const Creator = () => {
     fetchCreator();
   }, [getCreatorData, page, rowsPerPage]);
 
+  console.log('===>', selectedAdmin);
   return (
     <PageContainer title={t('Service Title')} description={t('Service Description')}>
       <Breadcrumb title={'Creator'} subtitle={'Creator Information'} />

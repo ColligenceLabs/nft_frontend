@@ -114,7 +114,7 @@ const CollectionCreate = () => {
               result = await deployKIP37(values.tokenUri, account, library);
             }
             formData.append('contract_address', result.address);
-            console.log('======>', result.address);
+            formData.append('contract_type', values.type);
 
             await createCollection(formData)
               .then((res) => {
