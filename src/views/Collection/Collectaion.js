@@ -32,6 +32,7 @@ import { stableSort, getComparator } from '../../utils/tableUtils';
 import CollectionDetailModal from './CollectionDetailModal';
 import { getCollectionData } from '../../services/collections.service';
 import { getCreatorData } from '../../services/creator.service';
+import useCreator from '../../hooks/useCreator';
 
 const Collections = () => {
   const { t } = useTranslation();
@@ -47,7 +48,8 @@ const Collections = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDetailRow, setSelectedDetailRow] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
-  const [creatorList, setCreatorList] = useState([]);
+
+  const creatorList = useCreator();
 
   const onFilterName = (e) => {
     setFilterName(e.target.value);
@@ -119,34 +121,18 @@ const Collections = () => {
 
   useEffect(async () => {
     const fetchCollections = async () => {
-      console.log('3');
-      await getCollectionData(page, rowsPerPage).then(({ data: { items } }) => {
-        const collectionArray = items.map((item) => {
-          console.log(creatorList);
-          let temp = creatorList.find((creator) => creator._id === item.creator_id);
-          console.log(temp);
-          return { ...item, creator_name: temp.full_name };
+      await getCollectionData(page, rowsPerPage).then(({ data }) => {
+        const collectionArray = data.items.map((item) => {
+          let temp = creatorList?.find((creator) => creator._id === item.creator_id);
+
+          return { ...item, creator_name: temp?.full_name };
         });
-        console.log(collectionArray);
+
         setRows(collectionArray);
         setTotalCount(data.headers.x_total_count);
       });
     };
 
-    const fetchCreators = async () => {
-      await getCreatorData().then(({ data: { items } }) => {
-        console.log('1');
-        const creatorArray = items.map((item) => ({
-          _id: item._id,
-          full_name: item.full_name,
-        }));
-        console.log('aa');
-        setCreatorList(creatorArray);
-      });
-      console.log('2');
-    };
-
-    await fetchCreators();
     await fetchCollections();
   }, [getCollectionData, page, rowsPerPage]);
 
