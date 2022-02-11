@@ -5,8 +5,9 @@ import * as yup from 'yup';
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/collection`;
 
 export const getCollectionData = (page, rowsPerPage) => {
+  const subQuery = page === undefined ? '' : `?page=${page + 1}&perPage=${rowsPerPage}`;
   return axios
-    .get(`${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`, { headers: authHeader() })
+    .get(`${API_URL}/indexs${subQuery}`, { headers: authHeader() })
     .then((response) => {
       return response.data;
     })

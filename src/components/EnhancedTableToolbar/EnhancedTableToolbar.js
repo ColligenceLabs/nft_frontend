@@ -1,14 +1,15 @@
-import React from 'react';
-import { Box, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import Search from '../Search/Search';
 import PropTypes from 'prop-types';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
+import FiltersDrawer from '../FiltersDrawer';
 
 const EnhancedTableToolbar = (props) => {
   const { t } = useTranslation();
-  const { numSelected, searchQuery, onChangeSearchQuery, onSearch } = props;
+  const { numSelected, setFilters } = props;
+  const [showDrawer, setShowDrawer] = useState(false);
 
   return (
     <Toolbar
@@ -49,20 +50,43 @@ const EnhancedTableToolbar = (props) => {
           {t('Filter')}
         </Typography>
       )}
-
-      <Search
-        searchQuery={searchQuery}
-        onChangeSearchQuery={onChangeSearchQuery}
-        onSearch={onSearch}
+      <Button sx={{ mr: 1 }} variant="contained" onClick={() => setShowDrawer(true)}>
+        Filters
+      </Button>
+      <FiltersDrawer
+        showDrawer={showDrawer}
+        setShowDrawer={setShowDrawer}
+        setFilters={setFilters}
       />
+      {/*<Box*/}
+      {/*  style={{*/}
+      {/*    display: 'flex',*/}
+      {/*    justifyContent: 'space-between',*/}
+      {/*    alignItems: 'center',*/}
+      {/*    gap: '1rem',*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <Search*/}
+      {/*    searchKeyword={searchKeyword}*/}
+      {/*    onChangeSearchQuery={onChangeSearchQuery}*/}
+      {/*    onSearch={onSearch}*/}
+      {/*  />*/}
+      {/*  <Button variant="contained" onClick={() => setShowDrawer(true)}>*/}
+      {/*    Filters*/}
+      {/*  </Button>*/}
+      {/*  <FiltersDrawer*/}
+      {/*    showDrawer={showDrawer}*/}
+      {/*    setShowDrawer={setShowDrawer}*/}
+      {/*    setFilters={setFilters}*/}
+      {/*  />*/}
+      {/*</Box>*/}
     </Toolbar>
   );
 };
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  onChangeSearchQuery: PropTypes.func.isRequired,
+  setFilters: PropTypes.func.isRequired,
 };
 
 export default EnhancedTableToolbar;
