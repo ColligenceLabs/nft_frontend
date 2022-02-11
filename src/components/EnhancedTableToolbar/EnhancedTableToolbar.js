@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import FeatherIcon from 'feather-icons-react';
 import { useTranslation } from 'react-i18next';
 import FiltersDrawer from '../FiltersDrawer';
@@ -51,6 +52,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
       <Button sx={{ mr: 1 }} variant="contained" onClick={() => setShowDrawer(true)}>
+        <FilterAltOutlinedIcon fontSize="small" sx={{ mr: 1 }} />
         Filters
       </Button>
       <FiltersDrawer
