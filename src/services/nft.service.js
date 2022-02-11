@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
 
@@ -14,9 +15,15 @@ export const getNFTData = (page, rowsPerPage, searchKeyword, collectionId) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
 };
 
 export const registerNFT = (formData) => {
-  return axios.post(`${API_URL}/create`, formData, { headers: authHeader() });
+  return axios
+    .post(`${API_URL}/create`, formData, { headers: authHeader() })
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
 };
