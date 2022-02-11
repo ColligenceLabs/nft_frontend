@@ -51,7 +51,7 @@ const EnhancedTableToolbar = (props) => {
           {t('Filter')}
         </Typography>
       )}
-      <Button sx={{ mr: 1 }} variant="contained" onClick={() => setShowDrawer(true)}>
+      <Button sx={{ mr: 1 }} variant="outlined" onClick={() => setShowDrawer(true)}>
         <FilterAltOutlinedIcon fontSize="small" sx={{ mr: 1 }} />
         Filters
       </Button>
