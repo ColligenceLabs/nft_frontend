@@ -97,12 +97,19 @@ const NFTs = () => {
     setSearchQuery(event.target.value);
   };
 
+  const onSearch = async () => {
+    await getNFTData(page, rowsPerPage, searchQuery).then(({ data }) => {
+      setRows(data.items);
+      setTotalCount(data.headers.x_total_count);
+    });
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
   useEffect(() => {
     const fetchNFTs = async () => {
-      await getNFTData(page, rowsPerPage).then(({ data }) => {
+      await getNFTData(page, rowsPerPage, searchQuery).then(({ data }) => {
         setRows(data.items);
         setTotalCount(data.headers.x_total_count);
       });
@@ -119,6 +126,7 @@ const NFTs = () => {
             numSelected={selected.length}
             searchQuery={searchQuery}
             onChangeSearchQuery={handleChangeSearchQuery}
+            onSearch={onSearch}
           />
           <TableContainer>
             <Table

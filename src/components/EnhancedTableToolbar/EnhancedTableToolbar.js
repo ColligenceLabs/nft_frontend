@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 const EnhancedTableToolbar = (props) => {
   const { t } = useTranslation();
-  const { numSelected, searchQuery, onChangeSearchQuery } = props;
+  const { numSelected, searchQuery, onChangeSearchQuery, onSearch } = props;
 
   return (
     <Toolbar
@@ -50,7 +50,11 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
 
-      <Search searchQuery={searchQuery} onChangeSearchQuery={onChangeSearchQuery} />
+      <Search
+        searchQuery={searchQuery}
+        onChangeSearchQuery={onChangeSearchQuery}
+        onSearch={onSearch}
+      />
     </Toolbar>
   );
 };

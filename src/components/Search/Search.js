@@ -1,7 +1,7 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
-import { InputBase } from '@mui/material';
+import { Box, Button, InputBase } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 
 const SearchContainer = styled('div')(({ theme }) => ({
@@ -12,11 +12,11 @@ const SearchContainer = styled('div')(({ theme }) => ({
   borderStyle: 'solid',
   // borderColor: alpha(theme.palette.primary.main, 0.15),
   // backgroundColor: alpha(theme.palette.primary.main, 0.15),
-  width: '80%',
+  width: '70%',
   [theme.breakpoints.up('sm')]: {
     marginRight: theme.spacing(0.5),
     marginBlock: theme.spacing(3),
-    width: 'auto',
+    width: '300px',
   },
 }));
 
@@ -45,20 +45,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Search = ({ searchQuery, onChangeSearchQuery }) => {
+const Search = ({ searchQuery, onChangeSearchQuery, onSearch }) => {
   const { t } = useTranslation();
   return (
-    <SearchContainer>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
-        value={searchQuery}
-        onChange={onChangeSearchQuery}
-        placeholder={t('Search…')}
-        inputProps={{ 'aria-label': 'search' }}
-      />
-    </SearchContainer>
+    <Box style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <SearchContainer>
+        <SearchIconWrapper>
+          <SearchIcon />
+        </SearchIconWrapper>
+        <StyledInputBase
+          value={searchQuery}
+          onChange={onChangeSearchQuery}
+          // placeholder={t('Search…')}
+          inputProps={{ 'aria-label': 'search' }}
+        />
+      </SearchContainer>
+      <Button style={{ padding: '8px', height: '39px' }} variant="contained" onClick={onSearch}>
+        Search
+      </Button>
+    </Box>
   );
 };
 
