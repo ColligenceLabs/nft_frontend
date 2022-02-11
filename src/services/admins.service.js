@@ -1,5 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin`;
 
@@ -9,7 +10,9 @@ export const getAdminsData = (page, rowsPerPage) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
+      error.toString().indexOf('401') ? (window.location.href = '/auth/login') : console.log(error),
+    );
 };
 
 export const updateAdminsStatus = (id, status) => {
@@ -24,7 +27,9 @@ export const updateAdminsStatus = (id, status) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
 };
 
 const adminsService = {

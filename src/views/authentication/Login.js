@@ -28,7 +28,6 @@ const Login = () => {
     dispatch(login({ email, password }))
       .unwrap()
       .then((res) => {
-        console.log(res);
         if (res.status === 1) {
           setErrorMessage('');
           navigate('/dashboard');
@@ -38,7 +37,6 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
-        // setLoading(false);
       });
   };
 
@@ -174,39 +172,6 @@ const Login = () => {
                   >
                     Login
                   </Button>
-                  {/*Todo 테스트 버튼 추후 삭제*/}
-                  {/*<Button*/}
-                  {/*  color="secondary"*/}
-                  {/*  variant="contained"*/}
-                  {/*  size="large"*/}
-                  {/*  fullWidth*/}
-                  {/*  onClick={() => {*/}
-                  {/*    dispatch(logout());*/}
-                  {/*  }}*/}
-                  {/*  to="/"*/}
-                  {/*  sx={{*/}
-                  {/*    mt: '10px',*/}
-                  {/*    pt: '10px',*/}
-                  {/*    pb: '10px',*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  logout*/}
-                  {/*</Button>*/}
-                  {/*<Button*/}
-                  {/*  color="secondary"*/}
-                  {/*  variant="contained"*/}
-                  {/*  size="large"*/}
-                  {/*  fullWidth*/}
-                  {/*  onClick={getData}*/}
-                  {/*  to="/"*/}
-                  {/*  sx={{*/}
-                  {/*    mt: '10px',*/}
-                  {/*    pt: '10px',*/}
-                  {/*    pb: '10px',*/}
-                  {/*  }}*/}
-                  {/*>*/}
-                  {/*  Get Data (Text)*/}
-                  {/*</Button>*/}
                 </Box>
               </Box>
             </Grid>

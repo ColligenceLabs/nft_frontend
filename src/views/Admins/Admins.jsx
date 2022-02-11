@@ -14,7 +14,6 @@ import {
   Typography,
   Switch,
 } from '@mui/material';
-
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -41,14 +40,10 @@ const Admins = () => {
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
   const [adminDetailModal, setAdminDetailModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState({});
   const [statusOpen, setStatusOpen] = useState(false);
-
-  const onFilterName = (e) => {
-    setFilterName(e.target.value);
-  };
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -98,10 +93,6 @@ const Admins = () => {
     setDense(event.target.checked);
   };
 
-  const handleChangeSearchQuery = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
   const handleUserDetailModal = (row) => {
     setSelectedAdmin(row);
     setAdminDetailModal(true);
@@ -118,6 +109,11 @@ const Admins = () => {
 
   const handleStatusClose = () => {
     setStatusOpen(false);
+  };
+
+  const setFilters = async (props) => {
+    console.log(props);
+    setSearchKeyword(props.searchKeyword);
   };
 
   const updateStatus = async (id, status) => {
@@ -148,11 +144,7 @@ const Admins = () => {
       <Breadcrumb title="Admins" subtitle={t('Admins Information')} />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={handleChangeSearchQuery}
-          />
+          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}

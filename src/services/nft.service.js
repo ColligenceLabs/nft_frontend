@@ -1,12 +1,13 @@
 import axios from 'axios';
 import authHeader from './auth-header';
+import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
 
-export const getNFTData = (page, rowsPerPage, keyword) => {
+export const getNFTData = (page, rowsPerPage, searchKeyword, collectionId) => {
   let url = `${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}&onchain=false`;
-  url = keyword !== undefined ? `${url}&keyword=${keyword}` : url;
-
+  url = searchKeyword !== undefined ? `${url}&keyword=${searchKeyword}` : url;
+  url = collectionId !== undefined ? `${url}&collection_id=${collectionId}` : url;
   return axios
     .get(url, {
       headers: authHeader(),
@@ -14,9 +15,15 @@ export const getNFTData = (page, rowsPerPage, keyword) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
 };
 
 export const registerNFT = (formData) => {
-  return axios.post(`${API_URL}/create`, formData, { headers: authHeader() });
+  return axios
+    .post(`${API_URL}/create`, formData, { headers: authHeader() })
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
 };

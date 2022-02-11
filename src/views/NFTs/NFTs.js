@@ -39,11 +39,8 @@ const NFTs = () => {
   const [dense, setDense] = React.useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const onFilterName = (e) => {
-    setFilterName(e.target.value);
-  };
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [collectionId, setCollectionId] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -53,19 +50,19 @@ const NFTs = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -93,15 +90,9 @@ const NFTs = () => {
     setDense(event.target.checked);
   };
 
-  const handleChangeSearchQuery = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
-  const onSearch = async () => {
-    await getNFTData(page, rowsPerPage, searchQuery).then(({ data }) => {
-      setRows(data.items);
-      setTotalCount(data.headers.x_total_count);
-    });
+  const setFilters = async (props) => {
+    setSearchKeyword(props.searchKeyword);
+    setCollectionId(props.collectionId);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -109,25 +100,20 @@ const NFTs = () => {
 
   useEffect(() => {
     const fetchNFTs = async () => {
-      await getNFTData(page, rowsPerPage, searchQuery).then(({ data }) => {
+      await getNFTData(page, rowsPerPage, searchKeyword, collectionId).then(({ data }) => {
         setRows(data.items);
         setTotalCount(data.headers.x_total_count);
       });
     };
     fetchNFTs();
-  }, [getNFTData, page, rowsPerPage]);
+  }, [getNFTData, page, rowsPerPage, searchKeyword, collectionId]);
 
   return (
     <PageContainer title="NFTs" description="this is NFTs page">
       <Breadcrumb title="NFTs" subtitle="NFTs Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={handleChangeSearchQuery}
-            onSearch={onSearch}
-          />
+          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -168,11 +154,6 @@ const NFTs = () => {
                           onClick={(event) => handleClick(event, row._id)}
                         />
                       </TableCell>
-                      {/*<TableCell style={{ minWidth: 90 }}>*/}
-                      {/*  <Typography color="textSecondary" variant="h6">*/}
-                      {/*    {row.no}*/}
-                      {/*  </Typography>*/}
-                      {/*</TableCell>*/}
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
                           {row._id}

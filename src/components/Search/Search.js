@@ -45,7 +45,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Search = ({ searchQuery, onChangeSearchQuery, onSearch }) => {
+const Search = ({ searchKeyword, onChangeSearchQuery, onSearch }) => {
   const { t } = useTranslation();
   return (
     <Box style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
@@ -54,7 +54,7 @@ const Search = ({ searchQuery, onChangeSearchQuery, onSearch }) => {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          value={searchQuery}
+          value={searchKeyword}
           onChange={onChangeSearchQuery}
           // placeholder={t('Search…')}
           inputProps={{ 'aria-label': 'search' }}

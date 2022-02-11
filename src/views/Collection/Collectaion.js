@@ -40,13 +40,9 @@ const Collections = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedDetailRow, setSelectedDetailRow] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
-
-  const onFilterName = (e) => {
-    setFilterName(e.target.value);
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -96,10 +92,6 @@ const Collections = () => {
     setDense(event.target.checked);
   };
 
-  const handleChangeSearchQuery = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
   const handleDetailModalOpen = (row) => {
     setSelectedDetailRow(row);
     setOpenDetailModal(true);
@@ -107,6 +99,11 @@ const Collections = () => {
 
   const handleDetailModalClose = () => {
     setOpenDetailModal(false);
+  };
+
+  const setFilters = async (props) => {
+    console.log(props);
+    setSearchKeyword(props.searchKeyword);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -138,11 +135,7 @@ const Collections = () => {
       <Breadcrumb title="Collections" subtitle="Collections Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={handleChangeSearchQuery}
-          />
+          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
