@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  MenuItem,
-  RadioGroup,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Divider, Drawer, IconButton, MenuItem, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import CustomSelect from '../forms/custom-elements/CustomSelect';
@@ -19,10 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { getCollectionData } from '../../services/collections.service';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 
-const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters }) => {
-  const location = useLocation();
+const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) => {
   const { t } = useTranslation();
-  const [currentRoute, setCurrentRoute] = useState('');
   const [collectionList, setCollectionList] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -34,12 +20,7 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters }) => {
     setSelectedCollection(e.target.value);
   };
 
-  useEffect(() => {
-    setCurrentRoute(location.pathname.replace('/', ''));
-  }, [location]);
-
   useEffect(async () => {
-    console.log(currentRoute);
     if (currentRoute === 'nfts') {
       await getCollectionData().then(({ data: { items } }) => {
         const collectionArray = items.map((item) => ({ id: item._id, value: item.name }));
