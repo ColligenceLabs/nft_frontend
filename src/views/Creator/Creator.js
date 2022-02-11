@@ -40,13 +40,9 @@ const Creator = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedAdmin, setSelectedAdmin] = useState({});
   const [statusOpen, setStatusOpen] = useState(false);
-
-  const onFilterName = (e) => {
-    setFilterName(e.target.value);
-  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -118,6 +114,11 @@ const Creator = () => {
     setStatusOpen(false);
   };
 
+  const setFilters = async (props) => {
+    console.log(props);
+    setSearchKeyword(props.searchKeyword);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
@@ -131,18 +132,13 @@ const Creator = () => {
     fetchCreator();
   }, [getCreatorData, page, rowsPerPage]);
 
-  console.log('===>', selectedAdmin);
   return (
     <PageContainer title={t('Service Title')} description={t('Service Description')}>
       <Breadcrumb title={'Creator'} subtitle={'Creator Information'} />
 
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={handleChangeSearchQuery}
-          />
+          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}

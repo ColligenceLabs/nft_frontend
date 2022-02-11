@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import {
   Box,
@@ -7,16 +6,13 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
   Paper,
   IconButton,
   FormControlLabel,
   Typography,
 } from '@mui/material';
-import { visuallyHidden } from '@mui/utils';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
@@ -25,93 +21,11 @@ import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
+import EnhancedTableHead from '../../components/EnhancedTableHead';
+import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
 import { rows } from './mockData';
 import UserDetailModal from './UserDetailModal';
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-function EnhancedTableHead(props) {
-  const { t } = useTranslation();
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <CustomCheckbox
-            color="primary"
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputprops={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <Typography variant="subtitle1" fontWeight="500">
-                {/*{t`${headCell.label}`}*/}
-                {t(`${headCell.label}`)}
-              </Typography>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
 
 const User = () => {
   const { t } = useTranslation();
@@ -122,13 +36,10 @@ const User = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [searchQuery, setSearchQuery] = useState('');
   const [userDetailModal, setUserDetailModal] = useState(false);
   const [selectedUserDetail, setSelectedUserDetail] = useState({});
-
-  const onFilterName = (e) => {
-    setFilterName(e.target.value);
-  };
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [totalCount, setTotalCount] = useState(0);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -178,10 +89,6 @@ const User = () => {
     setDense(event.target.checked);
   };
 
-  const handleChangeSearchQuery = (event) => {
-    setSearchQuery(event.target.value);
-  };
-
   const handleUserDetailModal = (row) => {
     setSelectedUserDetail(row);
     setUserDetailModal(true);
@@ -191,19 +98,20 @@ const User = () => {
     setUserDetailModal(false);
   };
 
+  const setFilters = async (props) => {
+    console.log(props);
+    setSearchKeyword(props.searchKeyword);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = rowsPerPage - rows.length;
 
   return (
     <PageContainer title="User" description="this is users page">
       <Breadcrumb title={t('User')} subtitle={t('User Information')} />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            searchQuery={searchQuery}
-            onChangeSearchQuery={handleChangeSearchQuery}
-          />
+          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -211,6 +119,7 @@ const User = () => {
               size={dense ? 'small' : 'medium'}
             >
               <EnhancedTableHead
+                headCells={headCells}
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
