@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Formik } from 'formik';
 import { Grid, MenuItem, Button, Paper, FormHelperText, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -9,7 +9,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useWeb3React } from '@web3-react/core';
-import { useKip17Contract } from '../../hooks/useContract';
+import { useKipContract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
 import collectionsService, { getCollectionsByCreatorId } from '../../services/collections.service';
@@ -18,35 +18,85 @@ import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT } from '../../services/nft.service';
+import { useSelector } from 'react-redux';
+import { parseUnits } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
   borderRadius: '7px',
 }));
 
+function calculateGasMargin(value) {
+  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000));
+}
+
 const NFTMint = () => {
-  const { t } = useTranslation();
   const [mintData, setMintData] = useState({
-    name: '',
-    creator: '',
-    category: '',
-    externalURL: '',
-    content: '',
-    contentFile: '',
-    // type: '',
-    // quantity: '',
-    collection: '',
-    amount: '',
-    thumbnail: '',
-    thumbnailFile: '',
-    price: '',
-    description: '',
+    address: contracts.kip17[parseInt(process.env.REACT_APP_CHAIN_ID, 10)],
+    type: 'KIP17',
+    tokenId: '',
+    quantity: '',
+    tokenUri: '',
   });
 
-  const [contract, setContract] = useState(
-    // 구 버전에서 발행된 전체 NFTs
-    contracts.kip17[parseInt(process.env.REACT_APP_CHAIN_ID, 10)],
-  );
+  const { t } = useTranslation();
+  const { library } = useActiveWeb3React();
+  const { account } = useWeb3React();
+  const contract = useKipContract(mintData.address, mintData.type);
+  // const { mintNFT } = useNFT(kipContract, account, mintData);
+
+  const mintNFT = useCallback(async () => {
+    const gasPrice = parseUnits('25', 'gwei').toString();
+
+    console.log('---------->', mintData);
+    const tokenId = parseInt(mintData.tokenId, 10);
+    let mintValue;
+    if (mintData.type === 'KIP17') {
+      mintValue = mintData.tokenUri;
+    }
+    if (mintData.type === 'KIP37') {
+      mintValue = parseInt(mintData.quantity, 10);
+    }
+
+    console.log('--->', tokenId, mintValue);
+
+    // gasLimit 계산
+    const gasLimit = await contract.estimateGas.mintWithTokenURI(
+      account,
+      tokenId,
+      mintValue,
+      // 3,
+      // 'https://ipfs.io/ipfs/QmVCVB5cFiwAKqe4kozNEsuA5BkGbwQWUZS8LcHXoNRz5g',
+    );
+    console.log(gasPrice, contract);
+
+    // mint 요청
+    const tx = await contract.mintWithTokenURI(account, tokenId, mintValue, {
+      // const tx = await contract.mintWithTokenURI(
+      //   account,
+      //   3,
+      //   'https://ipfs.io/ipfs/QmVCVB5cFiwAKqe4kozNEsuA5BkGbwQWUZS8LcHXoNRz5g',
+      //   {
+      from: account,
+      gasPrice,
+      // gasLimit: calculateGasMargin(gasLimit),
+      gasLimit: 2000000,
+    });
+
+    // receipt 대기
+    let receipt;
+    try {
+      receipt = await tx.wait();
+    } catch (e) {
+      console.log(e);
+    }
+    console.log(tx, receipt);
+
+    // TODO : NFT DB onchain 필드 true로 변경
+    //
+  }, [library, account, mintData]);
 
   //--------------- formik
   // const [creatorList, setCreatorList] = useState();
@@ -62,10 +112,6 @@ const NFTMint = () => {
       })
       .catch((error) => console.log(error));
   };
-
-  const { account } = useWeb3React();
-  const kip17Contract = useKip17Contract(contract);
-  const { createNFT } = useNFT(kip17Contract, account, mintData);
 
   return (
     <PageContainer title="NFT Mint" description="this is NFT Mint Form page">
@@ -112,11 +158,23 @@ const NFTMint = () => {
             formData.append('files', values['thumbnail']);
 
             await registerNFT(formData)
-              .then((res) => {
-                console.log(res.data);
+              .then(async (res) => {
+                console.log('====>', res.data);
+
                 if (res.data.status === 1) {
                   setErrorMessage(null);
                   setSuccessRegister(true);
+
+                  console.log('111111111111111111');
+                  setMintData({
+                    ...mintData,
+                    tokenId: res.data.data.metadata.tokenId,
+                    tokenUri: res.data.data.ipfs_link,
+                    quantity: res.data.data.quantity,
+                  });
+                  console.log('222222222222222222');
+                  // TODO : Actual NFT Minting here
+                  await mintNFT();
                 } else {
                   setErrorMessage(res.data.message);
                   setSuccessRegister(false);
@@ -194,11 +252,18 @@ const NFTMint = () => {
                     onChange={(event) => {
                       setFieldValue('collection', event.target.value);
                       console.log(event.target.value);
-                      collectionList.filter((collection) =>
-                        collection._id === event.target.value
-                          ? setFieldValue('category', collection.category.toString())
-                          : null,
-                      );
+                      collectionList.filter((collection) => {
+                        if (collection._id === event.target.value) {
+                          setFieldValue('category', collection.category.toString());
+                          // setContract(collection.contract_address);
+                          // setContractType(collection.contract_type);
+                          setMintData({
+                            ...mintData,
+                            address: collection.contract_address,
+                            type: collection.contract_type,
+                          });
+                        }
+                      });
                     }}
                     fullWidth
                     size="small"
