@@ -127,6 +127,7 @@ const useNFT = (contract, account) => {
         from: account,
         gasPrice,
         gasLimit: calculateGasMargin(gasLimit),
+        // gasLimit: 2000000,
       });
 
       // receipt 대기
@@ -144,7 +145,7 @@ const useNFT = (contract, account) => {
       // TODO : NFT DB onchain 필드 true로 변경
       //
     },
-    [library, account],
+    [library, account, contract],
   );
 
   // return { createNFT, mintNFT };
