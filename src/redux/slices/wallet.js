@@ -29,6 +29,11 @@ const slice = createSlice({
       state.balance = action.payload;
     },
 
+    // ACCOUNT
+    setAccount(state, action) {
+      state.account = action.payload;
+    },
+
     // TAL BALANCE
     setTalBalance(state, action) {
       state.talBalance = action.payload;
@@ -40,7 +45,8 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { hasError, setActivatingConnector, setBalance, setTalBalance } = slice.actions;
+export const { hasError, setActivatingConnector, setBalance, setTalBalance, setAccount } =
+  slice.actions;
 
 // ----------------------------------------------------------------------
 
@@ -52,9 +58,11 @@ export function getWalletBalance(account, library) {
           .getBalance(account)
           .then((balance) => {
             dispatch(slice.actions.setBalance(balance));
+            dispatch(slice.actions.setAccount(account));
           })
           .catch(() => {
             dispatch(slice.actions.setBalance(null));
+            dispatch(slice.actions.setAccount(null));
           });
       }
     } catch (error) {
