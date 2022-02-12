@@ -7,6 +7,7 @@ import useActiveWeb3React from './useActiveWeb3React';
 import fs from 'fs';
 import { IPFS_URL, ALT_URL } from '../config/constants/consts';
 import { create } from 'ipfs-http-client';
+import { setNftOnchain } from '../services/nft.service';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -32,18 +33,9 @@ const addToIPFS = async function (file) {
   return result;
 };
 
-const useNFT = (contract, account, mintData) => {
+const useNFT = (contract, account) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
   const { library } = useActiveWeb3React();
-
-  const tokenId = parseInt(mintData.tokenId, 10);
-  let mintValue;
-  if (mintData.type === 'KIP17') {
-    mintValue = mintData.tokenUri;
-  }
-  if (mintData.type === 'KIP37') {
-    mintValue = parseInt(mintData.quantity, 10);
-  }
 
   // const createNFT = useCallback(
   //   async (mintData) => {
@@ -53,7 +45,7 @@ const useNFT = (contract, account, mintData) => {
   //     console.log('11111', result);
   //     // thumbnail 서버 업로드
   //
-  //     // TODO : tokenId가 중복되지 않도록 처리해야함. 발행할 tokenId를 자동으로 가지고 오기 위한 API 필요
+  //     // tokenId가 중복되지 않도록 처리해야함. 발행할 tokenId를 자동으로 가지고 오기 위한 API 필요
   //     const tokenId = 3;
   //
   //     // form json 파일 생성
@@ -122,48 +114,38 @@ const useNFT = (contract, account, mintData) => {
   //   [library, account, mintData],
   // );
 
-  const mintNFT = useCallback(async () => {
-    const gasPrice = parseUnits('25', 'gwei').toString();
+  const mintNFT = useCallback(
+    async (tokenId, mintValue, nftId) => {
+      const gasPrice = parseUnits('25', 'gwei').toString();
 
-    console.log('--->', tokenId, mintValue);
+      // gasLimit 계산
+      const gasLimit = await contract.estimateGas.mintWithTokenURI(account, tokenId, mintValue);
+      console.log(gasPrice, contract);
 
-    // gasLimit 계산
-    const gasLimit = await contract.estimateGas.mintWithTokenURI(
-      account,
-      3,
-      mintValue,
-      // 3,
-      // 'https://ipfs.io/ipfs/QmVCVB5cFiwAKqe4kozNEsuA5BkGbwQWUZS8LcHXoNRz5g',
-    );
-    console.log(gasPrice, contract);
+      // mint 요청
+      const tx = await contract.mintWithTokenURI(account, tokenId, mintValue, {
+        from: account,
+        gasPrice,
+        gasLimit: calculateGasMargin(gasLimit),
+      });
 
-    // mint 요청
-    const tx = await contract.mintWithTokenURI(account, tokenId, mintValue, {
-      // const tx = await contract.mintWithTokenURI(
-      //   account,
-      //   3,
-      //   'https://ipfs.io/ipfs/QmVCVB5cFiwAKqe4kozNEsuA5BkGbwQWUZS8LcHXoNRz5g',
-      //   {
-      from: account,
-      gasPrice,
-      // gasLimit: calculateGasMargin(gasLimit),
-      gasLimit: 2000000,
-    });
+      // receipt 대기
+      let receipt;
+      try {
+        receipt = await tx.wait();
+        if (receipt.status === 1) {
+          await setNftOnchain(nftId);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      console.log(tx, receipt);
 
-    // receipt 대기
-    let receipt;
-    try {
-      receipt = await tx.wait();
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(tx, receipt);
-
-    // TODO : NFT DB onchain 필드 true로 변경
-    //
-  }, [library, account, mintData]);
-
-  console.log('=====>', mintData);
+      // TODO : NFT DB onchain 필드 true로 변경
+      //
+    },
+    [library, account],
+  );
 
   // return { createNFT, mintNFT };
   return { mintNFT };

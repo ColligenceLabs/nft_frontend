@@ -27,3 +27,11 @@ export const registerNFT = (formData) => {
       error.toString().indexOf('401') ? authService.logout() : console.log(error),
     );
 };
+
+export const setNftOnchain = (id) => {
+  return axios
+    .put(`${API_URL}/update-onchain/${id}`, { onchain: 'true' }, { headers: authHeader() })
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
+};

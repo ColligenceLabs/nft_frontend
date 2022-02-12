@@ -18,85 +18,22 @@ import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT } from '../../services/nft.service';
-import { useSelector } from 'react-redux';
-import { parseUnits } from 'ethers/lib/utils';
-import { BigNumber } from 'ethers';
-import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
   borderRadius: '7px',
 }));
 
-function calculateGasMargin(value) {
-  return value.mul(BigNumber.from(10000).add(BigNumber.from(1000))).div(BigNumber.from(10000));
-}
-
 const NFTMint = () => {
-  const [mintData, setMintData] = useState({
-    address: contracts.kip17[parseInt(process.env.REACT_APP_CHAIN_ID, 10)],
-    type: 'KIP17',
-    tokenId: '',
-    quantity: '',
-    tokenUri: '',
-  });
-
   const { t } = useTranslation();
-  const { library } = useActiveWeb3React();
+
+  // TODO : change for mainnet 1001 -> 8217
+  const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
+  const [contractType, setContractType] = useState('KIP17');
+
   const { account } = useWeb3React();
-  const contract = useKipContract(mintData.address, mintData.type);
-  // const { mintNFT } = useNFT(kipContract, account, mintData);
-
-  const mintNFT = useCallback(async () => {
-    const gasPrice = parseUnits('25', 'gwei').toString();
-
-    console.log('---------->', mintData);
-    const tokenId = parseInt(mintData.tokenId, 10);
-    let mintValue;
-    if (mintData.type === 'KIP17') {
-      mintValue = mintData.tokenUri;
-    }
-    if (mintData.type === 'KIP37') {
-      mintValue = parseInt(mintData.quantity, 10);
-    }
-
-    console.log('--->', tokenId, mintValue);
-
-    // gasLimit 계산
-    const gasLimit = await contract.estimateGas.mintWithTokenURI(
-      account,
-      tokenId,
-      mintValue,
-      // 3,
-      // 'https://ipfs.io/ipfs/QmVCVB5cFiwAKqe4kozNEsuA5BkGbwQWUZS8LcHXoNRz5g',
-    );
-    console.log(gasPrice, contract);
-
-    // mint 요청
-    const tx = await contract.mintWithTokenURI(account, tokenId, mintValue, {
-      // const tx = await contract.mintWithTokenURI(
-      //   account,
-      //   3,
-      //   'https://ipfs.io/ipfs/QmVCVB5cFiwAKqe4kozNEsuA5BkGbwQWUZS8LcHXoNRz5g',
-      //   {
-      from: account,
-      gasPrice,
-      // gasLimit: calculateGasMargin(gasLimit),
-      gasLimit: 2000000,
-    });
-
-    // receipt 대기
-    let receipt;
-    try {
-      receipt = await tx.wait();
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(tx, receipt);
-
-    // TODO : NFT DB onchain 필드 true로 변경
-    //
-  }, [library, account, mintData]);
+  const kipContract = useKipContract(contractAddr, contractType);
+  const { mintNFT } = useNFT(kipContract, account);
 
   //--------------- formik
   // const [creatorList, setCreatorList] = useState();
@@ -159,22 +96,18 @@ const NFTMint = () => {
 
             await registerNFT(formData)
               .then(async (res) => {
-                console.log('====>', res.data);
-
                 if (res.data.status === 1) {
                   setErrorMessage(null);
                   setSuccessRegister(true);
 
-                  console.log('111111111111111111');
-                  setMintData({
-                    ...mintData,
-                    tokenId: res.data.data.metadata.tokenId,
-                    tokenUri: res.data.data.ipfs_link,
-                    quantity: res.data.data.quantity,
-                  });
-                  console.log('222222222222222222');
+                  const nftId = res.data.data._id;
+                  const tokenId = res.data.data.metadata.tokenId;
+                  const tokenUri = res.data.data.ipfs_link;
+                  const quantity = res.data.data.quantity;
+                  const mintValue = contractType === 'KIP17' ? tokenUri : quantity;
+
                   // TODO : Actual NFT Minting here
-                  await mintNFT();
+                  await mintNFT(tokenId, mintValue, nftId);
                 } else {
                   setErrorMessage(res.data.message);
                   setSuccessRegister(false);
@@ -251,17 +184,11 @@ const NFTMint = () => {
                     value={values.collection}
                     onChange={(event) => {
                       setFieldValue('collection', event.target.value);
-                      console.log(event.target.value);
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
                           setFieldValue('category', collection.category.toString());
-                          // setContract(collection.contract_address);
-                          // setContractType(collection.contract_type);
-                          setMintData({
-                            ...mintData,
-                            address: collection.contract_address,
-                            type: collection.contract_type,
-                          });
+                          setContractAddr(collection.contract_address);
+                          setContractType(collection.contract_type);
                         }
                       });
                     }}
