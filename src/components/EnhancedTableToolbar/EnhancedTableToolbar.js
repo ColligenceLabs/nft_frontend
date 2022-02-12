@@ -112,7 +112,7 @@ const LinkButton = ({ title }) => {
           url: '/serials/create',
         });
         break;
-      case 'collections':
+      case 'collection':
         setButtonProps({
           label: 'Create',
           url: '/collection/create',
