@@ -23,8 +23,13 @@ export const getNFTData = (page, rowsPerPage, searchKeyword, collectionId) => {
 export const registerNFT = (formData) => {
   return axios
     .post(`${API_URL}/create`, formData, { headers: authHeader() })
-    .catch((error) =>
-      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch(
+      (error) => console.log(error),
+      // error.toString().indexOf('401') ? authService.logout() : console.log(error),
     );
 };
 
