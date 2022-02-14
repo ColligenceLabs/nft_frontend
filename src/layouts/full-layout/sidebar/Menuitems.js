@@ -9,7 +9,7 @@ import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
 
-const Menuitems = [
+export const Menuitems = [
   {
     title: 'Dashboard',
     icon: <DashboardOutlinedIcon width="20" height="20" />,
@@ -74,4 +74,54 @@ const Menuitems = [
   },
 ];
 
-export default Menuitems;
+export const CreatorMenu = [
+  {
+    title: 'Dashboard',
+    icon: <DashboardOutlinedIcon width="20" height="20" />,
+    href: '/dashboard',
+  },
+  {
+    title: 'NFTs',
+    // icon: 'users',
+    // href: '/nfts',
+    icon: <TokenOutlinedIcon width="20" height="20" />,
+    collapse: true,
+    children: [
+      {
+        title: 'NFTs',
+        icon: <TokenOutlinedIcon width="20" height="20" />,
+        href: '/nfts',
+      },
+      {
+        title: 'AirDrop',
+        // icon: 'edit',
+        icon: <InvertColorsIcon width="20" height="20" />,
+        href: '/airdrop',
+      },
+    ],
+  },
+  {
+    title: 'Serials',
+    icon: <NumbersIcon width="20" height="20" />,
+    href: '/serials',
+  },
+  {
+    title: 'Transaction',
+    icon: <SwapHorizIcon width="20" height="20" />,
+    href: '/transaction',
+  },
+  {
+    title: 'Collections',
+    // icon: 'hard-drive',
+    icon: <CollectionsOutlinedIcon width="20" height="20" />,
+    href: '/collection',
+  },
+  {
+    title: 'Reward',
+    icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
+    href: '/reward',
+  },
+];
+
+console.log(CreatorMenu);
+export default { Menuitems, CreatorMenu };
