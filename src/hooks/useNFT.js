@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import request from 'request';
 import { parseUnits } from 'ethers/lib/utils';
 import testMeta from '../config/constants/test.json';
@@ -35,6 +35,8 @@ const addToIPFS = async function (file) {
 
 const useNFT = (contract, account) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
+  const [isMinting, setIsMinting] = useState();
+
   const { library } = useActiveWeb3React();
 
   // const createNFT = useCallback(
@@ -116,6 +118,7 @@ const useNFT = (contract, account) => {
 
   const mintNFT = useCallback(
     async (tokenId, mintValue, nftId) => {
+      setIsMinting(true);
       const gasPrice = parseUnits('25', 'gwei').toString();
 
       // gasLimit 계산
@@ -141,7 +144,7 @@ const useNFT = (contract, account) => {
         console.log(e);
       }
       console.log(tx, receipt);
-
+      await setIsMinting(false);
       // TODO : NFT DB onchain 필드 true로 변경
       //
     },
@@ -149,7 +152,7 @@ const useNFT = (contract, account) => {
   );
 
   // return { createNFT, mintNFT };
-  return { mintNFT };
+  return { mintNFT, isMinting };
 };
 
 export default useNFT;

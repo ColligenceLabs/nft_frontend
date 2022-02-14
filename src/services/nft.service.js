@@ -15,23 +15,23 @@ export const getNFTData = (page, rowsPerPage, searchKeyword, collectionId) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) =>
-      error.toString().indexOf('401') ? authService.logout() : console.log(error),
-    );
+    .catch((error) => {
+      error.response.status == 401 ? authService.logout() : console.log(error);
+    });
 };
 
 export const registerNFT = (formData) => {
   return axios
     .post(`${API_URL}/create`, formData, { headers: authHeader() })
-    .catch((error) =>
-      error.toString().indexOf('401') ? authService.logout() : console.log(error),
-    );
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
 };
 
 export const setNftOnchain = (id) => {
   return axios
     .put(`${API_URL}/update-onchain/${id}`, { onchain: 'true' }, { headers: authHeader() })
-    .catch((error) =>
-      error.toString().indexOf('401') ? authService.logout() : console.log(error),
-    );
+    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
 };
