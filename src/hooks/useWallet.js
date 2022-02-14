@@ -9,7 +9,7 @@ export function useEagerConnect() {
   const [tried, setTried] = useState(false);
 
   useEffect(() => {
-    const connectorId = window.localStorage.getItem('wallet');
+    const connectorId = window.localStorage.getItem('wallet') ?? 'injected';
     // TODO: 이거 뭐지?
     // if (!connectorId || connectorId === 'klayton') {
     //   if (!window.klayton) {
