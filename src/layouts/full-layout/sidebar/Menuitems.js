@@ -123,5 +123,4 @@ export const CreatorMenu = [
   },
 ];
 
-console.log(CreatorMenu);
 export default { Menuitems, CreatorMenu };
