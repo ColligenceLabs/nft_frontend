@@ -217,7 +217,6 @@ const NFTMint = () => {
                     fullWidth
                     size="small"
                     value={values.category}
-                    onChange={handleChange}
                   />
                   {touched.category && errors.category && (
                     <FormHelperText htmlFor="render-select" error>
