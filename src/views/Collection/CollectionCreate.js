@@ -313,7 +313,7 @@ const CollectionCreate = () => {
 
                 {values.type === 'KIP37' && (
                   <Grid item lg={6} md={12} sm={12} xs={12}>
-                    <CustomFormLabel htmlFor="tokenUri">{t('Token uri')}</CustomFormLabel>
+                    <CustomFormLabel htmlFor="tokenUri">{t('IPFS Directory Name')}</CustomFormLabel>
                     <CustomTextField
                       id="tokenUri"
                       name="tokenUri"

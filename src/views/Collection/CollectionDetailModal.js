@@ -64,7 +64,7 @@ const CollectionDetailModal = (props) => {
             disabled
             size="small"
           />
-          <CustomFormLabel htmlFor="category">{t('Token uri')}</CustomFormLabel>
+          <CustomFormLabel htmlFor="category">{t('IPFS Directory Name')}</CustomFormLabel>
           <CustomTextField
             id="tokenUri"
             name="tokenUri"
