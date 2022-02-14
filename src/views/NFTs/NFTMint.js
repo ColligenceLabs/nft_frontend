@@ -17,7 +17,7 @@ import contracts from '../../config/constants/contracts';
 import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
-import { registerNFT } from '../../services/nft.service';
+import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -94,26 +94,41 @@ const NFTMint = () => {
             formData.append('files', values['content']);
             formData.append('files', values['thumbnail']);
 
-            await registerNFT(formData)
-              .then(async (res) => {
-                if (res.data.status === 1) {
-                  setErrorMessage(null);
-                  setSuccessRegister(true);
+            if (values['amount'] > 1 && contractType === 'KIP17') {
+              await batchRegisterNFT(formData)
+                .then(async (res) => {
+                  if (res.data.status === 1) {
+                    setErrorMessage(null);
+                    setSuccessRegister(true);
+                  } else {
+                    setErrorMessage(res.data.message);
+                    setSuccessRegister(false);
+                  }
+                })
+                .catch((error) => console.log(error));
+            } else {
+              await registerNFT(formData)
+                .then(async (res) => {
+                  if (res.data.status === 1) {
+                    setErrorMessage(null);
+                    setSuccessRegister(true);
 
-                  const nftId = res.data.data._id;
-                  const tokenId = res.data.data.metadata.tokenId;
-                  const tokenUri = res.data.data.ipfs_link;
-                  const quantity = res.data.data.quantity;
-                  const mintValue = contractType === 'KIP17' ? tokenUri : quantity;
+                    const nftId = res.data.data._id;
+                    const tokenId = res.data.data.metadata.tokenId;
+                    const tokenUri = res.data.data.ipfs_link;
+                    const quantity = res.data.data.quantity;
+                    const mintValue = contractType === 'KIP17' ? tokenUri : quantity;
 
-                  // TODO : Actual NFT Minting here
-                  await mintNFT(tokenId, mintValue, nftId);
-                } else {
-                  setErrorMessage(res.data.message);
-                  setSuccessRegister(false);
-                }
-              })
-              .catch((error) => console.log(error));
+                    // TODO : Actual NFT Minting here
+                    await mintNFT(tokenId, mintValue, nftId);
+                  } else {
+                    setErrorMessage(res.data.message);
+                    setSuccessRegister(false);
+                  }
+                })
+                .catch((error) => console.log(error));
+            }
+
             setSubmitting(false);
           }}
         >

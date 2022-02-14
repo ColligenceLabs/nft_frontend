@@ -30,6 +30,7 @@ import { LoadingButton } from '@mui/lab';
 import { deployKIP17, deployKIP37 } from '../../utils/deploy';
 import { useWeb3React } from '@web3-react/core';
 import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
+import { deployNFT17 } from '../../services/nft.service';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -106,14 +107,30 @@ const CollectionCreate = () => {
               }
             }
 
-            // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
-            let result;
-            if (values.type === 'KIP17') {
-              result = await deployKIP17(values.name, values.symbol, account, library);
-            } else if (values.type === 'KIP37') {
-              result = await deployKIP37(values.tokenUri, account, library);
+            let newContract;
+            if (process.env.REACT_APP_USE_KAS === 'false') {
+              // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
+              let result;
+              if (values.type === 'KIP17') {
+                result = await deployKIP17(values.name, values.symbol, account, library);
+              } else if (values.type === 'KIP37') {
+                result = await deployKIP37(values.tokenUri, account, library);
+              }
+              newContract = result.address;
+            } else {
+              // TODO: KAS로 스마트컨트랙 배포
+              const alias = `${values.symbol.toLowerCase()}-${Math.floor(Math.random() * 1000)}`;
+              await deployNFT17({
+                name: values.name,
+                symbol: values.symbol,
+                alias,
+              }).then((res) => {
+                newContract = res.data.data.address;
+              });
             }
-            formData.append('contract_address', result.address);
+
+            // console.log('newContract == ', newContract);
+            formData.append('contract_address', newContract);
             formData.append('contract_type', values.type);
 
             await createCollection(formData)

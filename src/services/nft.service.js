@@ -30,6 +30,24 @@ export const registerNFT = (formData) => {
     .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
 };
 
+export const deployNFT17 = (formData) => {
+  return axios
+    .post(`${API_URL}/deploy`, formData, { headers: authHeader() })
+    .then((res) => {
+      console.log(res);
+      return res;
+    })
+    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
+};
+
+export const batchRegisterNFT = (formData) => {
+  return axios
+    .post(`${API_URL}/batchcreate`, formData, { headers: authHeader() })
+    .catch((error) =>
+      error.toString().indexOf('401') ? authService.logout() : console.log(error),
+    );
+};
+
 export const setNftOnchain = (id) => {
   return axios
     .put(`${API_URL}/update-onchain/${id}`, { onchain: 'true' }, { headers: authHeader() })

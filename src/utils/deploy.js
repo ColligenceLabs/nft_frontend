@@ -1,6 +1,8 @@
 import { ContractFactory } from '@ethersproject/contracts';
 import { kip17Data, kip37Data } from '../contracts';
 // import { useWeb3React } from '@web3-react/core';
+import { mkDirIPFS } from '../hooks/useNFT';
+import { IPFS_URL } from '../config/constants/consts';
 
 export async function deployKIP17(name, symbol, account, library) {
   // hooks can not be called from inside a function
@@ -47,7 +49,7 @@ export async function deployKIP17(name, symbol, account, library) {
   return ret;
 }
 
-export async function deployKIP37(tokenUri, account, library) {
+export async function deployKIP37(name, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
@@ -56,6 +58,10 @@ export async function deployKIP37(tokenUri, account, library) {
     kip37Data.bytecode,
     library.getSigner(account),
   );
+
+  // TODO : ipfs mkdir
+  const hash = mkDirIPFS(name);
+  const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
 
   console.log('deployKIP37 start!');
   const ret = {};

@@ -33,6 +33,25 @@ const addToIPFS = async function (file) {
   return result;
 };
 
+export const mkDirIPFS = async function (directory) {
+  // console.log("start file upload to ipfs...")
+  const auth =
+    'Basic ' +
+    Buffer.from('24EBv9Z978FDIDn74tjbKZV8ihS' + ':' + '4a4d9b8d905d38a7e3a3caa7fa0e35f4').toString(
+      'base64',
+    );
+  const client = create({
+    host: 'ipfs.infura.io',
+    port: 5001,
+    protocol: 'https',
+    headers: {
+      authorization: auth,
+    },
+  });
+  const result = await client.files.mkdir(directory);
+  return result;
+};
+
 const useNFT = (contract, account) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
   const [isMinting, setIsMinting] = useState();
