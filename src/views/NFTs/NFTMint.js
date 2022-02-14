@@ -18,7 +18,6 @@ import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT } from '../../services/nft.service';
-import { useSelector } from 'react-redux';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
