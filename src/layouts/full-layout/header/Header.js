@@ -31,7 +31,7 @@ import { useEagerConnect, useInactiveListener } from '../../../hooks/useWallet';
 import { targetNetwork, targetNetworkMsg } from '../../../config';
 import { setupNetwork } from '../../../utils/wallet';
 import { logout } from '../../../redux/slices/auth';
-import { makeStyles, useTheme } from '@mui/styles';
+import { useTheme } from '@mui/styles';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
@@ -47,14 +47,14 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const { t } = useTranslation();
 
-  const { wallet, from } = useSelector((state) => state.nft);
+  const { from } = useSelector((state) => state.nft);
   const dispatch = useDispatch();
   const context = useWeb3React();
   const { connector, library, activate, account } = context;
   const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
   const {
     user: {
-      infor: { full_name, email },
+      infor: { full_name, email, level },
     },
   } = useSelector((state) => state.auth);
 
@@ -101,7 +101,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
-  const handleCloseModal = async (name) => {
+  const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
 
@@ -260,7 +260,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             </Box>
           </Box>
 
-          <ProfileDropdown fullName={full_name} email={email} />
+          <ProfileDropdown fullName={full_name} email={email} level={level} />
           <Link
             style={{
               textDecoration: 'none',
