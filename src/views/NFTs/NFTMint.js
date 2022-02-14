@@ -18,6 +18,7 @@ import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT } from '../../services/nft.service';
+import { useSelector } from 'react-redux';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -30,18 +31,15 @@ const NFTMint = () => {
   // TODO : change for mainnet 1001 -> 8217
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
-
   const { account } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const { mintNFT, isMinting } = useNFT(kipContract, account);
-
-  //--------------- formik
-  // const [creatorList, setCreatorList] = useState();
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const creatorList = useCreator();
 
+  console.log(creatorList);
   const getCollectionList = async (id) => {
     await getCollectionsByCreatorId(id)
       .then(({ data }) => {
@@ -154,6 +152,7 @@ const NFTMint = () => {
                     id="creator"
                     name="creator"
                     disabled={isSubmitting || isMinting}
+                    // defaultValue={creatorList && creatorList[0].full_name}
                     value={values.creator_id}
                     onChange={(event) => {
                       setFieldValue('creator_id', event.target.value);
