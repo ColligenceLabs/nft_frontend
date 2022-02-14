@@ -33,7 +33,7 @@ const NFTMint = () => {
 
   const { account } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
-  const { mintNFT } = useNFT(kipContract, account);
+  const { mintNFT, isMinting } = useNFT(kipContract, account);
 
   //--------------- formik
   // const [creatorList, setCreatorList] = useState();
@@ -375,7 +375,7 @@ const NFTMint = () => {
                 </Grid>
                 <Snackbar
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  open={successRegister}
+                  open={successRegister && !isMinting}
                   autoHideDuration={2000}
                   onClose={() => {
                     setSuccessRegister(false);
@@ -420,7 +420,7 @@ const NFTMint = () => {
                   {/*</div>*/}
                   <LoadingButton
                     type="submit"
-                    loading={isSubmitting}
+                    loading={isSubmitting || isMinting}
                     variant="contained"
                     sx={{ mt: 2 }}
                   >
