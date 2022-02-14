@@ -30,6 +30,7 @@ import { LoadingButton } from '@mui/lab';
 import { deployKIP17, deployKIP37 } from '../../utils/deploy';
 import { useWeb3React } from '@web3-react/core';
 import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
+import useCreator from '../../hooks/useCreator';
 import { deployNFT17 } from '../../services/nft.service';
 
 const COLLECTION_CATEGORY = [
@@ -61,23 +62,9 @@ const WarningBox = styled(Box)(({ theme }) => ({
 const CollectionCreate = () => {
   const { library, account } = useWeb3React();
   const { t } = useTranslation();
-
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
-  const [creatorList, setCreatorList] = useState();
-
-  useEffect(() => {
-    const fetchCreator = async () => {
-      await getCreatorData().then(({ data: { items } }) => {
-        let creatorArray = items.map((item) => ({
-          _id: item._id,
-          full_name: item.full_name,
-        }));
-        setCreatorList(creatorArray);
-      });
-    };
-    fetchCreator();
-  }, [getCreatorData]);
+  const creatorList = useCreator();
 
   return (
     <PageContainer title="Collection Create" description="this is Collection Create Form page">
@@ -172,6 +159,7 @@ const CollectionCreate = () => {
                     fullWidth
                     size="small"
                     value={values.name}
+                    disabled={isSubmitting}
                     onChange={handleChange}
                   />
                   {touched.name && errors.name && (
@@ -187,6 +175,7 @@ const CollectionCreate = () => {
                     id="creator"
                     name="creator"
                     value={values.creator_id}
+                    disabled={isSubmitting}
                     onChange={(event) => {
                       setFieldValue('creator_id', event.target.value);
                     }}
@@ -219,6 +208,7 @@ const CollectionCreate = () => {
                         setFieldValue('category', event.target.value);
                       },
                     }}
+                    disabled={isSubmitting}
                     fullWidth
                     size="small"
                   >
@@ -249,6 +239,7 @@ const CollectionCreate = () => {
                           component="label"
                           variant="contained"
                           size="small"
+                          disabled={isSubmitting}
                           style={{ marginRight: '1rem' }}
                         >
                           <DriveFileMoveOutlinedIcon fontSize="small" />
@@ -289,7 +280,7 @@ const CollectionCreate = () => {
                     defaultValue="radio1"
                     name="type"
                     value={values.type}
-                    onChange={handleChange}
+                    onChange={isSubmitting ? null : handleChange}
                   >
                     <Grid container>
                       <Grid item lg={6} sm={6} xs={6}>
@@ -311,6 +302,7 @@ const CollectionCreate = () => {
                       variant="outlined"
                       fullWidth
                       size="small"
+                      disabled={isSubmitting}
                       value={values.symbol}
                       onChange={handleChange}
                       error={touched.symbol && Boolean(errors.symbol)}
@@ -328,6 +320,7 @@ const CollectionCreate = () => {
                       variant="outlined"
                       fullWidth
                       size="small"
+                      disabled={isSubmitting}
                       value={values.tokenUri}
                       onChange={handleChange}
                       error={touched.tokenUri && Boolean(errors.tokenUri)}

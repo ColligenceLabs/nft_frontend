@@ -1,14 +1,15 @@
 import axios from 'axios';
 import authHeader from './auth-header';
-import * as yup from 'yup';
 import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/collection`;
 
-export const getCollectionData = (page, rowsPerPage) => {
-  const subQuery = page === undefined ? '' : `?page=${page + 1}&perPage=${rowsPerPage}`;
+export const getCollectionData = (page, rowsPerPage, id) => {
+  const pageQuery = page === undefined ? '' : `?page=${page + 1}&perPage=${rowsPerPage}`;
+  const subQuery = id === undefined ? '' : `&creator_id=${id}`;
+
   return axios
-    .get(`${API_URL}/indexs${subQuery}`, { headers: authHeader() })
+    .get(`${API_URL}/indexs${pageQuery}${subQuery}`, { headers: authHeader() })
     .then((response) => {
       return response.data;
     })

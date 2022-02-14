@@ -4,7 +4,7 @@ import FeatherIcon from 'feather-icons-react';
 
 import userimg from '../../../assets/images/users/user2.jpg';
 
-const ProfileDropdown = ({ fullName, email }) => (
+const ProfileDropdown = ({ fullName, email, level }) => (
   <Box>
     <Box
       sx={{
@@ -35,7 +35,7 @@ const ProfileDropdown = ({ fullName, email }) => (
             {fullName}
           </Typography>
           <Typography color="textSecondary" variant="h6" fontWeight="400">
-            Administrator
+            {level}
           </Typography>
           <Box display="flex" alignItems="center">
             <Typography

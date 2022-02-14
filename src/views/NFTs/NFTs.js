@@ -27,6 +27,7 @@ import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
 import { getNFTData } from '../../services/nft.service';
+import { useSelector } from 'react-redux';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -41,6 +42,11 @@ const NFTs = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [collectionId, setCollectionId] = useState('');
+  const {
+    user: {
+      infor: { level, id },
+    },
+  } = useSelector((state) => state.auth);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -100,7 +106,13 @@ const NFTs = () => {
 
   useEffect(() => {
     const fetchNFTs = async () => {
-      await getNFTData(page, rowsPerPage, searchKeyword, collectionId).then(({ data }) => {
+      await getNFTData(
+        page,
+        rowsPerPage,
+        searchKeyword,
+        collectionId,
+        level.toLowerCase() === 'creator' ? id : undefined,
+      ).then(({ data }) => {
         setRows(data.items);
         setTotalCount(data.headers.x_total_count);
       });
