@@ -12,7 +12,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useKipContract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
-import collectionsService, { getCollectionsByCreatorId } from '../../services/collections.service';
+import { getCollectionsByCreatorId } from '../../services/collections.service';
 import contracts from '../../config/constants/contracts';
 import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
@@ -137,6 +137,7 @@ const NFTMint = () => {
                     variant="outlined"
                     fullWidth
                     size="small"
+                    disabled={isSubmitting || isMinting}
                     value={values.name}
                     onChange={handleChange}
                   />
@@ -152,6 +153,7 @@ const NFTMint = () => {
                     labelId="demo-simple-select-label"
                     id="creator"
                     name="creator"
+                    disabled={isSubmitting || isMinting}
                     value={values.creator_id}
                     onChange={(event) => {
                       setFieldValue('creator_id', event.target.value);
@@ -182,6 +184,7 @@ const NFTMint = () => {
                     id="collection"
                     name="collection"
                     value={values.collection}
+                    disabled={isSubmitting || isMinting}
                     onChange={(event) => {
                       setFieldValue('collection', event.target.value);
                       collectionList.filter((collection) => {
@@ -214,6 +217,7 @@ const NFTMint = () => {
                     id="category"
                     name="category"
                     variant="outlined"
+                    disabled={isSubmitting || isMinting}
                     fullWidth
                     size="small"
                     value={values.category}
@@ -241,6 +245,7 @@ const NFTMint = () => {
                           component="label"
                           variant="contained"
                           size="small"
+                          disabled={isSubmitting || isMinting}
                           style={{ marginRight: '1rem' }}
                         >
                           <DriveFileMoveOutlinedIcon fontSize="small" />
@@ -269,10 +274,10 @@ const NFTMint = () => {
                   <CustomTextField
                     id="amount"
                     name="amount"
-                    placeholder={t('Enter amount')}
                     variant="outlined"
                     fullWidth
                     size="small"
+                    disabled={isSubmitting || isMinting}
                     value={values.amount}
                     onChange={handleChange}
                   />
@@ -297,6 +302,7 @@ const NFTMint = () => {
                           component="label"
                           variant="contained"
                           size="small"
+                          disabled={isSubmitting || isMinting}
                           style={{ marginRight: '1rem' }}
                         >
                           <DriveFileMoveOutlinedIcon fontSize="small" />
@@ -324,9 +330,9 @@ const NFTMint = () => {
                   <CustomTextField
                     id="externalURL"
                     name="externalURL"
-                    placeholder={t('Enter external URL')}
                     variant="outlined"
                     fullWidth
+                    disabled={isSubmitting || isMinting}
                     size="small"
                     value={values.externalURL}
                     onChange={handleChange}
@@ -342,10 +348,10 @@ const NFTMint = () => {
                   <CustomTextField
                     id="description"
                     name="description"
-                    placeholder={t('Enter description')}
                     variant="outlined"
                     fullWidth
                     size="small"
+                    disabled={isSubmitting || isMinting}
                     value={values.description}
                     onChange={handleChange}
                   />
@@ -360,10 +366,10 @@ const NFTMint = () => {
                   <CustomTextField
                     id="price"
                     name="price"
-                    placeholder={t('Enter price')}
                     variant="outlined"
                     fullWidth
                     size="small"
+                    disabled={isSubmitting || isMinting}
                     value={values.price}
                     onChange={handleChange}
                   />
@@ -410,14 +416,6 @@ const NFTMint = () => {
                   </Grid>
                 )}
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  {/*<div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>*/}
-                  {/*  <StyledButton variant="outlined" size="small">*/}
-                  {/*    {t('Cancel')}*/}
-                  {/*  </StyledButton>*/}
-                  {/*  <StyledButton variant="contained" onClick={createNFT}>*/}
-                  {/*    {t('Confirm')}*/}
-                  {/*  </StyledButton>*/}
-                  {/*</div>*/}
                   <LoadingButton
                     type="submit"
                     loading={isSubmitting || isMinting}
