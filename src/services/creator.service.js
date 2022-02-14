@@ -11,21 +11,14 @@ export const getCreatorData = (page, rowsPerPage) => {
       ? `?level=creator`
       : `?page=${page + 1}&perPage=${rowsPerPage}&level=creator`;
 
-  return (
-    axios
-      .get(`${API_URL}${subQuery}`, {
-        headers: authHeader(),
-      })
-      .then((response) => {
-        return response.data;
-      })
-      // .catch((error) =>
-      //   error.toString().indexOf('401') ? (window.location.href = '/auth/login') : console.log(error),
-      // );
-      .catch((error) =>
-        error.toString().indexOf('401') ? authService.logout() : console.log(error),
-      )
-  );
+  return axios
+    .get(`${API_URL}${subQuery}`, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
 };
 
 const creatorService = {

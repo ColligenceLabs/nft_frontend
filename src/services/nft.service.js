@@ -15,9 +15,9 @@ export const getNFTData = (page, rowsPerPage, searchKeyword, collectionId) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) =>
-      error.toString().indexOf('401') ? authService.logout() : console.log(error),
-    );
+    .catch((error) => {
+      error.response.status == 401 ? authService.logout() : console.log(error);
+    });
 };
 
 export const registerNFT = (formData) => {
@@ -27,16 +27,11 @@ export const registerNFT = (formData) => {
       console.log(res);
       return res;
     })
-    .catch(
-      (error) => console.log(error),
-      // error.toString().indexOf('401') ? authService.logout() : console.log(error),
-    );
+    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
 };
 
 export const setNftOnchain = (id) => {
   return axios
     .put(`${API_URL}/update-onchain/${id}`, { onchain: 'true' }, { headers: authHeader() })
-    .catch((error) =>
-      error.toString().indexOf('401') ? authService.logout() : console.log(error),
-    );
+    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
 };
