@@ -28,6 +28,7 @@ import { stableSort, getComparator } from '../../utils/tableUtils';
 import CollectionDetailModal from './CollectionDetailModal';
 import { getCollectionData } from '../../services/collections.service';
 import { getCreatorData } from '../../services/creator.service';
+import { useSelector } from 'react-redux';
 
 const Collections = () => {
   const { t } = useTranslation();
@@ -43,6 +44,12 @@ const Collections = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedDetailRow, setSelectedDetailRow] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
+
+  const {
+    user: {
+      infor: { level, id },
+    },
+  } = useSelector((state) => state.auth);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -115,7 +122,11 @@ const Collections = () => {
         data: { items: creatorList },
       } = await getCreatorData();
 
-      await getCollectionData(page, rowsPerPage).then(({ data }) => {
+      await getCollectionData(
+        page,
+        rowsPerPage,
+        level.toLowerCase() === 'creator' ? id : undefined,
+      ).then(({ data }) => {
         const collectionArray = data.items.map((item) => {
           let temp = creatorList?.find((creator) => creator._id === item.creator_id);
 
