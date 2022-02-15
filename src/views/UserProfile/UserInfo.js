@@ -123,14 +123,17 @@ const UserInfo = () => {
                   id="level"
                   name="level"
                   onChange={handleChange}
-                  // value={values.level || ''}
+                  value={values.level || ''}
+                  disabled={level.toLowerCase() === 'creator'}
                   defaultValue="creator"
                   fullWidth
                   size="small"
                   // error={touched.level && Boolean(errors.level)}
                   // helperText={touched.repeatPassword && errors.repeatPassword}
                 >
+                  <MenuItem value="administrator">Administrator</MenuItem>
                   <MenuItem value="creator">Creator</MenuItem>
+                  <MenuItem value="operator">Operator</MenuItem>
                 </CustomSelect>
                 {touched.level && errors.level && (
                   <FormHelperText htmlFor="render-select" error>
