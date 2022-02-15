@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, MenuItem, Typography, Avatar, Button, Divider } from '@mui/material';
+import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
-
 import userimg from '../../../assets/images/users/user2.jpg';
 
 const ProfileDropdown = ({ fullName, email, level }) => (
@@ -69,6 +69,8 @@ const ProfileDropdown = ({ fullName, email, level }) => (
           pt: 3,
           pb: 3,
         }}
+        component={Link}
+        to="/profile"
       >
         <Box display="flex" alignItems="center">
           <Button
@@ -84,6 +86,7 @@ const ProfileDropdown = ({ fullName, email, level }) => (
           >
             <FeatherIcon icon="dollar-sign" width="18" height="18" />
           </Button>
+
           <Box
             sx={{
               ml: 2,

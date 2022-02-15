@@ -28,6 +28,7 @@ const Collection = Loadable(lazy(() => import('../views/Collection')));
 const CollectionCreate = Loadable(lazy(() => import('../views/Collection/CollectionCreate')));
 const Reward = Loadable(lazy(() => import('../views/Reward')));
 const RewardCreate = Loadable(lazy(() => import('../views/Reward/RewardCreate')));
+const UserProfile = Loadable(lazy(() => import('../views/UserProfile/UserProfile')));
 
 /* ****Routes***** */
 const Router = (isLoggedIn) => [
@@ -52,7 +53,7 @@ const Router = (isLoggedIn) => [
       { path: '/collection/create', exact: true, element: <CollectionCreate /> },
       { path: '/reward', exact: true, element: <Reward /> },
       { path: '/reward/create', exact: true, element: <RewardCreate /> },
-
+      { path: '/profile', exact: true, element: <UserProfile /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
