@@ -85,7 +85,6 @@ const UserInfo = () => {
                   fullWidth
                   size="small"
                   value={values.address || ''}
-                  onChange={handleChange}
                   // error={touched.email && Boolean(errors.email)}
                   // helperText={touched.email && errors.email}
                 />
