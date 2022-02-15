@@ -13,7 +13,7 @@ export const getCollectionData = (page, rowsPerPage, id) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
 export const getDetailCollection = () => {
@@ -23,7 +23,7 @@ export const getDetailCollection = () => {
       return response.data;
     })
 
-    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
 export const createCollection = (formData) => {
@@ -37,7 +37,7 @@ export const getCollectionsByCreatorId = (id) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
 const collectionsService = {
