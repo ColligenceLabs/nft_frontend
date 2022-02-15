@@ -256,6 +256,7 @@ const CollectionCreate = () => {
                             id="image"
                             style={{ display: 'none' }}
                             type="file"
+                            accept="image/jpg, image/png, image/jpeg"
                             name="image"
                             onChange={(event) => {
                               console.log(event.currentTarget.files[0]);
