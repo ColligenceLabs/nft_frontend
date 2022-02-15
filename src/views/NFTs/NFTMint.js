@@ -88,8 +88,8 @@ const NFTMint = () => {
             }
             formData.append('quantity', values['amount']);
             formData.append('collection_id', values['collection']);
-            formData.append('files', values['content']);
-            formData.append('files', values['thumbnail']);
+            formData.append('file', values['content']);
+            formData.append('thumbnail', values['thumbnail']);
 
             if (values['amount'] > 1 && contractType === 'KIP17') {
               await batchRegisterNFT(formData)
