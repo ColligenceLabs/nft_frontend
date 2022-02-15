@@ -98,7 +98,8 @@ const CollectionCreate = () => {
             }
 
             let newContract;
-            if (process.env.REACT_APP_USE_KAS === 'false') {
+            const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
+            if (useKAS === 'false') {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
               if (values.type === 'KIP17') {
