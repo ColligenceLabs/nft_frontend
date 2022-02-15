@@ -32,6 +32,7 @@ import { useWeb3React } from '@web3-react/core';
 import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 import useCreator from '../../hooks/useCreator';
 import { deployNFT17 } from '../../services/nft.service';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -65,6 +66,7 @@ const CollectionCreate = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const creatorList = useCreator();
+  const { level, id, full_name } = useUserInfo();
 
   return (
     <PageContainer title="Collection Create" description="this is Collection Create Form page">
@@ -74,7 +76,7 @@ const CollectionCreate = () => {
           validationSchema={collectionCreateSchema}
           initialValues={{
             name: '',
-            creator_id: '',
+            creator_id: level.toLowerCase() === 'creator' ? id : '',
             image: null,
             category: [],
             contract_address: '',
@@ -182,12 +184,18 @@ const CollectionCreate = () => {
                     fullWidth
                     size="small"
                   >
-                    {creatorList &&
+                    {level.toLowerCase() === 'creator' ? (
+                      <MenuItem key={id} value={id}>
+                        {full_name}
+                      </MenuItem>
+                    ) : (
+                      creatorList &&
                       creatorList.map((creator) => (
                         <MenuItem key={creator._id} value={creator._id}>
                           {creator.full_name}
                         </MenuItem>
-                      ))}
+                      ))
+                    )}
                   </CustomSelect>
                   {touched.creator_id && errors.creator_id && (
                     <FormHelperText htmlFor="render-select" error>
