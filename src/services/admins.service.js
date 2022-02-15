@@ -11,7 +11,7 @@ export const getAdminsData = (page, rowsPerPage) => {
       return response.data;
     })
     .catch((error) =>
-      error.response.status == 401 ? (window.location.href = '/auth/login') : console.log(error),
+      error.response.status === 401 ? (window.location.href = '/auth/login') : console.log(error),
     );
 };
 
@@ -27,7 +27,7 @@ export const updateAdminsStatus = (id, status) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
 const adminsService = {

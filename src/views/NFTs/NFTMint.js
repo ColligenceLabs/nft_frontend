@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { Grid, MenuItem, Button, Paper, FormHelperText, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -18,6 +18,8 @@ import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
+import { useSelector } from 'react-redux';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -37,8 +39,8 @@ const NFTMint = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const creatorList = useCreator();
+  const { level, id, full_name } = useUserInfo();
 
-  console.log(creatorList);
   const getCollectionList = async (id) => {
     await getCollectionsByCreatorId(id)
       .then(({ data }) => {
@@ -47,15 +49,22 @@ const NFTMint = () => {
       .catch((error) => console.log(error));
   };
 
+  useEffect(() => {
+    if (level.toLowerCase() === 'creator') {
+      getCollectionList(id);
+    }
+  }, [level]);
+
   return (
     <PageContainer title="NFT Mint" description="this is NFT Mint Form page">
       <Breadcrumb title="NFT Mint" subtitle="NFT Mint Information" />
       <Container>
         <Formik
           validationSchema={nftRegisterSchema}
+          enableReinitialize
           initialValues={{
             name: '',
-            creator_id: '',
+            creator_id: level.toLowerCase() === 'creator' ? id : '',
             category: '',
             collection: '',
             content: null,
@@ -177,12 +186,18 @@ const NFTMint = () => {
                     fullWidth
                     size="small"
                   >
-                    {creatorList &&
+                    {level.toLowerCase() === 'creator' ? (
+                      <MenuItem key={id} value={id}>
+                        {full_name}
+                      </MenuItem>
+                    ) : (
+                      creatorList &&
                       creatorList.map((creator) => (
                         <MenuItem key={creator._id} value={creator._id}>
                           {creator.full_name}
                         </MenuItem>
-                      ))}
+                      ))
+                    )}
                   </CustomSelect>
                   {touched.creator_id && errors.creator_id && (
                     <FormHelperText htmlFor="render-select" error>

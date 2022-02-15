@@ -18,7 +18,7 @@ export const getCreatorData = (page, rowsPerPage) => {
     .then((response) => {
       return response.data;
     })
-    .catch((error) => (error.response.status == 401 ? authService.logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
 const creatorService = {

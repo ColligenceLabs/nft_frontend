@@ -6,7 +6,7 @@ export const register = (formData) => {
   return axios
     .post(API_URL + 'register', formData)
 
-    .catch((error) => (error.response.status == 401 ? logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? logout() : console.log(error)));
 };
 
 const login = (email, password) => {
@@ -22,7 +22,7 @@ const login = (email, password) => {
       return response.data;
     })
 
-    .catch((error) => (error.response.status == 401 ? logout() : console.log(error)));
+    .catch((error) => (error.response.status === 401 ? logout() : console.log(error)));
 };
 
 // Todo logout

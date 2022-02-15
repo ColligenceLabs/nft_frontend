@@ -19,12 +19,12 @@ import { SidebarWidth } from '../../../assets/global/Theme-variable';
 import LogoIcon from '../logo/LogoIcon';
 import { Menuitems, CreatorMenu } from './Menuitems';
 import Scrollbar from '../../../components/custom-scroll/Scrollbar';
-import { useSelector } from 'react-redux';
+import useUserInfo from '../../../hooks/useUserInfo';
 
 const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(true);
-  const { user } = useSelector((state) => state.auth);
+  const { level } = useUserInfo();
   const { pathname } = useLocation();
   const pathDirect = pathname;
   const pathWithoutLastPart = pathname.slice(0, pathname.lastIndexOf('/'));
@@ -44,7 +44,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
         <LogoIcon />
         <Box>
           <List>
-            {(user.infor.level === 'administrator' ? Menuitems : CreatorMenu).map((item, index) => {
+            {(level === 'administrator' ? Menuitems : CreatorMenu).map((item, index) => {
               // {/********SubHeader**********/}
               if (item.subheader) {
                 return (
