@@ -9,6 +9,7 @@ import {
   Alert,
   TextField,
   FormHelperText,
+  CardMedia,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -232,6 +233,23 @@ const Register = () => {
                                   </FormHelperText>
                                 )}
                               </Grid>
+
+                              <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                                <CustomFormLabel htmlFor="description">
+                                  {t('Description')}
+                                </CustomFormLabel>
+                                <CustomTextField
+                                  id="description"
+                                  name="description"
+                                  variant="outlined"
+                                  fullWidth
+                                  size="small"
+                                  value={values.description}
+                                  onChange={handleChange}
+                                  error={touched.description && Boolean(errors.description)}
+                                  helperText={touched.description && errors.description}
+                                />
+                              </Grid>
                               <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                                 <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
                                 <CustomTextField
@@ -270,22 +288,14 @@ const Register = () => {
                                     {errors.image}
                                   </FormHelperText>
                                 )}
-                              </Grid>
-                              <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                                <CustomFormLabel htmlFor="description">
-                                  {t('Description')}
-                                </CustomFormLabel>
-                                <CustomTextField
-                                  id="description"
-                                  name="description"
-                                  variant="outlined"
-                                  fullWidth
-                                  size="small"
-                                  value={values.description}
-                                  onChange={handleChange}
-                                  error={touched.description && Boolean(errors.description)}
-                                  helperText={touched.description && errors.description}
-                                />
+                                {values.image !== null && (
+                                  <CardMedia
+                                    component="img"
+                                    sx={{ width: 250, mt: 3 }}
+                                    image={URL.createObjectURL(values.image)}
+                                    alt="Live from space album cover"
+                                  />
+                                )}
                               </Grid>
                             </Grid>
                             {errorMessage && (

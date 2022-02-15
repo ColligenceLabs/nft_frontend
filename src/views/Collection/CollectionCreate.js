@@ -13,6 +13,7 @@ import {
   FormHelperText,
   Snackbar,
   CircularProgress,
+  CardMedia,
 } from '@mui/material';
 import { Formik } from 'formik';
 import { styled } from '@mui/material/styles';
@@ -257,6 +258,7 @@ const CollectionCreate = () => {
                             type="file"
                             name="image"
                             onChange={(event) => {
+                              console.log(event.currentTarget.files[0]);
                               setFieldValue('image', event.currentTarget.files[0]);
                             }}
                           />
@@ -268,6 +270,14 @@ const CollectionCreate = () => {
                     <FormHelperText htmlFor="render-select" error>
                       {errors.image}
                     </FormHelperText>
+                  )}
+                  {values.image !== null && (
+                    <CardMedia
+                      component="img"
+                      sx={{ width: 250, mt: 3 }}
+                      image={URL.createObjectURL(values.image)}
+                      alt="Live from space album cover"
+                    />
                   )}
                 </Grid>
                 <Grid item lg={12} md={12} sm={12} xs={12}>
