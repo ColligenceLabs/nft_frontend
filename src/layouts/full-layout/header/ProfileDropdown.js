@@ -2,118 +2,123 @@ import React from 'react';
 import { Box, MenuItem, Typography, Avatar, Button, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
-import userimg from '../../../assets/images/users/user2.jpg';
 
-const ProfileDropdown = ({ fullName, email, level }) => (
-  <Box>
-    <Box
-      sx={{
-        pb: 3,
-        mt: 3,
-      }}
-    >
-      <Box display="flex" alignItems="center">
-        <Avatar
-          src={userimg}
-          alt={userimg}
-          sx={{
-            width: '90px',
-            height: '90px',
-          }}
-        />
-        <Box
-          sx={{
-            ml: 2,
-          }}
-        >
-          <Typography
-            variant="h4"
-            sx={{
-              lineHeight: '1.235',
-            }}
-          >
-            {fullName}
-          </Typography>
-          <Typography color="textSecondary" variant="h6" fontWeight="400">
-            {level}
-          </Typography>
-          <Box display="flex" alignItems="center">
-            <Typography
-              color="textSecondary"
-              display="flex"
-              alignItems="center"
-              sx={{
-                color: (theme) => theme.palette.grey.A200,
-                mr: 1,
-              }}
-            >
-              <FeatherIcon icon="mail" width="18" />
-            </Typography>
-            <Typography color="textSecondary" variant="h6">
-              {email}
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
-    <Divider
-      style={{
-        marginTop: 0,
-        marginBottom: 0,
-      }}
-    />
-
+const ProfileDropdown = ({ fullName, email, level, image }) => {
+  const userimg = image.replace(
+    'https://nftbedev.talken.io/talkenNft/uploads',
+    'http://localhost:4000/talkenNft',
+  );
+  return (
     <Box>
-      <MenuItem
+      <Box
         sx={{
-          pt: 3,
           pb: 3,
+          mt: 3,
         }}
-        component={Link}
-        to="/profile"
       >
         <Box display="flex" alignItems="center">
-          <Button
+          <Avatar
+            src={userimg}
+            alt={userimg}
             sx={{
-              backgroundColor: (theme) => theme.palette.primary.light,
-              color: (theme) => theme.palette.primary.main,
-              boxShadow: 'none',
-              minWidth: '50px',
-              width: '45px',
-              height: '40px',
-              borderRadius: '10px',
+              width: '90px',
+              height: '90px',
             }}
-          >
-            <FeatherIcon icon="dollar-sign" width="18" height="18" />
-          </Button>
-
+          />
           <Box
             sx={{
               ml: 2,
             }}
           >
             <Typography
-              variant="h5"
+              variant="h4"
               sx={{
                 lineHeight: '1.235',
               }}
             >
-              My Profile
+              {fullName}
             </Typography>
             <Typography color="textSecondary" variant="h6" fontWeight="400">
-              Account Settings
+              {level}
             </Typography>
+            <Box display="flex" alignItems="center">
+              <Typography
+                color="textSecondary"
+                display="flex"
+                alignItems="center"
+                sx={{
+                  color: (theme) => theme.palette.grey.A200,
+                  mr: 1,
+                }}
+              >
+                <FeatherIcon icon="mail" width="18" />
+              </Typography>
+              <Typography color="textSecondary" variant="h6">
+                {email}
+              </Typography>
+            </Box>
           </Box>
         </Box>
-      </MenuItem>
+      </Box>
       <Divider
         style={{
           marginTop: 0,
           marginBottom: 0,
         }}
       />
+
+      <Box>
+        <MenuItem
+          sx={{
+            pt: 3,
+            pb: 3,
+          }}
+          component={Link}
+          to="/profile"
+        >
+          <Box display="flex" alignItems="center">
+            <Button
+              sx={{
+                backgroundColor: (theme) => theme.palette.primary.light,
+                color: (theme) => theme.palette.primary.main,
+                boxShadow: 'none',
+                minWidth: '50px',
+                width: '45px',
+                height: '40px',
+                borderRadius: '10px',
+              }}
+            >
+              <FeatherIcon icon="dollar-sign" width="18" height="18" />
+            </Button>
+
+            <Box
+              sx={{
+                ml: 2,
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{
+                  lineHeight: '1.235',
+                }}
+              >
+                My Profile
+              </Typography>
+              <Typography color="textSecondary" variant="h6" fontWeight="400">
+                Account Settings
+              </Typography>
+            </Box>
+          </Box>
+        </MenuItem>
+        <Divider
+          style={{
+            marginTop: 0,
+            marginBottom: 0,
+          }}
+        />
+      </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export default ProfileDropdown;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
 import { Alert, FormHelperText, Grid, MenuItem, Paper, Snackbar } from '@mui/material';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -22,18 +22,23 @@ const UserInfo = () => {
   const {
     user: { infor },
   } = useSelector((state) => state.auth);
-
+  const [userInfor, setUserInfor] = useState({});
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
+
+  useEffect(() => {
+    setUserInfor({
+      ...infor,
+      address: account,
+    });
+  }, [infor, account]);
 
   return (
     <Container>
       <Formik
         // validationSchema={adminRegisterSchema}
-        initialValues={{
-          ...infor,
-          address: account,
-        }}
+        enableReinitialize
+        initialValues={{ ...userInfor }}
         onSubmit={async (data, { setSubmitting }) => {
           setSubmitting(true);
 
@@ -53,14 +58,14 @@ const UserInfo = () => {
           <form onSubmit={handleSubmit}>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               <Grid item lg={6} md={12} sm={12} xs={12}>
-                <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
+                <CustomFormLabel htmlFor="full_name">{t('Name')}</CustomFormLabel>
                 <CustomTextField
                   id="full_name"
                   name="full_name"
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={values.full_name}
+                  value={values.full_name || ''}
                   onChange={handleChange}
                 />
                 {touched.full_name && errors.full_name && (
@@ -77,7 +82,7 @@ const UserInfo = () => {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={values.address}
+                  value={values.address || ''}
                   onChange={handleChange}
                   // error={touched.email && Boolean(errors.email)}
                   // helperText={touched.email && errors.email}
@@ -97,7 +102,7 @@ const UserInfo = () => {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={values.email}
+                  value={values.email || ''}
                   onChange={handleChange}
                   // error={touched.email && Boolean(errors.email)}
                   // helperText={touched.email && errors.email}
@@ -116,7 +121,7 @@ const UserInfo = () => {
                   id="level"
                   name="level"
                   onChange={handleChange}
-                  // value={values.level}
+                  // value={values.level || ''}
                   defaultValue="creator"
                   fullWidth
                   size="small"
@@ -140,7 +145,7 @@ const UserInfo = () => {
                   variant="outlined"
                   fullWidth
                   size="small"
-                  value={values.description}
+                  value={values.description || ''}
                   onChange={handleChange}
                   error={touched.description && Boolean(errors.description)}
                   helperText={touched.description && errors.description}

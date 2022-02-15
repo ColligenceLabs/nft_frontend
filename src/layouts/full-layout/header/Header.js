@@ -19,7 +19,7 @@ import {
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
 import ProfileDropdown from './ProfileDropdown';
-import userimg from '../../../assets/images/users/user2.jpg';
+
 import LanguageSelector from '../../../components/LanguageSelector/LanguageSelector';
 import ThemeSelector from '../../../components/ThemeSelector/ThemeSelector';
 import WalletDialog from '../../../components/WalletDialog';
@@ -54,9 +54,13 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
   const {
     user: {
-      infor: { full_name, email, level },
+      infor: { full_name, email, level, image },
     },
   } = useSelector((state) => state.auth);
+  const userimg = image.replace(
+    'https://nftbedev.talken.io/talkenNft/uploads',
+    'http://localhost:4000/talkenNft',
+  );
 
   useEffect(() => {
     async function login() {
@@ -260,7 +264,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             </Box>
           </Box>
 
-          <ProfileDropdown fullName={full_name} email={email} level={level} />
+          <ProfileDropdown fullName={full_name} email={email} level={level} image={image} />
           <Link
             style={{
               textDecoration: 'none',
