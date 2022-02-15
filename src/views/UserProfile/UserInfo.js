@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -19,19 +20,20 @@ const UserInfo = () => {
   const { t } = useTranslation();
   const context = useWeb3React();
   const { account } = context;
-  const {
-    user: { infor },
-  } = useSelector((state) => state.auth);
   const [userInfor, setUserInfor] = useState({});
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
+  const { full_name, level, email, description } = useUserInfo();
 
   useEffect(() => {
     setUserInfor({
-      ...infor,
+      full_name,
+      level,
+      email,
+      description,
       address: account,
     });
-  }, [infor, account]);
+  }, [account]);
 
   return (
     <Container>

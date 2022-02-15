@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik } from 'formik';
 import { Grid, MenuItem, Button, Paper, FormHelperText, Snackbar, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -18,6 +18,7 @@ import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
+import { useSelector } from 'react-redux';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -37,6 +38,11 @@ const NFTMint = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const creatorList = useCreator();
+  const {
+    user: {
+      infor: { level },
+    },
+  } = useSelector((state) => state.auth);
 
   console.log(creatorList);
   const getCollectionList = async (id) => {
@@ -53,9 +59,10 @@ const NFTMint = () => {
       <Container>
         <Formik
           validationSchema={nftRegisterSchema}
+          enableReinitialize
           initialValues={{
             name: '',
-            creator_id: '',
+            creator_id: level.toLowerCase() === 'creator' ? creatorList && creatorList[0]._id : '',
             category: '',
             collection: '',
             content: null,
