@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
+  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
@@ -64,7 +66,9 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const classes = useStyles();
   const [startDate, setStartDate] = React.useState(new Date());
   const [endDate, setEndDate] = React.useState(new Date());
-
+  const [errorMessage, setErrorMessage] = useState();
+  const [successFlag, setSuccessFlag] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const handleChangeStart = (newValue) => {
     setStartDate(newValue);
   };
@@ -75,6 +79,15 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
 
   const handleSchedule = async () => {
     const res = await setSchedule(selected, startDate, endDate);
+    console.log(res);
+    if (res.data.status === 1) {
+      setErrorMessage(null);
+      setSuccessFlag(true);
+    } else {
+      setSuccessFlag(false);
+      setErrorMessage(res.data.message);
+    }
+    setOpenSnackbar(true);
     handleCloseModal();
   };
 
@@ -138,6 +151,25 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={openSnackbar}
+        autoHideDuration={successFlag ? 2000 : 3000}
+        onClose={() => {
+          setOpenSnackbar(false);
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setOpenSnackbar(false);
+          }}
+          variant="filled"
+          severity={successFlag ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {successFlag ? 'Success' : errorMessage}
+        </Alert>
+      </Snackbar>
     </React.Fragment>
   );
 };
