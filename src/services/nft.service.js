@@ -52,3 +52,35 @@ export const setNftOnchain = (id) => {
     .put(`${API_URL}/update-onchain/${id}`, { onchain: 'true' }, { headers: authHeader() })
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
+
+export const deleteNft = (nfts) => {
+  if (nfts.length === 1) {
+    return axios
+      .delete(`${API_URL}/delete/${nfts.toString()}`, { headers: authHeader() })
+      .catch((error) =>
+        error.response.status === 401 ? authService.logout() : console.log(error),
+      );
+  } else {
+    return axios
+      .put(
+        `${API_URL}/delete-many`,
+        {
+          nft_ids: nfts,
+        },
+        { headers: authHeader() },
+      )
+      .catch((error) =>
+        error.response.status === 401 ? authService.logout() : console.log(error),
+      );
+  }
+};
+
+export const setSchedule = (ids, start_date, end_date) => {
+  return axios
+    .put(
+      `${API_URL}/update-schedule`,
+      { ids: ids, start_date, end_date },
+      { headers: authHeader() },
+    )
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};

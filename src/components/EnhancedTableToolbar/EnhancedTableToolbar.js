@@ -12,13 +12,15 @@ import AddIcon from '@mui/icons-material/Add';
 const EnhancedTableToolbar = (props) => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { numSelected, setFilters } = props;
+  const { numSelected, setFilters, onDelete, addSchedule, openSchedule } = props;
   const [showDrawer, setShowDrawer] = useState(false);
   const [currentRoute, setCurrentRoute] = useState('');
 
   useEffect(() => {
     setCurrentRoute(location.pathname.replace('/', ''));
   }, [location]);
+
+  const handleDelete = (popupState) => {};
 
   return (
     <Toolbar
@@ -41,8 +43,22 @@ const EnhancedTableToolbar = (props) => {
                 {`${numSelected} item(s) selected`} <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
               </Button>
               <Menu {...bindMenu(popupState)}>
-                <MenuItem onClick={popupState.close}>Sale Schedule</MenuItem>
-                <MenuItem onClick={popupState.close}>Delete</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    popupState.close();
+                    openSchedule();
+                  }}
+                >
+                  Sale Schedule
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    popupState.close();
+                    onDelete();
+                  }}
+                >
+                  Delete
+                </MenuItem>
               </Menu>
             </React.Fragment>
           )}
