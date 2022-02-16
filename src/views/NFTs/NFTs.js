@@ -26,8 +26,9 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { getNFTData } from '../../services/nft.service';
+import { deleteNft, deleteNfts, getNFTData } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
+import ScheduleDialog from './ScheduleDialog';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -42,6 +43,8 @@ const NFTs = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [collectionId, setCollectionId] = useState('');
+  const [openScheduleModal, setOpenScheduleModal] = useState(false);
+
   const {
     user: {
       infor: { level, id },
@@ -101,22 +104,37 @@ const NFTs = () => {
     setCollectionId(props.collectionId);
   };
 
+  const onDelete = async () => {
+    const res = await deleteNft(selected);
+    console.log(res);
+    fetchNFTs();
+  };
+
+  const openSchedule = () => {
+    setOpenScheduleModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenScheduleModal(false);
+    fetchNFTs();
+  };
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
+  const fetchNFTs = async () => {
+    await getNFTData(
+      page,
+      rowsPerPage,
+      searchKeyword,
+      collectionId,
+      level.toLowerCase() === 'creator' ? id : undefined,
+    ).then(({ data }) => {
+      setRows(data.items);
+      setTotalCount(data.headers.x_total_count);
+    });
+  };
+
   useEffect(() => {
-    const fetchNFTs = async () => {
-      await getNFTData(
-        page,
-        rowsPerPage,
-        searchKeyword,
-        collectionId,
-        level.toLowerCase() === 'creator' ? id : undefined,
-      ).then(({ data }) => {
-        setRows(data.items);
-        setTotalCount(data.headers.x_total_count);
-      });
-    };
     fetchNFTs();
   }, [getNFTData, page, rowsPerPage, searchKeyword, collectionId]);
 
@@ -125,7 +143,12 @@ const NFTs = () => {
       <Breadcrumb title="NFTs" subtitle="NFTs Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setFilters={setFilters}
+            onDelete={onDelete}
+            openSchedule={openSchedule}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -321,6 +344,11 @@ const NFTs = () => {
           label="Dense padding"
         />
       </Box>
+      <ScheduleDialog
+        open={openScheduleModal}
+        handleCloseModal={handleCloseModal}
+        selected={selected}
+      />
     </PageContainer>
   );
 };
