@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { getCreatorData } from '../../services/creator.service';
 import { createCollection } from '../../services/collections.service';
 import { LoadingButton } from '@mui/lab';
-import { deployKIP17, deployKIP37 } from '../../utils/deploy';
+import { deployKIP17, deployKIP17WithKaikas, deployKIP37 } from '../../utils/deploy';
 import { useWeb3React } from '@web3-react/core';
 import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 import useCreator from '../../hooks/useCreator';
@@ -114,7 +114,16 @@ const CollectionCreate = () => {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
               if (values.type === 'KIP17') {
-                result = await deployKIP17(values.name, values.symbol, account, library);
+                if (window.localStorage.getItem('wallet') === 'kaikas') {
+                  result = await deployKIP17WithKaikas(
+                    values.name,
+                    values.symbol,
+                    account,
+                    library,
+                  );
+                } else {
+                  result = await deployKIP17(values.name, values.symbol, account, library);
+                }
               } else if (values.type === 'KIP37') {
                 result = await deployKIP37(values.tokenUri, account, library);
               }
@@ -129,6 +138,13 @@ const CollectionCreate = () => {
               }).then((res) => {
                 newContract = res.data.data.address;
               });
+            }
+
+            if (!newContract) {
+              setErrorMessage('test');
+              setSuccessRegister(false);
+              setSubmitting(false);
+              return;
             }
 
             // console.log('newContract == ', newContract);
