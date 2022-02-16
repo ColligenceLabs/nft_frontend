@@ -29,6 +29,7 @@ import { headCells } from './tableConfig';
 import { deleteNft, deleteNfts, getNFTData } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import ScheduleDialog from './ScheduleDialog';
+import DeleteDialog from '../../components/DeleteDialog';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -44,6 +45,7 @@ const NFTs = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [collectionId, setCollectionId] = useState('');
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const {
     user: {
@@ -107,7 +109,8 @@ const NFTs = () => {
   const onDelete = async () => {
     const res = await deleteNft(selected);
     console.log(res);
-    fetchNFTs();
+    await fetchNFTs();
+    setOpenDeleteModal(false);
   };
 
   const openSchedule = () => {
@@ -118,6 +121,15 @@ const NFTs = () => {
     setOpenScheduleModal(false);
     fetchNFTs();
   };
+
+  const openDelete = () => {
+    setOpenDeleteModal(true);
+  };
+
+  const handleDeleteClose = () => {
+    setOpenDeleteModal(false);
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
@@ -146,7 +158,7 @@ const NFTs = () => {
           <EnhancedTableToolbar
             numSelected={selected.length}
             setFilters={setFilters}
-            onDelete={onDelete}
+            onDelete={openDelete}
             openSchedule={openSchedule}
           />
           <TableContainer>
@@ -348,6 +360,12 @@ const NFTs = () => {
         open={openScheduleModal}
         handleCloseModal={handleCloseModal}
         selected={selected}
+      />
+      <DeleteDialog
+        title="NFT 삭제"
+        open={openDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        doDelete={onDelete}
       />
     </PageContainer>
   );
