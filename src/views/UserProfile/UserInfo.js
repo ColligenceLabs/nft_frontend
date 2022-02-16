@@ -68,7 +68,7 @@ const UserInfo = () => {
                   fullWidth
                   size="small"
                   value={values.full_name || ''}
-                  onChange={handleChange}
+                  // onChange={handleChange}
                 />
                 {touched.full_name && errors.full_name && (
                   <FormHelperText htmlFor="render-select" error>
@@ -104,7 +104,7 @@ const UserInfo = () => {
                   fullWidth
                   size="small"
                   value={values.email || ''}
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   // error={touched.email && Boolean(errors.email)}
                   // helperText={touched.email && errors.email}
                 />
@@ -121,7 +121,7 @@ const UserInfo = () => {
                   labelId="demo-simple-select-label"
                   id="level"
                   name="level"
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   value={values.level || ''}
                   disabled={level.toLowerCase() === 'creator'}
                   defaultValue="creator"
@@ -150,7 +150,7 @@ const UserInfo = () => {
                   fullWidth
                   size="small"
                   value={values.description || ''}
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   error={touched.description && Boolean(errors.description)}
                   helperText={touched.description && errors.description}
                 />
@@ -193,16 +193,16 @@ const UserInfo = () => {
                 </Grid>
               )}
 
-              <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                <LoadingButton
-                  type="submit"
-                  loading={isSubmitting || true}
-                  variant="outlined"
-                  variant="contained"
-                >
-                  {t('Confirm')}
-                </LoadingButton>
-              </Grid>
+              {/*<Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">*/}
+              {/*  <LoadingButton*/}
+              {/*    type="submit"*/}
+              {/*    loading={isSubmitting || true}*/}
+              {/*    variant="outlined"*/}
+              {/*    variant="contained"*/}
+              {/*  >*/}
+              {/*    {t('Confirm')}*/}
+              {/*  </LoadingButton>*/}
+              {/*</Grid>*/}
             </Grid>
           </form>
         )}

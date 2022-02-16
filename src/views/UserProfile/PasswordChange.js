@@ -6,6 +6,9 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import { LoadingButton } from '@mui/lab';
 import { useTranslation } from 'react-i18next';
 import { styled } from '@mui/material/styles';
+import changePasswordSchema from '../../config/schema/changePasswordSchema';
+import useUserInfo from '../../hooks/useUserInfo';
+import { changePassword } from '../../services/auth.service';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -14,14 +17,14 @@ const Container = styled(Paper)(({ theme }) => ({
 
 const PasswordChange = () => {
   const { t } = useTranslation();
-
+  const { id } = useUserInfo();
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
 
   return (
     <Container>
       <Formik
-        // validationSchema={adminRegisterSchema}
+        validationSchema={changePasswordSchema}
         initialValues={{
           old_password: '',
           new_password: '',
@@ -29,6 +32,13 @@ const PasswordChange = () => {
         }}
         onSubmit={async (data, { setSubmitting }) => {
           setSubmitting(true);
+          const res = await changePassword(id, data.old_password, data.new_password);
+          if (res.status === 1) {
+            setErrorMessage(null);
+            setSuccessRegister(true);
+          } else {
+            setErrorMessage(res.message);
+          }
 
           setSubmitting(false);
         }}
@@ -51,9 +61,10 @@ const PasswordChange = () => {
                   id="new_password"
                   name="new_password"
                   variant="outlined"
+                  type="password"
                   fullWidth
                   size="small"
-                  value={values.full_name}
+                  value={values.new_password}
                   onChange={handleChange}
                 />
                 {touched.new_password && errors.new_password && (
@@ -68,6 +79,7 @@ const PasswordChange = () => {
                   id="new_repassword"
                   name="new_repassword"
                   variant="outlined"
+                  type="password"
                   fullWidth
                   size="small"
                   value={values.new_repassword}
@@ -86,6 +98,7 @@ const PasswordChange = () => {
                 <CustomTextField
                   id="old_password"
                   name="old_password"
+                  type="password"
                   variant="outlined"
                   fullWidth
                   size="small"
@@ -119,7 +132,7 @@ const PasswordChange = () => {
                   severity="success"
                   sx={{ width: '100%' }}
                 >
-                  Success in Collection create!
+                  Success changed the password!
                 </Alert>
               </Snackbar>
 
@@ -141,11 +154,11 @@ const PasswordChange = () => {
               <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
                 <LoadingButton
                   type="submit"
-                  loading={isSubmitting || true}
+                  loading={isSubmitting}
                   variant="outlined"
                   variant="contained"
                 >
-                  {t('Confirm')}
+                  {t('Change Password')}
                 </LoadingButton>
               </Grid>
             </Grid>

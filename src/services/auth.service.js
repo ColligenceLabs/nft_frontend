@@ -1,4 +1,5 @@
 import axios from 'axios';
+import authHeader from './auth-header';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/`;
 
@@ -25,6 +26,22 @@ const login = (email, password) => {
     .catch((error) => (error.response.status === 401 ? logout() : console.log(error)));
 };
 
+export const changePassword = (id, old_password, password) => {
+  return axios
+    .put(
+      `${API_URL}password/${id}`,
+      {
+        old_password,
+        password,
+      },
+      { headers: authHeader() },
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 // Todo logout
 const logout = () => {
   localStorage.removeItem('user');
@@ -35,6 +52,7 @@ const authService = {
   register,
   login,
   logout,
+  changePassword,
 };
 
 export default authService;
