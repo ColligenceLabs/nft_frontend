@@ -32,6 +32,12 @@ export const Menuitems = [
     href: '/creator',
   },
   {
+    title: 'Collections',
+    // icon: 'hard-drive',
+    icon: <CollectionsOutlinedIcon width="20" height="20" />,
+    href: '/collection',
+  },
+  {
     title: 'NFTs',
     // icon: 'users',
     // href: '/nfts',
@@ -61,12 +67,7 @@ export const Menuitems = [
     icon: <SwapHorizIcon width="20" height="20" />,
     href: '/transaction',
   },
-  {
-    title: 'Collections',
-    // icon: 'hard-drive',
-    icon: <CollectionsOutlinedIcon width="20" height="20" />,
-    href: '/collection',
-  },
+
   {
     title: 'Reward',
     icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
@@ -81,6 +82,12 @@ export const CreatorMenu = [
     href: '/dashboard',
   },
   {
+    title: 'Collections',
+    // icon: 'hard-drive',
+    icon: <CollectionsOutlinedIcon width="20" height="20" />,
+    href: '/collection',
+  },
+  {
     title: 'NFTs',
     // icon: 'users',
     // href: '/nfts',
@@ -110,12 +117,7 @@ export const CreatorMenu = [
     icon: <SwapHorizIcon width="20" height="20" />,
     href: '/transaction',
   },
-  {
-    title: 'Collections',
-    // icon: 'hard-drive',
-    icon: <CollectionsOutlinedIcon width="20" height="20" />,
-    href: '/collection',
-  },
+
   {
     title: 'Reward',
     icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
