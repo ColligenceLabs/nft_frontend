@@ -20,6 +20,7 @@ import nftRegisterSchema from '../../config/schema/nftMintSchema';
 import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
+import WalletDialog from '../../components/WalletDialog';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -32,14 +33,19 @@ const NFTMint = () => {
   // TODO : change for mainnet 1001 -> 8217
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
-  const { account } = useWeb3React();
+  const { account, activate } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const { mintNFT, isMinting } = useNFT(kipContract, account);
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
+
+  const handleCloseModal = async () => {
+    setIsOpenConnectModal(false);
+  };
 
   const getCollectionList = async (id) => {
     await getCollectionsByCreatorId(id)
@@ -79,6 +85,12 @@ const NFTMint = () => {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
+
+            if (account === undefined) {
+              setIsOpenConnectModal(true);
+              return;
+            }
+
             let formData = new FormData();
             for (let value in values) {
               if (
@@ -458,6 +470,11 @@ const NFTMint = () => {
             </form>
           )}
         </Formik>
+        <WalletDialog
+          isOpenConnectModal={isOpenConnectModal}
+          handleCloseModal={handleCloseModal}
+          activate={activate}
+        />
       </Container>
     </PageContainer>
   );

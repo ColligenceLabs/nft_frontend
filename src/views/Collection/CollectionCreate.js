@@ -34,6 +34,7 @@ import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 import useCreator from '../../hooks/useCreator';
 import { deployNFT17 } from '../../services/nft.service';
 import useUserInfo from '../../hooks/useUserInfo';
+import WalletDialog from '../../components/WalletDialog';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -62,12 +63,17 @@ const WarningBox = styled(Box)(({ theme }) => ({
 }));
 
 const CollectionCreate = () => {
-  const { library, account } = useWeb3React();
+  const { library, account, activate } = useWeb3React();
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
+
+  const handleCloseModal = async () => {
+    setIsOpenConnectModal(false);
+  };
 
   return (
     <PageContainer title="Collection Create" description="this is Collection Create Form page">
@@ -87,6 +93,11 @@ const CollectionCreate = () => {
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
+
+            if (account === undefined) {
+              setIsOpenConnectModal(true);
+              return;
+            }
 
             let formData = new FormData();
             for (let value in values) {
@@ -409,6 +420,11 @@ const CollectionCreate = () => {
             </form>
           )}
         </Formik>
+        <WalletDialog
+          isOpenConnectModal={isOpenConnectModal}
+          handleCloseModal={handleCloseModal}
+          activate={activate}
+        />
       </Container>
     </PageContainer>
   );
