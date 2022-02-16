@@ -42,6 +42,7 @@ const NFTMint = () => {
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
+  const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -113,7 +114,7 @@ const NFTMint = () => {
             formData.append('thumbnail', values['thumbnail']);
             formData.append('category', values['category']);
 
-            if (values['amount'] > 1 && contractType === 'KIP17') {
+            if (useKAS === 'true') {
               await batchRegisterNFT(formData)
                 .then(async (res) => {
                   if (res.data.status === 1) {

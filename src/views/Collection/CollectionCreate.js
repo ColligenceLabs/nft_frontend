@@ -70,6 +70,7 @@ const CollectionCreate = () => {
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
+  const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -109,7 +110,6 @@ const CollectionCreate = () => {
             }
 
             let newContract;
-            const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
             if (useKAS === 'false') {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
