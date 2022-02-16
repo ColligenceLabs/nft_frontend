@@ -19,7 +19,8 @@ import {
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
 import ProfileDropdown from './ProfileDropdown';
-
+import adminImage from '../../../assets/images/users/admin.png';
+import creatorImage from '../../../assets/images/users/creator.png';
 import LanguageSelector from '../../../components/LanguageSelector/LanguageSelector';
 import ThemeSelector from '../../../components/ThemeSelector/ThemeSelector';
 import WalletDialog from '../../../components/WalletDialog';
@@ -57,10 +58,16 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       infor: { full_name, email, level, image },
     },
   } = useSelector((state) => state.auth);
-  const userimg = image.replace(
-    'https://nftbedev.talken.io/talkenNft/uploads',
-    'http://localhost:4000/talkenNft',
-  );
+
+  let userimg;
+  if (image === undefined || image === '') {
+    userimg = level.toLowerCase() === 'creator' ? creatorImage : adminImage;
+  } else {
+    userimg = image.replace(
+      'https://nftbedev.talken.io/talkenNft/uploads',
+      'http://localhost:4000/talkenNft',
+    );
+  }
 
   useEffect(() => {
     async function login() {

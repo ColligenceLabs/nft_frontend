@@ -2,12 +2,20 @@ import React from 'react';
 import { Box, MenuItem, Typography, Avatar, Button, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
+import adminImage from '../../../assets/images/users/admin.png';
+import creatorImage from '../../../assets/images/users/creator.png';
 
 const ProfileDropdown = ({ fullName, email, level, image }) => {
-  const userimg = image.replace(
-    'https://nftbedev.talken.io/talkenNft/uploads',
-    'http://localhost:4000/talkenNft',
-  );
+  let userimg;
+  if (image === undefined || image === '') {
+    userimg = level.toLowerCase() === 'creator' ? creatorImage : adminImage;
+  } else {
+    userimg = image.replace(
+      'https://nftbedev.talken.io/talkenNft/uploads',
+      'http://localhost:4000/talkenNft',
+    );
+  }
+
   return (
     <Box>
       <Box
