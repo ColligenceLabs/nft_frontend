@@ -141,7 +141,7 @@ const NFTMint = () => {
                     const mintValue = contractType === 'KIP17' ? tokenUri : quantity;
 
                     // TODO : Actual NFT Minting here
-                    await mintNFT(tokenId, mintValue, nftId);
+                    await mintNFT(tokenId, mintValue, nftId, contractType);
                   } else {
                     setErrorMessage(res.data.message);
                     setSuccessRegister(false);

@@ -136,21 +136,37 @@ const useNFT = (contract, account) => {
   // );
 
   const mintNFT = useCallback(
-    async (tokenId, mintValue, nftId) => {
+    async (tokenId, mintValue, nftId, contractType) => {
       setIsMinting(true);
       const gasPrice = parseUnits('25', 'gwei').toString();
 
-      // gasLimit 계산
-      const gasLimit = await contract.estimateGas.mintWithTokenURI(account, tokenId, mintValue);
-      console.log(gasPrice, contract);
+      let tx;
 
-      // mint 요청
-      const tx = await contract.mintWithTokenURI(account, tokenId, mintValue, {
-        from: account,
-        gasPrice,
-        gasLimit: calculateGasMargin(gasLimit),
-        // gasLimit: 2000000,
-      });
+      if (contractType === 'KIP17') {
+        // gasLimit 계산
+        const gasLimit = await contract.estimateGas.mintWithTokenURI(account, tokenId, mintValue);
+        console.log(gasPrice, contract);
+
+        // mint 요청
+        tx = await contract.mintWithTokenURI(account, tokenId, mintValue, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+          // gasLimit: 2000000,
+        });
+      } else {
+        // gasLimit 계산
+        const gasLimit = await contract.estimateGas.create(account, tokenId, mintValue);
+        console.log(gasPrice, contract);
+
+        // mint 요청
+        tx = await contract.create(account, tokenId, mintValue, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+          // gasLimit: 2000000,
+        });
+      }
 
       // receipt 대기
       let receipt;
