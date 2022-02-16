@@ -96,9 +96,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         } catch (e) {
           console.log(e);
         }
-      } else if (window.klayton) {
+      } else if (window.klaytn) {
         // Kaikas 지갑이 연결된 경우
-        console.log('test=====', window.klayton);
+        console.log('test=====', window.klaytn);
       } else {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));
