@@ -1,5 +1,6 @@
 import { ContractFactory } from '@ethersproject/contracts';
 import { kip17Data, kip37Data } from '../contracts';
+import Caver from 'caver-js';
 // import { useWeb3React } from '@web3-react/core';
 import { mkDirIPFS } from '../hooks/useNFT';
 import { IPFS_URL } from '../config/constants/consts';
@@ -96,4 +97,64 @@ export async function deployKIP37(name, account, library) {
     console.log(JSON.stringify(receipt));
   }
   return ret;
+}
+
+export async function deployKIP17WithKaikas(name, symbol, account, library) {
+  // hooks can not be called from inside a function
+  // const { account, library } = useWeb3React();
+  console.log('deployKIP17WithKaikas start!');
+
+  const caver = new Caver(window.klaytn);
+  const factory = new caver.klay.Contract(kip17Data.abi);
+  console.log('=====> ', factory, window.klaytn.selectedAddress);
+
+  const ret = {};
+  const contract = await factory
+    .deploy({
+      data: kip17Data.bytecode,
+      arguments: [name, symbol],
+    })
+    .send(
+      {
+        from: window.klaytn.selectedAddress,
+        gas: 7000000,
+        value: 0,
+      },
+      (error, transactionHash) => {
+        console.log('callback', error, transactionHash);
+      },
+    )
+    .then((newContractInstance) => {
+      console.log('then', newContractInstance);
+    })
+    .catch(function (err) {
+      console.log(err);
+      ret.err = err;
+    });
+
+  console.log('===>1234', contract);
+
+  //
+  // if (!!ret.err) return ret;
+  //
+  // const receipt = await contract.deployTransaction.wait().catch(function (err) {
+  //   console.log(err);
+  //   ret.err = err;
+  // });
+  // if (!!ret.err) return ret;
+  // const { confirmations } = receipt;
+  // console.log('receipt', receipt);
+  // ret.confirmations = confirmations;
+  // if (confirmations > 0) {
+  //   console.log('ㅏㅑㅖ17 contract deploy... confirmed!!', contract);
+  //   const { address } = contract;
+  //   ret.address = address;
+  //
+  //   // TODO: 신규 스마트코트랙 주소 등 DB에 입력
+  //   // ...
+  // } else {
+  //   ret.err = receipt;
+  //   console.log(JSON.stringify(receipt));
+  // }
+  // return ret;
 }
