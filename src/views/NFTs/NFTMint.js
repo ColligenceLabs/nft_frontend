@@ -40,6 +40,7 @@ const NFTMint = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
 
@@ -194,6 +195,7 @@ const NFTMint = () => {
                       setFieldValue('creator_id', event.target.value);
                       setFieldValue('collection', '');
                       setFieldValue('category', '');
+
                       getCollectionList(event.target.value);
                     }}
                     fullWidth
@@ -233,6 +235,10 @@ const NFTMint = () => {
                           setFieldValue('category', collection.category.toString());
                           setContractAddr(collection.contract_address);
                           setContractType(collection.contract_type);
+                          process.env.REACT_APP_USE_KAS === 'false' &&
+                          collection.contract_type === 'KIP17'
+                            ? setFieldValue('amount', '1')
+                            : setFieldValue('amount', '');
                         }
                       });
                     }}
@@ -320,7 +326,11 @@ const NFTMint = () => {
                     size="small"
                     disabled={isSubmitting || isMinting}
                     value={values.amount}
-                    onChange={handleChange}
+                    onChange={
+                      process.env.REACT_APP_USE_KAS === 'false' && contractType === 'KIP17'
+                        ? null
+                        : handleChange
+                    }
                   />
                   {touched.amount && errors.amount && (
                     <FormHelperText htmlFor="render-select" error>
