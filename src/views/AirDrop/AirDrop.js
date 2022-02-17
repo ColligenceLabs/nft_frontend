@@ -22,13 +22,14 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { deleteNft, getNFTData } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import ScheduleDialog from '../NFTs/ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
+import TransferDialog from '../../components/TransferDialog/TransferDialog';
 
 const AirDrop = () => {
   const [rows, setRows] = useState([]);
@@ -42,6 +43,8 @@ const AirDrop = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [sendModal, setSendModal] = useState(false);
+  const [selectedAirDrop, setSelectedAirDrop] = useState({});
 
   const {
     user: {
@@ -122,6 +125,15 @@ const AirDrop = () => {
 
   const handleDeleteClose = () => {
     setOpenDeleteModal(false);
+  };
+
+  const handleSendModal = (row) => {
+    setSelectedAirDrop(row);
+    setSendModal(true);
+  };
+
+  const handleCloseSendModal = () => {
+    setSendModal(false);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -301,8 +313,8 @@ const AirDrop = () => {
                       <TableCell style={{ minWidth: 200 }}>
                         <Typography color="textSecondary" variant="h6" fontWeight="400">
                           <Box>
-                            <IconButton>
-                              <RefreshOutlinedIcon />
+                            <IconButton size={'small'} onClick={() => handleSendModal(row)}>
+                              <SendOutlinedIcon />
                             </IconButton>
                             <IconButton>
                               <AlbumOutlinedIcon />
@@ -353,6 +365,12 @@ const AirDrop = () => {
         open={openDeleteModal}
         handleDeleteClose={handleDeleteClose}
         doDelete={onDelete}
+      />
+      <TransferDialog
+        open={sendModal}
+        handleCloseModal={handleCloseSendModal}
+        item={selectedAirDrop}
+        type={selectedAirDrop.collection_id?.contract_type}
       />
     </PageContainer>
   );

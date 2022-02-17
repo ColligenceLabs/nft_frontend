@@ -19,17 +19,18 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { deleteNft, deleteNfts, getNFTData } from '../../services/nft.service';
+import { deleteNft, getNFTData } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import ScheduleDialog from './ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
+import TransferDialog from '../../components/TransferDialog/TransferDialog';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -46,6 +47,8 @@ const NFTs = () => {
   const [collectionId, setCollectionId] = useState('');
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [sendModal, setSendModal] = useState(false);
+  const [selectedNft, setSelectedNft] = useState({});
 
   const {
     user: {
@@ -127,6 +130,15 @@ const NFTs = () => {
 
   const handleDeleteClose = () => {
     setOpenDeleteModal(false);
+  };
+
+  const handleSendModal = (row) => {
+    setSelectedNft(row);
+    setSendModal(true);
+  };
+
+  const handleCloseSendModal = () => {
+    setSendModal(false);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -315,8 +327,8 @@ const NFTs = () => {
                       </TableCell>
                       <TableCell style={{ minWidth: 200 }}>
                         {/*<Box display="flex" justifyContent={'space-around'}>*/}
-                        <IconButton size={'small'}>
-                          <RefreshOutlinedIcon />
+                        <IconButton size={'small'} onClick={() => handleSendModal(row)}>
+                          <SendOutlinedIcon />
                         </IconButton>
                         <IconButton size={'small'}>
                           <AlbumOutlinedIcon />
@@ -366,6 +378,12 @@ const NFTs = () => {
         open={openDeleteModal}
         handleDeleteClose={handleDeleteClose}
         doDelete={onDelete}
+      />
+      <TransferDialog
+        open={sendModal}
+        handleCloseModal={handleCloseSendModal}
+        item={selectedNft}
+        type={selectedNft.collection_id?.contract_type}
       />
     </PageContainer>
   );
