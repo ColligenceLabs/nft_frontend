@@ -98,6 +98,7 @@
   "Account is not active!": "계정 비활성화 상태입니다. 관리자의 최종 승인 후 로그인이 가능해 집니다.",
   "Username and password is incorrect!": "이메일 주소 및 암호를 다시 확인하세요.",
   "Password length should be 5 to 30 characters!": "암호는 최소 5글자 이상 30글자 이하입니다.",
-  "Trace NFT": "NFT 추적"
+  "Trace NFT": "NFT 추적",
+  "Balance": "남은 수량"
 
 }
