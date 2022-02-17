@@ -64,7 +64,7 @@ const EnhancedTableToolbar = (props) => {
           )}
         </PopupState>
       ) : (
-        <Button disabled={numSelected === 0} variant="outlined">
+        <Button disabled={numSelected === 0} variant="outlined" onClick={onDelete}>
           {`Delete ${numSelected} item(s) selected`}
         </Button>
       )}

@@ -21,7 +21,7 @@ const UserDetailModal = (props) => {
           <CustomTextField
             id="userId"
             name="userId"
-            value={row._id?.$oid}
+            value={row._id}
             variant="outlined"
             fullWidth
             disabled

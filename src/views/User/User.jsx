@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Box,
@@ -24,22 +24,26 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { rows } from './mockData';
 import UserDetailModal from './UserDetailModal';
+import { deleteUser, getUserData } from '../../services/user.service';
+import DeleteDialog from '../../components/DeleteDialog';
 
 const User = () => {
   const { t } = useTranslation();
 
+  const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [totalCount, setTotalCount] = useState(0);
   const [userDetailModal, setUserDetailModal] = useState(false);
   const [selectedUserDetail, setSelectedUserDetail] = useState({});
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [totalCount, setTotalCount] = useState(0);
+  const [userStatus, setUserStatus] = useState('');
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -49,19 +53,19 @@ const User = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.uid);
+      const newSelecteds = rows.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -98,20 +102,51 @@ const User = () => {
     setUserDetailModal(false);
   };
 
+  const onDelete = async () => {
+    const res = await deleteUser(selected);
+    await fetchUsers();
+    setOpenDeleteModal(false);
+  };
+
+  const openDelete = () => {
+    setOpenDeleteModal(true);
+  };
+
+  const handleDeleteClose = () => {
+    setOpenDeleteModal(false);
+  };
+
   const setFilters = async (props) => {
     console.log(props);
     setSearchKeyword(props.searchKeyword);
+    setUserStatus(props.userStatus);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
+
+  const fetchUsers = async () => {
+    await getUserData(page, rowsPerPage, searchKeyword, userStatus).then(({ data }) => {
+      console.log(data.items);
+      setRows(data.items);
+      setTotalCount(data.headers.x_total_count);
+    });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [getUserData, page, rowsPerPage, searchKeyword, userStatus]);
 
   return (
     <PageContainer title="User" description="this is users page">
       <Breadcrumb title={t('User')} subtitle={t('User Information')} />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setFilters={setFilters}
+            onDelete={openDelete}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -130,9 +165,8 @@ const User = () => {
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                   // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.uid);
+                    const isItemSelected = isSelected(row._id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -142,7 +176,7 @@ const User = () => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.uid}
+                        key={row._id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -152,7 +186,7 @@ const User = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
-                            onClick={(event) => handleClick(event, row.uid)}
+                            onClick={(event) => handleClick(event, row._id)}
                           />
                         </TableCell>
                         <TableCell>
@@ -165,13 +199,11 @@ const User = () => {
                             <Box
                               sx={{
                                 backgroundColor:
-                                  row.status === 'Active'
+                                  row.status === 'active'
                                     ? (theme) => theme.palette.success.main
-                                    : row.status === 'Pending'
+                                    : row.status === 'inactive'
                                     ? (theme) => theme.palette.warning.main
-                                    : row.status === 'Completed'
-                                    ? (theme) => theme.palette.primary.main
-                                    : row.status === 'Cancel'
+                                    : row.status === 'suspend'
                                     ? (theme) => theme.palette.error.main
                                     : (theme) => theme.palette.secondary.main,
                                 borderRadius: '100%',
@@ -192,7 +224,7 @@ const User = () => {
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {new Date(row.createdAt.$date).toLocaleString()}
+                            {new Date(row.createdAt).toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell>
@@ -226,7 +258,7 @@ const User = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={totalCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -242,6 +274,12 @@ const User = () => {
         open={userDetailModal}
         closeUserDetailModal={closeUserDetailModal}
         row={selectedUserDetail}
+      />
+      <DeleteDialog
+        title="USER 삭제"
+        open={openDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        doDelete={onDelete}
       />
     </PageContainer>
   );

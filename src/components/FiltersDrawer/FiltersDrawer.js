@@ -12,12 +12,16 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
   const [collectionList, setCollectionList] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [userStatus, setUserStatus] = useState('');
 
   const handleSearchKeyword = (e) => {
     setSearchKeyword(e.target.value);
   };
   const handleSelectedCollection = (e) => {
     setSelectedCollection(e.target.value);
+  };
+  const handleUserStatus = (e) => {
+    setUserStatus(e.target.value);
   };
 
   useEffect(async () => {
@@ -72,6 +76,27 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
           </>
         )}
 
+        {/* ------------User Status ------------- */}
+        {currentRoute === 'user' && (
+          <>
+            <CustomFormLabel htmlFor="status">{t('Status')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="status"
+              name="status"
+              onChange={handleUserStatus}
+              value={userStatus}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+              <MenuItem value="suspend">Suspend</MenuItem>
+            </CustomSelect>
+            <Box pt={3} />
+          </>
+        )}
+
         {/* ------------ Search Keyword -------------*/}
         <CustomFormLabel htmlFor="searchKeyword">{t('Search Keyword')}</CustomFormLabel>
         <CustomTextField
@@ -103,7 +128,11 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
           <Button
             variant="contained"
             onClick={() => {
-              setFilters({ collectionId: selectedCollection, searchKeyword: searchKeyword });
+              setFilters({
+                collectionId: selectedCollection,
+                searchKeyword: searchKeyword,
+                userStatus,
+              });
               setShowDrawer(false);
             }}
           >
