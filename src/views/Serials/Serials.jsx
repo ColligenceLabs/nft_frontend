@@ -94,8 +94,8 @@ const Serials = () => {
   const emptyRows = rowsPerPage - rows.length;
 
   return (
-    <PageContainer title="Serials" description="this is Serials page">
-      <Breadcrumb title="Serials" subtitle="Serials Information" />
+    <PageContainer title="Trace NFT" description="this is Trace NFT page">
+      <Breadcrumb title="Trace NFT" subtitle="Trace NFT Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />

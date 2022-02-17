@@ -48,8 +48,8 @@ const SerialsCreate = () => {
   };
 
   return (
-    <PageContainer title="Serials Register" description="this is Serials Register Form page">
-      <Breadcrumb title="Serials Register" subtitle="Serials Register Information" />
+    <PageContainer title="Trace NFT Register" description="this is Trace NFT Register Form page">
+      <Breadcrumb title="Trace NFT Register" subtitle="Trace NFT Information" />
       <Container>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item lg={6} md={12} sm={12} xs={12}>
