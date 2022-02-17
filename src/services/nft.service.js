@@ -4,8 +4,8 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
 
-export const getNFTData = (page, rowsPerPage, searchKeyword, collectionId, creator_id) => {
-  let url = `${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}&onchain=true`;
+export const getNFTData = (type, page, rowsPerPage, searchKeyword, collectionId, creator_id) => {
+  let url = `${API_URL}/indexs?type=${type}&page=${page + 1}&perPage=${rowsPerPage}&onchain=true`;
   url = searchKeyword !== undefined ? `${url}&keyword=${searchKeyword}` : url;
   url = collectionId !== undefined ? `${url}&collection_id=${collectionId}` : url;
   url = creator_id !== undefined ? `${url}&creator_id=${creator_id}` : url;
@@ -88,11 +88,10 @@ export const deleteNft = (nfts) => {
 };
 
 export const setSchedule = (ids, start_date, end_date) => {
-  return axios
-    .put(
-      `${API_URL}/update-schedule`,
-      { ids: ids, start_date, end_date },
-      { headers: authHeader() },
-    )
-    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+  return axios.put(
+    `${API_URL}/update-schedule`,
+    { ids: ids, start_date, end_date },
+    { headers: authHeader() },
+  );
+  //   .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };

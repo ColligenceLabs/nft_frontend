@@ -3,8 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Card,
-  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,9 +10,8 @@ import {
   Divider,
   Snackbar,
   TextField,
-  Typography,
 } from '@mui/material';
-import { deleteNft, deleteNfts, getNFTData, setSchedule } from '../../services/nft.service';
+import { setSchedule } from '../../services/nft.service';
 import { makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -64,8 +61,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const classes = useStyles();
+
   const [startDate, setStartDate] = React.useState(new Date());
-  const [endDate, setEndDate] = React.useState(new Date());
+  const [endDate, setEndDate] = React.useState(
+    new Date(new Date().setDate(new Date().getDate() + 1)),
+  );
+
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -79,7 +80,6 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
 
   const handleSchedule = async () => {
     const res = await setSchedule(selected, startDate, endDate);
-    console.log(res);
     if (res.data.status === 1) {
       setErrorMessage(null);
       setSuccessFlag(true);
