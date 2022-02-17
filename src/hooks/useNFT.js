@@ -200,7 +200,7 @@ const useNFT = (contract, account) => {
         console.log(gasPrice, contract);
 
         // transfer 요청
-        tx = await contract.safeTransferFrom(account, tokenId, mintValue, {
+        tx = await contract.safeTransferFrom(account, to, tokenId, {
           from: account,
           gasPrice,
           gasLimit: calculateGasMargin(gasLimit),
