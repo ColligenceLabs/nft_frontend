@@ -9,8 +9,10 @@ import { useDispatch } from 'react-redux';
 import { clearMessage } from '../../redux/slices/message';
 import { login } from '../../redux/slices/auth';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -115,7 +117,7 @@ const Login = () => {
                       variant="filled"
                       severity="error"
                     >
-                      {errorMessage}
+                      {t(errorMessage)}
                     </Alert>
                   )}
                   <Box
