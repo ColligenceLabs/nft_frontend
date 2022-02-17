@@ -221,11 +221,14 @@ const useNFT = (contract, account) => {
 
       if (contractType === 'KIP17') {
         // gasLimit 계산
-        const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId);
+        // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
+        // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
+        const gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
         console.log(gasPrice, contract);
 
         // transfer 요청
-        tx = await contract.safeTransferFrom(account, to, tokenId, {
+        // tx = await contract.safeTransferFrom(account, to, tokenId, '0x', {
+        tx = await contract.transferFrom(account, to, tokenId, {
           from: account,
           gasPrice,
           gasLimit: calculateGasMargin(gasLimit),
@@ -233,11 +236,17 @@ const useNFT = (contract, account) => {
         });
       } else {
         // gasLimit 계산
-        const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, amount);
+        const gasLimit = await contract.estimateGas.safeTransferFrom(
+          account,
+          to,
+          tokenId,
+          amount,
+          '0x',
+        );
         console.log(gasPrice, contract);
 
         // transfer 요청
-        tx = await contract.safeTransferFrom(account, to, tokenId, amount, {
+        tx = await contract.safeTransferFrom(account, to, tokenId, amount, '0x', {
           from: account,
           gasPrice,
           gasLimit: calculateGasMargin(gasLimit),
@@ -247,6 +256,7 @@ const useNFT = (contract, account) => {
 
       // receipt 대기
       let receipt;
+      let errMessage;
       try {
         receipt = await tx.wait();
         if (receipt.status === 1) {
@@ -254,9 +264,11 @@ const useNFT = (contract, account) => {
         }
       } catch (e) {
         console.log(e);
+        errMessage = e.message;
       }
       console.log(tx, receipt);
       await setIsTransfering(false);
+      return [receipt?.status, errMessage];
     },
     [library, account, contract],
   );

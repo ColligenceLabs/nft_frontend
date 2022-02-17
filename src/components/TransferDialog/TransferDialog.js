@@ -15,6 +15,10 @@ import { makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
+import { useWeb3React } from '@web3-react/core';
+import { useKipContract } from '../../hooks/useContract';
+import useNFT from '../../hooks/useNFT';
+import contracts from '../../config/constants/contracts';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -60,16 +64,27 @@ const useStyles = makeStyles((theme) => ({
 const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   const classes = useStyles();
 
+  const { account } = useWeb3React();
+
+  const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
+  const [contractType, setContractType] = useState('KIP17');
+  const kipContract = useKipContract(contractAddr, contractType);
+  const { transferNFT, isTransfering } = useNFT(kipContract, account);
+
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [toAddress, setToAddress] = useState('');
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState(1);
 
   useEffect(() => {
     if (item !== undefined) {
-      console.log(item);
-      console.log(item.collection_id?.creator_id);
+      // console.log('--->', item);
+      // console.log(item.collection_id?.creator_id);
+      if (item && item.collection_id) {
+        setContractAddr(item.collection_id.contract_address);
+        setContractType(type);
+      }
     }
   }, [item]);
 
@@ -81,13 +96,18 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
     setAmount(e.target.value);
   };
 
-  const handleTransfer = () => {
-    if (type === 'KIP17') {
-      console.log('KIP17 SEND');
-    } else {
-      console.log('KIP37 SEND');
-    }
+  const handleTransfer = async () => {
+    // toAddress, amount
+    const tokenId = item.metadata.tokenId;
+    const nftId = item._id;
+
+    console.log('====>', kipContract);
+    console.log('====>', tokenId, toAddress, amount, nftId, contractType);
+    const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
+
     // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
+    success ? setSuccessFlag(true) : setSuccessFlag(false);
+    success ? setErrorMessage(null) : setErrorMessage(error);
   };
 
   const { t } = useTranslation();
@@ -129,7 +149,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
               >
                 <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
                 <Typography variant="caption" color="primary" sx={{ mr: 1 }}>
-                  남은 수량 : {item.quantity_selling - item.transfered}
+                  {t('Balance')} : {item.quantity_selling - item.transfered}
                 </Typography>
               </Box>
               <CustomTextField
