@@ -47,6 +47,12 @@ export const batchRegisterNFT = (formData) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const kasTransferNFT = (formData) => {
+  return axios
+    .post(`${API_URL}/transfer`, formData, { headers: authHeader() })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const setNftOnchain = (id) => {
   return axios
     .put(`${API_URL}/update-onchain/${id}`, { onchain: 'true' }, { headers: authHeader() })
