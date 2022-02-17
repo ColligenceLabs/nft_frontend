@@ -68,11 +68,11 @@ export const Menuitems = [
     href: '/transaction',
   },
 
-  {
-    title: 'Reward',
-    icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
-    href: '/reward',
-  },
+  // {
+  //   title: 'Reward',
+  //   icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
+  //   href: '/reward',
+  // },
 ];
 
 export const CreatorMenu = [
@@ -113,11 +113,11 @@ export const CreatorMenu = [
     href: '/transaction',
   },
 
-  {
-    title: 'Reward',
-    icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
-    href: '/reward',
-  },
+  // {
+  //   title: 'Reward',
+  //   icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
+  //   href: '/reward',
+  // },
 ];
 
 export default { Menuitems, CreatorMenu };
