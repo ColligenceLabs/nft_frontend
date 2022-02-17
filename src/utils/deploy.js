@@ -61,8 +61,15 @@ export async function deployKIP37(name, account, library) {
   );
 
   // TODO : ipfs mkdir
-  const hash = mkDirIPFS(name);
-  const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
+  try {
+    const hash = await mkDirIPFS(name);
+    console.log('IPFS files mkdir : ', hash);
+  } catch (err) {
+    console.log(err);
+  }
+  // TODO : 403 forbidden why ?
+  // const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
+  const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
 
   console.log('deployKIP37 start!');
   const ret = {};
