@@ -7,7 +7,7 @@ import useActiveWeb3React from './useActiveWeb3React';
 import fs from 'fs';
 import { IPFS_URL, ALT_URL } from '../config/constants/consts';
 import { create } from 'ipfs-http-client';
-import { setNftOnchain } from '../services/nft.service';
+import { setNftOnchain, setNftTransfered } from '../services/nft.service';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -55,6 +55,7 @@ export const mkDirIPFS = async function (directory) {
 const useNFT = (contract, account) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
   const [isMinting, setIsMinting] = useState();
+  const [isTransfering, setIsTransfering] = useState();
 
   const { library } = useActiveWeb3React();
 
@@ -180,14 +181,61 @@ const useNFT = (contract, account) => {
       }
       console.log(tx, receipt);
       await setIsMinting(false);
-      // TODO : NFT DB onchain 필드 true로 변경
-      //
+    },
+    [library, account, contract],
+  );
+
+  const transferNFT = useCallback(
+    async (tokenId, to, amount, nftId, contractType) => {
+      setIsTransfering(true);
+      const gasPrice = parseUnits('25', 'gwei').toString();
+
+      let tx;
+
+      if (contractType === 'KIP17') {
+        // gasLimit 계산
+        const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId);
+        console.log(gasPrice, contract);
+
+        // transfer 요청
+        tx = await contract.safeTransferFrom(account, tokenId, mintValue, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+          // gasLimit: 2000000,
+        });
+      } else {
+        // gasLimit 계산
+        const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, amount);
+        console.log(gasPrice, contract);
+
+        // transfer 요청
+        tx = await contract.safeTransferFrom(account, to, tokenId, amount, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+          // gasLimit: 2000000,
+        });
+      }
+
+      // receipt 대기
+      let receipt;
+      try {
+        receipt = await tx.wait();
+        if (receipt.status === 1) {
+          await setNftTransfered(nftId, amount);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      console.log(tx, receipt);
+      await setIsTransfering(false);
     },
     [library, account, contract],
   );
 
   // return { createNFT, mintNFT };
-  return { mintNFT, isMinting };
+  return { mintNFT, transferNFT, isMinting, isTransfering };
 };
 
 export default useNFT;

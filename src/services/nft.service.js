@@ -53,6 +53,12 @@ export const setNftOnchain = (id) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const setNftTransfered = (id, amount) => {
+  return axios
+    .put(`${API_URL}/update-onchain/${id}`, { transfered: amount }, { headers: authHeader() })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const deleteNft = (nfts) => {
   if (nfts.length === 1) {
     return axios
