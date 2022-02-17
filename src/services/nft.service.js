@@ -71,7 +71,7 @@ export const setNftOnchain = (id) => {
 
 export const setNftTransfered = (id, amount) => {
   return axios
-    .put(`${API_URL}/update-onchain/${id}`, { transfered: amount }, { headers: authHeader() })
+    .put(`${API_URL}/update-transfered/${id}`, { transfered: amount }, { headers: authHeader() })
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 

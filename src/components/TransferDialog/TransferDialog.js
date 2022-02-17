@@ -19,6 +19,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useKipContract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import contracts from '../../config/constants/contracts';
+import { batchRegisterNFT, kasTransferNFT } from '../../services/nft.service';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -100,14 +101,37 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
     // toAddress, amount
     const tokenId = item.metadata.tokenId;
     const nftId = item._id;
+    const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
     console.log('====>', kipContract);
-    console.log('====>', tokenId, toAddress, amount, nftId, contractType);
-    const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
+    if (useKAS === 'true') {
+      const formData = {
+        nft_id: nftId,
+        from_address: account,
+        to_address: toAddress,
+        tokenId,
+        amount,
+      };
+      console.log('====>', formData);
+      await kasTransferNFT(formData)
+        .then(async (res) => {
+          if (res.data.status === 1) {
+            setErrorMessage(null);
+            setSuccessFlag(true);
+          } else {
+            setErrorMessage(res.data.message);
+            setSuccessFlag(false);
+          }
+        })
+        .catch((error) => console.log(error));
+    } else {
+      console.log('====>', tokenId, toAddress, amount, nftId, contractType);
+      const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
 
-    // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
-    success ? setSuccessFlag(true) : setSuccessFlag(false);
-    success ? setErrorMessage(null) : setErrorMessage(error);
+      // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
+      success ? setSuccessFlag(true) : setSuccessFlag(false);
+      success ? setErrorMessage(null) : setErrorMessage(error);
+    }
   };
 
   const { t } = useTranslation();
