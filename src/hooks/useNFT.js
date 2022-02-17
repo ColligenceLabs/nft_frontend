@@ -48,9 +48,12 @@ export const mkDirIPFS = async function (directory) {
       authorization: auth,
     },
   });
+  // const dirStr = `/${directory}`;
   const dirStr = `/${directory.toLowerCase()}`;
-  console.log('--->', dirStr);
-  const result = await client.files.mkdir(dirStr);
+  // const result = await client.files.mkdir(directory);
+  // const result = await client.files.mkdir(dirStr);
+  // TODO : files.mkdir return 403 forbidden error... need to fix it
+  const result = 'talken-nft';
   return result;
 };
 
