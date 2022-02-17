@@ -125,7 +125,7 @@ const LinkButton = ({ title }) => {
       case 'history':
         setButtonProps({
           label: 'Create',
-          url: '/history/create',
+          url: '/trace/create',
         });
         break;
       case 'collection':

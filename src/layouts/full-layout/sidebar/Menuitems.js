@@ -58,9 +58,9 @@ export const Menuitems = [
     ],
   },
   {
-    title: 'History',
+    title: 'Trace NFT',
     icon: <NumbersIcon width="20" height="20" />,
-    href: '/history',
+    href: '/trace',
   },
   {
     title: 'Transaction',
