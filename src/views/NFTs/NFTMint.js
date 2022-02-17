@@ -35,7 +35,7 @@ const NFTMint = () => {
   const [contractType, setContractType] = useState('KIP17');
   const { account, activate } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
-  const { mintNFT, isMinting } = useNFT(kipContract, account);
+  const { mintNFT17, mintNFT37, isMinting } = useNFT(kipContract, account);
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
@@ -138,10 +138,15 @@ const NFTMint = () => {
                     const tokenId = res.data.data.metadata.tokenId;
                     const tokenUri = res.data.data.ipfs_link;
                     const quantity = res.data.data.quantity;
-                    const mintValue = contractType === 'KIP17' ? tokenUri : quantity;
 
                     // TODO : Actual NFT Minting here
-                    await mintNFT(tokenId, mintValue, nftId, contractType);
+                    if (contractType === 'KIP17') {
+                      console.log('KIP17 mint : ', tokenId, tokenUri, nftId);
+                      await mintNFT17(tokenId, tokenUri, nftId);
+                    } else {
+                      console.log('KIP17 mint : ', tokenId, quantity, tokenUri, nftId);
+                      await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                    }
                   } else {
                     setErrorMessage(res.data.message);
                     setSuccessRegister(false);
