@@ -58,9 +58,9 @@ export const Menuitems = [
     ],
   },
   {
-    title: 'Serials',
+    title: 'History',
     icon: <NumbersIcon width="20" height="20" />,
-    href: '/serials',
+    href: '/history',
   },
   {
     title: 'Transaction',
@@ -106,11 +106,6 @@ export const CreatorMenu = [
         href: '/airdrop',
       },
     ],
-  },
-  {
-    title: 'Serials',
-    icon: <NumbersIcon width="20" height="20" />,
-    href: '/serials',
   },
   {
     title: 'Transaction',

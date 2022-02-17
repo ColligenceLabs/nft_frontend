@@ -122,10 +122,10 @@ const LinkButton = ({ title }) => {
           url: '/airdrop/mint',
         });
         break;
-      case 'serials':
+      case 'history':
         setButtonProps({
           label: 'Create',
-          url: '/serials/create',
+          url: '/history/create',
         });
         break;
       case 'collection':
