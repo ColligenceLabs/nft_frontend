@@ -186,6 +186,8 @@ const useNFT = (contract, account) => {
   );
 
   const transferNFT = useCallback(
+    // KIP17 amount should be 1 always.
+    // NIP37 amount should be between 1 to total supply.
     async (tokenId, to, amount, nftId, contractType) => {
       setIsTransfering(true);
       const gasPrice = parseUnits('25', 'gwei').toString();
