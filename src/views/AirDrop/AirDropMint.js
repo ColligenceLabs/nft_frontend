@@ -295,6 +295,7 @@ const AirDropMint = () => {
                   <CustomTextField
                     id="amount"
                     name="amount"
+                    type="number"
                     variant="outlined"
                     fullWidth
                     size="small"

@@ -322,6 +322,7 @@ const NFTMint = () => {
                   <CustomTextField
                     id="amount"
                     name="amount"
+                    type="number"
                     variant="outlined"
                     fullWidth
                     size="small"
@@ -419,6 +420,7 @@ const NFTMint = () => {
                     id="price"
                     name="price"
                     variant="outlined"
+                    type="number"
                     fullWidth
                     size="small"
                     disabled={isSubmitting || isMinting}
