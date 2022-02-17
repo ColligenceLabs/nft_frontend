@@ -128,7 +128,7 @@ const Collections = () => {
         level.toLowerCase() === 'creator' ? id : undefined,
       ).then(({ data }) => {
         const collectionArray = data.items.map((item) => {
-          let temp = creatorList?.find((creator) => creator._id === item.creator_id);
+          let temp = creatorList?.find((creator) => creator._id === item.creator_id._id);
 
           return { ...item, creator_name: temp?.full_name };
         });
