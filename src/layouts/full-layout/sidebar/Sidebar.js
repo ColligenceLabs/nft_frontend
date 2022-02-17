@@ -46,6 +46,7 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
           <List>
             {(level === 'administrator' ? Menuitems : CreatorMenu).map((item, index) => {
               // {/********SubHeader**********/}
+              if (process.env.REACT_APP_UID_MAPPING === 'false' && item.href === '/user') return;
               if (item.subheader) {
                 return (
                   <li key={item.subheader}>

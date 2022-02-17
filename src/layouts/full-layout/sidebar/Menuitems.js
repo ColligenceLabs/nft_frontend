@@ -5,7 +5,7 @@ import NumbersIcon from '@mui/icons-material/Numbers';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+// import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
 
@@ -20,11 +20,7 @@ export const Menuitems = [
     icon: <SupervisorAccountOutlinedIcon width="20" height="20" />,
     href: '/admins',
   },
-  {
-    title: 'User',
-    icon: <PeopleAltOutlinedIcon width="20" height="20" />,
-    href: '/user',
-  },
+
   {
     title: 'Creator',
     // icon: 'hard-drive',
@@ -66,6 +62,11 @@ export const Menuitems = [
     title: 'Transaction',
     icon: <SwapHorizIcon width="20" height="20" />,
     href: '/transaction',
+  },
+  {
+    title: 'UID Mapping',
+    icon: <PeopleAltOutlinedIcon width="20" height="20" />,
+    href: '/user',
   },
 
   // {
