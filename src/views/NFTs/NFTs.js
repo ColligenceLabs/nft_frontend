@@ -108,7 +108,6 @@ const NFTs = () => {
 
   const onDelete = async () => {
     const res = await deleteNft(selected);
-    console.log(res);
     await fetchNFTs();
     setOpenDeleteModal(false);
   };
@@ -135,6 +134,7 @@ const NFTs = () => {
 
   const fetchNFTs = async () => {
     await getNFTData(
+      0,
       page,
       rowsPerPage,
       searchKeyword,
