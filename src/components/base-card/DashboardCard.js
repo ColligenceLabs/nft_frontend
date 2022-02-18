@@ -41,8 +41,8 @@ const DashboardCard = ({
           {title}
         </Typography>
       }
-      subtitle={subtitle}
-      action={action || ''}
+      // subtitle={subtitle}
+      // action={action || ''}
     />
     {/* content area */}
     <CardContent

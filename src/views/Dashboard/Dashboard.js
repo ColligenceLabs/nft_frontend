@@ -1,54 +1,38 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@mui/material';
-import {
-  WelcomeCard,
-  BlogCard,
-  Earnings,
-  MonthlySales,
-  SalesOverview,
-  TotalSales,
-  ProductPerformance,
-  WeeklyStats,
-  DailyActivities,
-} from './dashboard1-components';
 
 import PageContainer from '../../components/container/PageContainer';
+import NFTs from './components/NFTs';
+import AirDrops from './components/AirDrops';
+import Creators from './components/Creators';
+import Transactions from './components/Transactions';
+import TotalNFTs from './components/TotalNFTs';
+import Last30days from './components/Last30days';
 
 const Dashboard = () => (
   <PageContainer title="Dashboard" description="this is Dashboard PAGE">
     <Grid container spacing={0}>
       {/* ------------------------- row 1 ------------------------- */}
-      <Grid item xs={12} lg={6}>
-        <WelcomeCard />
-        <Grid container spacing={0}>
-          <Grid item xs={12} lg={6} sm={6}>
-            <Earnings />
-          </Grid>
-          <Grid item xs={12} lg={6} sm={6}>
-            <MonthlySales />
-          </Grid>
-        </Grid>
+      <Grid item xs={12} sm={6} lg={3} xl={3}>
+        <NFTs />
       </Grid>
-      <Grid item xs={12} lg={6}>
-        <SalesOverview />
+      <Grid item xs={12} sm={6} lg={3} xl={3}>
+        <AirDrops />
       </Grid>
+      <Grid item xs={12} sm={6} lg={3} xl={3}>
+        <Creators />
+      </Grid>
+      <Grid item xs={12} sm={6} lg={3} xl={3}>
+        <Transactions />
+      </Grid>
+
       {/* ------------------------- row 2 ------------------------- */}
-      <Grid item xs={12} lg={4}>
-        <TotalSales />
-      </Grid>
       <Grid item xs={12} lg={8}>
-        <ProductPerformance />
-      </Grid>
-      {/* ------------------------- row 3 ------------------------- */}
-      <Grid item xs={12} lg={4}>
-        <BlogCard />
+        <Last30days />
       </Grid>
       <Grid item xs={12} lg={4}>
-        <WeeklyStats />
-      </Grid>
-      <Grid item xs={12} lg={4}>
-        <DailyActivities />
+        <TotalNFTs />
       </Grid>
     </Grid>
   </PageContainer>
