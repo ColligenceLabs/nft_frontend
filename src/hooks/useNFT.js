@@ -56,7 +56,7 @@ export const mkDirIPFS = async function (directory) {
   return result;
 };
 
-const useNFT = (contract, account) => {
+const useNFT = (contract, kasContract, account) => {
   // TODO: library 를 dependencies 에 추가하지 않으먄 같은 에러가 발생함.
   const [isMinting, setIsMinting] = useState();
   const [isTransfering, setIsTransfering] = useState();
@@ -140,6 +140,43 @@ const useNFT = (contract, account) => {
   //   [library, account, mintData],
   // );
 
+  const mintNFT17WithKaikas = useCallback(
+    async (tokenId, tokenUri, nftId) => {
+      setIsMinting(true);
+      const gasPrice = parseUnits('25', 'gwei').toString();
+
+      let tx;
+      // gasLimit 계산
+      const gasLimit = await kasContract.methods.mintWithTokenURI(account, tokenId, tokenUri)
+        .estimateGas({
+          from: account
+        });
+      console.log(gasPrice, BigNumber.from(gasLimit));
+
+      // mint 요청
+      tx = await kasContract.methods.mintWithTokenURI(account, tokenId, tokenUri).send({
+          from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+        })
+        .catch((err) => {
+          console.log('mintNFT17WithKaikas error', err);
+        });
+
+      // receipt 대기
+      try {
+        if (tx?.status) {
+          await setNftOnchain(nftId);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      console.log(tx);
+      await setIsMinting(false);
+    },
+    [library, account, kasContract],
+  );
+
   const mintNFT17 = useCallback(
     async (tokenId, tokenUri, nftId) => {
       setIsMinting(true);
@@ -149,7 +186,7 @@ const useNFT = (contract, account) => {
 
       // gasLimit 계산
       const gasLimit = await contract.estimateGas.mintWithTokenURI(account, tokenId, tokenUri);
-      console.log(gasPrice, contract);
+      console.log(gasPrice, gasLimit, contract);
 
       // mint 요청
       tx = await contract.mintWithTokenURI(account, tokenId, tokenUri, {
@@ -210,6 +247,39 @@ const useNFT = (contract, account) => {
     [library, account, contract],
   );
 
+  const mintNFT37WithKaikas = useCallback(
+    async (tokenId, amount, tokenUri, nftId, contractType) => {
+      setIsMinting(true);
+      const gasPrice = parseUnits('25', 'gwei').toString();
+
+      // gasLimit 계산
+      const gasLimit = await kasContract.create(tokenId, amount, tokenUri)
+        .estimateGas({from: account});
+
+      console.log(gasPrice, gasLimit);
+
+      // mint 요청
+      const tx = await kasContract.create(tokenId, amount, tokenUri)
+        .send({
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+          // gasLimit: 2000000,
+        });
+
+      try {
+        if (tx?.status) {
+          await setNftOnchain(nftId);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      console.log(tx);
+      await setIsMinting(false);
+    },
+    [library, account, kasContract],
+  );
+
   const transferNFT = useCallback(
     // KIP17 amount should be 1 always.
     // NIP37 amount should be between 1 to total supply.
@@ -262,7 +332,7 @@ const useNFT = (contract, account) => {
   );
 
   // return { createNFT, mintNFT };
-  return { mintNFT17, mintNFT37, transferNFT, isMinting, isTransfering };
+  return { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, transferNFT, isMinting, isTransfering };
 };
 
 export default useNFT;
