@@ -22,9 +22,7 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { rows } from './mockData';
 import { getTransactionData } from '../../services/transaction.service';
-import { getNFTData } from '../../services/nft.service';
 
 const Transaction = () => {
   const { t } = useTranslation();
