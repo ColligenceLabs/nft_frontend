@@ -9,7 +9,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useWeb3React } from '@web3-react/core';
-import { useKipContract } from '../../hooks/useContract';
+import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
 import { getCollectionsByCreatorId } from '../../services/collections.service';
@@ -35,7 +35,8 @@ const NFTMint = () => {
   const [contractType, setContractType] = useState('KIP17');
   const { account, activate } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
-  const { mintNFT17, mintNFT37, isMinting } = useNFT(kipContract, account);
+  const kasContract = useKipContractWithKaikas(contractAddr, contractType);
+  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(kipContract, kasContract, account);
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
@@ -142,10 +143,18 @@ const NFTMint = () => {
                     // TODO : Actual NFT Minting here
                     if (contractType === 'KIP17') {
                       console.log('KIP17 mint : ', tokenId, tokenUri, nftId);
-                      await mintNFT17(tokenId, tokenUri, nftId);
+                      if (window.localStorage.getItem('wallet') === 'kaikas') {
+                        await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                      } else {
+                        await mintNFT17(tokenId, tokenUri, nftId);
+                      }
                     } else {
                       console.log('KIP17 mint : ', tokenId, quantity, tokenUri, nftId);
-                      await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                      if (window.localStorage.getItem('wallet') === 'kaikas') {
+                        await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                      } else {
+                        await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                      }
                     }
                   } else {
                     setErrorMessage(res.data.message);
