@@ -30,9 +30,25 @@ export const updateAdminsStatus = (id, status) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const updateWallet = (id, address) => {
+  return axios
+    .put(
+      `${API_URL}/update-mine/${id}`,
+      {
+        admin_address: address,
+      },
+      { headers: authHeader() },
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 const adminsService = {
   getAdminsData,
   updateAdminsStatus,
+  updateWallet,
 };
 
 export default adminsService;
