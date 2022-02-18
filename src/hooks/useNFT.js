@@ -368,8 +368,97 @@ const useNFT = (contract, kasContract, account) => {
     [library, account, contract],
   );
 
+  const transferNFTWithKaikas = useCallback(
+    // KIP17 amount should be 1 always.
+    // NIP37 amount should be between 1 to total supply.
+    async (tokenId, to, amount, nftId, contractType) => {
+      setIsTransfering(true);
+      const gasPrice = parseUnits('25', 'gwei').toString();
+
+      console.log('====', kasContract);
+      let tx;
+      let gasLimit;
+
+      if (contractType === 'KIP17') {
+        try {
+          // gasLimit 계산
+          // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
+          // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
+          gasLimit = await kasContract.methods.transferFrom(account, to, tokenId).estimateGas();
+          console.log(gasPrice, contract);
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'estimateGas transferFrom failed'];
+        }
+
+        try {
+          // transfer 요청
+          // tx = await contract.safeTransferFrom(account, to, tokenId, '0x', {
+          tx = await kasContract.methods.transferFrom(account, to, tokenId)
+            .send({
+              from: account,
+              gasPrice,
+              gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+              // gasLimit: 2000000,
+            });
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'transferFrom failed'];
+        }
+      } else {
+        try {
+          // gasLimit 계산
+          gasLimit = await kasContract.methods.safeTransferFrom(
+            account,
+            to,
+            tokenId,
+            amount,
+            '0x',
+          ).estimateGas();
+          console.log(gasPrice, contract);
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'estimateGas safeTransferFrom failed'];
+        }
+
+        try {
+          // transfer 요청
+          tx = await kasContract.methods.safeTransferFrom(account, to, tokenId, amount, '0x')
+            .send({
+              from: account,
+              gasPrice,
+              gasLimit: calculateGasMargin(gasLimit),
+              // gasLimit: 2000000,
+            });
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'safeTransferFrom failed'];
+        }
+      }
+
+      // receipt 대기
+      let errMessage;
+      try {
+        if (tx.status === 1) {
+          await setNftTransfered(nftId, amount);
+        }
+      } catch (e) {
+        console.log(e);
+        errMessage = e.message;
+      }
+      console.log(tx);
+      await setIsTransfering(false);
+      return [tx?.status, errMessage];
+    },
+    [library, account, kasContract],
+  );
+
   // return { createNFT, mintNFT };
-  return { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, transferNFT, isMinting, isTransfering };
+  return { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, transferNFT, transferNFTWithKaikas, isMinting, isTransfering };
 };
 
 export default useNFT;

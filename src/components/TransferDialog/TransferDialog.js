@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import { useWeb3React } from '@web3-react/core';
-import { useKipContract } from '../../hooks/useContract';
+import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import contracts from '../../config/constants/contracts';
 import { batchRegisterNFT, kasTransferNFT } from '../../services/nft.service';
@@ -71,7 +71,8 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
   const kipContract = useKipContract(contractAddr, contractType);
-  const { transferNFT, isTransfering } = useNFT(kipContract, account);
+  const kipKaikasContract = useKipContractWithKaikas(contractAddr, contractType);
+  const { transferNFT, transferNFTWithKaikas, isTransfering } = useNFT(kipContract, kipKaikasContract, account);
 
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
@@ -133,12 +134,21 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         });
     } else {
       console.log('1 ====>', tokenId, toAddress, amount, nftId, contractType);
-      const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
-      console.log('2 ====>', success, error);
+      if (window.localStorage.getItem('wallet') === 'kaikas') {
+        const [success, error] = await transferNFTWithKaikas(tokenId, toAddress, amount, nftId, contractType);
+        console.log('2 ====>', success, error);
 
-      // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
-      success ? setSuccessFlag(true) : setSuccessFlag(false);
-      success ? setErrorMessage(null) : setErrorMessage(error);
+        // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
+        success ? setSuccessFlag(true) : setSuccessFlag(false);
+        success ? setErrorMessage(null) : setErrorMessage(error);
+      } else {
+        const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
+        console.log('2 ====>', success, error);
+
+        // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
+        success ? setSuccessFlag(true) : setSuccessFlag(false);
+        success ? setErrorMessage(null) : setErrorMessage(error);
+      }
     }
     setOpenSnackbar(true);
     handleCloseModal();
