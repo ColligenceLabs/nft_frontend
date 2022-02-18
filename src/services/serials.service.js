@@ -3,8 +3,10 @@ import authHeader from './auth-header';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/serial`;
 
-export const getSerialsData = (page, rowsPerPage) => {
+export const getSerialsData = (page, rowsPerPage, searchStatus, searchNftId) => {
   let url = `${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`;
+  url = searchStatus !== undefined ? `${url}&status=${searchStatus}` : url;
+  url = searchNftId !== undefined ? `${url}&nft_id=${searchNftId}` : url;
 
   return axios
     .get(url, { headers: authHeader() })

@@ -7,20 +7,26 @@ import { useTranslation } from 'react-i18next';
 import { getCollectionData } from '../../services/collections.service';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import useCreator from '../../hooks/useCreator';
+import useNFT from '../../hooks/useNFT';
+import { getNFTData } from '../../services/nft.service';
 
 const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) => {
   const { t } = useTranslation();
   const [collectionList, setCollectionList] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState('');
+  const [nftList, setNftList] = useState([]);
+  const [selectedNft, setSelectedNft] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [status, setStatus] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEamil] = useState('');
   const [level, setLevel] = useState('');
   const [creatorId, setCreatorId] = useState('');
-
   const creatorList = useCreator();
 
+  const handleSelectedNft = (e) => {
+    setSelectedNft(e.target.value);
+  };
   const handleSearchCreator = (e) => {
     setCreatorId(e.target.value);
   };
@@ -52,6 +58,11 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
         const collectionArray = items.map((item) => ({ id: item._id, value: item.name }));
         setCollectionList(collectionArray);
       });
+    } else if (currentRoute === 'trace') {
+      await getNFTData(0).then(({ data: { items } }) => {
+        const nftArray = items.map((item) => ({ id: item._id, value: item.metadata.name }));
+        setNftList(nftArray);
+      });
     }
   }, [currentRoute]);
 
@@ -74,6 +85,42 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
       </Box>
       <Divider />
       <Box p={2}>
+        {/* ------------ trace ------------- */}
+        {currentRoute === 'trace' && (
+          <>
+            <CustomFormLabel htmlFor="status">{t('Status')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="status"
+              name="status"
+              onChange={handleUserStatus}
+              value={status}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+            </CustomSelect>
+            <Box pt={3} />
+            <CustomFormLabel htmlFor="nft">{t('NFT')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="nft"
+              name="nft"
+              onChange={handleSelectedNft}
+              value={selectedNft}
+              fullWidth
+              size="small"
+            >
+              {nftList !== undefined &&
+                nftList.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.value}
+                  </MenuItem>
+                ))}
+            </CustomSelect>
+          </>
+        )}
         {/* ------------ collection ------------- */}
         {currentRoute === 'collection' && (
           <>
@@ -288,6 +335,7 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
               setFullName('');
               setEamil('');
               setLevel('');
+              setSelectedNft('');
             }}
           >
             Reset
@@ -303,6 +351,7 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
                 searchKeyword: searchKeyword,
                 status,
                 creatorId,
+                selectedNft,
               });
               setShowDrawer(false);
             }}

@@ -37,7 +37,8 @@ const Serials = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchStatus, setSearchStatus] = useState('');
+  const [searchNftId, setSearchNftId] = useState('');
   const [totalCount, setTotalCount] = useState(0);
 
   const handleRequestSort = (event, property) => {
@@ -89,16 +90,15 @@ const Serials = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
-    setSearchKeyword(props.searchKeyword);
+    setSearchStatus(props.status);
+    setSearchNftId(props.selectedNft);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
   const fetchSerials = async () => {
-    await getSerialsData(page, rowsPerPage).then(({ data }) => {
-      console.log(data.items);
+    await getSerialsData(page, rowsPerPage, searchStatus, searchNftId).then(({ data }) => {
       setRows(data.items);
       setTotalCount(data.headers.x_total_count);
     });
@@ -106,7 +106,7 @@ const Serials = () => {
 
   useEffect(() => {
     fetchSerials();
-  }, [page, rowsPerPage, searchKeyword]);
+  }, [page, rowsPerPage, searchStatus, searchNftId]);
 
   return (
     <PageContainer title="Trace NFT" description="this is Trace NFT page">
@@ -156,7 +156,7 @@ const Serials = () => {
                       </TableCell>
                       <TableCell style={{ minWidth: 150 }}>
                         <Typography color="textSecondary" variant="h6" fontWeight="400">
-                          {row.nft_id.metadata.name}
+                          {row.nft_id?.metadata.name}
                         </Typography>
                       </TableCell>
                       <TableCell style={{ minWidth: 170 }}>
