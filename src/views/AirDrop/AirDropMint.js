@@ -9,7 +9,7 @@ import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useWeb3React } from '@web3-react/core';
-import { useKipContract } from '../../hooks/useContract';
+import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import { useTranslation } from 'react-i18next';
 import { getCollectionsByCreatorId } from '../../services/collections.service';
@@ -34,7 +34,8 @@ const AirDropMint = () => {
   const [contractType, setContractType] = useState('KIP17');
   const { account, activate } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
-  const { mintNFT, isMinting } = useNFT(kipContract, account);
+  const kasContract = useKipContractWithKaikas(contractAddr, contractType);
+  const { mintNFT, isMinting } = useNFT(kipContract, kasContract, account);
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);

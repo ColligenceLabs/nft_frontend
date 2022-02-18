@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next';
 import { getCreatorData } from '../../services/creator.service';
 import { createCollection } from '../../services/collections.service';
 import { LoadingButton } from '@mui/lab';
-import { deployKIP17, deployKIP17WithKaikas, deployKIP37 } from '../../utils/deploy';
+import { deployKIP17, deployKIP17WithKaikas, deployKIP37, deployKIP37WithKaikas } from '../../utils/deploy';
 import { useWeb3React } from '@web3-react/core';
 import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 import useCreator from '../../hooks/useCreator';
@@ -125,7 +125,11 @@ const CollectionCreate = () => {
                   result = await deployKIP17(values.name, values.symbol, account, library);
                 }
               } else if (values.type === 'KIP37') {
-                result = await deployKIP37(values.tokenUri, account, library);
+                if (window.localStorage.getItem('wallet') === 'kaikas') {
+                  result = await deployKIP37WithKaikas(values.tokenUri, account, library);
+                } else {
+                  result = await deployKIP37(values.tokenUri, account, library);
+                }
               }
               newContract = result.address;
             } else {

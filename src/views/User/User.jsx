@@ -119,7 +119,7 @@ const User = () => {
   const setFilters = async (props) => {
     console.log(props);
     setSearchKeyword(props.searchKeyword);
-    setUserStatus(props.userStatus);
+    setUserStatus(props.status);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;

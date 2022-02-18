@@ -37,7 +37,7 @@ export async function deployKIP17(name, symbol, account, library) {
   console.log('receipt', receipt);
   ret.confirmations = confirmations;
   if (confirmations > 0) {
-    console.log('ㅏㅑㅖ17 contract deploy... confirmed!!', contract);
+    console.log('KIP17 contract deploy... confirmed!!', contract);
     const { address } = contract;
     ret.address = address;
 
@@ -113,7 +113,7 @@ export async function deployKIP17WithKaikas(name, symbol, account, library) {
 
   const caver = new Caver(window.klaytn);
   const factory = new caver.klay.Contract(kip17Data.abi);
-  console.log('=====> ', factory, window.klaytn.selectedAddress);
+  // console.log('=====> ', factory, window.klaytn.selectedAddress);
 
   const ret = {};
   const contract = await factory
@@ -126,42 +126,65 @@ export async function deployKIP17WithKaikas(name, symbol, account, library) {
         from: window.klaytn.selectedAddress,
         gas: 7000000,
         value: 0,
-      },
-      (error, transactionHash) => {
-        console.log('callback', error, transactionHash);
-      },
+      }
     )
-    .then((newContractInstance) => {
-      console.log('then', newContractInstance);
-    })
     .catch(function (err) {
       console.log(err);
       ret.err = err;
     });
 
-  console.log('===>1234', contract);
+  // console.log('===>1234', contract, contract._address);
 
-  //
-  // if (!!ret.err) return ret;
-  //
-  // const receipt = await contract.deployTransaction.wait().catch(function (err) {
-  //   console.log(err);
-  //   ret.err = err;
-  // });
-  // if (!!ret.err) return ret;
-  // const { confirmations } = receipt;
-  // console.log('receipt', receipt);
-  // ret.confirmations = confirmations;
-  // if (confirmations > 0) {
-  //   console.log('ㅏㅑㅖ17 contract deploy... confirmed!!', contract);
-  //   const { address } = contract;
-  //   ret.address = address;
-  //
-  //   // TODO: 신규 스마트코트랙 주소 등 DB에 입력
-  //   // ...
-  // } else {
-  //   ret.err = receipt;
-  //   console.log(JSON.stringify(receipt));
-  // }
-  // return ret;
+  if (!!ret.err) return ret;
+
+  ret.address = contract._address;
+
+  return ret;
+}
+
+export async function deployKIP37WithKaikas(name, account, library) {
+  // hooks can not be called from inside a function
+  // const { account, library } = useWeb3React();
+  console.log('deployKIP37WithKaikas start!');
+
+  const caver = new Caver(window.klaytn);
+  const factory = new caver.klay.Contract(kip37Data.abi);
+  // console.log('=====> ', factory, window.klaytn.selectedAddress);
+
+  // TODO : ipfs mkdir
+  try {
+    const hash = await mkDirIPFS(name);
+    console.log('IPFS files mkdir : ', hash);
+  } catch (err) {
+    console.log(err);
+  }
+  // TODO : 403 forbidden why ?
+  // const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
+  const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
+
+  const ret = {};
+  const contract = await factory
+    .deploy({
+      data: kip37Data.bytecode,
+      arguments: [tokenUri],
+    })
+    .send(
+      {
+        from: window.klaytn.selectedAddress,
+        gas: 7000000,
+        value: 0,
+      }
+    )
+    .catch(function (err) {
+      console.log(err);
+      ret.err = err;
+    });
+
+  // console.log('===>1234', contract, contract._address);
+
+  if (!!ret.err) return ret;
+
+  ret.address = contract._address;
+
+  return ret;
 }
