@@ -33,6 +33,7 @@ import { targetNetwork, targetNetworkMsg } from '../../../config';
 import { setupNetwork } from '../../../utils/wallet';
 import { logout } from '../../../redux/slices/auth';
 import { useTheme } from '@mui/styles';
+import { updateWallet } from '../../../services/admins.service';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
@@ -55,7 +56,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
   const {
     user: {
-      infor: { full_name, email, level, image },
+      infor: { full_name, email, level, image, id },
     },
   } = useSelector((state) => state.auth);
 
@@ -68,6 +69,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       'http://localhost:4000/talkenNft',
     );
   }
+
+  useEffect(async () => {
+    // TODO : Admin 테이블의 admin_address 변경할 지점
+    console.log('=== ', id, account);
+    await updateWallet(id, account);
+  }, [account]);
 
   useEffect(() => {
     async function login() {
