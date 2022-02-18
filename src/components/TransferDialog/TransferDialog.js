@@ -113,6 +113,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         amount,
       };
       console.log('====>', formData);
+      // TODO : isTransfering 사용하여 Send 버튼 로딩 표시...
       await kasTransferNFT(formData)
         .then(async (res) => {
           if (res.data.status === 1) {
@@ -125,8 +126,9 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         })
         .catch((error) => console.log(error));
     } else {
-      console.log('====>', tokenId, toAddress, amount, nftId, contractType);
+      console.log('1 ====>', tokenId, toAddress, amount, nftId, contractType);
       const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
+      console.log('2 ====>', success, error);
 
       // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
       success ? setSuccessFlag(true) : setSuccessFlag(false);
