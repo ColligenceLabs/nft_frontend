@@ -220,38 +220,62 @@ const useNFT = (contract, account) => {
       let tx;
 
       if (contractType === 'KIP17') {
-        // gasLimit 계산
-        // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
-        // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
-        const gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
-        console.log(gasPrice, contract);
+        try {
+          // gasLimit 계산
+          // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
+          // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
+          const gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
+          console.log(gasPrice, contract);
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'estimateGas transferFrom failed'];
+        }
 
-        // transfer 요청
-        // tx = await contract.safeTransferFrom(account, to, tokenId, '0x', {
-        tx = await contract.transferFrom(account, to, tokenId, {
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(gasLimit),
-          // gasLimit: 2000000,
-        });
+        try {
+          // transfer 요청
+          // tx = await contract.safeTransferFrom(account, to, tokenId, '0x', {
+          tx = await contract.transferFrom(account, to, tokenId, {
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(gasLimit),
+            // gasLimit: 2000000,
+          });
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'transferFrom failed'];
+        }
       } else {
-        // gasLimit 계산
-        const gasLimit = await contract.estimateGas.safeTransferFrom(
-          account,
-          to,
-          tokenId,
-          amount,
-          '0x',
-        );
-        console.log(gasPrice, contract);
+        try {
+          // gasLimit 계산
+          const gasLimit = await contract.estimateGas.safeTransferFrom(
+            account,
+            to,
+            tokenId,
+            amount,
+            '0x',
+          );
+          console.log(gasPrice, contract);
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'estimateGas safeTransferFrom failed'];
+        }
 
-        // transfer 요청
-        tx = await contract.safeTransferFrom(account, to, tokenId, amount, '0x', {
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(gasLimit),
-          // gasLimit: 2000000,
-        });
+        try {
+          // transfer 요청
+          tx = await contract.safeTransferFrom(account, to, tokenId, amount, '0x', {
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(gasLimit),
+            // gasLimit: 2000000,
+          });
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'safeTransferFrom failed'];
+        }
       }
 
       // receipt 대기
