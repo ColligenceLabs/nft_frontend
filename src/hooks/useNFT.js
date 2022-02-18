@@ -218,13 +218,14 @@ const useNFT = (contract, account) => {
       const gasPrice = parseUnits('25', 'gwei').toString();
 
       let tx;
+      let gasLimit;
 
       if (contractType === 'KIP17') {
         try {
           // gasLimit 계산
           // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
           // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
-          const gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
+          gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
           console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
@@ -249,7 +250,7 @@ const useNFT = (contract, account) => {
       } else {
         try {
           // gasLimit 계산
-          const gasLimit = await contract.estimateGas.safeTransferFrom(
+          gasLimit = await contract.estimateGas.safeTransferFrom(
             account,
             to,
             tokenId,
