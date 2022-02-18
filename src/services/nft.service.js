@@ -17,7 +17,7 @@ export const getNFTData = (type, page, rowsPerPage, searchKeyword, collectionId,
       return response.data;
     })
     .catch((error) => {
-      error.response.status === 401 ? authService.logout() : console.log(error);
+      error.response?.status === 401 ? authService.logout() : console.log(error);
     });
 };
 

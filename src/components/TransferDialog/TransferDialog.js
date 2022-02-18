@@ -78,6 +78,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [toAddress, setToAddress] = useState('');
   const [amount, setAmount] = useState(1);
+  const [maxAmount, setMaxAmount] = useState(0);
 
   useEffect(() => {
     if (item !== undefined) {
@@ -85,17 +86,18 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
       if (item && item.collection_id) {
         setContractAddr(item.collection_id.contract_address);
         setContractType(type);
+        setMaxAmount(item.quantity_selling - item.transfered);
       }
     }
+    return () => setMaxAmount(0);
   }, [item, isTransfering]);
 
-  useEffect(() => console.log(successFlag), [successFlag]);
   const handleChangeToAddress = (e) => {
     setToAddress(e.target.value);
   };
 
   const handleChangeAmount = (e) => {
-    setAmount(e.target.value);
+    setAmount(e.target.value > maxAmount ? maxAmount : e.target.value);
   };
 
   const handleTransfer = async () => {
@@ -178,7 +180,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
               >
                 <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
                 <Typography variant="caption" color="primary" sx={{ mr: 1 }}>
-                  {t('Balance')} : {item.quantity_selling - item.transfered}
+                  {t('Balance')} : {maxAmount}
                 </Typography>
               </Box>
               <CustomTextField
