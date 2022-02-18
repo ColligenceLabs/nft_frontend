@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Box,
@@ -23,10 +23,13 @@ import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
 import { rows } from './mockData';
+import { getTransactionData } from '../../services/transaction.service';
+import { getNFTData } from '../../services/nft.service';
 
 const Transaction = () => {
   const { t } = useTranslation();
 
+  const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -44,19 +47,19 @@ const Transaction = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.uid);
+      const newSelecteds = rows.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, _id) => {
+    const selectedIndex = selected.indexOf(_id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, _id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -92,6 +95,18 @@ const Transaction = () => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
+  const fetchTransactions = async () => {
+    await getTransactionData(page, rowsPerPage).then(({ data }) => {
+      console.log(data.items);
+      setRows(data.items);
+      setTotalCount(data.headers.x_total_count);
+    });
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [page, rowsPerPage, searchKeyword]);
+
   return (
     <PageContainer title="Transaction" description="this is transaction page">
       <Breadcrumb title="Transaction" subtitle="Transaction Information" />
@@ -116,9 +131,8 @@ const Transaction = () => {
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                   // .filter((row) => (searchQuery !== '' ? row.uid === searchQuery : row))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.no);
+                    const isItemSelected = isSelected(row._id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
@@ -128,7 +142,7 @@ const Transaction = () => {
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.no}
+                        key={row._id}
                         selected={isItemSelected}
                       >
                         <TableCell padding="checkbox">
@@ -138,14 +152,10 @@ const Transaction = () => {
                             inputprops={{
                               'aria-labelledby': labelId,
                             }}
-                            onClick={(event) => handleClick(event, row.no)}
+                            onClick={(event) => handleClick(event, row._id)}
                           />
                         </TableCell>
-                        <TableCell style={{ minWidth: 90 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            {row.no}
-                          </Typography>
-                        </TableCell>
+
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
                             {row.seller}
@@ -176,8 +186,12 @@ const Transaction = () => {
                             <Box
                               sx={{
                                 backgroundColor:
-                                  row.status === 'SUCCESS'
+                                  row.status === 'active'
                                     ? (theme) => theme.palette.success.main
+                                    : row.status === 'inactive'
+                                    ? (theme) => theme.palette.warning.main
+                                    : row.status === 'suspend'
+                                    ? (theme) => theme.palette.error.main
                                     : (theme) => theme.palette.secondary.main,
                                 borderRadius: '100%',
                                 height: '10px',
@@ -197,7 +211,7 @@ const Transaction = () => {
                         </TableCell>
                         <TableCell style={{ minWidth: 200 }}>
                           <Typography color="textSecondary" variant="h6">
-                            {row.createdAt}
+                            {new Date(row.createdAt).toLocaleString()}
                           </Typography>
                         </TableCell>
                         <TableCell style={{ minWidth: 90 }}>
@@ -225,7 +239,7 @@ const Transaction = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={rows.length}
+            count={totalCount}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
