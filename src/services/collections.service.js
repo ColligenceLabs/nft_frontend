@@ -5,8 +5,6 @@ import authService from './auth.service';
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/collection`;
 
 export const getCollectionData = (page, rowsPerPage, id, searchKeyword, searchStatus) => {
-  console.log(id);
-
   let url = `${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`;
   url = id !== undefined ? `${url}&creator_id=${id}` : url;
   url = searchKeyword !== undefined ? `${url}&keyword=${searchKeyword}` : url;

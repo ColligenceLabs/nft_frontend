@@ -5,20 +5,24 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/indexs`;
 
-export const getCreatorData = (page, rowsPerPage) => {
-  const subQuery =
+export const getCreatorData = (page = undefined, rowsPerPage, searchName, searchStatus) => {
+  let url =
     page === undefined
-      ? `?level=creator`
-      : `?page=${page + 1}&perPage=${rowsPerPage}&level=creator`;
+      ? `${API_URL}?level=creator`
+      : `${API_URL}?page=${page + 1}&perPage=${rowsPerPage}&level=creator`;
+  url = searchName !== undefined ? `${url}&full_name=${searchName}` : url;
+  url = searchStatus !== undefined ? `${url}&status=${searchStatus}` : url;
 
-  return axios
-    .get(`${API_URL}${subQuery}`, {
-      headers: authHeader(),
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+  return (
+    axios
+      .get(url, {
+        headers: authHeader(),
+      })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)))
+  );
 };
 
 const creatorService = {

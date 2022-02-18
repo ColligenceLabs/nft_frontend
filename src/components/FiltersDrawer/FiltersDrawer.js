@@ -172,21 +172,6 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
         {/* ------------ creator ------------- */}
         {currentRoute === 'creator' && (
           <>
-            <CustomFormLabel htmlFor="level">{t('Level')}</CustomFormLabel>
-            <CustomSelect
-              labelId="demo-simple-select-label"
-              id="level"
-              name="level"
-              onChange={handleLevel}
-              value={level}
-              fullWidth
-              size="small"
-            >
-              <MenuItem value="administrator">Administrator</MenuItem>
-              <MenuItem value="creator">Creator</MenuItem>
-              <MenuItem value="operator">Operator</MenuItem>
-            </CustomSelect>
-            <Box pt={3} />
             <CustomFormLabel htmlFor="fullName">{t('Name')}</CustomFormLabel>
             <CustomTextField
               id="fullName"
@@ -197,17 +182,21 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
               value={fullName}
               onChange={handleFullName}
             />
-            <Box pt={3} />
-            <CustomFormLabel htmlFor="email">{t('Email')}</CustomFormLabel>
-            <CustomTextField
-              id="email"
-              name="email"
-              variant="outlined"
-              fullWidth
-              size="small"
-              value={email}
-              onChange={handleEmail}
-            />
+            {/*<Box pt={3} />*/}
+            {/*<CustomFormLabel htmlFor="status">{t('Status')}</CustomFormLabel>*/}
+            {/*<CustomSelect*/}
+            {/*  labelId="demo-simple-select-label"*/}
+            {/*  id="status"*/}
+            {/*  name="status"*/}
+            {/*  onChange={handleUserStatus}*/}
+            {/*  value={status}*/}
+            {/*  fullWidth*/}
+            {/*  size="small"*/}
+            {/*>*/}
+            {/*  <MenuItem value="active">Active</MenuItem>*/}
+            {/*  <MenuItem value="inactive">Inactive</MenuItem>*/}
+            {/*  <MenuItem value="suspend">Suspend</MenuItem>*/}
+            {/*</CustomSelect>*/}
           </>
         )}
         {/* ------------ admins ------------- */}

@@ -40,9 +40,10 @@ const Creator = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedAdmin, setSelectedAdmin] = useState({});
   const [statusOpen, setStatusOpen] = useState(false);
+  const [searchName, setSearchName] = useState('');
+  const [searchStatus, setSearchStatus] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -115,8 +116,8 @@ const Creator = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
-    setSearchKeyword(props.searchKeyword);
+    setSearchName(props.full_name);
+    setSearchStatus(props.status);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -124,13 +125,13 @@ const Creator = () => {
 
   useEffect(() => {
     const fetchCreator = async () => {
-      await getCreatorData(page, rowsPerPage).then(({ data }) => {
+      await getCreatorData(page, rowsPerPage, searchName, searchStatus).then(({ data }) => {
         setRows(data.items);
         setTotalCount(data.headers.x_total_count);
       });
     };
     fetchCreator();
-  }, [getCreatorData, page, rowsPerPage]);
+  }, [getCreatorData, page, rowsPerPage, searchName, searchStatus]);
 
   return (
     <PageContainer title={t('Service Title')} description={t('Service Description')}>

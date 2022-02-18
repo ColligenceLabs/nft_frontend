@@ -125,6 +125,7 @@ const Collections = () => {
       data: { items: creatorList },
     } = await getCreatorData();
 
+    console.log(creatorList);
     await getCollectionData(
       page,
       rowsPerPage,
