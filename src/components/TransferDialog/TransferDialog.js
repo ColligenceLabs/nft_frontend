@@ -123,11 +123,14 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
             setErrorMessage(null);
             setSuccessFlag(true);
           } else {
-            setErrorMessage(res.data.message);
+            setErrorMessage(res.data.message.error._message);
             setSuccessFlag(false);
           }
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          setSuccessFlag(false);
+          setErrorMessage(error);
+        });
     } else {
       console.log('1 ====>', tokenId, toAddress, amount, nftId, contractType);
       const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
