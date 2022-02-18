@@ -288,35 +288,70 @@ const useNFT = (contract, kasContract, account) => {
       const gasPrice = parseUnits('25', 'gwei').toString();
 
       let tx;
+      let gasLimit;
 
       if (contractType === 'KIP17') {
-        // gasLimit 계산
-        const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId);
-        console.log(gasPrice, contract);
+        try {
+          // gasLimit 계산
+          // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
+          // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
+          gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
+          console.log(gasPrice, contract);
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'estimateGas transferFrom failed'];
+        }
 
-        // transfer 요청
-        tx = await contract.safeTransferFrom(account, to, tokenId, {
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(gasLimit),
-          // gasLimit: 2000000,
-        });
+        try {
+          // transfer 요청
+          // tx = await contract.safeTransferFrom(account, to, tokenId, '0x', {
+          tx = await contract.transferFrom(account, to, tokenId, {
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(gasLimit),
+            // gasLimit: 2000000,
+          });
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'transferFrom failed'];
+        }
       } else {
-        // gasLimit 계산
-        const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, amount);
-        console.log(gasPrice, contract);
+        try {
+          // gasLimit 계산
+          gasLimit = await contract.estimateGas.safeTransferFrom(
+            account,
+            to,
+            tokenId,
+            amount,
+            '0x',
+          );
+          console.log(gasPrice, contract);
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'estimateGas safeTransferFrom failed'];
+        }
 
-        // transfer 요청
-        tx = await contract.safeTransferFrom(account, to, tokenId, amount, {
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(gasLimit),
-          // gasLimit: 2000000,
-        });
+        try {
+          // transfer 요청
+          tx = await contract.safeTransferFrom(account, to, tokenId, amount, '0x', {
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(gasLimit),
+            // gasLimit: 2000000,
+          });
+        } catch (e) {
+          console.log(e);
+          await setIsTransfering(false);
+          return [0, 'safeTransferFrom failed'];
+        }
       }
 
       // receipt 대기
       let receipt;
+      let errMessage;
       try {
         receipt = await tx.wait();
         if (receipt.status === 1) {
@@ -324,9 +359,11 @@ const useNFT = (contract, kasContract, account) => {
         }
       } catch (e) {
         console.log(e);
+        errMessage = e.message;
       }
       console.log(tx, receipt);
       await setIsTransfering(false);
+      return [receipt?.status, errMessage];
     },
     [library, account, contract],
   );

@@ -43,7 +43,9 @@ const Admins = () => {
   const [adminDetailModal, setAdminDetailModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState({});
   const [statusOpen, setStatusOpen] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [searchEmail, setSearchEmail] = useState('');
+  const [searchLevel, setSearchLevel] = useState('');
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -113,7 +115,9 @@ const Admins = () => {
 
   const setFilters = async (props) => {
     console.log(props);
-    setSearchKeyword(props.searchKeyword);
+    setSearchName(props.full_name);
+    setSearchEmail(props.email);
+    setSearchLevel(props.level);
   };
 
   const updateStatus = async (id, status) => {
@@ -131,13 +135,15 @@ const Admins = () => {
 
   useEffect(() => {
     const fetchAdmins = async () => {
-      await getAdminsData(page, rowsPerPage).then(({ data }) => {
-        setRows(data.items);
-        setTotalCount(data.headers.x_total_count);
-      });
+      await getAdminsData(page, rowsPerPage, searchName, searchEmail, searchLevel).then(
+        ({ data }) => {
+          setRows(data.items);
+          setTotalCount(data.headers.x_total_count);
+        },
+      );
     };
     fetchAdmins();
-  }, [getAdminsData, page, rowsPerPage]);
+  }, [getAdminsData, page, rowsPerPage, searchName, searchEmail, searchLevel]);
 
   return (
     <PageContainer title="Admins" description="this is admins page">
@@ -187,6 +193,11 @@ const Admins = () => {
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
                           {row.full_name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.description}
                         </Typography>
                       </TableCell>
                       <TableCell>

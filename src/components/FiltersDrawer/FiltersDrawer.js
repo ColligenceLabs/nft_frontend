@@ -6,14 +6,24 @@ import CustomSelect from '../forms/custom-elements/CustomSelect';
 import { useTranslation } from 'react-i18next';
 import { getCollectionData } from '../../services/collections.service';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
+import useCreator from '../../hooks/useCreator';
 
 const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) => {
   const { t } = useTranslation();
   const [collectionList, setCollectionList] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [userStatus, setUserStatus] = useState('');
+  const [status, setStatus] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEamil] = useState('');
+  const [level, setLevel] = useState('');
+  const [creatorId, setCreatorId] = useState('');
 
+  const creatorList = useCreator();
+
+  const handleSearchCreator = (e) => {
+    setCreatorId(e.target.value);
+  };
   const handleSearchKeyword = (e) => {
     setSearchKeyword(e.target.value);
   };
@@ -21,7 +31,19 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
     setSelectedCollection(e.target.value);
   };
   const handleUserStatus = (e) => {
-    setUserStatus(e.target.value);
+    setStatus(e.target.value);
+  };
+
+  const handleFullName = (e) => {
+    setFullName(e.target.value);
+  };
+
+  const handleEmail = (e) => {
+    setEamil(e.target.value);
+  };
+
+  const handleLevel = (e) => {
+    setLevel(e.target.value);
   };
 
   useEffect(async () => {
@@ -52,7 +74,138 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
       </Box>
       <Divider />
       <Box p={2}>
-        {/* ------------ Collection ------------- */}
+        {/* ------------ collection ------------- */}
+        {currentRoute === 'collection' && (
+          <>
+            <CustomFormLabel htmlFor="searchKeyword">{t('Name')}</CustomFormLabel>
+            <CustomTextField
+              id="searchKeyword"
+              name="searchKeyword"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchKeyword}
+              onChange={handleSearchKeyword}
+            />
+            <CustomFormLabel htmlFor="creator">{t('Creator')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="creator"
+              name="creator"
+              value={creatorId}
+              onChange={handleSearchCreator}
+              fullWidth
+              size="small"
+            >
+              {creatorList &&
+                creatorList.map((creator) => (
+                  <MenuItem key={creator._id} value={creator._id}>
+                    {creator.full_name}
+                  </MenuItem>
+                ))}
+            </CustomSelect>
+            <Box pt={3} />
+            <CustomFormLabel htmlFor="status">{t('Status')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="status"
+              name="status"
+              onChange={handleUserStatus}
+              value={status}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="active">Active</MenuItem>
+              <MenuItem value="inactive">Inactive</MenuItem>
+              <MenuItem value="suspend">Suspend</MenuItem>
+            </CustomSelect>
+            <Box pt={3} />
+          </>
+        )}
+        {/* ------------ creator ------------- */}
+        {currentRoute === 'creator' && (
+          <>
+            <CustomFormLabel htmlFor="level">{t('Level')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="level"
+              name="level"
+              onChange={handleLevel}
+              value={level}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="administrator">Administrator</MenuItem>
+              <MenuItem value="creator">Creator</MenuItem>
+              <MenuItem value="operator">Operator</MenuItem>
+            </CustomSelect>
+            <Box pt={3} />
+            <CustomFormLabel htmlFor="fullName">{t('Name')}</CustomFormLabel>
+            <CustomTextField
+              id="fullName"
+              name="fullName"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={fullName}
+              onChange={handleFullName}
+            />
+            <Box pt={3} />
+            <CustomFormLabel htmlFor="email">{t('Email')}</CustomFormLabel>
+            <CustomTextField
+              id="email"
+              name="email"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={email}
+              onChange={handleEmail}
+            />
+          </>
+        )}
+        {/* ------------ admins ------------- */}
+        {currentRoute === 'admins' && (
+          <>
+            <CustomFormLabel htmlFor="level">{t('Level')}</CustomFormLabel>
+            <CustomSelect
+              labelId="demo-simple-select-label"
+              id="level"
+              name="level"
+              onChange={handleLevel}
+              value={level}
+              fullWidth
+              size="small"
+            >
+              <MenuItem value="administrator">Administrator</MenuItem>
+              <MenuItem value="creator">Creator</MenuItem>
+              <MenuItem value="operator">Operator</MenuItem>
+            </CustomSelect>
+            <Box pt={3} />
+            <CustomFormLabel htmlFor="fullName">{t('Name')}</CustomFormLabel>
+            <CustomTextField
+              id="fullName"
+              name="fullName"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={fullName}
+              onChange={handleFullName}
+            />
+            <Box pt={3} />
+            <CustomFormLabel htmlFor="email">{t('Email')}</CustomFormLabel>
+            <CustomTextField
+              id="email"
+              name="email"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={email}
+              onChange={handleEmail}
+            />
+          </>
+        )}
+
+        {/* ------------ nfts ------------- */}
         {currentRoute === 'nfts' && (
           <>
             <CustomFormLabel htmlFor="collection">{t('Collection')}</CustomFormLabel>
@@ -73,10 +226,20 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
                 ))}
             </CustomSelect>
             <Box pt={3} />
+            <CustomFormLabel htmlFor="searchKeyword">{t('Search Keyword')}</CustomFormLabel>
+            <CustomTextField
+              id="searchKeyword"
+              name="searchKeyword"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchKeyword}
+              onChange={handleSearchKeyword}
+            />
           </>
         )}
 
-        {/* ------------User Status ------------- */}
+        {/* ------------user ------------- */}
         {currentRoute === 'user' && (
           <>
             <CustomFormLabel htmlFor="status">{t('Status')}</CustomFormLabel>
@@ -85,7 +248,7 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
               id="status"
               name="status"
               onChange={handleUserStatus}
-              value={userStatus}
+              value={status}
               fullWidth
               size="small"
             >
@@ -94,20 +257,19 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
               <MenuItem value="suspend">Suspend</MenuItem>
             </CustomSelect>
             <Box pt={3} />
+            <CustomFormLabel htmlFor="searchKeyword">{t('Search Keyword')}</CustomFormLabel>
+            <CustomTextField
+              id="searchKeyword"
+              name="searchKeyword"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchKeyword}
+              onChange={handleSearchKeyword}
+            />
           </>
         )}
 
-        {/* ------------ Search Keyword -------------*/}
-        <CustomFormLabel htmlFor="searchKeyword">{t('Search Keyword')}</CustomFormLabel>
-        <CustomTextField
-          id="searchKeyword"
-          name="searchKeyword"
-          variant="outlined"
-          fullWidth
-          size="small"
-          value={searchKeyword}
-          onChange={handleSearchKeyword}
-        />
         <Box pt={3} />
         <Box
           style={{
@@ -119,8 +281,13 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
           <Button
             variant="outlined"
             onClick={() => {
+              setStatus('');
+              setCreatorId('');
               setSelectedCollection('');
               setSearchKeyword('');
+              setFullName('');
+              setEamil('');
+              setLevel('');
             }}
           >
             Reset
@@ -129,9 +296,13 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
             variant="contained"
             onClick={() => {
               setFilters({
+                full_name: fullName,
+                level,
+                email,
                 collectionId: selectedCollection,
                 searchKeyword: searchKeyword,
-                userStatus,
+                status,
+                creatorId,
               });
               setShowDrawer(false);
             }}

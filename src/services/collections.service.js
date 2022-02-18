@@ -4,16 +4,26 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/collection`;
 
-export const getCollectionData = (page, rowsPerPage, id) => {
-  const pageQuery = page === undefined ? '' : `?page=${page + 1}&perPage=${rowsPerPage}`;
-  const subQuery = id === undefined ? '' : `&creator_id=${id}`;
+export const getCollectionData = (page, rowsPerPage, id, searchKeyword, searchStatus) => {
+  console.log(id);
 
-  return axios
-    .get(`${API_URL}/indexs${pageQuery}${subQuery}`, { headers: authHeader() })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+  let url = `${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`;
+  url = id !== undefined ? `${url}&creator_id=${id}` : url;
+  url = searchKeyword !== undefined ? `${url}&keyword=${searchKeyword}` : url;
+  url = searchStatus !== undefined ? `${url}&status=${searchStatus}` : url;
+
+  // const pageQuery = page === undefined ? '' : `?page=${page + 1}&perPage=${rowsPerPage}`;
+  // const subQuery = id === undefined ? '' : `&creator_id=${id}`;
+
+  return (
+    axios
+      // .get(`${API_URL}/indexs${pageQuery}${subQuery}`, { headers: authHeader() })
+      .get(url, { headers: authHeader() })
+      .then((response) => {
+        return response.data;
+      })
+      .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)))
+  );
 };
 
 export const getDetailCollection = () => {

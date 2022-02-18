@@ -137,8 +137,9 @@ const NFTs = () => {
     setSendModal(true);
   };
 
-  const handleCloseSendModal = () => {
+  const handleCloseSendModal = async () => {
     setSendModal(false);
+    await fetchNFTs();
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -152,10 +153,12 @@ const NFTs = () => {
       searchKeyword,
       collectionId,
       level.toLowerCase() === 'creator' ? id : undefined,
-    ).then(({ data }) => {
-      setRows(data.items);
-      setTotalCount(data.headers.x_total_count);
-    });
+    )
+      .then(({ data }) => {
+        setRows(data.items);
+        setTotalCount(data.headers.x_total_count);
+      })
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -327,7 +330,11 @@ const NFTs = () => {
                       </TableCell>
                       <TableCell style={{ minWidth: 200 }}>
                         {/*<Box display="flex" justifyContent={'space-around'}>*/}
-                        <IconButton size={'small'} onClick={() => handleSendModal(row)}>
+                        <IconButton
+                          size={'small'}
+                          disabled={row.quantity_selling === row.transfered}
+                          onClick={() => handleSendModal(row)}
+                        >
                           <SendOutlinedIcon />
                         </IconButton>
                         <IconButton size={'small'}>

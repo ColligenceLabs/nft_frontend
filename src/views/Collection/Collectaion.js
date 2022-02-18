@@ -41,9 +41,11 @@ const Collections = () => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalCount, setTotalCount] = useState(0);
-  const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedDetailRow, setSelectedDetailRow] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchCreatorId, setSearchCreatorId] = useState('');
+  const [searchStatus, setSearchStatus] = useState('');
 
   const {
     user: {
@@ -111,35 +113,39 @@ const Collections = () => {
   const setFilters = async (props) => {
     console.log(props);
     setSearchKeyword(props.searchKeyword);
+    setSearchCreatorId(props.creatorId);
+    setSearchStatus(props.status);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
-  useEffect(async () => {
-    const fetchCollections = async () => {
-      const {
-        data: { items: creatorList },
-      } = await getCreatorData();
+  const fetchCollections = async () => {
+    const {
+      data: { items: creatorList },
+    } = await getCreatorData();
 
-      await getCollectionData(
-        page,
-        rowsPerPage,
-        level.toLowerCase() === 'creator' ? id : undefined,
-      ).then(({ data }) => {
-        const collectionArray = data.items.map((item) => {
-          let temp = creatorList?.find((creator) => creator._id === item.creator_id);
+    await getCollectionData(
+      page,
+      rowsPerPage,
+      level.toLowerCase() === 'creator' ? id : searchCreatorId,
+      searchKeyword,
+      searchStatus,
+    ).then(({ data }) => {
+      const collectionArray = data.items.map((item) => {
+        let temp = creatorList?.find((creator) => creator._id === item.creator_id._id);
 
-          return { ...item, creator_name: temp?.full_name };
-        });
-
-        setRows(collectionArray);
-        setTotalCount(data.headers.x_total_count);
+        return { ...item, creator_name: temp?.full_name };
       });
-    };
 
+      setRows(collectionArray);
+      setTotalCount(data.headers.x_total_count);
+    });
+  };
+
+  useEffect(async () => {
     await fetchCollections();
-  }, [getCollectionData, page, rowsPerPage]);
+  }, [getCollectionData, page, rowsPerPage, searchKeyword, searchCreatorId, searchStatus]);
 
   return (
     <PageContainer title="Collections" description="this is collections page">

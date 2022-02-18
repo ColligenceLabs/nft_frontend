@@ -132,8 +132,9 @@ const AirDrop = () => {
     setSendModal(true);
   };
 
-  const handleCloseSendModal = () => {
+  const handleCloseSendModal = async () => {
     setSendModal(false);
+    await fetchAirDrops();
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -313,7 +314,11 @@ const AirDrop = () => {
                       <TableCell style={{ minWidth: 200 }}>
                         <Typography color="textSecondary" variant="h6" fontWeight="400">
                           <Box>
-                            <IconButton size={'small'} onClick={() => handleSendModal(row)}>
+                            <IconButton
+                              size={'small'}
+                              disabled={row.quantity_selling === row.transfered}
+                              onClick={() => handleSendModal(row)}
+                            >
                               <SendOutlinedIcon />
                             </IconButton>
                             <IconButton>

@@ -6,6 +6,12 @@ export const headCells = [
     label: 'Name',
   },
   {
+    id: 'description',
+    numeric: false,
+    disablePadding: false,
+    label: 'Description',
+  },
+  {
     id: 'email',
     numeric: false,
     disablePadding: false,

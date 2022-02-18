@@ -15,6 +15,12 @@ import { makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
+import { useWeb3React } from '@web3-react/core';
+import { useKipContract } from '../../hooks/useContract';
+import useNFT from '../../hooks/useNFT';
+import contracts from '../../config/constants/contracts';
+import { batchRegisterNFT, kasTransferNFT } from '../../services/nft.service';
+import { LoadingButton } from '@mui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -60,34 +66,79 @@ const useStyles = makeStyles((theme) => ({
 const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   const classes = useStyles();
 
+  const { account } = useWeb3React();
+
+  const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
+  const [contractType, setContractType] = useState('KIP17');
+  const kipContract = useKipContract(contractAddr, contractType);
+  const { transferNFT, isTransfering } = useNFT(kipContract, account);
+
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [toAddress, setToAddress] = useState('');
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState(1);
+  const [maxAmount, setMaxAmount] = useState(0);
 
   useEffect(() => {
     if (item !== undefined) {
-      console.log(item);
-      console.log(item.collection_id?.creator_id);
+      console.log(isTransfering);
+      if (item && item.collection_id) {
+        setContractAddr(item.collection_id.contract_address);
+        setContractType(type);
+        setMaxAmount(item.quantity_selling - item.transfered);
+      }
     }
-  }, [item]);
+    return () => setMaxAmount(0);
+  }, [item, isTransfering]);
 
   const handleChangeToAddress = (e) => {
     setToAddress(e.target.value);
   };
 
   const handleChangeAmount = (e) => {
-    setAmount(e.target.value);
+    setAmount(e.target.value > maxAmount ? maxAmount : e.target.value);
   };
 
-  const handleTransfer = () => {
-    if (type === 'KIP17') {
-      console.log('KIP17 SEND');
+  const handleTransfer = async () => {
+    // toAddress, amount
+    const tokenId = item.metadata.tokenId;
+    const nftId = item._id;
+    const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
+
+    console.log('====>', kipContract);
+    if (useKAS === 'true') {
+      const formData = {
+        nft_id: nftId,
+        from_address: account,
+        to_address: toAddress,
+        tokenId,
+        amount,
+      };
+      console.log('====>', formData);
+      // TODO : isTransfering 사용하여 Send 버튼 로딩 표시...
+      await kasTransferNFT(formData)
+        .then(async (res) => {
+          if (res.data.status === 1) {
+            setErrorMessage(null);
+            setSuccessFlag(true);
+          } else {
+            setErrorMessage(res.data.message);
+            setSuccessFlag(false);
+          }
+        })
+        .catch((error) => console.log(error));
     } else {
-      console.log('KIP37 SEND');
+      console.log('1 ====>', tokenId, toAddress, amount, nftId, contractType);
+      const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
+      console.log('2 ====>', success, error);
+
+      // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
+      success ? setSuccessFlag(true) : setSuccessFlag(false);
+      success ? setErrorMessage(null) : setErrorMessage(error);
     }
-    // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
+    setOpenSnackbar(true);
+    handleCloseModal();
   };
 
   const { t } = useTranslation();
@@ -129,7 +180,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
               >
                 <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
                 <Typography variant="caption" color="primary" sx={{ mr: 1 }}>
-                  남은 수량 : {item.quantity_selling - item.transfered}
+                  {t('Balance')} : {maxAmount}
                 </Typography>
               </Box>
               <CustomTextField
@@ -149,11 +200,11 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         <Divider />
         <DialogActions style={{ marginRight: '20px', padding: '10px' }}>
           <Button variant="outlined" onClick={handleCloseModal}>
-            Cancel
+            {t('Cancel')}
           </Button>
-          <Button variant="contained" onClick={handleTransfer}>
-            Send
-          </Button>
+          <LoadingButton onClick={handleTransfer} loading={isTransfering} variant="contained">
+            {t('Send')}
+          </LoadingButton>
         </DialogActions>
       </Dialog>
       <Snackbar
