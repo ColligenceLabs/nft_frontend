@@ -6,7 +6,7 @@ import FeatherIcon from 'feather-icons-react';
 const NFTs = () => (
   <Card
     sx={{
-      backgroundColor: (theme) => theme.palette.secondary.main,
+      backgroundColor: '#26c6da',
       color: 'white',
     }}
   >
@@ -27,7 +27,7 @@ const NFTs = () => (
           }}
         >
           <Fab
-            size="medium"
+            size="small"
             color=""
             aria-label="add"
             elevation="0"
@@ -35,7 +35,7 @@ const NFTs = () => (
               boxShadow: 'none',
             }}
           >
-            <FeatherIcon icon="dollar-sign" />
+            <FeatherIcon icon="inbox" />
           </Fab>
         </Box>
       </Box>
@@ -48,19 +48,19 @@ const NFTs = () => (
         }}
         gutterBottom
       >
-        $93,438.78
+        2091
       </Typography>
-      <Typography
-        variant="h6"
-        fontWeight="400"
-        sx={{
-          marginBottom: '0',
-          opacity: '0.6',
-        }}
-        gutterBottom
-      >
-        Monthly Revenue
-      </Typography>
+      {/*<Typography*/}
+      {/*  variant="h6"*/}
+      {/*  fontWeight="400"*/}
+      {/*  sx={{*/}
+      {/*    marginBottom: '0',*/}
+      {/*    opacity: '0.6',*/}
+      {/*  }}*/}
+      {/*  gutterBottom*/}
+      {/*>*/}
+      {/*  Monthly Revenue*/}
+      {/*</Typography>*/}
     </CardContent>
   </Card>
 );

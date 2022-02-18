@@ -27,7 +27,7 @@ const Creators = () => (
           }}
         >
           <Fab
-            size="medium"
+            size="small"
             color=""
             aria-label="add"
             elevation="0"
@@ -35,7 +35,7 @@ const Creators = () => (
               boxShadow: 'none',
             }}
           >
-            <FeatherIcon icon="dollar-sign" />
+            <FeatherIcon icon="video" />
           </Fab>
         </Box>
       </Box>
@@ -48,19 +48,19 @@ const Creators = () => (
         }}
         gutterBottom
       >
-        $93,438.78
+        21
       </Typography>
-      <Typography
-        variant="h6"
-        fontWeight="400"
-        sx={{
-          marginBottom: '0',
-          opacity: '0.6',
-        }}
-        gutterBottom
-      >
-        Monthly Revenue
-      </Typography>
+      {/*<Typography*/}
+      {/*  variant="h6"*/}
+      {/*  fontWeight="400"*/}
+      {/*  sx={{*/}
+      {/*    marginBottom: '0',*/}
+      {/*    opacity: '0.6',*/}
+      {/*  }}*/}
+      {/*  gutterBottom*/}
+      {/*>*/}
+      {/*  Monthly Revenue*/}
+      {/*</Typography>*/}
     </CardContent>
   </Card>
 );

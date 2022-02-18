@@ -27,7 +27,7 @@ const AirDrops = () => (
           }}
         >
           <Fab
-            size="medium"
+            size="small"
             color=""
             aria-label="add"
             elevation="0"
@@ -35,7 +35,7 @@ const AirDrops = () => (
               boxShadow: 'none',
             }}
           >
-            <FeatherIcon icon="dollar-sign" />
+            <FeatherIcon icon="file-plus" />
           </Fab>
         </Box>
       </Box>
@@ -48,19 +48,19 @@ const AirDrops = () => (
         }}
         gutterBottom
       >
-        $93,438.78
+        11
       </Typography>
-      <Typography
-        variant="h6"
-        fontWeight="400"
-        sx={{
-          marginBottom: '0',
-          opacity: '0.6',
-        }}
-        gutterBottom
-      >
-        Monthly Revenue
-      </Typography>
+      {/*<Typography*/}
+      {/*  variant="h6"*/}
+      {/*  fontWeight="400"*/}
+      {/*  sx={{*/}
+      {/*    marginBottom: '0',*/}
+      {/*    opacity: '0.6',*/}
+      {/*  }}*/}
+      {/*  gutterBottom*/}
+      {/*>*/}
+      {/*  Monthly Revenue*/}
+      {/*</Typography>*/}
     </CardContent>
   </Card>
 );
