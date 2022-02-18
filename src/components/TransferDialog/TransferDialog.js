@@ -20,6 +20,7 @@ import { useKipContract } from '../../hooks/useContract';
 import useNFT from '../../hooks/useNFT';
 import contracts from '../../config/constants/contracts';
 import { batchRegisterNFT, kasTransferNFT } from '../../services/nft.service';
+import { LoadingButton } from '@mui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -80,15 +81,15 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
 
   useEffect(() => {
     if (item !== undefined) {
-      // console.log('--->', item);
-      // console.log(item.collection_id?.creator_id);
+      console.log(isTransfering);
       if (item && item.collection_id) {
         setContractAddr(item.collection_id.contract_address);
         setContractType(type);
       }
     }
-  }, [item]);
+  }, [item, isTransfering]);
 
+  useEffect(() => console.log(successFlag), [successFlag]);
   const handleChangeToAddress = (e) => {
     setToAddress(e.target.value);
   };
@@ -134,6 +135,8 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
       success ? setSuccessFlag(true) : setSuccessFlag(false);
       success ? setErrorMessage(null) : setErrorMessage(error);
     }
+    setOpenSnackbar(true);
+    handleCloseModal();
   };
 
   const { t } = useTranslation();
@@ -195,11 +198,11 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         <Divider />
         <DialogActions style={{ marginRight: '20px', padding: '10px' }}>
           <Button variant="outlined" onClick={handleCloseModal}>
-            Cancel
+            {t('Cancel')}
           </Button>
-          <Button variant="contained" onClick={handleTransfer}>
-            Send
-          </Button>
+          <LoadingButton onClick={handleTransfer} loading={isTransfering} variant="contained">
+            {t('Send')}
+          </LoadingButton>
         </DialogActions>
       </Dialog>
       <Snackbar
