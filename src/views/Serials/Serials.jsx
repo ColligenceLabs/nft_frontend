@@ -21,7 +21,6 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { rows } from './mockData';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
