@@ -7,7 +7,7 @@ import useActiveWeb3React from './useActiveWeb3React';
 import fs from 'fs';
 import { IPFS_URL, ALT_URL } from '../config/constants/consts';
 import { create } from 'ipfs-http-client';
-import { setNftOnchain, setNftTransfered } from '../services/nft.service';
+import { setNftOnchain, setNftTransferData, setNftTransfered } from '../services/nft.service';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -147,17 +147,20 @@ const useNFT = (contract, kasContract, account) => {
 
       let tx;
       // gasLimit 계산
-      const gasLimit = await kasContract.methods.mintWithTokenURI(account, tokenId, tokenUri)
+      const gasLimit = await kasContract.methods
+        .mintWithTokenURI(account, tokenId, tokenUri)
         .estimateGas({
-          from: account
+          from: account,
         });
       console.log(gasPrice, BigNumber.from(gasLimit));
 
       // mint 요청
-      tx = await kasContract.methods.mintWithTokenURI(account, tokenId, tokenUri).send({
+      tx = await kasContract.methods
+        .mintWithTokenURI(account, tokenId, tokenUri)
+        .send({
           from: account,
-            gasPrice,
-            gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+          gasPrice,
+          gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
         })
         .catch((err) => {
           console.log('mintNFT17WithKaikas error', err);
@@ -253,19 +256,19 @@ const useNFT = (contract, kasContract, account) => {
       const gasPrice = parseUnits('25', 'gwei').toString();
 
       // gasLimit 계산
-      const gasLimit = await kasContract.create(tokenId, amount, tokenUri)
-        .estimateGas({from: account});
+      const gasLimit = await kasContract
+        .create(tokenId, amount, tokenUri)
+        .estimateGas({ from: account });
 
       console.log(gasPrice, gasLimit);
 
       // mint 요청
-      const tx = await kasContract.create(tokenId, amount, tokenUri)
-        .send({
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
-          // gasLimit: 2000000,
-        });
+      const tx = await kasContract.create(tokenId, amount, tokenUri).send({
+        from: account,
+        gasPrice,
+        gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+        // gasLimit: 2000000,
+      });
 
       try {
         if (tx?.status) {
@@ -355,7 +358,9 @@ const useNFT = (contract, kasContract, account) => {
       try {
         receipt = await tx.wait();
         if (receipt.status === 1) {
-          await setNftTransfered(nftId, amount);
+          // TODO : create serial 및 transaction 엔트리...
+          // await setNftTransfered(nftId, amount);  --> setNftTransferData 여기서 처리
+          await setNftTransferData(nftId, to, amount, receipt.transactionHash);
         }
       } catch (e) {
         console.log(e);
@@ -395,13 +400,12 @@ const useNFT = (contract, kasContract, account) => {
         try {
           // transfer 요청
           // tx = await contract.safeTransferFrom(account, to, tokenId, '0x', {
-          tx = await kasContract.methods.transferFrom(account, to, tokenId)
-            .send({
-              from: account,
-              gasPrice,
-              gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
-              // gasLimit: 2000000,
-            });
+          tx = await kasContract.methods.transferFrom(account, to, tokenId).send({
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+            // gasLimit: 2000000,
+          });
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);
@@ -410,13 +414,9 @@ const useNFT = (contract, kasContract, account) => {
       } else {
         try {
           // gasLimit 계산
-          gasLimit = await kasContract.methods.safeTransferFrom(
-            account,
-            to,
-            tokenId,
-            amount,
-            '0x',
-          ).estimateGas();
+          gasLimit = await kasContract.methods
+            .safeTransferFrom(account, to, tokenId, amount, '0x')
+            .estimateGas();
           console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
@@ -426,13 +426,12 @@ const useNFT = (contract, kasContract, account) => {
 
         try {
           // transfer 요청
-          tx = await kasContract.methods.safeTransferFrom(account, to, tokenId, amount, '0x')
-            .send({
-              from: account,
-              gasPrice,
-              gasLimit: calculateGasMargin(gasLimit),
-              // gasLimit: 2000000,
-            });
+          tx = await kasContract.methods.safeTransferFrom(account, to, tokenId, amount, '0x').send({
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(gasLimit),
+            // gasLimit: 2000000,
+          });
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);
@@ -444,7 +443,9 @@ const useNFT = (contract, kasContract, account) => {
       let errMessage;
       try {
         if (tx.status === 1) {
-          await setNftTransfered(nftId, amount);
+          // TODO : create serial 및 transaction 엔트리...
+          // await setNftTransfered(nftId, amount);  --> setNftTransferData 여기서 처리
+          await setNftTransferData(nftId, to, amount, receipt.transactionHash);
         }
       } catch (e) {
         console.log(e);
@@ -458,7 +459,16 @@ const useNFT = (contract, kasContract, account) => {
   );
 
   // return { createNFT, mintNFT };
-  return { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, transferNFT, transferNFTWithKaikas, isMinting, isTransfering };
+  return {
+    mintNFT17,
+    mintNFT17WithKaikas,
+    mintNFT37,
+    mintNFT37WithKaikas,
+    transferNFT,
+    transferNFTWithKaikas,
+    isMinting,
+    isTransfering,
+  };
 };
 
 export default useNFT;
