@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 const chartOption = {
   chart: {
     id: 'donut-chart',
-    fontFamily: "'DM Sans', sans-serif",
     foreColor: '#adb0bb',
   },
   dataLabels: {

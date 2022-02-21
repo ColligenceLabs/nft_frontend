@@ -28,13 +28,18 @@ const Dashboard = () => {
       <Grid container spacing={0}>
         {/* ------------------------- row 1 ------------------------- */}
         <Grid item xs={12} sm={6} lg={3} xl={3}>
-          <SummaryCard title={t('NFTs')} icon="inbox" value={summary.nfts || 0} color="#26c6da" />
+          <SummaryCard
+            title={t('NFTs')}
+            icon="inbox"
+            value={summary.nfts || 'Loding...'}
+            color="#26c6da"
+          />
         </Grid>
         <Grid item xs={12} sm={6} lg={3} xl={3}>
           <SummaryCard
             title={t('AirDrops')}
             icon="file-plus"
-            value={summary.airdrops || 0}
+            value={summary.airdrops || 'Loding...'}
             color="#6ac3fd"
           />
         </Grid>
@@ -42,7 +47,7 @@ const Dashboard = () => {
           <SummaryCard
             title={t('Creator')}
             icon="video"
-            value={summary.creators || 0}
+            value={summary.creators || 'Loding...'}
             color="#f64e60"
           />
         </Grid>
@@ -50,7 +55,7 @@ const Dashboard = () => {
           <SummaryCard
             title={t('Transactions')}
             icon="credit-card"
-            value={summary.transactions || 0}
+            value={summary.transactions || 'Loding...'}
             color="#ffa800"
           />
         </Grid>

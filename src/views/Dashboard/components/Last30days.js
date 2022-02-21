@@ -9,7 +9,6 @@ const chartOption = {
   chart: {
     height: 250,
     type: 'line',
-    fontFamily: "'DM Sans', sans-serif",
     foreColor: '#adb0bb',
     toolbar: {
       show: false,
@@ -27,28 +26,6 @@ const chartOption = {
     width: 3,
     curve: 'smooth',
   },
-
-  // xaxis: {
-  //   // type: 'datetime',
-  //   categories: [
-  //     '1/11/2000',
-  //     '2/11/2000',
-  //     '3/11/2000',
-  //     '4/11/2000',
-  //     '5/11/2000',
-  //     '6/11/2000',
-  //     '7/11/2000',
-  //     '8/11/2000',
-  //     '9/11/2000',
-  //     '10/11/2000',
-  //     '11/11/2000',
-  //     '12/11/2000',
-  //     '1/11/2001',
-  //     '2/11/2001',
-  //     '5/11/2001',
-  //     '6/11/2001',
-  //   ],
-  // },
   fill: {
     type: 'gradient',
     gradient: {
@@ -100,7 +77,7 @@ const Last30days = () => {
       res.data.map((item) => {
         if (item.name === 'total_revenue') {
           categoryArray = categoryArray.concat(
-            new Date(item.createdAt).toLocaleDateString('en-GB', {
+            new Date(item.createdAt).toLocaleDateString('ko-KR', {
               month: '2-digit',
               day: '2-digit',
               year: 'numeric',
