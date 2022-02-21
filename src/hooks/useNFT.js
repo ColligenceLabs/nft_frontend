@@ -192,25 +192,30 @@ const useNFT = (contract, kasContract, account) => {
       console.log(gasPrice, gasLimit, contract);
 
       // mint 요청
-      tx = await contract.mintWithTokenURI(account, tokenId, tokenUri, {
-        from: account,
-        gasPrice,
-        gasLimit: calculateGasMargin(gasLimit),
-        // gasLimit: 2000000,
-      });
-
-      // receipt 대기
-      let receipt;
       try {
-        receipt = await tx.wait();
-        if (receipt.status === 1) {
-          await setNftOnchain(nftId);
+        tx = await contract.mintWithTokenURI(account, tokenId, tokenUri, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+          // gasLimit: 2000000,
+        });
+
+        // receipt 대기
+        let receipt;
+        try {
+          receipt = await tx.wait();
+          if (receipt.status === 1) {
+            await setNftOnchain(nftId);
+          }
+        } catch (e) {
+          console.log(e);
         }
+        console.log(tx, receipt);
+        await setIsMinting(false);
       } catch (e) {
         console.log(e);
+        await setIsMinting(false);
       }
-      console.log(tx, receipt);
-      await setIsMinting(false);
     },
     [library, account, contract],
   );
@@ -227,25 +232,30 @@ const useNFT = (contract, kasContract, account) => {
       console.log(gasPrice, contract);
 
       // mint 요청
-      tx = await contract.create(tokenId, amount, tokenUri, {
-        from: account,
-        gasPrice,
-        gasLimit: calculateGasMargin(gasLimit),
-        // gasLimit: 2000000,
-      });
-
-      // receipt 대기
-      let receipt;
       try {
-        receipt = await tx.wait();
-        if (receipt.status === 1) {
-          await setNftOnchain(nftId);
+        tx = await contract.create(tokenId, amount, tokenUri, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+          // gasLimit: 2000000,
+        });
+
+        // receipt 대기
+        let receipt;
+        try {
+          receipt = await tx.wait();
+          if (receipt.status === 1) {
+            await setNftOnchain(nftId);
+          }
+        } catch (e) {
+          console.log(e);
         }
+        console.log(tx, receipt);
+        await setIsMinting(false);
       } catch (e) {
         console.log(e);
+        await setIsMinting(false);
       }
-      console.log(tx, receipt);
-      await setIsMinting(false);
     },
     [library, account, contract],
   );

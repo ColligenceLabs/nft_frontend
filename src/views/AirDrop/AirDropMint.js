@@ -35,7 +35,11 @@ const AirDropMint = () => {
   const { account, activate } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
-  const { mintNFT, isMinting } = useNFT(kipContract, kasContract, account);
+  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(
+    kipContract,
+    kasContract,
+    account,
+  );
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
@@ -131,10 +135,23 @@ const AirDropMint = () => {
                     const tokenId = res.data.data.metadata.tokenId;
                     const tokenUri = res.data.data.ipfs_link;
                     const quantity = res.data.data.quantity;
-                    const mintValue = contractType === 'KIP17' ? tokenUri : quantity;
 
                     // TODO : Actual NFT Minting here
-                    await mintNFT(tokenId, mintValue, nftId, contractType);
+                    if (contractType === 'KIP17') {
+                      console.log('KIP17 mint : ', tokenId, tokenUri, nftId);
+                      if (window.localStorage.getItem('wallet') === 'kaikas') {
+                        await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                      } else {
+                        await mintNFT17(tokenId, tokenUri, nftId);
+                      }
+                    } else {
+                      console.log('KIP17 mint : ', tokenId, quantity, tokenUri, nftId);
+                      if (window.localStorage.getItem('wallet') === 'kaikas') {
+                        await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                      } else {
+                        await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                      }
+                    }
                   } else {
                     setErrorMessage(res.data.message);
                     setSuccessRegister(false);
