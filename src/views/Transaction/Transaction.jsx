@@ -86,8 +86,11 @@ const Transaction = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
     setSearchKeyword(props.searchKeyword);
+  };
+
+  const splitAddress = (str) => {
+    return str.substr(0, 5) + '...' + str.substr(str.length - 5, str.length);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -95,9 +98,8 @@ const Transaction = () => {
 
   const fetchTransactions = async () => {
     await getTransactionData(page, rowsPerPage).then(({ data }) => {
-      console.log(data.items);
       setRows(data.items);
-      setTotalCount(data.headers.x_total_count);
+      setTotalCount(data.headers.x_total_count || 0);
     });
   };
 
@@ -156,17 +158,18 @@ const Transaction = () => {
 
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.seller}
+                            {/*{row.seller.admin_address}*/}
+                            {splitAddress(row.seller.admin_address)}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.buyer}
+                            {splitAddress(row.buyer)}
                           </Typography>
                         </TableCell>
                         <TableCell style={{ minWidth: 150 }}>
                           <Typography color="textSecondary" variant="h6">
-                            {row.tokenId}
+                            row.tokenId
                           </Typography>
                         </TableCell>
                         <TableCell style={{ minWidth: 90 }}>
@@ -176,7 +179,7 @@ const Transaction = () => {
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.transactionId}
+                            {splitAddress(row.tx_id)}
                           </Typography>
                         </TableCell>
                         <TableCell>
