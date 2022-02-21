@@ -13,11 +13,14 @@ const Dashboard = () => {
   const [summary, setSummary] = useState({});
   const [totalNfts, setTotalNfts] = useState({});
 
-  useEffect(async () => {
+  const fetchSummayData = async () => {
     await getSummaryPie().then((res) => {
       setSummary(res.data.summary);
       setTotalNfts(res.data.pie_chart);
     });
+  };
+  useEffect(() => {
+    fetchSummayData();
   }, []);
 
   return (
