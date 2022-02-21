@@ -5,7 +5,7 @@ import testMeta from '../config/constants/test.json';
 import { BigNumber } from 'ethers';
 import useActiveWeb3React from './useActiveWeb3React';
 import fs from 'fs';
-import { IPFS_URL, ALT_URL } from '../config/constants/consts';
+import { IPFS_URL, ALT_URL, FAILURE, SUCCESS } from '../config/constants/consts';
 import { create } from 'ipfs-http-client';
 import { setNftOnchain, setNftTransferData, setNftTransfered } from '../services/nft.service';
 
@@ -162,8 +162,10 @@ const useNFT = (contract, kasContract, account) => {
           gasPrice,
           gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
         })
-        .catch((err) => {
+        .catch(async (err) => {
           console.log('mintNFT17WithKaikas error', err);
+          await setIsMinting(false);
+          return FAILURE;
         });
 
       // receipt 대기
@@ -176,6 +178,7 @@ const useNFT = (contract, kasContract, account) => {
       }
       console.log(tx);
       await setIsMinting(false);
+      return SUCCESS;
     },
     [library, account, kasContract],
   );
@@ -209,12 +212,15 @@ const useNFT = (contract, kasContract, account) => {
           }
         } catch (e) {
           console.log(e);
+          return FAILURE;
         }
         console.log(tx, receipt);
         await setIsMinting(false);
+        return SUCCESS;
       } catch (e) {
         console.log(e);
         await setIsMinting(false);
+        return FAILURE;
       }
     },
     [library, account, contract],
@@ -249,12 +255,15 @@ const useNFT = (contract, kasContract, account) => {
           }
         } catch (e) {
           console.log(e);
+          return FAILURE;
         }
         console.log(tx, receipt);
         await setIsMinting(false);
+        return SUCCESS;
       } catch (e) {
         console.log(e);
         await setIsMinting(false);
+        return FAILURE;
       }
     },
     [library, account, contract],
@@ -273,12 +282,19 @@ const useNFT = (contract, kasContract, account) => {
       console.log(gasPrice, gasLimit);
 
       // mint 요청
-      const tx = await kasContract.create(tokenId, amount, tokenUri).send({
-        from: account,
-        gasPrice,
-        gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
-        // gasLimit: 2000000,
-      });
+      const tx = await kasContract
+        .create(tokenId, amount, tokenUri)
+        .send({
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+          // gasLimit: 2000000,
+        })
+        .catch(async (err) => {
+          console.log('mintNFT37WithKaikas error', err);
+          await setIsMinting(false);
+          return FAILURE;
+        });
 
       try {
         if (tx?.status) {
@@ -289,6 +305,7 @@ const useNFT = (contract, kasContract, account) => {
       }
       console.log(tx);
       await setIsMinting(false);
+      return SUCCESS;
     },
     [library, account, kasContract],
   );

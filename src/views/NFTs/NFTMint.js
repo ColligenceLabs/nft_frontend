@@ -21,6 +21,7 @@ import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
+import { FAILURE, SUCCESS } from '../../config/constants/consts';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -36,7 +37,11 @@ const NFTMint = () => {
   const { account, activate } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
-  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(kipContract, kasContract, account);
+  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(
+    kipContract,
+    kasContract,
+    account,
+  );
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
@@ -141,19 +146,28 @@ const NFTMint = () => {
                     const quantity = res.data.data.quantity;
 
                     // TODO : Actual NFT Minting here
+                    let result = SUCCESS;
                     if (contractType === 'KIP17') {
                       console.log('KIP17 mint : ', tokenId, tokenUri, nftId);
                       if (window.localStorage.getItem('wallet') === 'kaikas') {
-                        await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                        result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
                       } else {
-                        await mintNFT17(tokenId, tokenUri, nftId);
+                        result = await mintNFT17(tokenId, tokenUri, nftId);
+                      }
+                      if (result === FAILURE) {
+                        setErrorMessage('Transaction failed or cancelled.');
+                        setSuccessRegister(false);
                       }
                     } else {
                       console.log('KIP17 mint : ', tokenId, quantity, tokenUri, nftId);
                       if (window.localStorage.getItem('wallet') === 'kaikas') {
-                        await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                        result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
                       } else {
-                        await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                        result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                      }
+                      if (result === FAILURE) {
+                        setErrorMessage('Transaction failed or cancelled.');
+                        setSuccessRegister(false);
                       }
                     }
                   } else {
