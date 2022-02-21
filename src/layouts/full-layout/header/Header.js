@@ -71,7 +71,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   }
 
   useEffect(async () => {
-    // TODO : Admin 테이블의 admin_address 변경할 지점
+    // TODO : Admin 테이블의 admin_address 변경할 지점 - 너무 자주 실행 되는 듯...
     console.log('=== ', id, account);
     await updateWallet(id, account);
   }, [account]);

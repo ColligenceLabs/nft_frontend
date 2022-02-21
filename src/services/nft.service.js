@@ -75,6 +75,16 @@ export const setNftTransfered = (id, amount) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const setNftTransferData = (nft_id, to_address, amount, transactionHash) => {
+  return axios
+    .post(
+      `${API_URL}/set-transfered`,
+      { nft_id, to_address, amount, transactionHash },
+      { headers: authHeader() },
+    )
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const deleteNft = (nfts) => {
   if (nfts.length === 1) {
     return axios
