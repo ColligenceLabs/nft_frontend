@@ -37,8 +37,8 @@ const TotalNFTs = ({ chartData }) => {
   const [labels, setLabels] = useState([]);
 
   useEffect(() => {
-    if (chartData.data !== undefined && chartData.header !== undefined) {
-      setData(chartData.data);
+    if (chartData.data !== undefined && chartData.data !== null && chartData.header !== undefined) {
+      setData(chartData.data.map((item) => (item === null ? 0 : item)));
       setLabels(chartData.header);
     }
   }, [chartData]);
