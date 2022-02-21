@@ -1,40 +1,66 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Grid } from '@mui/material';
 
 import PageContainer from '../../components/container/PageContainer';
-import NFTs from './components/NFTs';
-import AirDrops from './components/AirDrops';
-import Creators from './components/Creators';
-import Transactions from './components/Transactions';
 import TotalNFTs from './components/TotalNFTs';
 import Last30days from './components/Last30days';
+import { getSummaryPie } from '../../services/dashboard.service';
+import SummaryCard from './components/SummaryCard';
 
-const Dashboard = () => (
-  <PageContainer title="Dashboard" description="this is Dashboard PAGE">
-    <Grid container spacing={0}>
-      {/* ------------------------- row 1 ------------------------- */}
-      <Grid item xs={12} sm={6} lg={3} xl={3}>
-        <NFTs />
-      </Grid>
-      <Grid item xs={12} sm={6} lg={3} xl={3}>
-        <AirDrops />
-      </Grid>
-      <Grid item xs={12} sm={6} lg={3} xl={3}>
-        <Creators />
-      </Grid>
-      <Grid item xs={12} sm={6} lg={3} xl={3}>
-        <Transactions />
-      </Grid>
+const Dashboard = () => {
+  const { t } = useTranslation();
+  const [summary, setSummary] = useState({});
+  const [totalNfts, setTotalNfts] = useState({});
 
-      {/* ------------------------- row 2 ------------------------- */}
-      <Grid item xs={12} lg={8}>
-        <Last30days />
+  useEffect(async () => {
+    await getSummaryPie().then((res) => {
+      setSummary(res.data.summary);
+      setTotalNfts(res.data.pie_chart);
+    });
+  }, []);
+
+  return (
+    <PageContainer title="Dashboard" description="this is Dashboard PAGE">
+      <Grid container spacing={0}>
+        {/* ------------------------- row 1 ------------------------- */}
+        <Grid item xs={12} sm={6} lg={3} xl={3}>
+          <SummaryCard title={t('NFTs')} icon="inbox" value={summary.nfts || 0} color="#26c6da" />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3} xl={3}>
+          <SummaryCard
+            title={t('AirDrops')}
+            icon="file-plus"
+            value={summary.airdrops || 0}
+            color="#6ac3fd"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3} xl={3}>
+          <SummaryCard
+            title={t('Creator')}
+            icon="video"
+            value={summary.creators || 0}
+            color="#f64e60"
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} lg={3} xl={3}>
+          <SummaryCard
+            title={t('Transactions')}
+            icon="credit-card"
+            value={summary.transactions || 0}
+            color="#ffa800"
+          />
+        </Grid>
+
+        {/* ------------------------- row 2 ------------------------- */}
+        <Grid item xs={12} lg={8}>
+          <Last30days />
+        </Grid>
+        <Grid item xs={12} lg={4}>
+          <TotalNFTs chartData={totalNfts} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} lg={4}>
-        <TotalNFTs />
-      </Grid>
-    </Grid>
-  </PageContainer>
-);
+    </PageContainer>
+  );
+};
 export default Dashboard;
