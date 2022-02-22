@@ -36,7 +36,7 @@ const Serials = () => {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [searchStatus, setSearchStatus] = useState('');
   const [searchNftId, setSearchNftId] = useState('');
   const [totalCount, setTotalCount] = useState(0);

@@ -38,7 +38,7 @@ const Admins = () => {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(true);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [adminDetailModal, setAdminDetailModal] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState({});
