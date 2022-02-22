@@ -33,6 +33,8 @@ import ScheduleDialog from '../NFTs/ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import TransferDialog from '../../components/TransferDialog/TransferDialog';
 import { useTranslation } from 'react-i18next';
+import NFTsDetailModal from '../NFTs/NFTsDetailModal';
+import AirdropDetailModal from './AirdropDetailModal';
 
 const AirDrop = () => {
   const { t } = useTranslation();
@@ -47,6 +49,7 @@ const AirDrop = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [totalCount, setTotalCount] = useState(0);
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [selectedAirDrop, setSelectedAirDrop] = useState({});
@@ -138,6 +141,10 @@ const AirDrop = () => {
   const handleCloseModal = () => {
     setOpenScheduleModal(false);
     fetchAirDrops();
+  };
+
+  const handleCloseDetailModal = () => {
+    setOpenDetailModal(false);
   };
 
   const openDelete = () => {
@@ -342,7 +349,13 @@ const AirDrop = () => {
                             >
                               <SendOutlinedIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton
+                              size={'small'}
+                              onClick={() => {
+                                setSelectedAirDrop(row);
+                                setOpenDetailModal(true);
+                              }}
+                            >
                               <AlbumOutlinedIcon />
                             </IconButton>
                             <IconButton
@@ -403,6 +416,11 @@ const AirDrop = () => {
         handleCloseModal={handleCloseSendModal}
         item={selectedAirDrop}
         type={selectedAirDrop.collection_id?.contract_type}
+      />
+      <AirdropDetailModal
+        open={openDetailModal}
+        handleCloseDetailModal={handleCloseDetailModal}
+        row={selectedAirDrop}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
