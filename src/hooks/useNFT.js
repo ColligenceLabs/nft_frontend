@@ -271,16 +271,24 @@ const useNFT = (contract, kasContract, account) => {
         }
       } else if (creator === account) {
         // KIP37의 경우 신규 Token ID를 create 한 후 추가로 mint 할 수 있으나... mint 함수를 인식하지 못하는 문제가 있음.
+        // mintBatch 함수는 ok...
         // gasLimit 계산
         console.log(tokenId, account, amount);
+        const tids = [];
+        const amounts = [];
+        tids.push(tokenId);
+        amounts.push(amount);
         // TODO : TypeError: contract.estimateGas.mint is not a function
-        const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
+        // Klaytn KIP17 스마트컨트랙 확인 필요...
+        // const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
+        const gasLimit = await contract.estimateGas.mintBatch(account, tids, amounts);
         console.log(gasPrice, contract);
 
         // mint 요청
         try {
           // TODO : TypeError: contract.mint is not a function
-          tx = await contract.mint(tokenId, account, amount, {
+          // tx = await contract.mintBatch(tokenId, account, amount, {
+          tx = await contract.mintBatch(account, tids, amounts, {
             from: account,
             gasPrice,
             // gasLimit: calculateGasMargin(gasLimit),
