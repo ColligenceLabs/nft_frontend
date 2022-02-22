@@ -72,7 +72,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   useEffect(async () => {
     // TODO : Admin 테이블의 admin_address 변경할 지점 - 너무 자주 실행 되는 듯...
-    console.log('=== ', id, account);
     await updateWallet(id, account);
   }, [account]);
 
@@ -98,14 +97,11 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         try {
           // const walletBalance = await taalswap.getBalance(wallet);
           const walletBalance = await library.getBalance(account);
-          console.log('balance', walletBalance);
           dispatch(setBalance(walletBalance));
         } catch (e) {
           console.log(e);
         }
       } else if (window.klaytn) {
-        // Kaikas 지갑이 연결된 경우
-        console.log('test=====', window.klaytn);
       } else {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));

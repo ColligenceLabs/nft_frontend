@@ -114,7 +114,6 @@ const Admins = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
     setSearchName(props.full_name);
     setSearchEmail(props.email);
     setSearchLevel(props.level);

@@ -117,7 +117,6 @@ const User = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
     setSearchKeyword(props.searchKeyword);
     setUserStatus(props.status);
   };
@@ -127,7 +126,6 @@ const User = () => {
 
   const fetchUsers = async () => {
     await getUserData(page, rowsPerPage, searchKeyword, userStatus).then(({ data }) => {
-      console.log(data.items);
       setRows(data.items);
       setTotalCount(data.headers.x_total_count);
     });

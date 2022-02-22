@@ -111,7 +111,6 @@ const Collections = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
     setSearchKeyword(props.searchKeyword);
     setSearchCreatorId(props.creatorId);
     setSearchStatus(props.status);
@@ -125,7 +124,6 @@ const Collections = () => {
       data: { items: creatorList },
     } = await getCreatorData();
 
-    console.log(creatorList);
     await getCollectionData(
       page,
       rowsPerPage,

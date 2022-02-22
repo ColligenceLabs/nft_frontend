@@ -72,7 +72,11 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   const [contractType, setContractType] = useState('KIP17');
   const kipContract = useKipContract(contractAddr, contractType);
   const kipKaikasContract = useKipContractWithKaikas(contractAddr, contractType);
-  const { transferNFT, transferNFTWithKaikas, isTransfering } = useNFT(kipContract, kipKaikasContract, account);
+  const { transferNFT, transferNFTWithKaikas, isTransfering } = useNFT(
+    kipContract,
+    kipKaikasContract,
+    account,
+  );
 
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
@@ -83,7 +87,6 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
 
   useEffect(() => {
     if (item !== undefined) {
-      console.log(isTransfering);
       if (item && item.collection_id) {
         setContractAddr(item.collection_id.contract_address);
         setContractType(type);
@@ -107,7 +110,6 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
     const nftId = item._id;
     const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
-    console.log('====>', kipContract);
     if (useKAS === 'true') {
       const formData = {
         nft_id: nftId,
@@ -116,7 +118,6 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         tokenId,
         amount,
       };
-      console.log('====>', formData);
       // TODO : isTransfering 사용하여 Send 버튼 로딩 표시...
       await kasTransferNFT(formData)
         .then(async (res) => {
@@ -133,17 +134,20 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
           setErrorMessage(error);
         });
     } else {
-      console.log('1 ====>', tokenId, toAddress, amount, nftId, contractType);
       if (window.localStorage.getItem('wallet') === 'kaikas') {
-        const [success, error] = await transferNFTWithKaikas(tokenId, toAddress, amount, nftId, contractType);
-        console.log('2 ====>', success, error);
+        const [success, error] = await transferNFTWithKaikas(
+          tokenId,
+          toAddress,
+          amount,
+          nftId,
+          contractType,
+        );
 
         // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
         success ? setSuccessFlag(true) : setSuccessFlag(false);
         success ? setErrorMessage(null) : setErrorMessage(error);
       } else {
         const [success, error] = await transferNFT(tokenId, toAddress, amount, nftId, contractType);
-        console.log('2 ====>', success, error);
 
         // api finish =>  success ? setSuccessFlag(true), setErrorMessage(null) : setSuccessFlag(false),  setErrorMessage(error.message)
         success ? setSuccessFlag(true) : setSuccessFlag(false);
