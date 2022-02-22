@@ -69,8 +69,8 @@ const AirDropMint = () => {
   }, [level]);
 
   return (
-    <PageContainer title="NFT Mint" description="this is NFT Mint Form page">
-      <Breadcrumb title="NFT Mint" subtitle="NFT Mint Information" />
+    <PageContainer title="Airdrop Mint" description="this is Airdrop Mint Form page">
+      <Breadcrumb title="Airdrop Mint" subtitle="Airdrop Mint Information" />
       <Container>
         <Formik
           validationSchema={airdropMintSchema}
