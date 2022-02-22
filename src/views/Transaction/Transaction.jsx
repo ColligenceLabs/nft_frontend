@@ -174,11 +174,11 @@ const Transaction = () => {
                             {splitAddress(row.buyer)}
                           </Typography>
                         </TableCell>
-                        <TableCell style={{ minWidth: 150 }}>
-                          <Typography color="textSecondary" variant="h6">
-                            row.tokenId
-                          </Typography>
-                        </TableCell>
+                        {/*<TableCell style={{ minWidth: 150 }}>*/}
+                        {/*  <Typography color="textSecondary" variant="h6">*/}
+                        {/*    row.tokenId*/}
+                        {/*  </Typography>*/}
+                        {/*</TableCell>*/}
                         <TableCell style={{ minWidth: 90 }}>
                           <Typography color="textSecondary" variant="h6">
                             {row.price}

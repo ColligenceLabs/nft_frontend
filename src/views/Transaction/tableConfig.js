@@ -11,12 +11,12 @@ export const headCells = [
     disablePadding: false,
     label: 'Buyer',
   },
-  {
-    id: 'tokenId',
-    numeric: false,
-    disablePadding: false,
-    label: 'Token ID',
-  },
+  // {
+  //   id: 'tokenId',
+  //   numeric: false,
+  //   disablePadding: false,
+  //   label: 'Token ID',
+  // },
   {
     id: 'price',
     numeric: false,
