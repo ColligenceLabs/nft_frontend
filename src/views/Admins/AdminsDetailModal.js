@@ -14,7 +14,7 @@ const AdminsDetailModal = (props) => {
       onClose={closeUserDetailModal}
       BackdropProps={{ style: { opacity: 0.2 }, transitionDuration: 1000 }}
     >
-      <DialogTitle>{t('Admin detail')}</DialogTitle>
+      <DialogTitle>{t('User detail')}</DialogTitle>
       <DialogContent dividers>
         <Box style={{ width: 500, marginBottom: 30 }}>
           <CustomFormLabel htmlFor="name">{t('User id')}</CustomFormLabel>

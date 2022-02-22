@@ -18,8 +18,6 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
@@ -28,6 +26,7 @@ import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { getCreatorData } from '../../services/creator.service';
 import { updateAdminsStatus } from '../../services/admins.service';
+import AdminsDetailModal from '../Admins/AdminsDetailModal';
 
 const Creator = () => {
   const { t } = useTranslation();
@@ -44,6 +43,7 @@ const Creator = () => {
   const [statusOpen, setStatusOpen] = useState(false);
   const [searchName, setSearchName] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
+  const [adminDetailModal, setAdminDetailModal] = useState(false);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -92,8 +92,13 @@ const Creator = () => {
     setDense(event.target.checked);
   };
 
-  const handleChangeSearchQuery = (event) => {
-    setSearchQuery(event.target.value);
+  const handleUserDetailModal = (row) => {
+    setSelectedAdmin(row);
+    setAdminDetailModal(true);
+  };
+
+  const closeUserDetailModal = () => {
+    setAdminDetailModal(false);
   };
 
   const handleStatusOpen = (row) => {
@@ -187,6 +192,16 @@ const Creator = () => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
+                          {row.description}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.email}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
                           <Box display="flex" alignItems="center">
                             <Switch
                               onClick={() => handleStatusOpen(row)}
@@ -211,14 +226,8 @@ const Creator = () => {
                       </TableCell>
                       <TableCell>
                         <Box>
-                          <IconButton>
-                            <RefreshOutlinedIcon />
-                          </IconButton>
-                          <IconButton>
+                          <IconButton onClick={() => handleUserDetailModal(row)}>
                             <AlbumOutlinedIcon />
-                          </IconButton>
-                          <IconButton>
-                            <DeleteOutlinedIcon />
                           </IconButton>
                         </Box>
                       </TableCell>
@@ -252,6 +261,11 @@ const Creator = () => {
           label="Dense padding"
         />
       </Box>
+      <AdminsDetailModal
+        open={adminDetailModal}
+        closeUserDetailModal={closeUserDetailModal}
+        row={selectedAdmin}
+      />
       <StatusDialog
         open={statusOpen}
         handleStatusClose={handleStatusClose}
