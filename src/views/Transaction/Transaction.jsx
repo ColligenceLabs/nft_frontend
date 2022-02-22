@@ -194,9 +194,9 @@ const Transaction = () => {
                             <Box
                               sx={{
                                 backgroundColor:
-                                  row.status === 'active'
+                                  row.status === 'processing'
                                     ? (theme) => theme.palette.success.main
-                                    : row.status === 'inactive'
+                                    : row.status === 'success'
                                     ? (theme) => theme.palette.warning.main
                                     : row.status === 'suspend'
                                     ? (theme) => theme.palette.error.main
