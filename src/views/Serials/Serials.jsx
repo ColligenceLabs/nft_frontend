@@ -218,9 +218,9 @@ const Serials = () => {
                       <TableCell style={{ minWidth: 200 }}>
                         <Typography color="textSecondary" variant="h6">
                           <Box>
-                            <IconButton size="small">
-                              <RefreshOutlinedIcon />
-                            </IconButton>
+                            {/*<IconButton size="small">*/}
+                            {/*  <RefreshOutlinedIcon />*/}
+                            {/*</IconButton>*/}
                             <IconButton
                               size="small"
                               onClick={() => {
