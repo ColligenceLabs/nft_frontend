@@ -59,16 +59,16 @@ const TransactionDetailModal = (props) => {
                 size="small"
                 value={'tokernID'}
               />
-              <CustomFormLabel htmlFor="transactionId">{t('Transaction ID')}</CustomFormLabel>
-              <CustomTextField
-                id="transactionId"
-                name="transactionId"
-                variant="outlined"
-                fullWidth
-                disabled
-                size="small"
-                value={row.tx_id}
-              />
+              {/*<CustomFormLabel htmlFor="transactionId">{t('Transaction ID')}</CustomFormLabel>*/}
+              {/*<CustomTextField*/}
+              {/*  id="transactionId"*/}
+              {/*  name="transactionId"*/}
+              {/*  variant="outlined"*/}
+              {/*  fullWidth*/}
+              {/*  disabled*/}
+              {/*  size="small"*/}
+              {/*  value={row.tx_id}*/}
+              {/*/>*/}
             </Box>
           </DialogContent>
           <DialogActions>
