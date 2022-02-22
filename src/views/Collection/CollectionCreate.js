@@ -28,7 +28,12 @@ import { useTranslation } from 'react-i18next';
 import { getCreatorData } from '../../services/creator.service';
 import { createCollection } from '../../services/collections.service';
 import { LoadingButton } from '@mui/lab';
-import { deployKIP17, deployKIP17WithKaikas, deployKIP37, deployKIP37WithKaikas } from '../../utils/deploy';
+import {
+  deployKIP17,
+  deployKIP17WithKaikas,
+  deployKIP37,
+  deployKIP37WithKaikas,
+} from '../../utils/deploy';
 import { useWeb3React } from '@web3-react/core';
 import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 import useCreator from '../../hooks/useCreator';
@@ -145,7 +150,7 @@ const CollectionCreate = () => {
             }
 
             if (!newContract) {
-              setErrorMessage('test');
+              setErrorMessage('');
               setSuccessRegister(false);
               setSubmitting(false);
               return;
