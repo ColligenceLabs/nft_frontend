@@ -261,7 +261,7 @@ const NFTs = () => {
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        {row.selling_status === 1 ? (
+                        {row.selling ? (
                           <Chip
                             label="On sale"
                             color="primary"
@@ -271,14 +271,14 @@ const NFTs = () => {
                         ) : (
                           <Chip
                             label="Off sale"
-                            color={'secondary'}
+                            color={'error'}
                             size={'small'}
                             style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
                           />
                         )}
                         <Chip
                           label={`Total Mint : ${row.quantity}`}
-                          color={'error'}
+                          color={'warning'}
                           size={'small'}
                           style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
                         />
@@ -290,7 +290,7 @@ const NFTs = () => {
                         />
                         <Chip
                           label={`Prices : ${row.price}`}
-                          color={'warning'}
+                          color={'secondary'}
                           size={'small'}
                           style={{ margin: '0.5px 0px', fontSize: '10px', height: '18px' }}
                         />
