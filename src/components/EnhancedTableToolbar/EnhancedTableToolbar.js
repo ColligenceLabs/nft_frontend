@@ -63,6 +63,35 @@ const EnhancedTableToolbar = (props) => {
             </React.Fragment>
           )}
         </PopupState>
+      ) : ['admins', 'creator'].includes(currentRoute) ? (
+        <PopupState variant="popover" popupId="demo-popup-menu">
+          {(popupState) => (
+            <React.Fragment>
+              <Button disabled={numSelected === 0} variant="outlined" {...bindTrigger(popupState)}>
+                {`${numSelected} item(s) change status`}{' '}
+                <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+              </Button>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem
+                  onClick={() => {
+                    popupState.close();
+                    openSchedule();
+                  }}
+                >
+                  Active
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    popupState.close();
+                    onDelete();
+                  }}
+                >
+                  Inactive
+                </MenuItem>
+              </Menu>
+            </React.Fragment>
+          )}
+        </PopupState>
       ) : (
         <Button disabled={numSelected === 0} variant="outlined" onClick={onDelete}>
           {`Delete ${numSelected} item(s) selected`}

@@ -232,15 +232,12 @@ const Admins = () => {
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
                           <Box>
-                            <IconButton>
-                              <RefreshOutlinedIcon />
-                            </IconButton>
                             <IconButton onClick={() => handleUserDetailModal(row)}>
                               <AlbumOutlinedIcon />
                             </IconButton>
-                            <IconButton>
-                              <DeleteOutlinedIcon />
-                            </IconButton>
+                            {/*<IconButton>*/}
+                            {/*  <DeleteOutlinedIcon />*/}
+                            {/*</IconButton>*/}
                           </Box>
                         </Typography>
                       </TableCell>
