@@ -159,7 +159,7 @@ const NFTMint = () => {
                         setSuccessRegister(false);
                       }
                     } else {
-                      console.log('KIP17 mint : ', tokenId, quantity, tokenUri, nftId);
+                      console.log('KIP37 mint : ', tokenId, quantity, tokenUri, nftId);
                       if (window.localStorage.getItem('wallet') === 'kaikas') {
                         result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
                       } else {

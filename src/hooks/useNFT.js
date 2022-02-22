@@ -233,37 +233,79 @@ const useNFT = (contract, kasContract, account) => {
 
       let tx;
 
-      // gasLimit 계산
-      const gasLimit = await contract.estimateGas.create(tokenId, amount, tokenUri);
-      console.log(gasPrice, contract);
+      // check token_id
+      const creator = await contract.creators(tokenId);
 
-      // mint 요청
-      try {
-        tx = await contract.create(tokenId, amount, tokenUri, {
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(gasLimit),
-          // gasLimit: 2000000,
-        });
+      if (creator === '0x0000000000000000000000000000000000000000') {
+        // gasLimit 계산
+        const gasLimit = await contract.estimateGas.create(tokenId, amount, tokenUri);
+        console.log(gasPrice, contract);
 
-        // receipt 대기
-        let receipt;
+        // mint 요청
         try {
-          receipt = await tx.wait();
-          if (receipt.status === 1) {
-            await setNftOnchain(nftId);
+          tx = await contract.create(tokenId, amount, tokenUri, {
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(gasLimit),
+            // gasLimit: 2000000,
+          });
+
+          // receipt 대기
+          let receipt;
+          try {
+            receipt = await tx.wait();
+            if (receipt.status === 1) {
+              await setNftOnchain(nftId);
+            }
+          } catch (e) {
+            console.log(e);
+            return FAILURE;
           }
+          console.log(tx, receipt);
+          await setIsMinting(false);
+          return SUCCESS;
         } catch (e) {
           console.log(e);
+          await setIsMinting(false);
           return FAILURE;
         }
-        console.log(tx, receipt);
-        await setIsMinting(false);
-        return SUCCESS;
-      } catch (e) {
-        console.log(e);
-        await setIsMinting(false);
-        return FAILURE;
+      } else if (creator === account) {
+        // KIP37의 경우 신규 Token ID를 create 한 후 추가로 mint 할 수 있으나... mint 함수를 인식하지 못하는 문제가 있음.
+        // gasLimit 계산
+        console.log(tokenId, account, amount);
+        // TODO : TypeError: contract.estimateGas.mint is not a function
+        const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
+        console.log(gasPrice, contract);
+
+        // mint 요청
+        try {
+          // TODO : TypeError: contract.mint is not a function
+          tx = await contract.mint(tokenId, account, amount, {
+            from: account,
+            gasPrice,
+            // gasLimit: calculateGasMargin(gasLimit),
+            gasLimit: 2000000,
+          });
+
+          // receipt 대기
+          let receipt;
+          try {
+            receipt = await tx.wait();
+            if (receipt.status === 1) {
+              await setNftOnchain(nftId);
+            }
+          } catch (e) {
+            console.log(e);
+            return FAILURE;
+          }
+          console.log(tx, receipt);
+          await setIsMinting(false);
+          return SUCCESS;
+        } catch (e) {
+          console.log(e);
+          await setIsMinting(false);
+          return FAILURE;
+        }
       }
     },
     [library, account, contract],
@@ -274,38 +316,74 @@ const useNFT = (contract, kasContract, account) => {
       setIsMinting(true);
       const gasPrice = parseUnits('25', 'gwei').toString();
 
-      // gasLimit 계산
-      const gasLimit = await kasContract
-        .create(tokenId, amount, tokenUri)
-        .estimateGas({ from: account });
+      // check token_id
+      const creator = await kasContract.creators(tokenId).send();
 
-      console.log(gasPrice, gasLimit);
+      if (creator === '0x0000000000000000000000000000000000000000') {
+        // gasLimit 계산
+        const gasLimit = await kasContract
+          .create(tokenId, amount, tokenUri)
+          .estimateGas({ from: account });
 
-      // mint 요청
-      const tx = await kasContract
-        .create(tokenId, amount, tokenUri)
-        .send({
-          from: account,
-          gasPrice,
-          gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
-          // gasLimit: 2000000,
-        })
-        .catch(async (err) => {
-          console.log('mintNFT37WithKaikas error', err);
-          await setIsMinting(false);
-          return FAILURE;
-        });
+        console.log(gasPrice, gasLimit);
 
-      try {
-        if (tx?.status) {
-          await setNftOnchain(nftId);
+        // mint 요청
+        const tx = await kasContract
+          .create(tokenId, amount, tokenUri)
+          .send({
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+            // gasLimit: 2000000,
+          })
+          .catch(async (err) => {
+            console.log('mintNFT37WithKaikas error', err);
+            await setIsMinting(false);
+            return FAILURE;
+          });
+
+        try {
+          if (tx?.status) {
+            await setNftOnchain(nftId);
+          }
+        } catch (e) {
+          console.log(e);
         }
-      } catch (e) {
-        console.log(e);
+        console.log(tx);
+        await setIsMinting(false);
+      } else if (creator === account) {
+        // gasLimit 계산
+        const gasLimit = await kasContract
+          .mint(tokenId, account, amount)
+          .estimateGas({ from: account });
+
+        console.log(gasPrice, gasLimit);
+
+        // mint 요청
+        const tx = await kasContract
+          .mint(tokenId, account, amount)
+          .send({
+            from: account,
+            gasPrice,
+            gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+            // gasLimit: 2000000,
+          })
+          .catch(async (err) => {
+            console.log('mintNFT37WithKaikas error', err);
+            await setIsMinting(false);
+            return FAILURE;
+          });
+
+        try {
+          if (tx?.status) {
+            await setNftOnchain(nftId);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        console.log(tx);
+        await setIsMinting(false);
       }
-      console.log(tx);
-      await setIsMinting(false);
-      return SUCCESS;
     },
     [library, account, kasContract],
   );
