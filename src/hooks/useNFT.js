@@ -279,16 +279,16 @@ const useNFT = (contract, kasContract, account) => {
         tids.push(tokenId);
         amounts.push(amount);
         // TODO : TypeError: contract.estimateGas.mint is not a function
-        // Klaytn KIP17 스마트컨트랙 확인 필요...
-        // const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
-        const gasLimit = await contract.estimateGas.mintBatch(account, tids, amounts);
+        // Klaytn KIP17 스마트컨트랙 수정하여 해결됨.
+        const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
+        // const gasLimit = await contract.estimateGas.mintBatch(account, tids, amounts);
         console.log(gasPrice, contract);
 
         // mint 요청
         try {
           // TODO : TypeError: contract.mint is not a function
-          // tx = await contract.mintBatch(tokenId, account, amount, {
-          tx = await contract.mintBatch(account, tids, amounts, {
+          tx = await contract.mint(tokenId, account, amount, {
+            // tx = await contract.mintBatch(account, tids, amounts, {
             from: account,
             gasPrice,
             // gasLimit: calculateGasMargin(gasLimit),
