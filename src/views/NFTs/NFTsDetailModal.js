@@ -25,7 +25,7 @@ const NFTsDetailModal = (props) => {
           BackdropProps={{ style: { opacity: 0.2 }, transitionDuration: 1000 }}
           maxWidth="md"
         >
-          <DialogTitle>{t('Collection detail')}</DialogTitle>
+          <DialogTitle>{t('NFT detail')}</DialogTitle>
           <DialogContent dividers>
             <Box>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -96,6 +96,7 @@ const NFTsDetailModal = (props) => {
                     name="externalURL"
                     variant="outlined"
                     fullWidth
+                    disabled
                     size="small"
                   />
                 </Grid>
@@ -106,6 +107,7 @@ const NFTsDetailModal = (props) => {
                     name="description"
                     variant="outlined"
                     fullWidth
+                    disabled
                     size="small"
                     value={row.metadata.description}
                   />
@@ -118,6 +120,7 @@ const NFTsDetailModal = (props) => {
                     variant="outlined"
                     type="number"
                     fullWidth
+                    disabled
                     size="small"
                     value={row.price}
                   />
