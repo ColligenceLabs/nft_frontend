@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { getCollectionData } from '../../services/collections.service';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
 import useCreator from '../../hooks/useCreator';
-import useNFT from '../../hooks/useNFT';
 import { getNFTData } from '../../services/nft.service';
 
 const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) => {
@@ -262,6 +261,22 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
                 ))}
             </CustomSelect>
             <Box pt={3} />
+            <CustomFormLabel htmlFor="searchKeyword">{t('Search Keyword')}</CustomFormLabel>
+            <CustomTextField
+              id="searchKeyword"
+              name="searchKeyword"
+              variant="outlined"
+              fullWidth
+              size="small"
+              value={searchKeyword}
+              onChange={handleSearchKeyword}
+            />
+          </>
+        )}
+
+        {/* ------------ airdrop ------------- */}
+        {currentRoute === 'airdrop' && (
+          <>
             <CustomFormLabel htmlFor="searchKeyword">{t('Search Keyword')}</CustomFormLabel>
             <CustomTextField
               id="searchKeyword"
