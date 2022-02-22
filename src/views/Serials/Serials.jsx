@@ -26,6 +26,7 @@ import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { getTransactionData } from '../../services/transaction.service';
 import { getSerialsData } from '../../services/serials.service';
+import SerialsDetailModal from './SerialsDetailModal';
 
 const Serials = () => {
   const { t } = useTranslation();
@@ -39,6 +40,8 @@ const Serials = () => {
   const [searchStatus, setSearchStatus] = useState('');
   const [searchNftId, setSearchNftId] = useState('');
   const [totalCount, setTotalCount] = useState(0);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+  const [selectedSerial, setSelectedSerial] = useState({});
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -91,6 +94,10 @@ const Serials = () => {
   const setFilters = async (props) => {
     setSearchStatus(props.status);
     setSearchNftId(props.selectedNft);
+  };
+
+  const handleCloseDetailModal = () => {
+    setOpenDetailModal(false);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -211,13 +218,19 @@ const Serials = () => {
                       <TableCell style={{ minWidth: 200 }}>
                         <Typography color="textSecondary" variant="h6">
                           <Box>
-                            <IconButton>
+                            <IconButton size="small">
                               <RefreshOutlinedIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setSelectedSerial(row);
+                                setOpenDetailModal(true);
+                              }}
+                            >
                               <AlbumOutlinedIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton size="small">
                               <DeleteOutlinedIcon />
                             </IconButton>
                           </Box>
@@ -253,6 +266,11 @@ const Serials = () => {
           label="Dense padding"
         />
       </Box>
+      <SerialsDetailModal
+        open={openDetailModal}
+        handleCloseDetailModal={handleCloseDetailModal}
+        row={selectedSerial}
+      />
     </PageContainer>
   );
 };
