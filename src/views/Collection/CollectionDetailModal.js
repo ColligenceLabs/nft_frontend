@@ -56,31 +56,31 @@ const CollectionDetailModal = (props) => {
             disabled
             size="small"
           />
-          {row.contract_type && row.contract_type.toLowerCase() === 'kip17' ? (
-            <>
-              <CustomFormLabel htmlFor="category">{t('Symbol')}</CustomFormLabel>
-              <CustomTextField
-                id="symbol"
-                name="symbol"
-                variant="outlined"
-                fullWidth
-                disabled
-                size="small"
-              />
-            </>
-          ) : (
-            <>
-              <CustomFormLabel htmlFor="category">{t('IPFS Directory Name')}</CustomFormLabel>
-              <CustomTextField
-                id="tokenUri"
-                name="tokenUri"
-                variant="outlined"
-                fullWidth
-                disabled
-                size="small"
-              />
-            </>
-          )}
+          {/*{row.contract_type && row.contract_type.toLowerCase() === 'kip17' ? (*/}
+          {/*  <>*/}
+          {/*    <CustomFormLabel htmlFor="category">{t('Symbol')}</CustomFormLabel>*/}
+          {/*    <CustomTextField*/}
+          {/*      id="symbol"*/}
+          {/*      name="symbol"*/}
+          {/*      variant="outlined"*/}
+          {/*      fullWidth*/}
+          {/*      disabled*/}
+          {/*      size="small"*/}
+          {/*    />*/}
+          {/*  </>*/}
+          {/*) : (*/}
+          {/*  <>*/}
+          {/*    <CustomFormLabel htmlFor="category">{t('IPFS Directory Name')}</CustomFormLabel>*/}
+          {/*    <CustomTextField*/}
+          {/*      id="tokenUri"*/}
+          {/*      name="tokenUri"*/}
+          {/*      variant="outlined"*/}
+          {/*      fullWidth*/}
+          {/*      disabled*/}
+          {/*      size="small"*/}
+          {/*    />*/}
+          {/*  </>*/}
+          {/*)}*/}
         </Box>
       </DialogContent>
       <DialogActions>
