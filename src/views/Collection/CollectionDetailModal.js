@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 
 const CollectionDetailModal = (props) => {
   const { open, closeDetailModal, row } = props;
-
   const { t } = useTranslation();
   return (
     <Dialog
@@ -21,7 +20,7 @@ const CollectionDetailModal = (props) => {
           <CustomTextField
             id="name"
             name="name"
-            // value={row._id?.$oid}
+            value={row.name}
             variant="outlined"
             fullWidth
             disabled
@@ -31,7 +30,7 @@ const CollectionDetailModal = (props) => {
           <CustomTextField
             id="creator"
             name="creator"
-            // value={row.uid}
+            value={row.creator_name}
             variant="outlined"
             fullWidth
             disabled
@@ -41,6 +40,7 @@ const CollectionDetailModal = (props) => {
           <CustomTextField
             id="category"
             name="category"
+            value={row.category}
             variant="outlined"
             fullWidth
             disabled
@@ -51,28 +51,36 @@ const CollectionDetailModal = (props) => {
             id="type"
             name="type"
             variant="outlined"
+            value={row.contract_type}
             fullWidth
             disabled
             size="small"
           />
-          <CustomFormLabel htmlFor="category">{t('Symbol')}</CustomFormLabel>
-          <CustomTextField
-            id="symbol"
-            name="symbol"
-            variant="outlined"
-            fullWidth
-            disabled
-            size="small"
-          />
-          <CustomFormLabel htmlFor="category">{t('IPFS Directory Name')}</CustomFormLabel>
-          <CustomTextField
-            id="tokenUri"
-            name="tokenUri"
-            variant="outlined"
-            fullWidth
-            disabled
-            size="small"
-          />
+          {row.contract_type && row.contract_type.toLowerCase() === 'kip17' ? (
+            <>
+              <CustomFormLabel htmlFor="category">{t('Symbol')}</CustomFormLabel>
+              <CustomTextField
+                id="symbol"
+                name="symbol"
+                variant="outlined"
+                fullWidth
+                disabled
+                size="small"
+              />
+            </>
+          ) : (
+            <>
+              <CustomFormLabel htmlFor="category">{t('IPFS Directory Name')}</CustomFormLabel>
+              <CustomTextField
+                id="tokenUri"
+                name="tokenUri"
+                variant="outlined"
+                fullWidth
+                disabled
+                size="small"
+              />
+            </>
+          )}
         </Box>
       </DialogContent>
       <DialogActions>
