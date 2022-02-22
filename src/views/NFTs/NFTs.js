@@ -33,6 +33,7 @@ import { useSelector } from 'react-redux';
 import ScheduleDialog from './ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import TransferDialog from '../../components/TransferDialog/TransferDialog';
+import NFTsDetailModal from './NFTsDetailModal';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -48,6 +49,7 @@ const NFTs = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [collectionId, setCollectionId] = useState('');
   const [openScheduleModal, setOpenScheduleModal] = useState(false);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [selectedNft, setSelectedNft] = useState({});
@@ -140,6 +142,10 @@ const NFTs = () => {
   const handleCloseModal = () => {
     setOpenScheduleModal(false);
     fetchNFTs();
+  };
+
+  const handleCloseDetailModal = () => {
+    setOpenDetailModal(false);
   };
 
   const openDelete = () => {
@@ -355,7 +361,13 @@ const NFTs = () => {
                         >
                           <SendOutlinedIcon />
                         </IconButton>
-                        <IconButton size={'small'}>
+                        <IconButton
+                          size={'small'}
+                          onClick={() => {
+                            setSelectedNft(row);
+                            setOpenDetailModal(true);
+                          }}
+                        >
                           <AlbumOutlinedIcon />
                         </IconButton>
                         <IconButton
@@ -416,6 +428,11 @@ const NFTs = () => {
         handleCloseModal={handleCloseSendModal}
         item={selectedNft}
         type={selectedNft.collection_id?.contract_type}
+      />
+      <NFTsDetailModal
+        open={openDetailModal}
+        handleCloseDetailModal={handleCloseDetailModal}
+        row={selectedNft}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
