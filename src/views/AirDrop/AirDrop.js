@@ -13,6 +13,8 @@ import {
   IconButton,
   Chip,
   Switch,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
@@ -30,8 +32,11 @@ import { useSelector } from 'react-redux';
 import ScheduleDialog from '../NFTs/ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import TransferDialog from '../../components/TransferDialog/TransferDialog';
+import { useTranslation } from 'react-i18next';
 
 const AirDrop = () => {
+  const { t } = useTranslation();
+
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -45,6 +50,9 @@ const AirDrop = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [selectedAirDrop, setSelectedAirDrop] = useState({});
+  const [deleteInAction, setDeleteInAction] = useState(false);
+  const [finishDelete, setFinishDelete] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(null);
 
   const {
     user: {
@@ -105,9 +113,22 @@ const AirDrop = () => {
   };
 
   const onDelete = async () => {
-    const res = await deleteNft(selected);
-    await fetchAirDrops();
+    let deleteAirdrop = [];
+
+    if (deleteInAction) {
+      deleteAirdrop = deleteAirdrop.concat(selectedAirDrop._id);
+    } else {
+      deleteAirdrop = selected;
+    }
+    const res = await deleteNft(deleteAirdrop);
+    if (res.data.status === 0) {
+      setDeleteMessage(res.data.message);
+    }
     setOpenDeleteModal(false);
+    setDeleteInAction(false);
+    setFinishDelete(true);
+
+    await fetchAirDrops();
   };
 
   const openSchedule = () => {
@@ -324,7 +345,13 @@ const AirDrop = () => {
                             <IconButton>
                               <AlbumOutlinedIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton
+                              onClick={() => {
+                                setSelectedAirDrop(row);
+                                setDeleteInAction(true);
+                                openDelete();
+                              }}
+                            >
                               <DeleteOutlinedIcon />
                             </IconButton>
                           </Box>
@@ -377,6 +404,22 @@ const AirDrop = () => {
         item={selectedAirDrop}
         type={selectedAirDrop.collection_id?.contract_type}
       />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={finishDelete}
+        autoHideDuration={2000}
+        onClose={() => {
+          setFinishDelete(false);
+        }}
+      >
+        <Alert
+          variant="filled"
+          severity={deleteMessage === null ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {deleteMessage === null ? t('Success delete NFTs.') : t(`${deleteMessage}`)}
+        </Alert>
+      </Snackbar>
     </PageContainer>
   );
 };
