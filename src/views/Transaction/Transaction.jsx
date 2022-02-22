@@ -23,6 +23,7 @@ import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
 import { getTransactionData } from '../../services/transaction.service';
+import TransactionDetailModal from './TransactionDetailModal';
 
 const Transaction = () => {
   const { t } = useTranslation();
@@ -36,6 +37,8 @@ const Transaction = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [totalCount, setTotalCount] = useState(0);
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState({});
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -83,6 +86,10 @@ const Transaction = () => {
 
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
+  };
+
+  const handleCloseDetailModal = () => {
+    setOpenDetailModal(false);
   };
 
   const setFilters = async (props) => {
@@ -217,7 +224,13 @@ const Transaction = () => {
                         </TableCell>
                         <TableCell style={{ minWidth: 90 }}>
                           <Box>
-                            <IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() => {
+                                setSelectedTransaction(row);
+                                setOpenDetailModal(true);
+                              }}
+                            >
                               <AlbumOutlinedIcon />
                             </IconButton>
                           </Box>
@@ -252,6 +265,11 @@ const Transaction = () => {
           label="Dense padding"
         />
       </Box>
+      <TransactionDetailModal
+        open={openDetailModal}
+        handleCloseDetailModal={handleCloseDetailModal}
+        row={selectedTransaction}
+      />
     </PageContainer>
   );
 };
