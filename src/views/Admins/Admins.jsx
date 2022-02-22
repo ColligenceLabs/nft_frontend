@@ -243,15 +243,15 @@ const Admins = () => {
                     </TableRow>
                   );
                 })}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: (dense ? 53 : 73) * emptyRows,
-                    }}
-                  >
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
+                {/*{emptyRows > 0 && (*/}
+                {/*  <TableRow*/}
+                {/*    style={{*/}
+                {/*      height: (dense ? 53 : 73) * emptyRows,*/}
+                {/*    }}*/}
+                {/*  >*/}
+                {/*    <TableCell colSpan={6} />*/}
+                {/*  </TableRow>*/}
+                {/*)}*/}
               </TableBody>
             </Table>
           </TableContainer>
