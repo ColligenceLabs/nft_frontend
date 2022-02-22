@@ -28,7 +28,7 @@ const UserInfo = () => {
   useEffect(() => {
     setUserInfor({
       full_name,
-      level,
+      level: level.toLowerCase(),
       email,
       description,
       address: account,
