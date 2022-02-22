@@ -14,6 +14,8 @@ import {
   Typography,
   Chip,
   Switch,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
@@ -49,6 +51,9 @@ const NFTs = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [selectedNft, setSelectedNft] = useState({});
+  const [deleteInAction, setDeleteInAction] = useState(false);
+  const [finishDelete, setFinishDelete] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(null);
 
   const {
     user: {
@@ -109,10 +114,23 @@ const NFTs = () => {
     setCollectionId(props.collectionId);
   };
 
-  const onDelete = async () => {
-    const res = await deleteNft(selected);
-    await fetchNFTs();
+  const onDelete = async (multiFlag = true) => {
+    let deleteNfts = [];
+
+    if (deleteInAction) {
+      deleteNfts = deleteNfts.concat(selectedNft._id);
+    } else {
+      deleteNfts = selected;
+    }
+    const res = await deleteNft(deleteNfts);
+    if (res.data.status === 0) {
+      setDeleteMessage(res.data.message);
+    }
     setOpenDeleteModal(false);
+    setDeleteInAction(false);
+    setFinishDelete(true);
+
+    await fetchNFTs();
   };
 
   const openSchedule = () => {
@@ -340,7 +358,14 @@ const NFTs = () => {
                         <IconButton size={'small'}>
                           <AlbumOutlinedIcon />
                         </IconButton>
-                        <IconButton size={'small'}>
+                        <IconButton
+                          size={'small'}
+                          onClick={() => {
+                            setSelectedNft(row);
+                            setDeleteInAction(true);
+                            openDelete();
+                          }}
+                        >
                           <DeleteOutlinedIcon />
                         </IconButton>
                         {/*</Box>*/}
@@ -392,6 +417,22 @@ const NFTs = () => {
         item={selectedNft}
         type={selectedNft.collection_id?.contract_type}
       />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={finishDelete}
+        autoHideDuration={2000}
+        onClose={() => {
+          setFinishDelete(false);
+        }}
+      >
+        <Alert
+          variant="filled"
+          severity={deleteMessage === null ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {deleteMessage === null ? t('Success delete NFTs.') : t(`${deleteMessage}`)}
+        </Alert>
+      </Snackbar>
     </PageContainer>
   );
 };
