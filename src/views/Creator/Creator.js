@@ -25,11 +25,13 @@ import StatusDialog from '../../components/StatusDialog';
 import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { getCreatorData } from '../../services/creator.service';
-import { updateAdminsStatus } from '../../services/admins.service';
+import { updateAdminsStatus, updateMultiAdminsStatus } from '../../services/admins.service';
 import AdminsDetailModal from '../Admins/AdminsDetailModal';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const Creator = () => {
   const { t } = useTranslation();
+  const { id } = useUserInfo();
 
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
@@ -125,16 +127,30 @@ const Creator = () => {
     setSearchStatus(props.status);
   };
 
+  const changeAdminStatus = async (toStatus) => {
+    const data = {
+      _comment: 'active, inactive, suspend',
+      ids: selected,
+      status: toStatus,
+    };
+    const res = await updateMultiAdminsStatus(id, data);
+    if (res.status === 1) {
+      await fetchCreator();
+      setSelected([]);
+    }
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
+  const fetchCreator = async () => {
+    await getCreatorData(page, rowsPerPage, searchName, searchStatus).then(({ data }) => {
+      setRows(data.items);
+      setTotalCount(data.headers.x_total_count);
+    });
+  };
+
   useEffect(() => {
-    const fetchCreator = async () => {
-      await getCreatorData(page, rowsPerPage, searchName, searchStatus).then(({ data }) => {
-        setRows(data.items);
-        setTotalCount(data.headers.x_total_count);
-      });
-    };
     fetchCreator();
   }, [getCreatorData, page, rowsPerPage, searchName, searchStatus]);
 
@@ -144,7 +160,11 @@ const Creator = () => {
 
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setFilters={setFilters}
+            changeAdminStatus={changeAdminStatus}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -206,6 +226,7 @@ const Creator = () => {
                             <Switch
                               onClick={() => handleStatusOpen(row)}
                               checked={row.status === 'active'}
+                              color="error"
                             />
                             <Typography
                               color="textSecondary"

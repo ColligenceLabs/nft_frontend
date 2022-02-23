@@ -26,12 +26,17 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
-import { getAdminsData, updateAdminsStatus } from '../../services/admins.service';
+import {
+  getAdminsData,
+  updateAdminsStatus,
+  updateMultiAdminsStatus,
+} from '../../services/admins.service';
 import AdminsDetailModal from './AdminsDetailModal';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const Admins = () => {
   const { t } = useTranslation();
-
+  const { id } = useUserInfo();
   const [rows, setRows] = useState([]);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('calories');
@@ -119,6 +124,19 @@ const Admins = () => {
     setSearchLevel(props.level);
   };
 
+  const changeAdminStatus = async (toStatus) => {
+    const data = {
+      _comment: 'active, inactive, suspend',
+      ids: selected,
+      status: toStatus,
+    };
+    const res = await updateMultiAdminsStatus(id, data);
+    if (res.status === 1) {
+      await fetchAdmins();
+      setSelected([]);
+    }
+  };
+
   const updateStatus = async (id, status) => {
     const newStatus = status === 'active' ? 'inactive' : 'active';
     await updateAdminsStatus(id, newStatus).then((res) => {
@@ -132,15 +150,16 @@ const Admins = () => {
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
+  const fetchAdmins = async () => {
+    await getAdminsData(page, rowsPerPage, searchName, searchEmail, searchLevel).then(
+      ({ data }) => {
+        setRows(data.items);
+        setTotalCount(data.headers.x_total_count);
+      },
+    );
+  };
+
   useEffect(() => {
-    const fetchAdmins = async () => {
-      await getAdminsData(page, rowsPerPage, searchName, searchEmail, searchLevel).then(
-        ({ data }) => {
-          setRows(data.items);
-          setTotalCount(data.headers.x_total_count);
-        },
-      );
-    };
     fetchAdmins();
   }, [getAdminsData, page, rowsPerPage, searchName, searchEmail, searchLevel]);
 
@@ -149,7 +168,11 @@ const Admins = () => {
       <Breadcrumb title="Admins" subtitle={t('Admins Information')} />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setFilters={setFilters}
+            changeAdminStatus={changeAdminStatus}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}

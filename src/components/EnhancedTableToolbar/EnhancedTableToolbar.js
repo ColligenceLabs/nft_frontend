@@ -12,7 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 const EnhancedTableToolbar = (props) => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { numSelected, setFilters, onDelete, addSchedule, openSchedule } = props;
+  const { numSelected, setFilters, onDelete, addSchedule, openSchedule, changeAdminStatus } = props;
   const [showDrawer, setShowDrawer] = useState(false);
   const [currentRoute, setCurrentRoute] = useState('');
 
@@ -75,7 +75,7 @@ const EnhancedTableToolbar = (props) => {
                 <MenuItem
                   onClick={() => {
                     popupState.close();
-                    openSchedule();
+                    changeAdminStatus('active');
                   }}
                 >
                   Active
@@ -83,7 +83,7 @@ const EnhancedTableToolbar = (props) => {
                 <MenuItem
                   onClick={() => {
                     popupState.close();
-                    onDelete();
+                    changeAdminStatus('inactive');
                   }}
                 >
                   Inactive
