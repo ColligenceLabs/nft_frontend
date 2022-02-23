@@ -11,7 +11,7 @@ import {
   Snackbar,
   Typography,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import CustomFormLabel from '../forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../forms/custom-elements/CustomTextField';
@@ -22,49 +22,8 @@ import contracts from '../../config/constants/contracts';
 import { batchRegisterNFT, kasTransferNFT } from '../../services/nft.service';
 import { LoadingButton } from '@mui/lab';
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  button: {
-    width: '100px',
-  },
-  dialogTitle: {
-    textAlign: 'center',
-    fontSize: 20,
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.light,
-  },
-
-  walletBoxWrapper: {
-    borderRadius: '1rem',
-    border: '1px solid',
-    borderColor: theme.palette.primary.main,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    display: 'flex',
-    height: '80px',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-
-  walletBoxIcon: {
-    alignItems: 'center',
-  },
-  walletBoxContent: {
-    minWidth: 135,
-    padding: '0rem 0.5rem 0rem 0.5rem',
-  },
-
-  chipWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    marginRight: '1.5rem',
-    gap: '0.15rem',
-  },
-}));
-
 const TransferDialog = ({ open, handleCloseModal, item, type }) => {
-  const classes = useStyles();
+  const theme = useTheme();
 
   const { account } = useWeb3React();
 
@@ -170,14 +129,10 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
         aria-labelledby="max-width-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle
-          className={classes.dialogTitle}
-          id="customized-dialog-title"
-          onClose={handleCloseModal}
-        >
-          <Box className={classes.dialogTitle} id="dialog_title">
+        <DialogTitle style={{ background: `${theme.palette.primary.main}` }}>
+          <Typography variant="title" color="white">
             {`Transfer ${item.type === 0 ? 'NFT' : 'AirDrop'}`}
-          </Box>
+          </Typography>
         </DialogTitle>
         <DialogContent>
           <CustomFormLabel htmlFor="toAddress">{t('To Address')}</CustomFormLabel>
