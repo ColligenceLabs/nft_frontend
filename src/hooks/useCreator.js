@@ -15,10 +15,12 @@ const useCreator = () => {
               (item) => item._id === id && { _id: item._id, full_name: item.full_name },
             );
           } else {
-            creatorArray = items.map((item) => ({
-              _id: item._id,
-              full_name: item.full_name,
-            }));
+            creatorArray = items
+              .filter((item) => item.status === 'active')
+              .map((item) => ({
+                _id: item._id,
+                full_name: item.full_name,
+              }));
           }
           setCreatorList(creatorArray);
         })
