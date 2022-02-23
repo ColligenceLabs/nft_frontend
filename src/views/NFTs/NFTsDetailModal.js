@@ -8,12 +8,15 @@ import {
   DialogTitle,
   Grid,
   CardMedia,
+  Typography,
 } from '@mui/material';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@mui/styles';
 
 const NFTsDetailModal = (props) => {
+  const theme = useTheme();
   const { open, handleCloseDetailModal, row } = props;
   const { t } = useTranslation();
   return (
@@ -25,7 +28,11 @@ const NFTsDetailModal = (props) => {
           BackdropProps={{ style: { opacity: 0.2 }, transitionDuration: 1000 }}
           maxWidth="md"
         >
-          <DialogTitle>{t('NFT detail')}</DialogTitle>
+          <DialogTitle style={{ background: `${theme.palette.primary.main}` }}>
+            <Typography variant="title" color="white">
+              {t('NFT detail')}
+            </Typography>
+          </DialogTitle>
           <DialogContent dividers>
             <Box>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>

@@ -8,12 +8,15 @@ import {
   DialogTitle,
   Grid,
   CardMedia,
+  Typography,
 } from '@mui/material';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@mui/styles';
 
 const TransactionDetailModal = (props) => {
+  const theme = useTheme();
   const { open, handleCloseDetailModal, row } = props;
   const { t } = useTranslation();
 
@@ -26,7 +29,11 @@ const TransactionDetailModal = (props) => {
           BackdropProps={{ style: { opacity: 0.2 }, transitionDuration: 1000 }}
           maxWidth="md"
         >
-          <DialogTitle>{t('Transaction detail')}</DialogTitle>
+          <DialogTitle style={{ background: `${theme.palette.primary.main}` }}>
+            <Typography variant="title" color="white">
+              {t('Transaction detail')}
+            </Typography>
+          </DialogTitle>
           <DialogContent dividers>
             <Box style={{ width: 500, marginBottom: 30 }}>
               <CustomFormLabel htmlFor="seller">{t('Seller')}</CustomFormLabel>
