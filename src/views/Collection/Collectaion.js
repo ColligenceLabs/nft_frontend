@@ -17,18 +17,17 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { headCells } from './tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
-
 import CollectionDetailModal from './CollectionDetailModal';
-import { getCollectionData } from '../../services/collections.service';
+import { deleteCollections, getCollectionData } from '../../services/collections.service';
 import { getCreatorData } from '../../services/creator.service';
 import { useSelector } from 'react-redux';
+import DeleteDialog from '../../components/DeleteDialog';
 
 const Collections = () => {
   const { t } = useTranslation();
@@ -43,9 +42,13 @@ const Collections = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedDetailRow, setSelectedDetailRow] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCreatorId, setSearchCreatorId] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
+  const [deleteInAction, setDeleteInAction] = useState(false);
+  const [finishDelete, setFinishDelete] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(null);
 
   const {
     user: {
@@ -106,6 +109,10 @@ const Collections = () => {
     setOpenDetailModal(true);
   };
 
+  const openDelete = () => {
+    setOpenDeleteModal(true);
+  };
+
   const handleDetailModalClose = () => {
     setOpenDetailModal(false);
   };
@@ -114,6 +121,31 @@ const Collections = () => {
     setSearchKeyword(props.searchKeyword);
     setSearchCreatorId(props.creatorId);
     setSearchStatus(props.status);
+  };
+
+  const onDelete = async (multiFlag = true) => {
+    let deleteArray = [];
+
+    if (deleteInAction) {
+      deleteArray = deleteArray.concat(selectedDetailRow._id);
+    } else {
+      deleteArray = selected;
+    }
+    const res = await deleteCollections({ ids: deleteArray });
+    if (res.data.status === 0) {
+      setDeleteMessage(res.data.message);
+    } else {
+      setSelected([]);
+    }
+    setOpenDeleteModal(false);
+    setDeleteInAction(false);
+    setFinishDelete(true);
+
+    await fetchCollections();
+  };
+
+  const handleDeleteClose = () => {
+    setOpenDeleteModal(false);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -151,7 +183,11 @@ const Collections = () => {
       <Breadcrumb title="Collections" subtitle="Collections Information" />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
-          <EnhancedTableToolbar numSelected={selected.length} setFilters={setFilters} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            setFilters={setFilters}
+            onDelete={openDelete}
+          />
           <TableContainer>
             <Table
               sx={{ minWidth: 750 }}
@@ -245,13 +281,19 @@ const Collections = () => {
                         </TableCell>
                         <TableCell style={{ minWidth: 200 }}>
                           <Box>
-                            <IconButton>
-                              <RefreshOutlinedIcon />
-                            </IconButton>
+                            {/*<IconButton>*/}
+                            {/*  <RefreshOutlinedIcon />*/}
+                            {/*</IconButton>*/}
                             <IconButton onClick={() => handleDetailModalOpen(row)}>
                               <AlbumOutlinedIcon />
                             </IconButton>
-                            <IconButton>
+                            <IconButton
+                              onClick={() => {
+                                setSelectedDetailRow(row);
+                                setDeleteInAction(true);
+                                openDelete();
+                              }}
+                            >
                               <DeleteOutlinedIcon />
                             </IconButton>
                           </Box>
@@ -286,6 +328,12 @@ const Collections = () => {
           label="Dense padding"
         />
       </Box>
+      <DeleteDialog
+        title="Collection 삭제"
+        open={openDeleteModal}
+        handleDeleteClose={handleDeleteClose}
+        doDelete={onDelete}
+      />
       <CollectionDetailModal
         open={openDetailModal}
         closeDetailModal={handleDetailModalClose}

@@ -48,11 +48,21 @@ export const getCollectionsByCreatorId = (id) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const deleteCollections = (data) => {
+  return axios
+    .put(`${API_URL}/deletes`, data, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 const collectionsService = {
   getDetailCollection,
   createCollection,
   getCollectionData,
   getCollectionsByCreatorId,
+  deleteCollections,
 };
 
 export default collectionsService;

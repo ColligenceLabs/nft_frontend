@@ -35,7 +35,7 @@ const EnhancedTableToolbar = (props) => {
         alignItems: 'center',
       }}
     >
-      {['nfts', 'airdrop'].includes(currentRoute) ? (
+      {['nfts'].includes(currentRoute) ? (
         <PopupState variant="popover" popupId="demo-popup-menu">
           {(popupState) => (
             <React.Fragment>
@@ -100,10 +100,12 @@ const EnhancedTableToolbar = (props) => {
             </React.Fragment>
           )}
         </PopupState>
-      ) : (
+      ) : ['collection'].includes(currentRoute) ? (
         <Button disabled={numSelected === 0} variant="outlined" onClick={onDelete}>
           {`Delete ${numSelected} item(s) selected`}
         </Button>
+      ) : (
+        <Box></Box>
       )}
       <Box style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
         <Button sx={{ mr: 1 }} variant="outlined" onClick={() => setShowDrawer(true)}>
