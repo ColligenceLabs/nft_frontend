@@ -10,16 +10,17 @@ import {
   CardMedia,
   Typography,
 } from '@mui/material';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/styles';
+import BlurredUpImage from '../../components/BlurredUpImage';
 
 const NFTsDetailModal = (props) => {
   const theme = useTheme();
   const { open, handleCloseDetailModal, row } = props;
   const { t } = useTranslation();
+
   return (
     <>
       {row._id && (
@@ -136,22 +137,12 @@ const NFTsDetailModal = (props) => {
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
-                  <LazyLoadImage
-                    alt={row.metadata.image.name}
-                    src={row.metadata.image}
-                    style={{ width: '100%', height: 'auto' }}
-                    effect="blur"
-                  />
+                  <BlurredUpImage image={row.metadata.image} />
                 </Grid>
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
-                  <LazyLoadImage
-                    alt={row.metadata.thumbnail.name}
-                    src={row.metadata.thumbnail}
-                    style={{ width: '100%', height: 'auto' }}
-                    effect="blur"
-                  />
+                  <BlurredUpImage image={row.metadata.thumbnail} />
                 </Grid>
               </Grid>
             </Box>

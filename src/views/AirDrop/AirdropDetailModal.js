@@ -14,6 +14,7 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/styles';
+import BlurredUpImage from '../../components/BlurredUpImage';
 
 const AirdropDetailModal = (props) => {
   const theme = useTheme();
@@ -123,20 +124,12 @@ const AirdropDetailModal = (props) => {
                 </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
-                  <img
-                    src={row.metadata.image}
-                    style={{ width: '100%', height: 'auto' }}
-                    alt={row.metadata.name}
-                  />
+                  <BlurredUpImage image={row.metadata.image} />
                 </Grid>
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
-                  <CardMedia
-                    component="img"
-                    image={row.metadata.thumbnail}
-                    alt={row.metadata.name}
-                  />
+                  <BlurredUpImage image={row.metadata.thumbnail} />
                 </Grid>
               </Grid>
             </Box>
