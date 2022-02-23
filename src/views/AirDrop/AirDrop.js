@@ -24,16 +24,15 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+// import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { deleteNft, getNFTData } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import ScheduleDialog from '../NFTs/ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import TransferDialog from '../../components/TransferDialog/TransferDialog';
 import { useTranslation } from 'react-i18next';
-import NFTsDetailModal from '../NFTs/NFTsDetailModal';
 import AirdropDetailModal from './AirdropDetailModal';
 
 const AirDrop = () => {
@@ -358,15 +357,15 @@ const AirDrop = () => {
                             >
                               <AlbumOutlinedIcon />
                             </IconButton>
-                            <IconButton
-                              onClick={() => {
-                                setSelectedAirDrop(row);
-                                setDeleteInAction(true);
-                                openDelete();
-                              }}
-                            >
-                              <DeleteOutlinedIcon />
-                            </IconButton>
+                            {/*<IconButton*/}
+                            {/*  onClick={() => {*/}
+                            {/*    setSelectedAirDrop(row);*/}
+                            {/*    setDeleteInAction(true);*/}
+                            {/*    openDelete();*/}
+                            {/*  }}*/}
+                            {/*>*/}
+                            {/*  <DeleteOutlinedIcon />*/}
+                            {/*</IconButton>*/}
                           </Box>
                         </Typography>
                       </TableCell>

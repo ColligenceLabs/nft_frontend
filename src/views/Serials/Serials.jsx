@@ -21,10 +21,7 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import { getTransactionData } from '../../services/transaction.service';
 import { getSerialsData } from '../../services/serials.service';
 import SerialsDetailModal from './SerialsDetailModal';
 
@@ -101,7 +98,6 @@ const Serials = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = rowsPerPage - rows.length;
 
   const fetchSerials = async () => {
     await getSerialsData(page, rowsPerPage, searchStatus, searchNftId).then(({ data }) => {
@@ -218,9 +214,6 @@ const Serials = () => {
                       <TableCell style={{ minWidth: 200 }}>
                         <Typography color="textSecondary" variant="h6">
                           <Box>
-                            {/*<IconButton size="small">*/}
-                            {/*  <RefreshOutlinedIcon />*/}
-                            {/*</IconButton>*/}
                             <IconButton
                               size="small"
                               onClick={() => {
@@ -230,24 +223,12 @@ const Serials = () => {
                             >
                               <AlbumOutlinedIcon />
                             </IconButton>
-                            <IconButton size="small">
-                              <DeleteOutlinedIcon />
-                            </IconButton>
                           </Box>
                         </Typography>
                       </TableCell>
                     </TableRow>
                   );
                 })}
-                {/*{emptyRows > 0 && (*/}
-                {/*  <TableRow*/}
-                {/*    style={{*/}
-                {/*      height: (dense ? 33 : 53) * emptyRows,*/}
-                {/*    }}*/}
-                {/*  >*/}
-                {/*    <TableCell colSpan={6} />*/}
-                {/*  </TableRow>*/}
-                {/*)}*/}
               </TableBody>
             </Table>
           </TableContainer>
