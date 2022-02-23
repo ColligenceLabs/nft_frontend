@@ -58,7 +58,7 @@ const NFTMint = () => {
   const getCollectionList = async (id) => {
     await getCollectionsByCreatorId(id)
       .then(({ data }) => {
-        setCollectionList(data);
+        setCollectionList(data.filter((row) => row.status === 'active'));
       })
       .catch((error) => console.log(error));
   };
