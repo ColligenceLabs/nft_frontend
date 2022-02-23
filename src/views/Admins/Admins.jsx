@@ -213,6 +213,7 @@ const Admins = () => {
                         <Typography color="textSecondary" variant="h6">
                           <Box display="flex" alignItems="center">
                             <Switch
+                              color='error'
                               onClick={() => handleStatusOpen(row)}
                               checked={row.status === 'active'}
                             />
