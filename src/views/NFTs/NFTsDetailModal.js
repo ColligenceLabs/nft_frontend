@@ -10,6 +10,7 @@ import {
   CardMedia,
   Typography,
 } from '@mui/material';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import { useTranslation } from 'react-i18next';
@@ -135,19 +136,21 @@ const NFTsDetailModal = (props) => {
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
-                  <img
+                  <LazyLoadImage
+                    alt={row.metadata.image.name}
                     src={row.metadata.image}
                     style={{ width: '100%', height: 'auto' }}
-                    alt={row.metadata.name}
+                    effect="blur"
                   />
                 </Grid>
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
-                  <CardMedia
-                    component="img"
-                    image={row.metadata.thumbnail}
-                    alt={row.metadata.name}
+                  <LazyLoadImage
+                    alt={row.metadata.thumbnail.name}
+                    src={row.metadata.thumbnail}
+                    style={{ width: '100%', height: 'auto' }}
+                    effect="blur"
                   />
                 </Grid>
               </Grid>
