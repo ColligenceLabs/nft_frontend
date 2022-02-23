@@ -153,8 +153,9 @@ const Admins = () => {
   const fetchAdmins = async () => {
     await getAdminsData(page, rowsPerPage, searchName, searchEmail, searchLevel).then(
       ({ data }) => {
-        setRows(data.items);
-        setTotalCount(data.headers.x_total_count);
+        const rowWithoutSuspendUser = data.items.filter((row) => row.status !== 'suspend');
+        setRows(rowWithoutSuspendUser);
+        setTotalCount(rowWithoutSuspendUser.length);
       },
     );
   };

@@ -145,8 +145,9 @@ const Creator = () => {
 
   const fetchCreator = async () => {
     await getCreatorData(page, rowsPerPage, searchName, searchStatus).then(({ data }) => {
-      setRows(data.items);
-      setTotalCount(data.headers.x_total_count);
+      const rowWithoutSuspendUser = data.items.filter((row) => row.status !== 'suspend');
+      setRows(rowWithoutSuspendUser);
+      setTotalCount(rowWithoutSuspendUser.length);
     });
   };
 

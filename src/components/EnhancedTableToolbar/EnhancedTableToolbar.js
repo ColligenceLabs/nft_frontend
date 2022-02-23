@@ -88,6 +88,14 @@ const EnhancedTableToolbar = (props) => {
                 >
                   Inactive
                 </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    popupState.close();
+                    changeAdminStatus('suspend');
+                  }}
+                >
+                  Suspend
+                </MenuItem>
               </Menu>
             </React.Fragment>
           )}
