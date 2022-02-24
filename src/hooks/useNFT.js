@@ -472,7 +472,6 @@ const useNFT = (contract, kasContract, account) => {
       setIsTransfering(true);
       const gasPrice = parseUnits('25', 'gwei').toString();
 
-      console.log('====', kasContract);
       let tx;
       let gasLimit;
 
@@ -482,7 +481,6 @@ const useNFT = (contract, kasContract, account) => {
           // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
           // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
           gasLimit = await kasContract.methods.transferFrom(account, to, tokenId).estimateGas();
-          console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);
@@ -509,7 +507,6 @@ const useNFT = (contract, kasContract, account) => {
           gasLimit = await kasContract.methods
             .safeTransferFrom(account, to, tokenId, amount, '0x')
             .estimateGas();
-          console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);

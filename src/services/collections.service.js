@@ -35,7 +35,6 @@ export const getDetailCollection = () => {
 };
 
 export const createCollection = (formData) => {
-  console.log('===> ', formData);
   return axios.post(`${API_URL}/create`, formData, { headers: authHeader() });
 };
 

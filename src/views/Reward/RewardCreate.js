@@ -61,9 +61,7 @@ const RewardCreate = () => {
     setType(event.target.value);
   };
 
-  const onSubmitData = () => {
-    console.log(creatorData);
-  };
+  const onSubmitData = () => {};
 
   return (
     <PageContainer title="Reward Register" description="this is Reward Register Form page">

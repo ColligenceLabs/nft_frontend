@@ -36,12 +36,9 @@ export const updateAdminsStatus = (id, status) => {
 };
 
 export const updateMultiAdminsStatus = (id, data) => {
-  console.log(data);
-  console.log(id);
   return axios
     .put(`${API_URL}/update-status/${id}`, data, { headers: authHeader() })
     .then((response) => {
-      console.log(response.data);
       return response.data;
     })
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));

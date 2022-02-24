@@ -56,7 +56,6 @@ const WalletInfo = ({ walletAddress, balance, disconnect }) => {
       } else {
         let textArea = document.createElement('textarea');
         textArea.value = walletAddress;
-        console.log(textArea.value);
         textArea.style.position = 'fixed';
         textArea.style.left = '-999999px';
         textArea.style.top = '-999999px';

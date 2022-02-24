@@ -25,7 +25,6 @@ export const registerNFT = (formData) => {
   return axios
     .post(`${API_URL}/create`, formData, { headers: authHeader() })
     .then((res) => {
-      console.log(res);
       return res;
     })
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
@@ -35,7 +34,6 @@ export const deployNFT17 = (formData) => {
   return axios
     .post(`${API_URL}/kas/deploy17`, formData, { headers: authHeader() })
     .then((res) => {
-      console.log(res);
       return res;
     })
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
@@ -45,7 +43,6 @@ export const deployNFT37 = (formData) => {
   return axios
     .post(`${API_URL}/kas/deploy37`, formData, { headers: authHeader() })
     .then((res) => {
-      console.log(res);
       return res;
     })
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));

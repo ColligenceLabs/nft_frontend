@@ -23,7 +23,6 @@ export const deleteUser = (ids) => {
   if (ids.length === 1) {
     return axios
       .delete(`${API_URL}/delete/${ids.toString()}`, { headers: authHeader() })
-      .then((res) => console.log(res))
       .catch((error) =>
         error.response.status === 401 ? authService.logout() : console.log(error),
       );
