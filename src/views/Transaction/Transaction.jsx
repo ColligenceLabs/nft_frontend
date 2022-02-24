@@ -12,6 +12,8 @@ import {
   IconButton,
   FormControlLabel,
   Typography,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
@@ -25,6 +27,7 @@ import { headCells } from './tableConfig';
 import { getTransactionData } from '../../services/transaction.service';
 import TransactionDetailModal from './TransactionDetailModal';
 import splitAddress from '../../utils/splitAddress';
+import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 
 const Transaction = () => {
   const { t } = useTranslation();
@@ -40,6 +43,8 @@ const Transaction = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState({});
+
+  const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -160,13 +165,19 @@ const Transaction = () => {
                           />
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => copyToClipBoard(row.seller.admin_address)}
+                        >
                           <Typography color="textSecondary" variant="h6">
                             {/*{row.seller.admin_address}*/}
                             {splitAddress(row.seller.admin_address)}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => copyToClipBoard(row.buyer)}
+                        >
                           <Typography color="textSecondary" variant="h6">
                             {splitAddress(row.buyer)}
                           </Typography>
@@ -181,7 +192,10 @@ const Transaction = () => {
                             {row.price}
                           </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell
+                          sx={{ cursor: 'pointer' }}
+                          onClick={() => copyToClipBoard(row.tx_id)}
+                        >
                           <Typography color="textSecondary" variant="h6">
                             {splitAddress(row.tx_id)}
                           </Typography>
@@ -267,6 +281,18 @@ const Transaction = () => {
         handleCloseDetailModal={handleCloseDetailModal}
         row={selectedTransaction}
       />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={copyDone}
+        autoHideDuration={2000}
+        onClose={() => {
+          setCopyDone(false);
+        }}
+      >
+        <Alert variant="filled" severity={copyResult ? 'success' : 'error'} sx={{ width: '100%' }}>
+          {copyMessage}
+        </Alert>
+      </Snackbar>
     </PageContainer>
   );
 };
