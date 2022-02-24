@@ -15,10 +15,12 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@mui/styles';
 import BlurredUpImage from '../../components/BlurredUpImage';
+import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 
 const AirdropDetailModal = (props) => {
   const theme = useTheme();
   const { open, handleCloseDetailModal, row } = props;
+  const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const { t } = useTranslation();
   return (
     <>
@@ -37,6 +39,32 @@ const AirdropDetailModal = (props) => {
           <DialogContent dividers>
             <Box>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="id">{t('ID')}</CustomFormLabel>
+                  <CustomTextField
+                    id="id"
+                    name="id"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    disabled
+                    value={row._id}
+                  />
+                </Grid>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="contractAddress">
+                    {t('Contract Address')}
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="contractAddress"
+                    name="contractAddress"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    disabled
+                    value={row.collection_id?.contract_address}
+                  />
+                </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="name">{t('Name')}</CustomFormLabel>
                   <CustomTextField
