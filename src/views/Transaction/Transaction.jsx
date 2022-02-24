@@ -24,6 +24,7 @@ import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
 import { getTransactionData } from '../../services/transaction.service';
 import TransactionDetailModal from './TransactionDetailModal';
+import splitAddress from '../../utils/splitAddress';
 
 const Transaction = () => {
   const { t } = useTranslation();
@@ -94,10 +95,6 @@ const Transaction = () => {
 
   const setFilters = async (props) => {
     setSearchKeyword(props.searchKeyword);
-  };
-
-  const splitAddress = (str) => {
-    return str.substr(0, 5) + '...' + str.substr(str.length - 5, str.length);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
