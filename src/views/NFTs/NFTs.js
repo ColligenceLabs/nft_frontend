@@ -182,7 +182,6 @@ const NFTs = () => {
       level.toLowerCase() === 'creator' ? id : undefined,
     )
       .then(({ data }) => {
-        console.log(data.items);
         setRows(data.items);
         setTotalCount(data.headers.x_total_count);
       })
