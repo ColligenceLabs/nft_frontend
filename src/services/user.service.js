@@ -21,7 +21,6 @@ export const getUserData = (page, rowsPerPage, searchKeyword, userStatus) => {
 
 export const deleteUser = (ids) => {
   if (ids.length === 1) {
-    console.log(ids.toString());
     return axios
       .delete(`${API_URL}/delete/${ids.toString()}`, { headers: authHeader() })
       .then((res) => console.log(res))

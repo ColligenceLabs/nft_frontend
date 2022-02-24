@@ -53,7 +53,6 @@ const RewardCreate = () => {
   };
 
   const handleTypeChange = (event) => {
-    console.log(event.target.name);
     const { name, value } = event.target;
     setCreatorData({
       ...creatorData,

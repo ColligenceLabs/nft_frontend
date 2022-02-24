@@ -34,7 +34,6 @@ const SerialsCreate = () => {
   };
 
   const handleNFTChange = (event) => {
-    console.log(event.target);
     const { name, value } = event.target;
     setSerialsData({
       ...serialsData,
@@ -43,9 +42,7 @@ const SerialsCreate = () => {
     setNft(event.target.value);
   };
 
-  const onSubmitData = () => {
-    console.log(creatorData);
-  };
+  const onSubmitData = () => {};
 
   return (
     <PageContainer title="Trace NFT Register" description="this is Trace NFT Register Form page">
