@@ -133,6 +133,7 @@ const NFTsDetailModal = (props) => {
                     fullWidth
                     disabled
                     size="small"
+                    value={row.metadata.external_url}
                   />
                 </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
