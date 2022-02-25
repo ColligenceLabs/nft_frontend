@@ -24,6 +24,7 @@ import { headCells } from './tableConfig';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import { getSerialsData } from '../../services/serials.service';
 import SerialsDetailModal from './SerialsDetailModal';
+import splitAddress from '../../utils/splitAddress';
 
 const Serials = () => {
   const { t } = useTranslation();
@@ -168,7 +169,7 @@ const Serials = () => {
                       </TableCell>
                       <TableCell style={{ minWidth: 100 }}>
                         <Typography color="textSecondary" variant="h6" fontWeight="400">
-                          {row.owner_id ?? '-'}
+                          {row.owner_id ? splitAddress(row.owner_id) : '-'}
                         </Typography>
                       </TableCell>
                       <TableCell style={{ minWidth: 150 }}>
