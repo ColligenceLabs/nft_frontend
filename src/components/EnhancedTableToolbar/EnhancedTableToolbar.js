@@ -48,7 +48,6 @@ const EnhancedTableToolbar = (props) => {
                 ) : (
                   <>
                     {`${numSelected} item(s) selected`} <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
-                    <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
                   </>
                 )}
               </Button>
@@ -118,14 +117,7 @@ const EnhancedTableToolbar = (props) => {
         </PopupState>
       ) : ['collection'].includes(currentRoute) ? (
         <Button disabled={numSelected === 0} variant="outlined" onClick={onDelete}>
-          {smDown ? (
-            <DeleteOutlineOutlinedIcon />
-          ) : (
-            <>
-              {`Delete ${numSelected} item(s) selected`}
-              <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
-            </>
-          )}
+          {smDown ? <DeleteOutlineOutlinedIcon /> : <>{`Delete ${numSelected} item(s) selected`}</>}
         </Button>
       ) : (
         <Box></Box>
