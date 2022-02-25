@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Menu, MenuItem, Toolbar } from '@mui/material';
+import { Box, Button, Menu, MenuItem, Toolbar, useMediaQuery } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import PropTypes from 'prop-types';
 import FilterAltOutlinedIcon from '@mui/icons-material/FilterAltOutlined';
 import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useTranslation } from 'react-i18next';
 import FiltersDrawer from '../FiltersDrawer';
 import AddIcon from '@mui/icons-material/Add';
@@ -21,6 +23,7 @@ const EnhancedTableToolbar = (props) => {
   }, [location]);
 
   const handleDelete = (popupState) => {};
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   return (
     <Toolbar
@@ -40,7 +43,14 @@ const EnhancedTableToolbar = (props) => {
           {(popupState) => (
             <React.Fragment>
               <Button disabled={numSelected === 0} variant="outlined" {...bindTrigger(popupState)}>
-                {`${numSelected} item(s) selected`} <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+                {smDown ? (
+                  <KeyboardArrowDownOutlinedIcon />
+                ) : (
+                  <>
+                    {`${numSelected} item(s) selected`} <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+                    <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+                  </>
+                )}
               </Button>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem
@@ -68,8 +78,14 @@ const EnhancedTableToolbar = (props) => {
           {(popupState) => (
             <React.Fragment>
               <Button disabled={numSelected === 0} variant="outlined" {...bindTrigger(popupState)}>
-                {`${numSelected} item(s) change status`}{' '}
-                <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+                {smDown ? (
+                  <KeyboardArrowDownOutlinedIcon />
+                ) : (
+                  <>
+                    {`${numSelected} item(s) change status`}
+                    <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+                  </>
+                )}
               </Button>
               <Menu {...bindMenu(popupState)}>
                 <MenuItem
@@ -102,15 +118,22 @@ const EnhancedTableToolbar = (props) => {
         </PopupState>
       ) : ['collection'].includes(currentRoute) ? (
         <Button disabled={numSelected === 0} variant="outlined" onClick={onDelete}>
-          {`Delete ${numSelected} item(s) selected`}
+          {smDown ? (
+            <DeleteOutlineOutlinedIcon />
+          ) : (
+            <>
+              {`Delete ${numSelected} item(s) selected`}
+              <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
+            </>
+          )}
         </Button>
       ) : (
         <Box></Box>
       )}
       <Box style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
         <Button sx={{ mr: 1 }} variant="outlined" onClick={() => setShowDrawer(true)}>
-          <FilterAltOutlinedIcon fontSize="small" sx={{ mr: 1 }} />
-          Filters
+          <FilterAltOutlinedIcon fontSize="small" sx={smDown ? null : { mr: 1 }} />
+          {smDown ? '' : 'Filters'}
         </Button>
         <FiltersDrawer
           showDrawer={showDrawer}
@@ -125,7 +148,7 @@ const EnhancedTableToolbar = (props) => {
           onClick={() => setShowDrawer(true)}
         >
           <FilterAltOutlinedIcon fontSize="small" sx={{ mr: 1 }} />
-          Filters
+          {smDown ? '' : 'Filters'}
         </LinkButton>
       </Box>
     </Toolbar>
@@ -139,6 +162,7 @@ EnhancedTableToolbar.propTypes = {
 
 const LinkButton = ({ title }) => {
   const { t } = useTranslation();
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const [buttonProps, setButtonProps] = useState({ label: null, ulr: null });
 
   useEffect(() => {
@@ -192,7 +216,7 @@ const LinkButton = ({ title }) => {
 
         <Button variant="contained" component={Link} to={{ pathname: buttonProps.url }}>
           <AddIcon style={{ marginRight: '5px' }} />
-          {t(`${buttonProps.label}`)}
+          {smDown ? '' : t(`${buttonProps.label}`)}
         </Button>
       )}
     </>
