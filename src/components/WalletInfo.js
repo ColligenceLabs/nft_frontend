@@ -3,7 +3,8 @@ import { formatEther } from '@ethersproject/units';
 import { useWeb3React } from '@web3-react/core';
 import { useTranslation } from 'react-i18next';
 import { infuraChainId } from '../config';
-import { makeStyles } from '@mui/styles';
+import { makeStyles, useTheme } from '@mui/styles';
+import disconnectOutlined from '@iconify/icons-ant-design/disconnect-outlined';
 
 import {
   Box,
@@ -14,7 +15,11 @@ import {
   DialogTitle,
   Typography,
   Snackbar,
+  IconButton,
+  Alert,
 } from '@mui/material';
+import { Icon } from '@iconify/react';
+import useCopyToClipBoard from '../hooks/useCopyToClipBoard';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -39,6 +44,8 @@ const WalletInfo = ({ walletAddress, balance, disconnect }) => {
   const context = useWeb3React();
   const { deactivate } = context;
   const { t } = useTranslation();
+  const theme = useTheme();
+  const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
 
   const [isOpenAccount, setIsOpenAccount] = useState(false);
   const [isOpenCopied, setIsOpenCopied] = useState({
@@ -92,26 +99,29 @@ const WalletInfo = ({ walletAddress, balance, disconnect }) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle
-          className={classes.dialogTitle}
-          id="customized-dialog-title"
-          onClose={handleCloseAccount}
-        >
-          {t('Account')}
+        <DialogTitle style={{ background: `${theme.palette.primary.main}` }}>
+          <Typography variant="title" color="white">
+            {t('Account')}
+          </Typography>
         </DialogTitle>
         <DialogContent className={classes.dialogContent}>
           <Box display="flex" justifyContent="space-between" alignItems="center">
-            <Typography variant="h3">{walletStr}</Typography>
-            <Button
-              variant="contained"
-              size="small"
+            <Typography
+              style={{ cursor: 'pointer' }}
+              variant="body2"
+              onClick={() => copyToClipBoard(walletAddress)}
+            >
+              {walletAddress}
+            </Typography>
+            <Icon
+              icon={disconnectOutlined}
+              color={theme.palette.primary.main}
+              style={{ cursor: 'pointer' }}
               onClick={async () => {
                 await deactivate();
                 window.localStorage.removeItem('chainId');
               }}
-            >
-              {t('Disconnect')}
-            </Button>
+            />
           </Box>
 
           <Box display="flex" justifyContent="flex-start" gap="0.5rem">
@@ -140,6 +150,19 @@ const WalletInfo = ({ walletAddress, balance, disconnect }) => {
         message="Copying is complete."
         key={vertical + horizontal}
       />
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={copyDone}
+        autoHideDuration={2000}
+        onClose={() => {
+          setCopyDone(false);
+        }}
+      >
+        <Alert variant="filled" severity={copyResult ? 'success' : 'error'} sx={{ width: '100%' }}>
+          {copyMessage}
+        </Alert>
+      </Snackbar>
     </React.Fragment>
   );
 };
