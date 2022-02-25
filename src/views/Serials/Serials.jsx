@@ -168,7 +168,7 @@ const Serials = () => {
                       </TableCell>
                       <TableCell style={{ minWidth: 100 }}>
                         <Typography color="textSecondary" variant="h6" fontWeight="400">
-                          {row.owner_id?.uid ?? '-'}
+                          {row.owner_id ?? '-'}
                         </Typography>
                       </TableCell>
                       <TableCell style={{ minWidth: 150 }}>
