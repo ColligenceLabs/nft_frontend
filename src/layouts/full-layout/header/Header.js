@@ -166,8 +166,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         </IconButton>
         <Box flexGrow={1} />
 
-        <LanguageSelector />
-        <ThemeSelector />
         <NetworkSelector />
 
         {connector ? (
@@ -189,6 +187,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             <AccountBalanceWalletIcon />
           </IconButton>
         )}
+
+        <LanguageSelector />
+        <ThemeSelector />
 
         <WalletDialog
           isOpenConnectModal={isOpenConnectModal}
