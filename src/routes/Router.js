@@ -29,6 +29,7 @@ const CollectionCreate = Loadable(lazy(() => import('../views/Collection/Collect
 const Reward = Loadable(lazy(() => import('../views/Reward')));
 const RewardCreate = Loadable(lazy(() => import('../views/Reward/RewardCreate')));
 const UserProfile = Loadable(lazy(() => import('../views/UserProfile/UserProfile')));
+const Solana = Loadable(lazy(() => import('../views/Solana')));
 
 /* ****Routes***** */
 const Router = (isLoggedIn) => [
@@ -54,6 +55,7 @@ const Router = (isLoggedIn) => [
       { path: '/reward', exact: true, element: <Reward /> },
       { path: '/reward/create', exact: true, element: <RewardCreate /> },
       { path: '/profile', exact: true, element: <UserProfile /> },
+      { path: '/solana', exact: true, element: <Solana /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },

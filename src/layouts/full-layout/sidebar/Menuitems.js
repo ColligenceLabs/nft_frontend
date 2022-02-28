@@ -68,7 +68,11 @@ export const Menuitems = [
     icon: <PeopleAltOutlinedIcon width="20" height="20" />,
     href: '/user',
   },
-
+  {
+    title: 'Solana',
+    icon: <PeopleAltOutlinedIcon width="20" height="20" />,
+    href: '/solana',
+  },
   // {
   //   title: 'Reward',
   //   icon: <EmojiEventsOutlinedIcon width="20" height="20" />,
