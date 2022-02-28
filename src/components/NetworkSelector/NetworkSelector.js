@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, Popover } from '@mui/material';
+import { Box, IconButton, Popover, Typography } from '@mui/material';
 import NETWORKS from './networks';
 
 const NetworkSelector = () => {
@@ -48,7 +48,17 @@ const NetworkSelector = () => {
       >
         {NETWORKS.map((option) => (
           <IconButton key={option.value} onClick={() => handleChangeNetwork(option.value)}>
-            <img src={option.icon} alt="klay" height="24px" />
+            <Box
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <img src={option.icon} alt="klay" height="24px" />
+              <Typography variant="caption">{option.label}</Typography>
+            </Box>
           </IconButton>
         ))}
       </Popover>
