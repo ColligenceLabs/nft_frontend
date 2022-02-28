@@ -7,10 +7,10 @@ export const headCells = [
   //   width: 10,
   // },
   {
-    id: 'id',
+    id: 'contract_address',
     numeric: false,
     disablePadding: false,
-    label: 'ID',
+    label: 'Contract Address',
     width: 10,
   },
   {

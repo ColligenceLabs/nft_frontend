@@ -34,6 +34,8 @@ import DeleteDialog from '../../components/DeleteDialog';
 import TransferDialog from '../../components/TransferDialog/TransferDialog';
 import { useTranslation } from 'react-i18next';
 import AirdropDetailModal from './AirdropDetailModal';
+import splitAddress from '../../utils/splitAddress';
+import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 
 const AirDrop = () => {
   const { t } = useTranslation();
@@ -61,6 +63,7 @@ const AirDrop = () => {
       infor: { level, id },
     },
   } = useSelector((state) => state.auth);
+  const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -234,7 +237,14 @@ const AirDrop = () => {
                           onClick={(event) => handleClick(event, row._id)}
                         />
                       </TableCell>
-
+                      <TableCell
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => copyToClipBoard(row.collection_id?.contract_address)}
+                      >
+                        <Typography color="textSecondary" variant="h6">
+                          {splitAddress(row.collection_id?.contract_address)}
+                        </Typography>
+                      </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6" fontWeight="400">
                           {row.metadata.name}
@@ -435,6 +445,18 @@ const AirDrop = () => {
           sx={{ width: '100%' }}
         >
           {deleteMessage === null ? t('Success delete NFTs.') : t(`${deleteMessage}`)}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={copyDone}
+        autoHideDuration={2000}
+        onClose={() => {
+          setCopyDone(false);
+        }}
+      >
+        <Alert variant="filled" severity={copyResult ? 'success' : 'error'} sx={{ width: '100%' }}>
+          {copyMessage}
         </Alert>
       </Snackbar>
     </PageContainer>

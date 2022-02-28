@@ -85,7 +85,6 @@ const Reward = () => {
   };
 
   const setFilters = async (props) => {
-    console.log(props);
     setSearchKeyword(props.searchKeyword);
   };
 

@@ -15,7 +15,6 @@ export async function deployKIP17(name, symbol, account, library) {
     library.getSigner(account),
   );
 
-  console.log('deployKIP17 start!');
   const ret = {};
   const contract = await factory
     .deploy(name, symbol, {
@@ -34,10 +33,8 @@ export async function deployKIP17(name, symbol, account, library) {
   });
   if (!!ret.err) return ret;
   const { confirmations } = receipt;
-  console.log('receipt', receipt);
   ret.confirmations = confirmations;
   if (confirmations > 0) {
-    console.log('KIP17 contract deploy... confirmed!!', contract);
     const { address } = contract;
     ret.address = address;
 
@@ -45,7 +42,6 @@ export async function deployKIP17(name, symbol, account, library) {
     // ...
   } else {
     ret.err = receipt;
-    console.log(JSON.stringify(receipt));
   }
   return ret;
 }
@@ -63,7 +59,6 @@ export async function deployKIP37(name, account, library) {
   // TODO : ipfs mkdir
   try {
     const hash = await mkDirIPFS(name);
-    console.log('IPFS files mkdir : ', hash);
   } catch (err) {
     console.log(err);
   }
@@ -71,7 +66,6 @@ export async function deployKIP37(name, account, library) {
   // const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
   const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
 
-  console.log('deployKIP37 start!');
   const ret = {};
   const contract = await factory
     .deploy(tokenUri, {
@@ -90,10 +84,8 @@ export async function deployKIP37(name, account, library) {
   });
   if (!!ret.err) return ret;
   const { confirmations } = receipt;
-  console.log('receipt', receipt);
   ret.confirmations = confirmations;
   if (confirmations > 0) {
-    console.log('KIP37 contract deploy... confirmed!!', contract);
     const { address } = contract;
     ret.address = address;
 
@@ -101,7 +93,6 @@ export async function deployKIP37(name, account, library) {
     // ...
   } else {
     ret.err = receipt;
-    console.log(JSON.stringify(receipt));
   }
   return ret;
 }
@@ -109,7 +100,6 @@ export async function deployKIP37(name, account, library) {
 export async function deployKIP17WithKaikas(name, symbol, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
-  console.log('deployKIP17WithKaikas start!');
 
   const caver = new Caver(window.klaytn);
   const factory = new caver.klay.Contract(kip17Data.abi);
@@ -121,13 +111,11 @@ export async function deployKIP17WithKaikas(name, symbol, account, library) {
       data: kip17Data.bytecode,
       arguments: [name, symbol],
     })
-    .send(
-      {
-        from: window.klaytn.selectedAddress,
-        gas: 7000000,
-        value: 0,
-      }
-    )
+    .send({
+      from: window.klaytn.selectedAddress,
+      gas: 7000000,
+      value: 0,
+    })
     .catch(function (err) {
       console.log(err);
       ret.err = err;
@@ -145,7 +133,6 @@ export async function deployKIP17WithKaikas(name, symbol, account, library) {
 export async function deployKIP37WithKaikas(name, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
-  console.log('deployKIP37WithKaikas start!');
 
   const caver = new Caver(window.klaytn);
   const factory = new caver.klay.Contract(kip37Data.abi);
@@ -154,7 +141,6 @@ export async function deployKIP37WithKaikas(name, account, library) {
   // TODO : ipfs mkdir
   try {
     const hash = await mkDirIPFS(name);
-    console.log('IPFS files mkdir : ', hash);
   } catch (err) {
     console.log(err);
   }
@@ -168,13 +154,11 @@ export async function deployKIP37WithKaikas(name, account, library) {
       data: kip37Data.bytecode,
       arguments: [tokenUri],
     })
-    .send(
-      {
-        from: window.klaytn.selectedAddress,
-        gas: 7000000,
-        value: 0,
-      }
-    )
+    .send({
+      from: window.klaytn.selectedAddress,
+      gas: 7000000,
+      value: 0,
+    })
     .catch(function (err) {
       console.log(err);
       ret.err = err;

@@ -102,15 +102,7 @@ const NFTMint = () => {
             let formData = new FormData();
             for (let value in values) {
               if (
-                [
-                  'name',
-                  'price',
-                  'external_url',
-                  'contract_type',
-                  'auto',
-                  'type',
-                  'description',
-                ].includes(value)
+                ['name', 'price', 'contract_type', 'auto', 'type', 'description'].includes(value)
               ) {
                 formData.append(value, values[value]);
               }
@@ -120,6 +112,7 @@ const NFTMint = () => {
             formData.append('file', values['content']);
             formData.append('thumbnail', values['thumbnail']);
             formData.append('category', values['category']);
+            formData.append('external_url', values['externalURL']);
 
             if (useKAS === 'true') {
               await batchRegisterNFT(formData)
@@ -148,7 +141,6 @@ const NFTMint = () => {
                     // TODO : Actual NFT Minting here
                     let result = SUCCESS;
                     if (contractType === 'KIP17') {
-                      console.log('KIP17 mint : ', tokenId, tokenUri, nftId);
                       if (window.localStorage.getItem('wallet') === 'kaikas') {
                         result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
                       } else {
@@ -159,7 +151,6 @@ const NFTMint = () => {
                         setSuccessRegister(false);
                       }
                     } else {
-                      console.log('KIP37 mint : ', tokenId, quantity, tokenUri, nftId);
                       if (window.localStorage.getItem('wallet') === 'kaikas') {
                         result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
                       } else {

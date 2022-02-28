@@ -31,7 +31,7 @@ const Dashboard = () => {
           <SummaryCard
             title={t('NFTs')}
             icon="inbox"
-            value={summary.nfts || 'Loding...'}
+            value={summary.nfts || 'Loading...'}
             color="#26c6da"
           />
         </Grid>
@@ -39,7 +39,7 @@ const Dashboard = () => {
           <SummaryCard
             title={t('AirDrops')}
             icon="file-plus"
-            value={summary.airdrops || 'Loding...'}
+            value={summary.airdrops || 'Loading...'}
             color="#6ac3fd"
           />
         </Grid>
@@ -47,7 +47,7 @@ const Dashboard = () => {
           <SummaryCard
             title={t('Creator')}
             icon="video"
-            value={summary.creators || 'Loding...'}
+            value={summary.creators || 'Loading...'}
             color="#f64e60"
           />
         </Grid>
@@ -55,7 +55,7 @@ const Dashboard = () => {
           <SummaryCard
             title={t('Transactions')}
             icon="credit-card"
-            value={summary.transactions || 'Loding...'}
+            value={summary.transactions || 'Loading...'}
             color="#ffa800"
           />
         </Grid>

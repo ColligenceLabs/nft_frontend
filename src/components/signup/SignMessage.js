@@ -5,7 +5,6 @@ import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 
 const signMessage = async ({ library, setError, message }) => {
   try {
-    console.log({ message });
     if (!window.ethereum) throw new Error('No crypto wallet found. Please install it.');
 
     // await window.ethereum.send('eth_requestAccounts');

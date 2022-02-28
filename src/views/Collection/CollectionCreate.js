@@ -162,7 +162,6 @@ const CollectionCreate = () => {
 
             await createCollection(formData)
               .then((res) => {
-                console.log(res.data);
                 if (res.data.status === 1) {
                   setErrorMessage(null);
                   setSuccessRegister(true);
@@ -296,7 +295,6 @@ const CollectionCreate = () => {
                             accept="image/jpg, image/png, image/jpeg"
                             name="image"
                             onChange={(event) => {
-                              console.log(event.currentTarget.files[0]);
                               setFieldValue('image', event.currentTarget.files[0]);
                             }}
                           />

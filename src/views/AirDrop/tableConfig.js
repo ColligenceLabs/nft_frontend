@@ -1,5 +1,12 @@
 export const headCells = [
   {
+    id: 'contract_address',
+    numeric: false,
+    disablePadding: false,
+    label: 'Contract Address',
+    width: 10,
+  },
+  {
     id: 'name',
     numeric: false,
     disablePadding: false,

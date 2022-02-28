@@ -15,7 +15,6 @@ export function calculateGasMargin(value) {
 }
 
 const addToIPFS = async function (file) {
-  // console.log("start file upload to ipfs...")
   const auth =
     'Basic ' +
     Buffer.from('24EBv9Z978FDIDn74tjbKZV8ihS' + ':' + '4a4d9b8d905d38a7e3a3caa7fa0e35f4').toString(
@@ -152,7 +151,6 @@ const useNFT = (contract, kasContract, account) => {
         .estimateGas({
           from: account,
         });
-      console.log(gasPrice, BigNumber.from(gasLimit));
 
       // mint 요청
       tx = await kasContract.methods
@@ -176,7 +174,6 @@ const useNFT = (contract, kasContract, account) => {
       } catch (e) {
         console.log(e);
       }
-      console.log(tx);
       await setIsMinting(false);
       return SUCCESS;
     },
@@ -192,7 +189,6 @@ const useNFT = (contract, kasContract, account) => {
 
       // gasLimit 계산
       const gasLimit = await contract.estimateGas.mintWithTokenURI(account, tokenId, tokenUri);
-      console.log(gasPrice, gasLimit, contract);
 
       // mint 요청
       try {
@@ -211,14 +207,11 @@ const useNFT = (contract, kasContract, account) => {
             await setNftOnchain(nftId);
           }
         } catch (e) {
-          console.log(e);
           return FAILURE;
         }
-        console.log(tx, receipt);
         await setIsMinting(false);
         return SUCCESS;
       } catch (e) {
-        console.log(e);
         await setIsMinting(false);
         return FAILURE;
       }
@@ -239,7 +232,6 @@ const useNFT = (contract, kasContract, account) => {
       if (creator === '0x0000000000000000000000000000000000000000') {
         // gasLimit 계산
         const gasLimit = await contract.estimateGas.create(tokenId, amount, tokenUri);
-        console.log(gasPrice, contract);
 
         // mint 요청
         try {
@@ -261,7 +253,6 @@ const useNFT = (contract, kasContract, account) => {
             console.log(e);
             return FAILURE;
           }
-          console.log(tx, receipt);
           await setIsMinting(false);
           return SUCCESS;
         } catch (e) {
@@ -273,7 +264,6 @@ const useNFT = (contract, kasContract, account) => {
         // KIP37의 경우 신규 Token ID를 create 한 후 추가로 mint 할 수 있으나... mint 함수를 인식하지 못하는 문제가 있음.
         // mintBatch 함수는 ok...
         // gasLimit 계산
-        console.log(tokenId, account, amount);
         const tids = [];
         const amounts = [];
         tids.push(tokenId);
@@ -282,7 +272,6 @@ const useNFT = (contract, kasContract, account) => {
         // Klaytn KIP17 스마트컨트랙 수정하여 해결됨.
         const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
         // const gasLimit = await contract.estimateGas.mintBatch(account, tids, amounts);
-        console.log(gasPrice, contract);
 
         // mint 요청
         try {
@@ -306,7 +295,6 @@ const useNFT = (contract, kasContract, account) => {
             console.log(e);
             return FAILURE;
           }
-          console.log(tx, receipt);
           await setIsMinting(false);
           return SUCCESS;
         } catch (e) {
@@ -333,8 +321,6 @@ const useNFT = (contract, kasContract, account) => {
           .create(tokenId, amount, tokenUri)
           .estimateGas({ from: account });
 
-        console.log(gasPrice, gasLimit);
-
         // mint 요청
         const tx = await kasContract
           .create(tokenId, amount, tokenUri)
@@ -357,15 +343,12 @@ const useNFT = (contract, kasContract, account) => {
         } catch (e) {
           console.log(e);
         }
-        console.log(tx);
         await setIsMinting(false);
       } else if (creator === account) {
         // gasLimit 계산
         const gasLimit = await kasContract
           .mint(tokenId, account, amount)
           .estimateGas({ from: account });
-
-        console.log(gasPrice, gasLimit);
 
         // mint 요청
         const tx = await kasContract
@@ -389,7 +372,6 @@ const useNFT = (contract, kasContract, account) => {
         } catch (e) {
           console.log(e);
         }
-        console.log(tx);
         await setIsMinting(false);
       }
     },
@@ -412,7 +394,6 @@ const useNFT = (contract, kasContract, account) => {
           // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
           // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
           gasLimit = await contract.estimateGas.transferFrom(account, to, tokenId);
-          console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);
@@ -443,7 +424,6 @@ const useNFT = (contract, kasContract, account) => {
             amount,
             '0x',
           );
-          console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);
@@ -479,7 +459,6 @@ const useNFT = (contract, kasContract, account) => {
         console.log(e);
         errMessage = e.message;
       }
-      console.log(tx, receipt);
       await setIsTransfering(false);
       return [receipt?.status, errMessage];
     },
@@ -493,7 +472,6 @@ const useNFT = (contract, kasContract, account) => {
       setIsTransfering(true);
       const gasPrice = parseUnits('25', 'gwei').toString();
 
-      console.log('====', kasContract);
       let tx;
       let gasLimit;
 
@@ -503,7 +481,6 @@ const useNFT = (contract, kasContract, account) => {
           // TODO : TypeError: contract.estimateGas.safeTransferFrom is not a function
           // const gasLimit = await contract.estimateGas.safeTransferFrom(account, to, tokenId, '0x');
           gasLimit = await kasContract.methods.transferFrom(account, to, tokenId).estimateGas();
-          console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);
@@ -530,7 +507,6 @@ const useNFT = (contract, kasContract, account) => {
           gasLimit = await kasContract.methods
             .safeTransferFrom(account, to, tokenId, amount, '0x')
             .estimateGas();
-          console.log(gasPrice, contract);
         } catch (e) {
           console.log(e);
           await setIsTransfering(false);

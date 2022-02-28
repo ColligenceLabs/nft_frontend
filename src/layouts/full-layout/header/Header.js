@@ -34,6 +34,7 @@ import { setupNetwork } from '../../../utils/wallet';
 import { logout } from '../../../redux/slices/auth';
 import { useTheme } from '@mui/styles';
 import { updateWallet } from '../../../services/admins.service';
+import NetworkSelector from '../../../components/NetworkSelector';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
@@ -164,8 +165,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           <FeatherIcon icon="menu" width="20" height="20" />
         </IconButton>
         <Box flexGrow={1} />
+
         <LanguageSelector />
         <ThemeSelector />
+        <NetworkSelector />
 
         {connector ? (
           <>
