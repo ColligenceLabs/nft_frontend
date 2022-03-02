@@ -146,7 +146,7 @@ const WalletDialog = ({ isOpenConnectModal, handleCloseModal, activate }) => {
         await activate(kaikas, null, true);
         dispatch(setActivatingConnector(kaikas));
         window.localStorage.setItem('wallet', 'kaikas');
-      } else if (wallet.name === 'WalletConnect') {
+      } else if (wallet.name === 'WalletConnectorDialog') {
         const wc = walletconnect(true);
         await activate(wc, undefined, true);
         window.localStorage.setItem('wallet', 'walletconnect');
