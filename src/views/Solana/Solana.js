@@ -6,6 +6,9 @@ import { useConnection, useStore, useWalletModal } from '@colligence/metaplex-co
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex/index';
+import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
+import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
+import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-common';
 import { mintNFT } from '@colligence/metaplex-common/dist/lib/contracts/token';
 
@@ -40,6 +43,7 @@ const Solana = () => {
   const [files, setFiles] = useState([]);
   const [nftCreateProgress, setNFTcreateProgress] = useState(0);
 
+  const [image, setImage] = useState(null);
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const connect = useCallback(
@@ -169,6 +173,37 @@ const Solana = () => {
           <StyledButton variant="contained" onClick={onSell}>
             Sell
           </StyledButton>
+        </div>
+        <div style={{ width: '500px', marginTop: '20px' }}>
+          <CustomTextField
+            id="thumbnailFiled"
+            name="thumbnailFiled"
+            variant="outlined"
+            fullWidth
+            size="small"
+            value={image.name || ''}
+            InputProps={{
+              startAdornment: (
+                <Button
+                  component="label"
+                  variant="contained"
+                  size="small"
+                  style={{ marginRight: '1rem' }}
+                >
+                  <DriveFileMoveOutlinedIcon fontSize="small" />
+                  <input
+                    id="thumbnail"
+                    style={{ display: 'none' }}
+                    type="file"
+                    name="image"
+                    onChange={(event) => {
+                      setImage(event.currentTarget.files[0]);
+                    }}
+                  />
+                </Button>
+              ),
+            }}
+          />
         </div>
       </Grid>
     </div>
