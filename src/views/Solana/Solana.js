@@ -6,6 +6,8 @@ import { useConnection, useStore, useWalletModal } from '@colligence/metaplex-co
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex/index';
+import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-common';
+import { mintNFT } from '@colligence/metaplex-common/dist/lib/contracts/token';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -13,6 +15,30 @@ const StyledButton = styled(Button)`
 
 const Solana = () => {
   const [isInitalizingStore, setIsInitalizingStore] = useState(false);
+
+  const [attributes, setAttributes] = useState({
+    name: '',
+    symbol: '',
+    collection: '',
+    description: '',
+    external_url: '',
+    image: '',
+    animation_url: undefined,
+    attributes: undefined,
+    seller_fee_basis_points: 0,
+    creators: [],
+    properties: {
+      files: [],
+      category: MetadataCategory.Image,
+    },
+  });
+  const [isMinting, setMinting] = useState(false);
+
+  const { endpoint } = useConnectionConfig();
+  const [nft, setNft] = useState(undefined);
+  const [alertMessage, setAlertMessage] = useState();
+  const [files, setFiles] = useState([]);
+  const [nftCreateProgress, setNFTcreateProgress] = useState(0);
 
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
@@ -52,6 +78,45 @@ const Solana = () => {
 
   const onSell = async () => {
     console.log('Sell clicked');
+  };
+
+  const mint = async () => {
+    const metadata = {
+      name: attributes.name,
+      symbol: attributes.symbol,
+      creators: attributes.creators,
+      collection: attributes.collection,
+      description: attributes.description,
+      sellerFeeBasisPoints: attributes.seller_fee_basis_points,
+      image: attributes.image,
+      animation_url: attributes.animation_url,
+      attributes: attributes.attributes,
+      external_url: attributes.external_url,
+      properties: {
+        files: attributes.properties.files,
+        category: attributes.properties?.category,
+      },
+    };
+    setMinting(true);
+
+    try {
+      const _nft = await mintNFT(
+        connection,
+        wallet,
+        endpoint.name,
+        files,
+        metadata,
+        setNFTcreateProgress,
+        attributes.properties?.maxSupply,
+      );
+
+      if (_nft) setNft(_nft);
+      setAlertMessage('');
+    } catch (e) {
+      setAlertMessage(e.message);
+    } finally {
+      setMinting(false);
+    }
   };
 
   const initializeStore = async () => {
@@ -98,7 +163,7 @@ const Solana = () => {
           <StyledButton variant="contained" onClick={initializeStore}>
             Init Store
           </StyledButton>
-          <StyledButton variant="contained" onClick={onCreate}>
+          <StyledButton variant="contained" onClick={mint}>
             Create
           </StyledButton>
           <StyledButton variant="contained" onClick={onSell}>
