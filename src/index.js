@@ -34,17 +34,24 @@ const getLibrary = (provider) => {
 };
 
 ReactDOM.render(
-  <WalletProvider>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <Provider store={configureStore()}>
-        <Suspense fallback={<Spinner />}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </Suspense>
-      </Provider>
-    </Web3ReactProvider>
-  </WalletProvider>,
+  <BrowserRouter>
+    <ConnectionProvider>
+      <WalletProvider>
+        <StoreProvider
+          ownerAddress={process.env.REACT_APP_STORE_OWNER_ADDRESS_ADDRESS}
+          storeAddress={process.env.REACT_APP_STORE_ADDRESS}
+        >
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Provider store={configureStore()}>
+              <Suspense fallback={<Spinner />}>
+                <App />
+              </Suspense>
+            </Provider>
+          </Web3ReactProvider>
+        </StoreProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  </BrowserRouter>,
   document.getElementById('root'),
 );
 

@@ -1,9 +1,11 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useWalletModal } from '@colligence/metaplex-common';
+import { useConnection, useStore, useWalletModal } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
+import { saveAdmin } from '../../solana/actions/saveAdmin';
+import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex/index';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -12,17 +14,36 @@ const StyledButton = styled(Button)`
 const Solana = () => {
   const [isInitalizingStore, setIsInitalizingStore] = useState(false);
 
-  const { wallet, select } = useWallet();
+  const wallet = useWallet();
   const { setVisible } = useWalletModal();
-  // const connect = useCallback(
-  //   () => (wallet.wallet ? wallet.connect().catch() : setVisible(true)),
-  //   [wallet.wallet, wallet.connect, setVisible],
-  // );
+  const connect = useCallback(
+    () => (wallet.wallet ? wallet.connect().catch() : setVisible(true)),
+    [wallet.wallet, wallet.connect, setVisible],
+  );
 
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
 
+  const connection = useConnection();
+  // const { store } = useMeta();
+  const { setStoreForOwner } = useStore();
+
+  // useEffect(() => {
+  //   if (!process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS) {
+  //     const getStore = async () => {
+  //       if (wallet.publicKey) {
+  //         const store = await setStoreForOwner(wallet.publicKey.toBase58());
+  //         setStoreAddress(store);
+  //       } else {
+  //         setStoreAddress(undefined);
+  //       }
+  //     };
+  //     getStore();
+  //   }
+  // }, [wallet.publicKey]);
+
   const onInitStore = async () => {
     console.log('Init store clicked');
+    // await initializeStore();
   };
 
   const onCreate = async () => {
@@ -52,7 +73,7 @@ const Solana = () => {
     await setStoreForOwner(undefined);
     await setStoreForOwner(wallet.publicKey.toBase58());
 
-    history.push('/admin');
+    // history.push('/admin');
   };
 
   return (
@@ -66,12 +87,15 @@ const Solana = () => {
             variant="contained"
             onClick={() => {
               console.log(phatomWallet.name);
-              select(phatomWallet.name);
+              wallet.select(phatomWallet.name);
             }}
           >
+            Phantom
+          </StyledButton>
+          <StyledButton variant="contained" onClick={connect}>
             Connect
           </StyledButton>
-          <StyledButton variant="contained" onClick={onInitStore}>
+          <StyledButton variant="contained" onClick={initializeStore}>
             Init Store
           </StyledButton>
           <StyledButton variant="contained" onClick={onCreate}>
