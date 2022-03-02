@@ -15,6 +15,7 @@ import {
   Button,
   Snackbar,
   Alert,
+  useMediaQuery,
 } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
@@ -50,7 +51,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const { vertical, horizontal, open } = isOpenSnackbar;
   const theme = useTheme();
-
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const { t } = useTranslation();
 
   const { from } = useSelector((state) => state.nft);
@@ -180,7 +181,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             <IconButton>
               <AccountBalanceWalletIcon color="primary" />
             </IconButton>
-            {!!library && (
+            {!!library && !smDown && (
               <WalletInfo
                 walletAddress={account}
                 balance={balance}
