@@ -32,7 +32,7 @@ const NetworkTab = ({ selectedNetwork, changeNetwork }) => {
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
         {NetworkList.map((network) => (
-          <Grid item key={network.id} lg={4} md={4} sm={12}>
+          <Grid item key={network.id} lg={4} md={4} sm={12} xs={12}>
             <Box
               style={{
                 display: 'flex',
