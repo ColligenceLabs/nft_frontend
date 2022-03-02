@@ -23,6 +23,7 @@ const StyledWalletIcon = experimentalStyled('div')(() => ({
   margin: '5px',
   padding: '5px',
   borderRadius: '100px',
+  cursor: 'pointer',
 }));
 
 const WalletConnector = ({ activate }) => {
