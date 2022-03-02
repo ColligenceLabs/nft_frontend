@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@colligence/metaplex-common';
+import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
+
 const StyledButton = styled(Button)`
   width: 100px;
 `;
@@ -10,12 +12,14 @@ const StyledButton = styled(Button)`
 const Solana = () => {
   const [isInitalizingStore, setIsInitalizingStore] = useState(false);
 
-  const wallet = useWallet();
+  const { wallet, select } = useWallet();
   const { setVisible } = useWalletModal();
-  const connect = useCallback(
-    () => (wallet.wallet ? wallet.connect().catch() : setVisible(true)),
-    [wallet.wallet, wallet.connect, setVisible],
-  );
+  // const connect = useCallback(
+  //   () => (wallet.wallet ? wallet.connect().catch() : setVisible(true)),
+  //   [wallet.wallet, wallet.connect, setVisible],
+  // );
+
+  const phatomWallet = useMemo(() => getPhantomWallet(), []);
 
   const onInitStore = async () => {
     console.log('Init store clicked');
@@ -55,7 +59,16 @@ const Solana = () => {
     <div>
       <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
-          <StyledButton variant="contained" onClick={() => connect()}>
+          {/* <StyledButton variant="contained" onClick={() => connect()}> */}
+          {/*  Connect*/}
+          {/* </StyledButton> */}
+          <StyledButton
+            variant="contained"
+            onClick={() => {
+              console.log(phatomWallet.name);
+              select(phatomWallet.name);
+            }}
+          >
             Connect
           </StyledButton>
           <StyledButton variant="contained" onClick={onInitStore}>
