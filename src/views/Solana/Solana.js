@@ -2,7 +2,14 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Grid } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useConnection, useStore, useWalletModal } from '@colligence/metaplex-common';
+import {
+  MAX_METADATA_LEN,
+  useConnection,
+  useStore,
+  useWalletModal,
+  getAssetCostToStore,
+  LAMPORT_MULTIPLIER,
+} from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex/index';
@@ -11,6 +18,7 @@ import CustomTextField from '../../components/forms/custom-elements/CustomTextFi
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-common';
 import { mintNFT } from '../../solana/actions/nft';
+import { MintLayout } from '@solana/spl-token';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -38,11 +46,12 @@ const Solana = () => {
   const [isMinting, setMinting] = useState(false);
 
   const { endpoint } = useConnectionConfig();
-  console.log('--endpoint->', endpoint);
   const [nft, setNft] = useState(undefined);
   const [alertMessage, setAlertMessage] = useState();
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
   const [nftCreateProgress, setNFTcreateProgress] = useState(0);
+
+  const [cost, setCost] = useState(0);
 
   const [image, setImage] = useState(null);
   const wallet = useWallet();
@@ -118,7 +127,7 @@ const Solana = () => {
         category: 'image',
       },
     };
-    console.log('--->', metadata);
+
     const endpoint2 = {
       chainId: 103,
       label: 'devnet',
@@ -127,7 +136,13 @@ const Solana = () => {
     };
     setMinting(true);
 
-    console.log('--->', connection);
+    // setFiles({ uri: image.name, type: image.type });
+    const files = [];
+    files.push(image);
+
+    calCost(files, metadata);
+    console.log('=========>', files);
+
     try {
       const _nft = await mintNFT(
         connection,
@@ -170,6 +185,33 @@ const Solana = () => {
     await setStoreForOwner(wallet.publicKey.toBase58());
 
     // history.push('/admin');
+  };
+
+  const calCost = (files, metadata) => {
+    const rentCall = Promise.all([
+      connection.getMinimumBalanceForRentExemption(MintLayout.span),
+      connection.getMinimumBalanceForRentExemption(MAX_METADATA_LEN),
+    ]);
+    if (files.length)
+      getAssetCostToStore([...files, new File([JSON.stringify(metadata)], 'metadata.json')]).then(
+        async (lamports) => {
+          const sol = lamports / LAMPORT_MULTIPLIER;
+
+          // TODO: cache this and batch in one call
+          const [mintRent, metadataRent] = await rentCall;
+
+          // const uriStr = 'x';
+          // let uriBuilder = '';
+          // for (let i = 0; i < MAX_URI_LENGTH; i++) {
+          //   uriBuilder += uriStr;
+          // }
+
+          const additionalSol = (metadataRent + mintRent) / LAMPORT_MULTIPLIER;
+
+          // TODO: add fees based on number of transactions and signers
+          setCost(sol + additionalSol);
+        },
+      );
   };
 
   return (
