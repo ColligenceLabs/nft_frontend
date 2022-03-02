@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import NetworkTab from './NetworkTab';
@@ -6,13 +6,23 @@ import KlayWallet from './KlayWallet';
 import EthWallet from './EthWallet';
 import SolWallet from './SolWallet';
 
-const WalletConnectorDialog = ({ isOpenConnectModal, handleCloseModal, activate }) => {
+const WalletConnectorDialog = ({
+  isOpenConnectModal,
+  handleCloseModal,
+  activate,
+  selectedNetworkId,
+}) => {
   const { t } = useTranslation();
-  const [selectedNetwork, setSelectedNetwork] = useState(0);
+  const [selectedNetwork, setSelectedNetwork] = useState(selectedNetworkId);
 
   const changeNetwork = (id) => {
     setSelectedNetwork(id);
   };
+
+  useEffect(() => {
+    setSelectedNetwork(selectedNetworkId);
+    return () => setSelectedNetwork(0);
+  }, [selectedNetworkId]);
 
   return (
     <React.Fragment>

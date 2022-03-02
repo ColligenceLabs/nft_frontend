@@ -15,6 +15,7 @@ import {
   Button,
   Snackbar,
   Alert,
+  useMediaQuery,
 } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import PropTypes from 'prop-types';
@@ -41,7 +42,7 @@ import WalletConnector from '../../../components/WalletConnector';
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
-  const [isOpenConnectTestModal, setIsOpenConnectTestModal] = useState(false);
+  // const [isOpenConnectTestModal, setIsOpenConnectTestModal] = useState(false);
   const [isOpenSnackbar, setIsOpenSnackbar] = useState({
     open: false,
     vertical: 'top',
@@ -50,7 +51,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const { vertical, horizontal, open } = isOpenSnackbar;
   const theme = useTheme();
-
+  const smDown = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   const { t } = useTranslation();
 
   const { from } = useSelector((state) => state.nft);
@@ -123,9 +124,9 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     setIsOpenConnectModal(false);
   };
 
-  const handleCloseTestModal = () => {
-    setIsOpenConnectTestModal(false);
-  };
+  // const handleCloseTestModal = () => {
+  //   setIsOpenConnectTestModal(false);
+  // };
 
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
@@ -180,7 +181,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             <IconButton>
               <AccountBalanceWalletIcon color="primary" />
             </IconButton>
-            {!!library && (
+            {!!library && !smDown && (
               <WalletInfo
                 walletAddress={account}
                 balance={balance}
@@ -194,26 +195,22 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             <AccountBalanceWalletIcon />
           </IconButton>
         )}
-        <Box></Box>
 
-        {/*<WalletConnector />*/}
+        <Box
+          sx={{
+            mr: 1,
+          }}
+        >
+          <WalletConnector activate={activate} />
+        </Box>
         <LanguageSelector />
         <ThemeSelector />
-
-        <Button variant="contained" onClick={() => setIsOpenConnectTestModal(true)}>
-          Test Wallet
-        </Button>
-
         <WalletDialog
           isOpenConnectModal={isOpenConnectModal}
           handleCloseModal={handleCloseModal}
           activate={activate}
         />
-        <WalletConnectorDialog
-          isOpenConnectModal={isOpenConnectTestModal}
-          handleCloseModal={handleCloseTestModal}
-          activate={activate}
-        />
+
         <Box
           sx={{
             width: '1px',

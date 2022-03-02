@@ -1,7 +1,9 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/styles';
 
 const WalletCard = ({ wallet, handleWalletCardClick }) => {
+  const theme = useTheme();
   return (
     <>
       {wallet.name !== null ? (
@@ -12,7 +14,11 @@ const WalletCard = ({ wallet, handleWalletCardClick }) => {
             alignItems: 'center',
             margin: '8px',
             padding: '16px',
-            backgroundColor: 'white',
+            // border: `1px solid ${
+            //   selectedNetwork === network.id ? theme.palette.primary.main : 'white'
+            // }`,
+
+            backgroundColor: `${theme.palette.background.paper}`,
             borderRadius: '5px',
             gap: '0.5rem',
             cursor: 'pointer',
@@ -28,7 +34,7 @@ const WalletCard = ({ wallet, handleWalletCardClick }) => {
           style={{
             margin: '8px',
             padding: '16px',
-            backgroundColor: 'white',
+            backgroundColor: `${theme.palette.background.paper}`,
             borderRadius: '5px',
             height: '55px',
           }}
