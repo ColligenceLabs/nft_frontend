@@ -37,7 +37,7 @@ const SolWallet = () => {
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
         {SolWalletList.map((wallet) => (
-          <Grid key={wallet.id} item lg={6} md={6} sm={12}>
+          <Grid key={wallet.id} item lg={6} md={6} sm={12} xs={12}>
             <WalletCard wallet={wallet} handleWalletCardClick={handleWalletCardClick} />
           </Grid>
         ))}
