@@ -30,11 +30,7 @@ import crypto from 'crypto';
 
 import { AR_SOL_HOLDER_ID } from '../utils/ids';
 import BN from 'bn.js';
-import {
-  Collection,
-  DataV2,
-  Uses,
-} from '@metaplex-foundation/mpl-token-metadata';
+import { Collection, DataV2, Uses } from '@metaplex-foundation/mpl-token-metadata';
 
 const RESERVED_TXN_MANIFEST = 'manifest.json';
 const RESERVED_METADATA = 'metadata.json';
@@ -58,9 +54,7 @@ const uploadToArweave = async (data: FormData): Promise<IArweaveResult> => {
 
   if (!resp.ok) {
     return Promise.reject(
-      new Error(
-        'Unable to upload the artwork to Arweave. Please wait and then try again.',
-      ),
+      new Error('Unable to upload the artwork to Arweave. Please wait and then try again.'),
     );
   }
 
@@ -110,16 +104,14 @@ export const mintNFT = async (
     external_url: metadata.external_url,
     properties: {
       ...metadata.properties,
-      creators: metadata.creators?.map(creator => {
+      creators: metadata.creators?.map((creator) => {
         return {
           address: creator.address,
           share: creator.share,
         };
       }),
     },
-    collection: metadata.collection
-      ? new PublicKey(metadata.collection).toBase58()
-      : null,
+    collection: metadata.collection ? new PublicKey(metadata.collection).toBase58() : null,
     use: metadata.uses ? metadata.uses : null,
   };
 
@@ -128,17 +120,17 @@ export const mintNFT = async (
     new File([JSON.stringify(metadataContent)], RESERVED_METADATA),
   ];
 
-  const { instructions: pushInstructions, signers: pushSigners } =
-    await prepPayForFilesTxn(wallet, realFiles);
+  const { instructions: pushInstructions, signers: pushSigners } = await prepPayForFilesTxn(
+    wallet,
+    realFiles,
+  );
 
   progressCallback(1);
 
   const TOKEN_PROGRAM_ID = programIds().token;
 
   // Allocate memory for the account
-  const mintRent = await connection.getMinimumBalanceForRentExemption(
-    MintLayout.span,
-  );
+  const mintRent = await connection.getMinimumBalanceForRentExemption(MintLayout.span);
   // const accountRent = await connection.getMinimumBalanceForRentExemption(
   //   AccountLayout.span,
   // );
@@ -151,6 +143,7 @@ export const mintNFT = async (
   const instructions: TransactionInstruction[] = [...pushInstructions];
   const signers: Keypair[] = [...pushSigners];
 
+  console.log('===>', payerPublicKey);
   // This is only temporarily owned by wallet...transferred to program by createMasterEdition below
   const mintKey = createMint(
     instructions,
@@ -165,11 +158,7 @@ export const mintNFT = async (
 
   const recipientKey = (
     await findProgramAddress(
-      [
-        wallet.publicKey.toBuffer(),
-        programIds().token.toBuffer(),
-        toPublicKey(mintKey).toBuffer(),
-      ],
+      [wallet.publicKey.toBuffer(), programIds().token.toBuffer(), toPublicKey(mintKey).toBuffer()],
       programIds().associatedToken,
     )
   )[0];
@@ -250,16 +239,14 @@ export const mintNFT = async (
     {},
   );
   data.append('tags', JSON.stringify(tags));
-  realFiles.map(f => data.append('file[]', f));
+  realFiles.map((f) => data.append('file[]', f));
 
   // TODO: convert to absolute file name for image
 
   const result: IArweaveResult = await uploadToArweave(data);
   progressCallback(6);
 
-  const metadataFile = result.messages?.find(
-    m => m.filename === RESERVED_TXN_MANIFEST,
-  );
+  const metadataFile = result.messages?.find((m) => m.filename === RESERVED_TXN_MANIFEST);
   if (metadataFile?.transactionId && wallet.publicKey) {
     const updateInstructions: TransactionInstruction[] = [];
     const updateSigners: Keypair[] = [];
@@ -334,12 +321,7 @@ export const mintNFT = async (
 
     progressCallback(8);
 
-    await sendTransactionWithRetry(
-      connection,
-      wallet,
-      updateInstructions,
-      updateSigners,
-    );
+    await sendTransactionWithRetry(connection, wallet, updateInstructions, updateSigners);
 
     notify({
       message: 'Art created on Solana',

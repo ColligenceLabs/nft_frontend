@@ -10,7 +10,7 @@ import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLa
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-common';
-import { mintNFT } from '@colligence/metaplex-common/dist/lib/contracts/token';
+import { mintNFT } from '../../solana/actions/nft';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -38,6 +38,7 @@ const Solana = () => {
   const [isMinting, setMinting] = useState(false);
 
   const { endpoint } = useConnectionConfig();
+  console.log('--endpoint->', endpoint);
   const [nft, setNft] = useState(undefined);
   const [alertMessage, setAlertMessage] = useState();
   const [files, setFiles] = useState([]);
@@ -86,32 +87,58 @@ const Solana = () => {
 
   const mint = async () => {
     const metadata = {
-      name: attributes.name,
-      symbol: attributes.symbol,
-      creators: attributes.creators,
-      collection: attributes.collection,
-      description: attributes.description,
-      sellerFeeBasisPoints: attributes.seller_fee_basis_points,
-      image: attributes.image,
-      animation_url: attributes.animation_url,
-      attributes: attributes.attributes,
-      external_url: attributes.external_url,
+      // name: attributes.name,
+      // symbol: attributes.symbol,
+      // creators: attributes.creators,
+      // collection: attributes.collection,
+      // description: attributes.description,
+      // sellerFeeBasisPoints: attributes.seller_fee_basis_points,
+      // image: attributes.image,
+      // animation_url: attributes.animation_url,
+      // attributes: attributes.attributes,
+      // external_url: attributes.external_url,
+      // properties: {
+      //   files: attributes.properties.files,
+      //   category: attributes.properties?.category,
+      // },
+      name: 'Klimit',
+      symbol: 'KMT',
+      creators: [
+        { address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL', share: 100, verified: true },
+      ],
+      collection: '',
+      description: 'Klimt Paintings',
+      sellerFeeBasisPoints: 500,
+      image: image.name,
+      animation_url: undefined,
+      attributes: undefined,
+      external_url: '',
       properties: {
-        files: attributes.properties.files,
-        category: attributes.properties?.category,
+        files: [{ uri: image.name, type: image.type }],
+        category: 'image',
       },
+    };
+    console.log('--->', metadata);
+    const endpoint2 = {
+      chainId: 103,
+      label: 'devnet',
+      name: 'devnet',
+      url: 'https://api.devnet.solana.com',
     };
     setMinting(true);
 
+    console.log('--->', connection);
     try {
       const _nft = await mintNFT(
         connection,
         wallet,
-        endpoint.name,
+        // endpoint.name,
+        'devnet',
         files,
         metadata,
         setNFTcreateProgress,
-        attributes.properties?.maxSupply,
+        // attributes.properties?.maxSupply,
+        10,
       );
 
       if (_nft) setNft(_nft);
@@ -181,7 +208,7 @@ const Solana = () => {
             variant="outlined"
             fullWidth
             size="small"
-            value={image.name || ''}
+            value={image?.name || ''}
             InputProps={{
               startAdornment: (
                 <Button
