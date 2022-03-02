@@ -3,6 +3,7 @@ import { Box, Grid, Typography } from '@mui/material';
 import eth_icon from '../../assets/images/network_icon/ethereum-eth-logo.png';
 import klay_icon from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import sol_icon from '../../assets/images/network_icon/solana-sol-logo.png';
+import { useTheme } from '@mui/styles';
 
 const NetworkList = [
   {
@@ -25,7 +26,8 @@ const NetworkList = [
   },
 ];
 
-const NetworkTab = ({ changeNetwork }) => {
+const NetworkTab = ({ selectedNetwork, changeNetwork }) => {
+  const theme = useTheme();
   return (
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
@@ -38,7 +40,11 @@ const NetworkTab = ({ changeNetwork }) => {
                 alignItems: 'center',
                 margin: '8px',
                 padding: '16px',
-                backgroundColor: 'white',
+                border: `1px solid ${
+                  selectedNetwork === network.id ? theme.palette.primary.main : 'white'
+                }`,
+
+                backgroundColor: `${theme.palette.background.paper}`,
                 borderRadius: '5px',
                 gap: '0.5rem',
                 cursor: 'pointer',

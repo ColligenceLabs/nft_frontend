@@ -12,6 +12,7 @@ const Solana = () => {
 
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
+
   const connect = useCallback(
     () => (wallet.wallet ? wallet.connect().catch() : setVisible(true)),
     [wallet.wallet, wallet.connect, setVisible],
@@ -55,7 +56,7 @@ const Solana = () => {
     <div>
       <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
-          <StyledButton variant="contained" onClick={() => connect()}>
+          <StyledButton variant="contained" onClick={connect}>
             Connect
           </StyledButton>
           <StyledButton variant="contained" onClick={onInitStore}>
