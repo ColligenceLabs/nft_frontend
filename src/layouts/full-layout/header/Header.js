@@ -35,10 +35,13 @@ import { logout } from '../../../redux/slices/auth';
 import { useTheme } from '@mui/styles';
 import { updateWallet } from '../../../services/admins.service';
 import NetworkSelector from '../../../components/NetworkSelector';
+import WalletConnectorDialog from '../../../components/WalletConnectorDialog';
+import WalletConnector from '../../../components/WalletConnector';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [isOpenConnectTestModal, setIsOpenConnectTestModal] = useState(false);
   const [isOpenSnackbar, setIsOpenSnackbar] = useState({
     open: false,
     vertical: 'top',
@@ -120,6 +123,10 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
     setIsOpenConnectModal(false);
   };
 
+  const handleCloseTestModal = () => {
+    setIsOpenConnectTestModal(false);
+  };
+
   const handleClick4 = (event) => {
     setAnchorEl4(event.currentTarget);
   };
@@ -187,13 +194,24 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
             <AccountBalanceWalletIcon />
           </IconButton>
         )}
+        <Box></Box>
 
+        {/*<WalletConnector />*/}
         <LanguageSelector />
         <ThemeSelector />
+
+        <Button variant="contained" onClick={() => setIsOpenConnectTestModal(true)}>
+          Test Wallet
+        </Button>
 
         <WalletDialog
           isOpenConnectModal={isOpenConnectModal}
           handleCloseModal={handleCloseModal}
+          activate={activate}
+        />
+        <WalletConnectorDialog
+          isOpenConnectModal={isOpenConnectTestModal}
+          handleCloseModal={handleCloseTestModal}
           activate={activate}
         />
         <Box
