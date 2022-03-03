@@ -20,6 +20,7 @@ import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined
 import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-common';
 import { mintNFT } from '../../solana/actions/nft';
 import { MintLayout } from '@solana/spl-token';
+import splitAddress from '../../utils/splitAddress';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -93,6 +94,7 @@ const Solana = () => {
 
   const onSell = async () => {
     console.log('Sell clicked');
+    console.log(splitAddress(wallet.publicKey.toBase58()));
   };
 
   const mint = async () => {
@@ -104,9 +106,9 @@ const Solana = () => {
     // });
     const fixedCreators = [
       {
-        key: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
-        label: '6u76...C8WL',
-        value: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
+        key: wallet.publicKey.toBase58(),
+        label: splitAddress(wallet.publicKey.toBase58()),
+        value: wallet.publicKey.toBase58(),
       },
     ];
     // TODO : artCreate/index.tsx 1091 라인 참고하여 share 값 계산 등등 처리할 것
@@ -171,8 +173,8 @@ const Solana = () => {
       const _nft = await mintNFT(
         connection,
         wallet,
-        // endpoint.name,
-        'devnet',
+        endpoint.name,
+        // 'devnet',
         files,
         metadata,
         setNFTcreateProgress,
@@ -183,6 +185,7 @@ const Solana = () => {
       if (_nft) setNft(_nft);
       setAlertMessage('');
     } catch (e) {
+      console.log('mintNFT error', e);
       setAlertMessage(e.message);
     } finally {
       setMinting(false);
@@ -248,7 +251,6 @@ const Solana = () => {
           <StyledButton
             variant="contained"
             onClick={() => {
-              console.log(phatomWallet.name);
               wallet.select(phatomWallet.name);
             }}
           >
