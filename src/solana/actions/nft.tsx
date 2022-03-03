@@ -114,15 +114,11 @@ export const mintNFT = async (
     collection: metadata.collection ? new PublicKey(metadata.collection).toBase58() : null,
     use: metadata.uses ? metadata.uses : null,
   };
-  console.log('-- metadataContent -->', metadataContent);
-
-  console.log('-- files -->', files);
 
   const realFiles: File[] = [
     ...files,
     new File([JSON.stringify(metadataContent)], RESERVED_METADATA),
   ];
-  console.log('-- realFiles -->', realFiles);
 
   const { instructions: pushInstructions, signers: pushSigners } = await prepPayForFilesTxn(
     wallet,
@@ -147,7 +143,6 @@ export const mintNFT = async (
   const instructions: TransactionInstruction[] = [...pushInstructions];
   const signers: Keypair[] = [...pushSigners];
 
-  console.log('===>', payerPublicKey);
   // This is only temporarily owned by wallet...transferred to program by createMasterEdition below
   const mintKey = createMint(
     instructions,
@@ -160,15 +155,12 @@ export const mintNFT = async (
     signers,
   ).toBase58();
 
-  console.log('--connection !!! ->', connection);
-
   const recipientKey = (
     await findProgramAddress(
       [wallet.publicKey.toBuffer(), programIds().token.toBuffer(), toPublicKey(mintKey).toBuffer()],
       programIds().associatedToken,
     )
   )[0];
-  console.log('--recipientKey !!! ->', recipientKey);
 
   createAssociatedTokenAccountInstruction(
     instructions,
@@ -177,57 +169,29 @@ export const mintNFT = async (
     wallet.publicKey,
     toPublicKey(mintKey),
   );
-  console.log('!!!!!!!!!!!!!!!');
 
-  console.log('--->', {
-    symbol: metadata.symbol,
-    name: metadata.name,
-    uri: ' '.repeat(64), // size of url for arweave
-    sellerFeeBasisPoints: metadata.sellerFeeBasisPoints,
-    creators: metadata.creators,
-    collection: metadata.collection
-      ? new Collection({
-          key: new PublicKey(metadata.collection).toBase58(),
-          verified: false,
-        })
-      : null,
-    uses: metadata.uses || null,
-  });
-  console.log(
-    '===>',
+  const metadataAccount = await createMetadataV2(
+    new DataV2({
+      symbol: metadata.symbol,
+      name: metadata.name,
+      uri: ' '.repeat(64), // size of url for arweave
+      sellerFeeBasisPoints: metadata.sellerFeeBasisPoints,
+      creators: metadata.creators,
+      collection: metadata.collection
+        ? new Collection({
+            key: new PublicKey(metadata.collection).toBase58(),
+            verified: false,
+          })
+        : null,
+      uses: metadata.uses || null,
+    }),
     payerPublicKey,
     mintKey,
     payerPublicKey,
     instructions,
     wallet.publicKey.toBase58(),
   );
-  try {
-    const metadataAccount = await createMetadataV2(
-      new DataV2({
-        symbol: metadata.symbol,
-        name: metadata.name,
-        uri: ' '.repeat(64), // size of url for arweave
-        sellerFeeBasisPoints: metadata.sellerFeeBasisPoints,
-        creators: metadata.creators,
-        collection: metadata.collection
-          ? new Collection({
-              key: new PublicKey(metadata.collection).toBase58(),
-              verified: false,
-            })
-          : null,
-        uses: metadata.uses || null,
-      }),
-      payerPublicKey,
-      mintKey,
-      payerPublicKey,
-      instructions,
-      wallet.publicKey.toBase58(),
-    );
 
-    console.log('==metadataAccount===>', metadataAccount);
-  } catch (e) {
-    console.log(e);
-  }
   // const metadataAccount = '7RTVnNaGExtXCL29snLbpuBx57otRePQ2tbS4ag6c4jn';
   // progressCallback(2);
 
@@ -241,7 +205,6 @@ export const mintNFT = async (
   //   }),
   // );
 
-  console.log('--connection !!! ->', connection);
   const { txid } = await sendTransactionWithRetry(
     connection,
     wallet,
