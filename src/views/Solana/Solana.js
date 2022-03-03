@@ -83,11 +83,6 @@ const Solana = () => {
   //   }
   // }, [wallet.publicKey]);
 
-  const onInitStore = async () => {
-    console.log('Init store clicked');
-    // await initializeStore();
-  };
-
   const onCreate = async () => {
     console.log('Create clicked');
   };
