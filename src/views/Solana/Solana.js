@@ -8,6 +8,7 @@ import {
   useStore,
   useWalletModal,
   getAssetCostToStore,
+  Creator,
   LAMPORT_MULTIPLIER,
 } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
@@ -95,6 +96,28 @@ const Solana = () => {
   };
 
   const mint = async () => {
+    // TODO : artCreate/index.tsx 1091 라인 참고
+    // const creators = new Creator({
+    //   address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
+    //   share: 100,
+    //   verified: true,
+    // });
+    const fixedCreators = [
+      {
+        key: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
+        label: '6u76...C8WL',
+        value: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
+      },
+    ];
+    const creatorStructs = [...fixedCreators].map(
+      (c) =>
+        new Creator({
+          address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
+          verified: true,
+          share: 100,
+        }),
+    );
+
     const metadata = {
       // name: attributes.name,
       // symbol: attributes.symbol,
@@ -112,9 +135,7 @@ const Solana = () => {
       // },
       name: 'Klimit',
       symbol: 'KMT',
-      creators: [
-        { address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL', share: 100, verified: true },
-      ],
+      creators: creatorStructs,
       collection: '',
       description: 'Klimt Paintings',
       sellerFeeBasisPoints: 500,

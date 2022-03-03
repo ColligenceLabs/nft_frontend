@@ -201,35 +201,35 @@ export const mintNFT = async (
     instructions,
     wallet.publicKey.toBase58(),
   );
-  // try {
-  //   const metadataAccount = await createMetadataV2(
-  //     new DataV2({
-  //       symbol: metadata.symbol,
-  //       name: metadata.name,
-  //       uri: ' '.repeat(64), // size of url for arweave
-  //       sellerFeeBasisPoints: metadata.sellerFeeBasisPoints,
-  //       creators: metadata.creators,
-  //       collection: metadata.collection
-  //         ? new Collection({
-  //             key: new PublicKey(metadata.collection).toBase58(),
-  //             verified: false,
-  //           })
-  //         : null,
-  //       uses: metadata.uses || null,
-  //     }),
-  //     payerPublicKey,
-  //     mintKey,
-  //     payerPublicKey,
-  //     instructions,
-  //     wallet.publicKey.toBase58(),
-  //   );
-  // } catch (e) {
-  //   console.log(e);
-  // }
-  const metadataAccount = '7RTVnNaGExtXCL29snLbpuBx57otRePQ2tbS4ag6c4jn';
-  // progressCallback(2);
+  try {
+    const metadataAccount = await createMetadataV2(
+      new DataV2({
+        symbol: metadata.symbol,
+        name: metadata.name,
+        uri: ' '.repeat(64), // size of url for arweave
+        sellerFeeBasisPoints: metadata.sellerFeeBasisPoints,
+        creators: metadata.creators,
+        collection: metadata.collection
+          ? new Collection({
+              key: new PublicKey(metadata.collection).toBase58(),
+              verified: false,
+            })
+          : null,
+        uses: metadata.uses || null,
+      }),
+      payerPublicKey,
+      mintKey,
+      payerPublicKey,
+      instructions,
+      wallet.publicKey.toBase58(),
+    );
 
-  console.log('==metadataAccount===>', metadataAccount);
+    console.log('==metadataAccount===>', metadataAccount);
+  } catch (e) {
+    console.log(e);
+  }
+  // const metadataAccount = '7RTVnNaGExtXCL29snLbpuBx57otRePQ2tbS4ag6c4jn';
+  // progressCallback(2);
 
   // TODO: enable when using payer account to avoid 2nd popup
   // const block = await connection.getRecentBlockhash('singleGossip');
