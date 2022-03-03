@@ -192,7 +192,6 @@ export const mintNFT = async (
     wallet.publicKey.toBase58(),
   );
 
-  // const metadataAccount = '7RTVnNaGExtXCL29snLbpuBx57otRePQ2tbS4ag6c4jn';
   // progressCallback(2);
 
   // TODO: enable when using payer account to avoid 2nd popup
@@ -225,7 +224,7 @@ export const mintNFT = async (
   // await connection.confirmTransaction(txid, 'max');
   await connection.getParsedConfirmedTransaction(txid, 'confirmed');
 
-  progressCallback(5);
+  // progressCallback(5);
 
   // this means we're done getting AR txn setup. Ship it off to ARWeave!
   const data = new FormData();
@@ -342,6 +341,7 @@ export const mintNFT = async (
   // 1. Jordan: --- upload file and metadata to storage API
   // 2. pay for storage by hashing files and attaching memo for each file
 
+  // TODO : metadataAccount를 collections DB에 저장 후 Mint에서 id 값으로 사용
   return { metadataAccount };
 };
 
