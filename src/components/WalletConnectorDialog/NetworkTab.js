@@ -9,7 +9,7 @@ const NetworkList = [
   {
     id: 0,
     network: 'eth',
-    network_name: 'Ethreame',
+    network_name: 'Ethereum',
     icon: eth_icon,
   },
   {
