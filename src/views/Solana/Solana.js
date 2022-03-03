@@ -109,12 +109,16 @@ const Solana = () => {
         value: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
       },
     ];
+    // TODO : artCreate/index.tsx 1091 라인 참고하여 share 값 계산 등등 처리할 것
     const creatorStructs = [...fixedCreators].map(
       (c) =>
         new Creator({
-          address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
-          verified: true,
-          share: 100,
+          address: c.value,
+          verified: c.value === wallet.publicKey?.toBase58(),
+          share: 100, // TODO: UI에서 입력받게 할 것인지?
+          // share:
+          //   royalties.find(r => r.creatorKey === c.value)?.amount ||
+          //   Math.round(100 / royalties.length),
         }),
     );
 
@@ -162,7 +166,6 @@ const Solana = () => {
     files.push(image);
 
     calCost(files, metadata);
-    console.log('=========>', files);
 
     try {
       const _nft = await mintNFT(
