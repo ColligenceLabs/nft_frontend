@@ -1,14 +1,23 @@
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import solLogo from '../../assets/images/network_icon/solana-sol-logo.png';
+import ethLogo from '../../assets/images/network_icon/ethereum-eth-logo.png';
 
 const NETWORKS = [
   {
-    value: 'klay',
+    id: 0,
+    value: 'ethereum',
+    label: 'Ethereum',
+    icon: ethLogo,
+  },
+  {
+    id: 1,
+    value: 'klaytn',
     label: 'Klaytn',
     icon: klayLogo,
   },
   {
-    value: 'sol',
+    id: 2,
+    value: 'solana',
     label: 'Solana',
     icon: solLogo,
   },
