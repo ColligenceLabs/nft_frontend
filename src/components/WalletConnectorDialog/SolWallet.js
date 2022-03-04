@@ -35,7 +35,7 @@ const SolWalletList = [
     icon: null,
   },
 ];
-const SolWallet = () => {
+const SolWallet = ({ solana }) => {
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
   const dispatch = useDispatch();
@@ -47,19 +47,15 @@ const SolWallet = () => {
     }
   }, [walletName, wallet.publicKey]);
 
-  const connectPhantom = useCallback(
-    async () => {
-      try {
-        await (wallet.wallet ? wallet.connect().catch() : setVisible(true));
-        setWalletName(wallet.wallet.name);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    [wallet.wallet, wallet.connect, setVisible],
-  );
+  const connectPhantom = useCallback(async () => {
+    try {
+      await (wallet.wallet ? wallet.connect().catch() : setVisible(true));
+      setWalletName(wallet.wallet.name);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [wallet.wallet, wallet.connect, setVisible]);
   const handleWalletCardClick = (wallet) => {
-    console.log(wallet);
     if (wallet.name === 'phantom') {
       connectPhantom();
     }
@@ -69,7 +65,11 @@ const SolWallet = () => {
       <Grid container>
         {SolWalletList.map((wallet) => (
           <Grid key={wallet.id} item lg={6} md={6} sm={12} xs={12}>
-            <WalletCard wallet={wallet} handleWalletCardClick={handleWalletCardClick} />
+            <WalletCard
+              wallet={wallet}
+              network={solana}
+              handleWalletCardClick={handleWalletCardClick}
+            />
           </Grid>
         ))}
       </Grid>

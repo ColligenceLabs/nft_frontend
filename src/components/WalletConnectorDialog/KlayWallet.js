@@ -38,7 +38,7 @@ const KlayWalletList = [
   },
 ];
 
-const KlayWallet = () => {
+const KlayWallet = ({ klaytn }) => {
   const dispatch = useDispatch();
   const context = useWeb3React();
   const { activate, account } = context;
@@ -51,7 +51,6 @@ const KlayWallet = () => {
   }, [walletName, account]);
 
   const handleWalletCardClick = async (wallet) => {
-    console.log(wallet);
     setWalletName(wallet.name);
     if (wallet.name === 'metamask') {
       await activate(injected, null, true);
@@ -69,7 +68,11 @@ const KlayWallet = () => {
       <Grid container>
         {KlayWalletList.map((wallet) => (
           <Grid key={wallet.id} item lg={6} md={6} sm={12} xs={12}>
-            <WalletCard wallet={wallet} handleWalletCardClick={handleWalletCardClick} />
+            <WalletCard
+              wallet={wallet}
+              network={klaytn}
+              handleWalletCardClick={handleWalletCardClick}
+            />
           </Grid>
         ))}
       </Grid>

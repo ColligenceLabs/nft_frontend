@@ -11,10 +11,13 @@ const WalletConnectorDialog = ({
   handleCloseModal,
   activate,
   selectedNetworkId,
+  ethereum,
+  klaytn,
+  solana,
 }) => {
   const { t } = useTranslation();
   const [selectedNetwork, setSelectedNetwork] = useState(selectedNetworkId);
-
+  const [connectedNetwork, setConnectedNetwork] = useState([]);
   const changeNetwork = (id) => {
     setSelectedNetwork(id);
   };
@@ -23,6 +26,16 @@ const WalletConnectorDialog = ({
     setSelectedNetwork(selectedNetworkId);
     return () => setSelectedNetwork(0);
   }, [selectedNetworkId]);
+
+  useEffect(() => {
+    const array = [
+      ethereum.address !== undefined ? 'ethereum' : null,
+      klaytn.address !== undefined ? 'klaytn' : null,
+      solana.address !== undefined ? 'solana' : null,
+    ];
+
+    setConnectedNetwork(array);
+  }, [ethereum, klaytn, solana]);
 
   return (
     <React.Fragment>
@@ -38,11 +51,15 @@ const WalletConnectorDialog = ({
           <Box id="dialog_title">{t('Connect Wallet')}</Box>
         </DialogTitle>
         <DialogContent>
-          <NetworkTab selectedNetwork={selectedNetwork} changeNetwork={changeNetwork} />
+          <NetworkTab
+            selectedNetwork={selectedNetwork}
+            connectedNetwork={connectedNetwork}
+            changeNetwork={changeNetwork}
+          />
           <Box style={{ width: '100%', height: '1rem' }} />
-          {selectedNetwork === 0 && <EthWallet />}
-          {selectedNetwork === 1 && <KlayWallet />}
-          {selectedNetwork === 2 && <SolWallet />}
+          {selectedNetwork === 0 && <EthWallet ethereum={ethereum} />}
+          {selectedNetwork === 1 && <KlayWallet klaytn={klaytn} />}
+          {selectedNetwork === 2 && <SolWallet solana={solana} />}
         </DialogContent>
       </Dialog>
     </React.Fragment>

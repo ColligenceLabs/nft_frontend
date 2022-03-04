@@ -8,26 +8,27 @@ import { useTheme } from '@mui/styles';
 const NetworkList = [
   {
     id: 0,
-    network: 'eth',
+    network: 'ethereum',
     network_name: 'Ethereum',
     icon: eth_icon,
   },
   {
     id: 1,
-    network: 'klay',
+    network: 'klaytn',
     network_name: 'Klaytn',
     icon: klay_icon,
   },
   {
     id: 2,
-    network: 'sol',
+    network: 'solana',
     network_name: 'Solana',
     icon: sol_icon,
   },
 ];
 
-const NetworkTab = ({ selectedNetwork, changeNetwork }) => {
+const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
   const theme = useTheme();
+
   return (
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
@@ -44,7 +45,12 @@ const NetworkTab = ({ selectedNetwork, changeNetwork }) => {
                   selectedNetwork === network.id ? theme.palette.primary.main : 'white'
                 }`,
 
-                backgroundColor: `${theme.palette.background.paper}`,
+                backgroundColor: `${
+                  connectedNetwork.includes(network.network)
+                    ? `${theme.palette.thirdary.main}`
+                    : `${theme.palette.background.paper}`
+                }`,
+
                 borderRadius: '5px',
                 gap: '0.5rem',
                 cursor: 'pointer',

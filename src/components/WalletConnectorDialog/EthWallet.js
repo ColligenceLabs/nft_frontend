@@ -6,7 +6,7 @@ import talken_icon from '../../assets/images/wallet_icons/wallet_icon_talk.png';
 import WalletCard from './WalletCard';
 import { injected, walletconnect } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
 import { setEthereum, setKlaytn } from '../../redux/slices/wallets';
 
@@ -37,15 +37,16 @@ const EthWalletList = [
   },
 ];
 
-const EthWallet = () => {
+const EthWallet = ({ ethereum }) => {
   const dispatch = useDispatch();
   const context = useWeb3React();
   const { activate, account } = context;
+  // const { ethereum } = useSelector((state) => state.wallets);
   const [walletName, setWalletName] = useState('');
 
   useEffect(() => {
     if (walletName !== '') {
-      dispatch(setEthereum({wallet: walletName, address: account}));
+      dispatch(setEthereum({ wallet: walletName, address: account }));
     }
   }, [walletName, account]);
 
@@ -59,12 +60,17 @@ const EthWallet = () => {
       await activate(wc, undefined, true);
     }
   };
+
   return (
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
         {EthWalletList.map((wallet) => (
           <Grid key={wallet.id} item lg={6} md={6} sm={12} xs={12}>
-            <WalletCard wallet={wallet} handleWalletCardClick={handleWalletCardClick} />
+            <WalletCard
+              wallet={wallet}
+              network={ethereum}
+              handleWalletCardClick={handleWalletCardClick}
+            />
           </Grid>
         ))}
       </Grid>
