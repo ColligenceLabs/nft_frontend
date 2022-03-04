@@ -138,6 +138,7 @@ const WalletDialog = ({ isOpenConnectModal, handleCloseModal, activate }) => {
 
   const onClickWallet = async (wallet) => {
     try {
+      console.log('--->', wallet.name);
       if (wallet.name === 'MetaMask') {
         await activate(injected, null, true);
         dispatch(setActivatingConnector(injected));
@@ -146,7 +147,7 @@ const WalletDialog = ({ isOpenConnectModal, handleCloseModal, activate }) => {
         await activate(kaikas, null, true);
         dispatch(setActivatingConnector(kaikas));
         window.localStorage.setItem('wallet', 'kaikas');
-      } else if (wallet.name === 'WalletConnectorDialog') {
+      } else if (wallet.name === 'WalletConnect') {
         const wc = walletconnect(true);
         await activate(wc, undefined, true);
         window.localStorage.setItem('wallet', 'walletconnect');
