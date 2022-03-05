@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Box, experimentalStyled } from '@mui/material';
+import { experimentalStyled } from '@mui/material';
+import WalletConnectorDialog from '../WalletConnectorDialog';
+import { useSelector } from 'react-redux';
+import WalletDetail from '../WalletDetail/WalletDetail';
 import eth_icon from '../../assets/images/network_icon/ethereum-eth-logo.png';
 import klay_icon from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import sol_icon from '../../assets/images/network_icon/solana-sol-logo.png';
-import { styled } from '@mui/material/styles';
-import WalletConnectorDialog from '../WalletConnectorDialog';
-import { useSelector } from 'react-redux';
 
 const WalletIconWrapper = experimentalStyled('div')(() => ({
   display: 'flex',
@@ -32,37 +32,69 @@ const StyledWalletIcon = experimentalStyled('div')(({ address, theme }) => ({
 const WalletConnector = ({ activate }) => {
   const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
-  const [isOpenConnectTestModal, setIsOpenConnectTestModal] = useState(false);
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
   const [selectedNetworkId, setSelectedNetworkId] = useState(0);
-  const handleCloseTestModal = () => {
-    setIsOpenConnectTestModal(false);
+  const [connectedWallet, setConnectedWallet] = useState();
+
+  const handleCloseConnectModal = () => {
+    setIsOpenConnectModal(false);
   };
-  const onClickWalletIcon = (id) => {
+
+  const hanleCloseDetailModal = () => {
+    setIsOpenDetailModal(false);
+  };
+
+  const handleSwitchWallet = () => {
+    setIsOpenDetailModal(false);
+    setIsOpenConnectModal(true);
+  };
+  const onClickWalletIcon = (id, chain, wallet) => {
     setSelectedNetworkId(id);
-    setIsOpenConnectTestModal(true);
+    if (wallet.address === undefined) {
+      setIsOpenConnectModal(true);
+    } else {
+      setConnectedWallet({ ...wallet, chain: chain });
+      setIsOpenDetailModal(true);
+    }
   };
 
   return (
     <>
       <WalletIconWrapper>
-        <StyledWalletIcon address={ethereum.address} onClick={() => onClickWalletIcon(0)}>
+        <StyledWalletIcon
+          address={ethereum.address}
+          onClick={() => onClickWalletIcon(0, 'ethereum', ethereum)}
+        >
           <img src={eth_icon} alt={'eth_icon'} width="20px" />
         </StyledWalletIcon>
-        <StyledWalletIcon address={klaytn.address} onClick={() => onClickWalletIcon(1)}>
+        <StyledWalletIcon
+          address={klaytn.address}
+          onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
+        >
           <img src={klay_icon} alt={'klay_icon'} width="20px" />
         </StyledWalletIcon>
-        <StyledWalletIcon address={solana.address} onClick={() => onClickWalletIcon(2)}>
+        <StyledWalletIcon
+          address={solana.address}
+          onClick={() => onClickWalletIcon(2, 'solana', solana)}
+        >
           <img src={sol_icon} alt={'sol_icon'} width="20px" />
         </StyledWalletIcon>
       </WalletIconWrapper>
       <WalletConnectorDialog
         selectedNetworkId={selectedNetworkId}
-        isOpenConnectModal={isOpenConnectTestModal}
-        handleCloseModal={handleCloseTestModal}
+        isOpenConnectModal={isOpenConnectModal}
+        handleCloseModal={handleCloseConnectModal}
         activate={activate}
         ethereum={ethereum}
         klaytn={klaytn}
         solana={solana}
+      />
+      <WalletDetail
+        isOpenDetailModal={isOpenDetailModal}
+        handleCloseDetailModal={hanleCloseDetailModal}
+        handleSwitchWallet={handleSwitchWallet}
+        connectedWallet={connectedWallet}
       />
     </>
   );

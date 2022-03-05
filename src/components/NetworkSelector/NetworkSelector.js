@@ -8,8 +8,7 @@ const NetworkSelector = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const currentNetwork = localStorage.getItem('cur_network') || 'klay';
-
+  const currentNetwork = localStorage.getItem('cur_network') || 'klaytn';
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -46,7 +45,7 @@ const NetworkSelector = () => {
           horizontal: 'center',
         }}
       >
-        {NETWORKS.map((option) => (
+        {NETWORKS.filter((network) => network.value !== 'ethereum').map((option) => (
           <IconButton key={option.value} onClick={() => handleChangeNetwork(option.value)}>
             <Box
               style={{
