@@ -11,6 +11,7 @@ import {
   Creator,
   LAMPORT_MULTIPLIER,
   useUserAccounts,
+  useMeta,
 } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
@@ -69,16 +70,18 @@ const Solana = () => {
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
 
   const connection = useConnection();
-  // const { store } = useMeta();
+  const { store } = useMeta();
   const { setStoreForOwner } = useStore();
 
   const { accountByMint } = useUserAccounts();
   const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
-  console.log('=====>', art);
+  // console.log('=====>', art);
   // const art = useArt(id);
 
   const artMintTokenAccount = accountByMint.get(art.mint);
   const walletPubKey = wallet?.publicKey?.toString() || '';
+
+  const [updatedCreators, setUpdatedCreators] = useState({});
 
   // useEffect(() => {
   //   if (!process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS) {
@@ -93,6 +96,20 @@ const Solana = () => {
   //     getStore();
   //   }
   // }, [wallet.publicKey]);
+
+  // TODO : input
+  const [newCreator, setNewCreator] = useState();
+
+  useEffect(() => {
+    const newWhitelistedCreator = new WhitelistedCreator({
+      activated: true,
+      // address: '81DhXxGzC4ymw97EAx9QaoFQ9rqY5AsSVQXthYB5LXSo',
+      address: newCreator,
+    });
+    // setUpdatedCreators({ '81DhXxGzC4ymw97EAx9QaoFQ9rqY5AsSVQXthYB5LXSo': newCreator });
+    // console.log('===>', newWhitelistedCreator);
+    setUpdatedCreators({ [newCreator]: newWhitelistedCreator });
+  }, [newCreator]);
 
   const onCreate = async () => {
     console.log('Create clicked');
@@ -224,6 +241,11 @@ const Solana = () => {
     }
   };
 
+  const addCreator = async (address) => {
+    console.log('==addCreator==>', updatedCreators);
+    await saveAdmin(connection, wallet, store.public, Object.values(updatedCreators));
+  };
+
   const initializeStore = async () => {
     if (!wallet.publicKey) {
       return;
@@ -294,6 +316,9 @@ const Solana = () => {
           <StyledButton variant="contained" onClick={initializeStore}>
             Init Store
           </StyledButton>
+          <StyledButton variant="contained" onClick={addCreator}>
+            Add Creator
+          </StyledButton>
           <StyledButton variant="contained" onClick={mintCollection}>
             Create Collection
           </StyledButton>
@@ -332,6 +357,17 @@ const Solana = () => {
                   />
                 </Button>
               ),
+            }}
+          />
+        </div>
+        <div style={{ width: '500px', marginTop: '20px' }}>
+          <input
+            type="text"
+            name="creator"
+            placeholder="New Creator Address"
+            style={{ width: '500px', height: '40px' }}
+            onChange={(e) => {
+              setNewCreator(e.target.value);
             }}
           />
         </div>
