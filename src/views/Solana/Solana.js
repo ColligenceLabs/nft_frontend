@@ -10,6 +10,7 @@ import {
   getAssetCostToStore,
   Creator,
   LAMPORT_MULTIPLIER,
+  useUserAccounts,
 } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
@@ -21,7 +22,6 @@ import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-comm
 import { mintNFT } from '../../solana/actions/nft';
 import { MintLayout } from '@solana/spl-token';
 import splitAddress from '../../utils/splitAddress';
-import { useUserAccounts } from '@colligence/metaplex-common/dist/lib';
 import { useArt } from '../../solana/hooks';
 import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWallet';
 
@@ -73,7 +73,9 @@ const Solana = () => {
   const { setStoreForOwner } = useStore();
 
   const { accountByMint } = useUserAccounts();
-  const art = useArt(id);
+  const art = useArt('C6B5pfbt93xLLLuWpgZR48nCWsGMi6A3tAxBF75GhdP7');
+  console.log('=====>', art);
+  // const art = useArt(id);
 
   const artMintTokenAccount = accountByMint.get(art.mint);
   const walletPubKey = wallet?.publicKey?.toString() || '';
