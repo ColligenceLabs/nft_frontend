@@ -73,7 +73,7 @@ const Solana = () => {
   const { setStoreForOwner } = useStore();
 
   const { accountByMint } = useUserAccounts();
-  const art = useArt('C6B5pfbt93xLLLuWpgZR48nCWsGMi6A3tAxBF75GhdP7');
+  const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
   console.log('=====>', art);
   // const art = useArt(id);
 
