@@ -112,6 +112,7 @@ const Register = () => {
                           image: null,
                           description: '',
                           useSolana: false,
+                          solana_address: '',
                         }}
                         onSubmit={async (data, { setSubmitting }) => {
                           setSubmitting(true);
