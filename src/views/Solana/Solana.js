@@ -10,6 +10,8 @@ import {
   getAssetCostToStore,
   Creator,
   LAMPORT_MULTIPLIER,
+  useUserAccounts,
+  useMeta,
 } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
@@ -21,6 +23,8 @@ import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-comm
 import { mintNFT } from '../../solana/actions/nft';
 import { MintLayout } from '@solana/spl-token';
 import splitAddress from '../../utils/splitAddress';
+import { useArt } from '../../solana/hooks';
+import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWallet';
 
 const StyledButton = styled(Button)`
   width: 100px;
@@ -66,8 +70,18 @@ const Solana = () => {
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
 
   const connection = useConnection();
-  // const { store } = useMeta();
+  const { store } = useMeta();
   const { setStoreForOwner } = useStore();
+
+  const { accountByMint } = useUserAccounts();
+  const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
+  // console.log('=====>', art);
+  // const art = useArt(id);
+
+  const artMintTokenAccount = accountByMint.get(art.mint);
+  const walletPubKey = wallet?.publicKey?.toString() || '';
+
+  const [updatedCreators, setUpdatedCreators] = useState({});
 
   // useEffect(() => {
   //   if (!process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS) {
@@ -83,6 +97,20 @@ const Solana = () => {
   //   }
   // }, [wallet.publicKey]);
 
+  // TODO : input
+  const [newCreator, setNewCreator] = useState();
+
+  useEffect(() => {
+    const newWhitelistedCreator = new WhitelistedCreator({
+      activated: true,
+      // address: '81DhXxGzC4ymw97EAx9QaoFQ9rqY5AsSVQXthYB5LXSo',
+      address: newCreator,
+    });
+    // setUpdatedCreators({ '81DhXxGzC4ymw97EAx9QaoFQ9rqY5AsSVQXthYB5LXSo': newCreator });
+    // console.log('===>', newWhitelistedCreator);
+    setUpdatedCreators({ [newCreator]: newWhitelistedCreator });
+  }, [newCreator]);
+
   const onCreate = async () => {
     console.log('Create clicked');
   };
@@ -92,13 +120,15 @@ const Solana = () => {
     console.log(splitAddress(wallet.publicKey.toBase58()));
   };
 
-  const mint = async () => {
+  const mintCollection = async () => {
     // TODO : artCreate/index.tsx 1091 라인 참고
     // const creators = new Creator({
     //   address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
     //   share: 100,
     //   verified: true,
     // });
+    // TODO : Metaplex Creator 생성 먼저...
+
     const fixedCreators = [
       {
         key: wallet.publicKey.toBase58(),
@@ -187,6 +217,35 @@ const Solana = () => {
     }
   };
 
+  // TODO : mintCollection에서 Return 된 값, 즉 collections DB의 contract_address 값을 사용
+  // 예 : 5PC1VdgyhoETpDPwvvHyjv2K5QkCWcuk1vSNJ2XcFrA
+  const mintEdition = async (id, amount) => {
+    // TODO : GUI에서 입력받을 값... 발행 수량 값
+    const editions = amount;
+    const editionNumber = undefined;
+
+    try {
+      await mintEditionsToWallet(
+        art,
+        wallet,
+        connection,
+        artMintTokenAccount,
+        editions,
+        walletPubKey,
+        editionNumber,
+      );
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.log('Success...');
+    }
+  };
+
+  const addCreator = async (address) => {
+    console.log('==addCreator==>', updatedCreators);
+    await saveAdmin(connection, wallet, store.public, Object.values(updatedCreators));
+  };
+
   const initializeStore = async () => {
     if (!wallet.publicKey) {
       return;
@@ -257,8 +316,14 @@ const Solana = () => {
           <StyledButton variant="contained" onClick={initializeStore}>
             Init Store
           </StyledButton>
-          <StyledButton variant="contained" onClick={mint}>
-            Create
+          <StyledButton variant="contained" onClick={addCreator}>
+            Add Creator
+          </StyledButton>
+          <StyledButton variant="contained" onClick={mintCollection}>
+            Create Collection
+          </StyledButton>
+          <StyledButton variant="contained" onClick={mintEdition}>
+            Mint
           </StyledButton>
           <StyledButton variant="contained" onClick={onSell}>
             Sell
@@ -292,6 +357,17 @@ const Solana = () => {
                   />
                 </Button>
               ),
+            }}
+          />
+        </div>
+        <div style={{ width: '500px', marginTop: '20px' }}>
+          <input
+            type="text"
+            name="creator"
+            placeholder="New Creator Address"
+            style={{ width: '500px', height: '40px' }}
+            onChange={(e) => {
+              setNewCreator(e.target.value);
             }}
           />
         </div>

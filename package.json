@@ -7,7 +7,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.12.13",
     "@colligence/klaytn-connector": "^6.2.26",
-    "@colligence/metaplex-common": "^0.0.2",
+    "@colligence/metaplex-common": "^0.0.3",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
@@ -87,12 +87,12 @@
     "react-spring": "^9.2.4",
     "react-swipeable-views": "^0.14.0",
     "react-swipeable-views-utils": "^0.14.0",
-
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.3.0",
     "request": "^2.88.2",
     "stylis-plugin-rtl": "^2.1.0",
+    "swr": "^1.2.2",
     "taalswap-ethers": "^5.5.7",
     "three": "^0.128.0",
     "typescript": "^4.1.3",

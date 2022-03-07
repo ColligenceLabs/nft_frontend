@@ -45,22 +45,26 @@ const KlayWallet = ({ klaytn }) => {
   const [walletName, setWalletName] = useState('');
 
   useEffect(() => {
-    if (walletName !== '') {
+    if (walletName !== '' && account !== '') {
       dispatch(setKlaytn({ wallet: walletName, address: account }));
     }
   }, [walletName, account]);
 
   const handleWalletCardClick = async (wallet) => {
     setWalletName(wallet.name);
-    if (wallet.name === 'metamask') {
-      await activate(injected, null, true);
-      dispatch(setActivatingConnector(injected));
-    } else if (wallet.name === 'walletConnector') {
-      const wc = walletconnect(true);
-      await activate(wc, undefined, true);
-    } else if (wallet.name === 'kaikas') {
-      await activate(kaikas, null, true);
-      dispatch(setActivatingConnector(kaikas));
+    try {
+      if (wallet.name === 'metamask') {
+        await activate(injected, null, true);
+        dispatch(setActivatingConnector(injected));
+      } else if (wallet.name === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
+      } else if (wallet.name === 'kaikas') {
+        await activate(kaikas, null, true);
+        dispatch(setActivatingConnector(kaikas));
+      }
+    } catch (e) {
+      console.log('connect wallet error', e);
     }
   };
   return (

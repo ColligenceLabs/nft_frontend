@@ -40,6 +40,10 @@ import useCreator from '../../hooks/useCreator';
 import { deployNFT17 } from '../../services/nft.service';
 import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
+import NETWORKS from '../../components/NetworkSelector/networks';
+import { useSelector } from 'react-redux';
+import { injected, kaikas, walletconnect } from '../../connectors';
+import { setActivatingConnector } from '../../redux/slices/wallet';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -76,9 +80,47 @@ const CollectionCreate = () => {
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
+  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
+  };
+
+  const activateNetwork = async (name, setFieldValue) => {
+    if (name === 'ethereum') {
+      if (!ethereum.wallet && !ethereum.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+      if (ethereum.wallet === 'metamask') {
+        await activate(injected, null, true);
+      } else if (ethereum.wallet === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
+      }
+    } else if (name === 'klaytn') {
+      if (!klaytn.wallet && !klaytn.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+      if (klaytn.wallet === 'metamask') {
+        await activate(injected, null, true);
+      } else if (klaytn.wallet === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
+      } else if (klaytn.wallet === 'kaikas') {
+        await activate(kaikas, null, true);
+      }
+    } else if (name === 'solana')  {
+      if (!solana.wallet && !solana.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+    } else {
+      return;
+    }
+    setFieldValue('network', name);
+    console.log('지갑연결 완료');
   };
 
   return (
@@ -89,6 +131,7 @@ const CollectionCreate = () => {
           validationSchema={collectionCreateSchema}
           initialValues={{
             name: '',
+            network: '',
             creator_id: level.toLowerCase() === 'creator' ? id : '',
             image: null,
             category: [],
@@ -106,6 +149,8 @@ const CollectionCreate = () => {
             }
 
             let formData = new FormData();
+            console.log(values.network);
+
             for (let value in values) {
               if (['name', 'creator_id', 'image'].includes(value)) {
                 formData.append(value, values[value]);
@@ -118,22 +163,26 @@ const CollectionCreate = () => {
             if (useKAS === 'false') {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
-              if (values.type === 'KIP17') {
-                if (window.localStorage.getItem('wallet') === 'kaikas') {
-                  result = await deployKIP17WithKaikas(
-                    values.name,
-                    values.symbol,
-                    account,
-                    library,
-                  );
-                } else {
-                  result = await deployKIP17(values.name, values.symbol, account, library);
-                }
-              } else if (values.type === 'KIP37') {
-                if (window.localStorage.getItem('wallet') === 'kaikas') {
-                  result = await deployKIP37WithKaikas(values.tokenUri, account, library);
-                } else {
-                  result = await deployKIP37(values.tokenUri, account, library);
+              if (values.network === 'solana') {
+                console.log('== create solana collection ==>', values);
+              } else {
+                if (values.type === 'KIP17') {
+                  if (window.localStorage.getItem('wallet') === 'kaikas') {
+                    result = await deployKIP17WithKaikas(
+                      values.name,
+                      values.symbol,
+                      account,
+                      library,
+                    );
+                  } else {
+                    result = await deployKIP17(values.name, values.symbol, account, library);
+                  }
+                } else if (values.type === 'KIP37') {
+                  if (window.localStorage.getItem('wallet') === 'kaikas') {
+                    result = await deployKIP37WithKaikas(values.tokenUri, account, library);
+                  } else {
+                    result = await deployKIP37(values.tokenUri, account, library);
+                  }
                 }
               }
               newContract = result.address;
@@ -187,6 +236,34 @@ const CollectionCreate = () => {
           }) => (
             <form onSubmit={handleSubmit}>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="network">{t('Network')}</CustomFormLabel>
+                  <CustomSelect
+                    labelId="demo-simple-select-label"
+                    id="network"
+                    name="network"
+                    value={values.network}
+                    disabled={isSubmitting}
+                    onChange={(event) => {
+                      console.log(event.target);
+                      activateNetwork(event.target.value, setFieldValue);
+                    }}
+                    fullWidth
+                    size="small"
+                  >
+                    {NETWORKS.map((network) => (
+                      <MenuItem key={network.id} value={network.value}>
+                        {network.label}
+                      </MenuItem>
+                    ))}
+                  </CustomSelect>
+                  {touched.network && errors.network && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.network}
+                    </FormHelperText>
+                  )}
+                </Grid>
+
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="name">
                     {t('Name (Smart Contract Name)')}
@@ -430,12 +507,7 @@ const CollectionCreate = () => {
                   </Grid>
                 )}
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <LoadingButton
-                    type="submit"
-                    loading={isSubmitting}
-                    variant="outlined"
-                    variant="contained"
-                  >
+                  <LoadingButton type="submit" loading={isSubmitting} variant="contained">
                     {t('Confirm')}
                   </LoadingButton>
                 </Grid>
