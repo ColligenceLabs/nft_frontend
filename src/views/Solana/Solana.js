@@ -161,30 +161,6 @@ const Solana = () => {
       },
     };
 
-    // TODO : mintCollection에서 Return 된 값, 즉 collections DB의 contract_address 값을 사용
-    // 예 : 5PC1VdgyhoETpDPwvvHyjv2K5QkCWcuk1vSNJ2XcFrA
-    const mintEdition = async (id, amount) => {
-      // TODO : GUI에서 입력받을 값... 발행 수량 값
-      const editions = amount;
-      const editionNumber = undefined;
-
-      try {
-        await mintEditionsToWallet(
-          art,
-          wallet,
-          connection,
-          artMintTokenAccount,
-          editions,
-          walletPubKey,
-          editionNumber,
-        );
-      } catch (e) {
-        console.error(e);
-      } finally {
-        console.log('Success...');
-      }
-    };
-
     const endpoint2 = {
       chainId: 103,
       label: 'devnet',
@@ -219,6 +195,30 @@ const Solana = () => {
       setAlertMessage(e.message);
     } finally {
       setMinting(false);
+    }
+  };
+
+  // TODO : mintCollection에서 Return 된 값, 즉 collections DB의 contract_address 값을 사용
+  // 예 : 5PC1VdgyhoETpDPwvvHyjv2K5QkCWcuk1vSNJ2XcFrA
+  const mintEdition = async (id, amount) => {
+    // TODO : GUI에서 입력받을 값... 발행 수량 값
+    const editions = amount;
+    const editionNumber = undefined;
+
+    try {
+      await mintEditionsToWallet(
+        art,
+        wallet,
+        connection,
+        artMintTokenAccount,
+        editions,
+        walletPubKey,
+        editionNumber,
+      );
+    } catch (e) {
+      console.error(e);
+    } finally {
+      console.log('Success...');
     }
   };
 
