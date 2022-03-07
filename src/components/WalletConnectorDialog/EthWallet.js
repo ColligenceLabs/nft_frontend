@@ -45,20 +45,25 @@ const EthWallet = ({ ethereum }) => {
   const [walletName, setWalletName] = useState('');
 
   useEffect(() => {
-    if (walletName !== '') {
+    if (walletName !== '' && account !== '') {
       dispatch(setEthereum({ wallet: walletName, address: account }));
     }
   }, [walletName, account]);
 
   const handleWalletCardClick = async (wallet) => {
     setWalletName(wallet.name);
-    if (wallet.name === 'metamask') {
-      await activate(injected, null, true);
-      dispatch(setActivatingConnector(injected));
-    } else if (wallet.name === 'walletConnector') {
-      const wc = walletconnect(true);
-      await activate(wc, undefined, true);
+    try {
+      if (wallet.name === 'metamask') {
+        await activate(injected, null, true);
+        dispatch(setActivatingConnector(injected));
+      } else if (wallet.name === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
+      }
+    } catch (e) {
+      console.log('connect wallet error', e);
     }
+
   };
 
   return (
