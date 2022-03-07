@@ -40,6 +40,7 @@ import useCreator from '../../hooks/useCreator';
 import { deployNFT17 } from '../../services/nft.service';
 import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
+import NETWORKS from '../../components/NetworkSelector/networks';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -89,6 +90,7 @@ const CollectionCreate = () => {
           validationSchema={collectionCreateSchema}
           initialValues={{
             name: '',
+            network: '',
             creator_id: level.toLowerCase() === 'creator' ? id : '',
             image: null,
             category: [],
@@ -106,6 +108,8 @@ const CollectionCreate = () => {
             }
 
             let formData = new FormData();
+            console.log(values.network);
+
             for (let value in values) {
               if (['name', 'creator_id', 'image'].includes(value)) {
                 formData.append(value, values[value]);
@@ -187,6 +191,34 @@ const CollectionCreate = () => {
           }) => (
             <form onSubmit={handleSubmit}>
               <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="network">{t('Network')}</CustomFormLabel>
+                  <CustomSelect
+                    labelId="demo-simple-select-label"
+                    id="network"
+                    name="network"
+                    value={values.network}
+                    disabled={isSubmitting}
+                    onChange={(event) => {
+                      console.log(event.target);
+                      setFieldValue('network', event.target.value);
+                    }}
+                    fullWidth
+                    size="small"
+                  >
+                    {NETWORKS.map((network) => (
+                      <MenuItem key={network.id} value={network.value}>
+                        {network.label}
+                      </MenuItem>
+                    ))}
+                  </CustomSelect>
+                  {touched.network && errors.network && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.network}
+                    </FormHelperText>
+                  )}
+                </Grid>
+
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="name">
                     {t('Name (Smart Contract Name)')}
@@ -430,12 +462,7 @@ const CollectionCreate = () => {
                   </Grid>
                 )}
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <LoadingButton
-                    type="submit"
-                    loading={isSubmitting}
-                    variant="outlined"
-                    variant="contained"
-                  >
+                  <LoadingButton type="submit" loading={isSubmitting} variant="contained">
                     {t('Confirm')}
                   </LoadingButton>
                 </Grid>
