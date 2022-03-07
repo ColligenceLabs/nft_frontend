@@ -10,6 +10,7 @@ import {
   TextField,
   FormHelperText,
   CardMedia,
+  FormControlLabel,
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -21,6 +22,7 @@ import PageContainer from '../../components/container/PageContainer';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
+import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState();
@@ -109,6 +111,7 @@ const Register = () => {
                           level: '',
                           image: null,
                           description: '',
+                          useSolana: false,
                         }}
                         onSubmit={async (data, { setSubmitting }) => {
                           setSubmitting(true);
@@ -265,7 +268,6 @@ const Register = () => {
                                       <Button
                                         variant="contained"
                                         component="label"
-                                        variant="contained"
                                         size="small"
                                         style={{ marginRight: '1rem' }}
                                       >
@@ -297,6 +299,20 @@ const Register = () => {
                                     alt="Live from space album cover"
                                   />
                                 )}
+                              </Grid>
+                              <Grid item xl={6} lg={6} md={6} sm={12} xs={12} marginTop={5}>
+                                <FormControlLabel
+                                  control={<CustomCheckbox />}
+                                  checked={values.useSolana}
+                                  onChange={(event) => {
+                                    console.log(event.target.checked);
+                                    setFieldValue('useSolana', event.target.checked);
+                                  }}
+                                  label="Use Solana?"
+                                  sx={{
+                                    mb: 2,
+                                  }}
+                                />
                               </Grid>
                             </Grid>
                             {errorMessage && (
