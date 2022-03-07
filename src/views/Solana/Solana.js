@@ -1,16 +1,301 @@
-import React from 'react';
-import { Button } from '@mui/material';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { useWallet } from '@solana/wallet-adapter-react';
+import {
+  MAX_METADATA_LEN,
+  useConnection,
+  useStore,
+  useWalletModal,
+  getAssetCostToStore,
+  Creator,
+  LAMPORT_MULTIPLIER,
+} from '@colligence/metaplex-common';
+import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
+import { saveAdmin } from '../../solana/actions/saveAdmin';
+import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex/index';
+import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
+import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
+import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
+import { MetadataCategory, useConnectionConfig } from '@colligence/metaplex-common';
+import { mintNFT } from '../../solana/actions/nft';
+import { MintLayout } from '@solana/spl-token';
+import splitAddress from '../../utils/splitAddress';
+
+const StyledButton = styled(Button)`
+  width: 100px;
+`;
 
 const Solana = () => {
-  const onClick = () => {
-    console.log('clicked');
+  const [isInitalizingStore, setIsInitalizingStore] = useState(false);
+
+  const [attributes, setAttributes] = useState({
+    name: '',
+    symbol: '',
+    collection: '',
+    description: '',
+    external_url: '',
+    image: '',
+    animation_url: undefined,
+    attributes: undefined,
+    seller_fee_basis_points: 0,
+    creators: [],
+    properties: {
+      files: [],
+      category: MetadataCategory.Image,
+    },
+  });
+  const [isMinting, setMinting] = useState(false);
+
+  const { endpoint } = useConnectionConfig();
+  const [nft, setNft] = useState(undefined);
+  const [alertMessage, setAlertMessage] = useState();
+  // const [files, setFiles] = useState([]);
+  const [nftCreateProgress, setNFTcreateProgress] = useState(0);
+
+  const [cost, setCost] = useState(0);
+
+  const [image, setImage] = useState(null);
+  const wallet = useWallet();
+  const { setVisible } = useWalletModal();
+  const connect = useCallback(
+    () => (wallet.wallet ? wallet.connect().catch() : setVisible(true)),
+    [wallet.wallet, wallet.connect, setVisible],
+  );
+
+  const phatomWallet = useMemo(() => getPhantomWallet(), []);
+
+  const connection = useConnection();
+  // const { store } = useMeta();
+  const { setStoreForOwner } = useStore();
+
+  // useEffect(() => {
+  //   if (!process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS) {
+  //     const getStore = async () => {
+  //       if (wallet.publicKey) {
+  //         const store = await setStoreForOwner(wallet.publicKey.toBase58());
+  //         setStoreAddress(store);
+  //       } else {
+  //         setStoreAddress(undefined);
+  //       }
+  //     };
+  //     getStore();
+  //   }
+  // }, [wallet.publicKey]);
+
+  const onCreate = async () => {
+    console.log('Create clicked');
+  };
+
+  const onSell = async () => {
+    console.log('Sell clicked');
+    console.log(splitAddress(wallet.publicKey.toBase58()));
+  };
+
+  const mint = async () => {
+    // TODO : artCreate/index.tsx 1091 라인 참고
+    // const creators = new Creator({
+    //   address: '6u76n3P6e6YLTMA5TSPNjFkuNGq9r4JHYUEtfa4kC8WL',
+    //   share: 100,
+    //   verified: true,
+    // });
+    const fixedCreators = [
+      {
+        key: wallet.publicKey.toBase58(),
+        label: splitAddress(wallet.publicKey.toBase58()),
+        value: wallet.publicKey.toBase58(),
+      },
+    ];
+    // TODO : artCreate/index.tsx 1091 라인 참고하여 share 값 계산 등등 처리할 것
+    const creatorStructs = [...fixedCreators].map(
+      (c) =>
+        new Creator({
+          address: c.value,
+          verified: c.value === wallet.publicKey?.toBase58(),
+          share: 100, // TODO: UI에서 입력받게 할 것인지?
+          // share:
+          //   royalties.find(r => r.creatorKey === c.value)?.amount ||
+          //   Math.round(100 / royalties.length),
+        }),
+    );
+
+    const metadata = {
+      // name: attributes.name,
+      // symbol: attributes.symbol,
+      // creators: attributes.creators,
+      // collection: attributes.collection,
+      // description: attributes.description,
+      // sellerFeeBasisPoints: attributes.seller_fee_basis_points,
+      // image: attributes.image,
+      // animation_url: attributes.animation_url,
+      // attributes: attributes.attributes,
+      // external_url: attributes.external_url,
+      // properties: {
+      //   files: attributes.properties.files,
+      //   category: attributes.properties?.category,
+      // },
+      name: 'Klimit',
+      symbol: 'KMT',
+      creators: creatorStructs,
+      collection: '',
+      description: 'Klimt Paintings',
+      sellerFeeBasisPoints: 500,
+      image: image.name,
+      animation_url: undefined,
+      attributes: undefined,
+      external_url: '',
+      properties: {
+        files: [{ uri: image.name, type: image.type }],
+        category: 'image',
+      },
+    };
+
+    const endpoint2 = {
+      chainId: 103,
+      label: 'devnet',
+      name: 'devnet',
+      url: 'https://api.devnet.solana.com',
+    };
+    setMinting(true);
+
+    // setFiles({ uri: image.name, type: image.type });
+    const files = [];
+    files.push(image);
+
+    calCost(files, metadata);
+
+    try {
+      const _nft = await mintNFT(
+        connection,
+        wallet,
+        endpoint.name,
+        // 'devnet',
+        files,
+        metadata,
+        setNFTcreateProgress,
+        // attributes.properties?.maxSupply,
+        10,
+      );
+
+      if (_nft) setNft(_nft);
+      setAlertMessage('');
+    } catch (e) {
+      console.log('mintNFT error', e);
+      setAlertMessage(e.message);
+    } finally {
+      setMinting(false);
+    }
+  };
+
+  const initializeStore = async () => {
+    if (!wallet.publicKey) {
+      return;
+    }
+
+    setIsInitalizingStore(true);
+
+    await saveAdmin(connection, wallet, false, [
+      new WhitelistedCreator({
+        address: wallet.publicKey.toBase58(),
+        activated: true,
+      }),
+    ]);
+
+    // TODO: process errors
+
+    await setStoreForOwner(undefined);
+    await setStoreForOwner(wallet.publicKey.toBase58());
+
+    // history.push('/admin');
+  };
+
+  const calCost = (files, metadata) => {
+    const rentCall = Promise.all([
+      connection.getMinimumBalanceForRentExemption(MintLayout.span),
+      connection.getMinimumBalanceForRentExemption(MAX_METADATA_LEN),
+    ]);
+    if (files.length)
+      getAssetCostToStore([...files, new File([JSON.stringify(metadata)], 'metadata.json')]).then(
+        async (lamports) => {
+          const sol = lamports / LAMPORT_MULTIPLIER;
+
+          // TODO: cache this and batch in one call
+          const [mintRent, metadataRent] = await rentCall;
+
+          // const uriStr = 'x';
+          // let uriBuilder = '';
+          // for (let i = 0; i < MAX_URI_LENGTH; i++) {
+          //   uriBuilder += uriStr;
+          // }
+
+          const additionalSol = (metadataRent + mintRent) / LAMPORT_MULTIPLIER;
+
+          // TODO: add fees based on number of transactions and signers
+          setCost(sol + additionalSol);
+        },
+      );
   };
 
   return (
     <div>
-      <Button variant="contained" onClick={onClick}>
-        Text
-      </Button>
+      <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-start' }}>
+          {/* <StyledButton variant="contained" onClick={() => connect()}> */}
+          {/*  Connect*/}
+          {/* </StyledButton> */}
+          <StyledButton
+            variant="contained"
+            onClick={() => {
+              wallet.select(phatomWallet.name);
+            }}
+          >
+            Phantom
+          </StyledButton>
+          <StyledButton variant="contained" onClick={connect}>
+            Connect
+          </StyledButton>
+          <StyledButton variant="contained" onClick={initializeStore}>
+            Init Store
+          </StyledButton>
+          <StyledButton variant="contained" onClick={mint}>
+            Create
+          </StyledButton>
+          <StyledButton variant="contained" onClick={onSell}>
+            Sell
+          </StyledButton>
+        </div>
+        <div style={{ width: '500px', marginTop: '20px' }}>
+          <CustomTextField
+            id="thumbnailFiled"
+            name="thumbnailFiled"
+            variant="outlined"
+            fullWidth
+            size="small"
+            value={image?.name || ''}
+            InputProps={{
+              startAdornment: (
+                <Button
+                  component="label"
+                  variant="contained"
+                  size="small"
+                  style={{ marginRight: '1rem' }}
+                >
+                  <DriveFileMoveOutlinedIcon fontSize="small" />
+                  <input
+                    id="thumbnail"
+                    style={{ display: 'none' }}
+                    type="file"
+                    name="image"
+                    onChange={(event) => {
+                      setImage(event.currentTarget.files[0]);
+                    }}
+                  />
+                </Button>
+              ),
+            }}
+          />
+        </div>
+      </Grid>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IconButton, Popover } from '@mui/material';
+import { Box, IconButton, Popover, Typography } from '@mui/material';
 import NETWORKS from './networks';
 
 const NetworkSelector = () => {
@@ -8,8 +8,7 @@ const NetworkSelector = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const currentNetwork = localStorage.getItem('cur_network') || 'klay';
-
+  const currentNetwork = localStorage.getItem('cur_network') || 'klaytn';
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -46,9 +45,19 @@ const NetworkSelector = () => {
           horizontal: 'center',
         }}
       >
-        {NETWORKS.map((option) => (
+        {NETWORKS.filter((network) => network.value !== 'ethereum').map((option) => (
           <IconButton key={option.value} onClick={() => handleChangeNetwork(option.value)}>
-            <img src={option.icon} alt="klay" height="24px" />
+            <Box
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'column',
+              }}
+            >
+              <img src={option.icon} alt="klay" height="24px" />
+              <Typography variant="caption">{option.label}</Typography>
+            </Box>
           </IconButton>
         ))}
       </Popover>

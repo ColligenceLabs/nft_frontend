@@ -34,6 +34,11 @@ const baseTheme = {
       light: '#ddebff',
       dark: '#173f98',
     },
+    thirdary: {
+      main: '#7ec6fc',
+      light: '#ddebff',
+      dark: '#173f98',
+    },
 
     success: {
       main: '#00c292',
