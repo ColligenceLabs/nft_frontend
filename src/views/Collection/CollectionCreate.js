@@ -163,22 +163,26 @@ const CollectionCreate = () => {
             if (useKAS === 'false') {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
-              if (values.type === 'KIP17') {
-                if (window.localStorage.getItem('wallet') === 'kaikas') {
-                  result = await deployKIP17WithKaikas(
-                    values.name,
-                    values.symbol,
-                    account,
-                    library,
-                  );
-                } else {
-                  result = await deployKIP17(values.name, values.symbol, account, library);
-                }
-              } else if (values.type === 'KIP37') {
-                if (window.localStorage.getItem('wallet') === 'kaikas') {
-                  result = await deployKIP37WithKaikas(values.tokenUri, account, library);
-                } else {
-                  result = await deployKIP37(values.tokenUri, account, library);
+              if (values.network === 'solana') {
+                console.log('== create solana collection ==>', values);
+              } else {
+                if (values.type === 'KIP17') {
+                  if (window.localStorage.getItem('wallet') === 'kaikas') {
+                    result = await deployKIP17WithKaikas(
+                      values.name,
+                      values.symbol,
+                      account,
+                      library,
+                    );
+                  } else {
+                    result = await deployKIP17(values.name, values.symbol, account, library);
+                  }
+                } else if (values.type === 'KIP37') {
+                  if (window.localStorage.getItem('wallet') === 'kaikas') {
+                    result = await deployKIP37WithKaikas(values.tokenUri, account, library);
+                  } else {
+                    result = await deployKIP37(values.tokenUri, account, library);
+                  }
                 }
               }
               newContract = result.address;
