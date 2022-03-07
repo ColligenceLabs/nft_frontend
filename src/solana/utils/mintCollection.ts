@@ -1,7 +1,7 @@
 import splitAddress from '../../utils/splitAddress';
 import { Creator, useConnection, useConnectionConfig } from '@colligence/metaplex-common';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { mintNFT } from '../../solana/actions/nft';
+import { mintNFT } from '../actions/nft';
 import { useState } from 'react';
 
 export interface MetaForm {

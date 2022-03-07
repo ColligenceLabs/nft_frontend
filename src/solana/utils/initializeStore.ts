@@ -1,6 +1,6 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection, WhitelistedCreator } from '@colligence/metaplex-common';
-import { saveAdmin } from '../../solana/actions/saveAdmin';
+import { saveAdmin } from '../actions/saveAdmin';
 
 export const initializeStore = async () => {
   const wallet = useWallet();

@@ -1,5 +1,5 @@
-import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWallet';
-import { useArt } from '../../solana/hooks';
+import { mintEditionsToWallet } from '../actions/mintEditionsIntoWallet';
+import { useArt } from '../hooks';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection, useUserAccounts } from '@colligence/metaplex-common';
 
