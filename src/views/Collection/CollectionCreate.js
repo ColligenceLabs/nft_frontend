@@ -41,6 +41,9 @@ import { deployNFT17 } from '../../services/nft.service';
 import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
 import NETWORKS from '../../components/NetworkSelector/networks';
+import { useSelector } from 'react-redux';
+import { injected, kaikas, walletconnect } from '../../connectors';
+import { setActivatingConnector } from '../../redux/slices/wallet';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -77,9 +80,47 @@ const CollectionCreate = () => {
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
+  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
+  };
+
+  const activateNetwork = async (name, setFieldValue) => {
+    if (name === 'ethereum') {
+      if (!ethereum.wallet && !ethereum.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+      if (ethereum.wallet === 'metamask') {
+        await activate(injected, null, true);
+      } else if (ethereum.wallet === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
+      }
+    } else if (name === 'klaytn') {
+      if (!klaytn.wallet && !klaytn.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+      if (klaytn.wallet === 'metamask') {
+        await activate(injected, null, true);
+      } else if (klaytn.wallet === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
+      } else if (klaytn.wallet === 'kaikas') {
+        await activate(kaikas, null, true);
+      }
+    } else if (name === 'solana')  {
+      if (!solana.wallet && !solana.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+    } else {
+      return;
+    }
+    setFieldValue('network', name);
+    console.log('지갑연결 완료');
   };
 
   return (
@@ -201,7 +242,7 @@ const CollectionCreate = () => {
                     disabled={isSubmitting}
                     onChange={(event) => {
                       console.log(event.target);
-                      setFieldValue('network', event.target.value);
+                      activateNetwork(event.target.value, setFieldValue);
                     }}
                     fullWidth
                     size="small"
