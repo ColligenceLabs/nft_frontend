@@ -43,7 +43,29 @@ const WalletDetail = ({
   };
 
   const handleViewExplorer = () => {
-    console.log('view on explorer');
+    let url = '';
+    switch (connectedWallet.chain) {
+      case 'ethereum':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://etherscan.io/address/${connectedWallet.address}`
+            : `https://ropsten.etherscan.io/address/${connectedWallet.address}`;
+        break;
+      case 'klaytn':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://scope.klaytn.com/account/${connectedWallet.address}?tabId=txList`
+            : `https://baobab.scope.klaytn.com/account/${connectedWallet.address}?tabId=txList`;
+        break;
+      case 'solana':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://solscan.io/account/${connectedWallet.address}?cluster=mainnet-beta`
+            : `https://solscan.io/account/${connectedWallet.address}?cluster=devnet`;
+        break;
+    }
+
+    window.open(url, '_blank');
   };
 
   return (
