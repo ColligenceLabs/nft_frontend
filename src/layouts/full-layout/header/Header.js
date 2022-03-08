@@ -38,6 +38,11 @@ import { updateWallet } from '../../../services/admins.service';
 import NetworkSelector from '../../../components/NetworkSelector';
 import WalletConnectorDialog from '../../../components/WalletConnectorDialog';
 import WalletConnector from '../../../components/WalletConnector';
+import { saveAdmin } from '../../../solana/actions/saveAdmin';
+import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex';
+
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnection, useMeta } from '@colligence/metaplex-common';
 
 const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
@@ -64,6 +69,23 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
       infor: { full_name, email, level, image, id },
     },
   } = useSelector((state) => state.auth);
+
+  const [showInitStore, setShowInitStore] = useState(false);
+  const wallet = useWallet();
+  const { store, isFetching, isLoading } = useMeta();
+  const connection = useConnection();
+
+  useEffect(() => {
+    if (store === null) {
+      if (isLoading) {
+        setShowInitStore(true); // Disable
+      } else {
+        setShowInitStore(false); // Enable
+      }
+    } else {
+      setShowInitStore(true); // Disable
+    }
+  }, [store, isLoading]);
 
   let userimg;
   if (image === undefined || image === '') {
@@ -303,11 +325,30 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               }}
               variant="contained"
               color="primary"
-              onClick={() => {
-                console.log('init');
+              disabled={showInitStore}
+              onClick={async () => {
+                console.log('init solana store');
+                if (!wallet.publicKey) {
+                  return;
+                }
+
+                if (wallet.connected && !isLoading && !isFetching && !store) {
+                  await saveAdmin(connection, wallet, false, [
+                    new WhitelistedCreator({
+                      address: wallet.publicKey.toBase58(),
+                      activated: true,
+                    }),
+                  ]);
+                } else {
+                  console.log('Store already initialized.');
+                }
               }}
             >
-              {t('Solana Init Store')}
+              {isLoading
+                ? t('Solana Store Loading...')
+                : store === null
+                ? t('Solana Init Store')
+                : t('Solana Store Initialized')}
             </Button>
           )}
 

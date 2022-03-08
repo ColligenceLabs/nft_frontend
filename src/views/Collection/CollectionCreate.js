@@ -170,6 +170,7 @@ const CollectionCreate = () => {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
               if (values.network === 'solana') {
+                // TODO : Call Solana mint collection here ...
                 console.log('== create solana collection ==>', values);
               } else {
                 if (values.type === 'KIP17') {
