@@ -111,7 +111,7 @@ const CollectionCreate = () => {
       } else if (klaytn.wallet === 'kaikas') {
         await activate(kaikas, null, true);
       }
-    } else if (name === 'solana')  {
+    } else if (name === 'solana') {
       if (!solana.wallet && !solana.address) {
         alert('지갑연결 필요');
         return;
@@ -208,6 +208,7 @@ const CollectionCreate = () => {
             // console.log('newContract == ', newContract);
             formData.append('contract_address', newContract);
             formData.append('contract_type', values.type);
+            formData.append('network', values.network);
 
             await createCollection(formData)
               .then((res) => {
