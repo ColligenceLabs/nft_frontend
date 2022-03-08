@@ -214,6 +214,7 @@ const CollectionCreate = () => {
             // console.log('newContract == ', newContract);
             formData.append('contract_address', newContract);
             formData.append('contract_type', values.type);
+            formData.append('network', values.network);
 
             await createCollection(formData)
               .then((res) => {

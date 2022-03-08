@@ -46,6 +46,7 @@ const NFTMint = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [targetNetwork, setTargetNetwork] = useState('klaytn');
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
@@ -140,25 +141,29 @@ const NFTMint = () => {
 
                     // TODO : Actual NFT Minting here
                     let result = SUCCESS;
-                    if (contractType === 'KIP17') {
-                      if (window.localStorage.getItem('wallet') === 'kaikas') {
-                        result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
-                      } else {
-                        result = await mintNFT17(tokenId, tokenUri, nftId);
-                      }
-                      if (result === FAILURE) {
-                        setErrorMessage('Transaction failed or cancelled.');
-                        setSuccessRegister(false);
-                      }
+                    if (targetNetwork === 'solana') {
+                      // TODO : Call Solana mintEdition here...
                     } else {
-                      if (window.localStorage.getItem('wallet') === 'kaikas') {
-                        result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                      if (contractType === 'KIP17') {
+                        if (window.localStorage.getItem('wallet') === 'kaikas') {
+                          result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                        } else {
+                          result = await mintNFT17(tokenId, tokenUri, nftId);
+                        }
+                        if (result === FAILURE) {
+                          setErrorMessage('Transaction failed or cancelled.');
+                          setSuccessRegister(false);
+                        }
                       } else {
-                        result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
-                      }
-                      if (result === FAILURE) {
-                        setErrorMessage('Transaction failed or cancelled.');
-                        setSuccessRegister(false);
+                        if (window.localStorage.getItem('wallet') === 'kaikas') {
+                          result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                        } else {
+                          result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                        }
+                        if (result === FAILURE) {
+                          setErrorMessage('Transaction failed or cancelled.');
+                          setSuccessRegister(false);
+                        }
                       }
                     }
                   } else {
@@ -252,6 +257,7 @@ const NFTMint = () => {
                       setFieldValue('collection', event.target.value);
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
+                          setTargetNetwork(collection.network);
                           setFieldValue('category', collection.category.toString());
                           setContractAddr(collection.contract_address);
                           setContractType(collection.contract_type);

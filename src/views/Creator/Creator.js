@@ -31,7 +31,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useConnection, useMeta } from '@colligence/metaplex-common';
+import { useConnection } from '@colligence/metaplex-common';
 
 const Creator = () => {
   const { t } = useTranslation();
@@ -53,7 +53,6 @@ const Creator = () => {
 
   const connection = useConnection();
   const wallet = useWallet();
-  const { store } = useMeta();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -129,14 +128,15 @@ const Creator = () => {
     });
 
     // TODO : In case of Solana creator add creator here
-    if (solana !== '' && solana !== undefined) {
+    if (newStatus === 'active' && solana !== '' && solana !== undefined) {
       const newWhitelistedCreator = new WhitelistedCreator({
         activated: true,
         address: solana,
       });
       const updatedCreators = { [solana]: newWhitelistedCreator };
-      if (connection && wallet && store) {
-        await saveAdmin(connection, wallet, store.public, Object.values(updatedCreators));
+      if (connection && wallet) {
+        // isPublic = always false : we don't permit a public store.
+        await saveAdmin(connection, wallet, false, Object.values(updatedCreators));
       }
     }
 
