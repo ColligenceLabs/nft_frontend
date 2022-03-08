@@ -123,7 +123,7 @@ const Solana = () => {
 
   useEffect(() => {
     if (!isLoading && !isFetching) {
-      setMsgStatus('Stored Loaded !!');
+      setMsgStatus('Store Loaded !!');
     }
   }, [isLoading, isFetching]);
 
