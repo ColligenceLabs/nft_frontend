@@ -19,6 +19,8 @@ import capitalize from '../../utils/capitalize';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import { styled } from '@mui/material/styles';
+import { setEthereum, setKlaytn, setSolana } from '../../redux/slices/wallets';
+import { useDispatch } from 'react-redux';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   padding: '10px',
@@ -36,10 +38,17 @@ const WalletDetail = ({
   const theme = useTheme();
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   const onClickDisconnect = () => {
-    console.log('on click disconnect');
+    if (connectedWallet.chain === 'solana')
+      dispatch(setSolana({}));
+    else if (connectedWallet.chain === 'ethereum')
+      dispatch(setEthereum({}));
+    else if (connectedWallet.chain === 'klaytn')
+      dispatch(setKlaytn({}));
+    handleCloseDetailModal();
   };
 
   const handleViewExplorer = () => {
