@@ -7,7 +7,7 @@
   "dependencies": {
     "@babel/preset-typescript": "^7.12.13",
     "@colligence/klaytn-connector": "^6.2.26",
-    "@colligence/metaplex-common": "^0.0.4",
+    "@colligence/metaplex-common": "^0.0.5",
     "@emotion/cache": "^11.4.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
