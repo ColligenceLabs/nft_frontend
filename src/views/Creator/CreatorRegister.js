@@ -38,6 +38,7 @@ const CreatorRegister = () => {
             level: 'Creator',
             image: null,
             description: '',
+            solana_address: '',
           }}
           onSubmit={async (data, { setSubmitting }) => {
             setSubmitting(true);
@@ -225,6 +226,23 @@ const CreatorRegister = () => {
                     onChange={handleChange}
                     error={touched.description && Boolean(errors.description)}
                     helperText={touched.description && errors.description}
+                  />
+                </Grid>
+
+                <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="solana_address">
+                    {t('Phantom Wallet Address')}
+                  </CustomFormLabel>
+                  <CustomTextField
+                    id="solana_address"
+                    name="solana_address"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={values.solana_address}
+                    onChange={handleChange}
+                    error={touched.solana_address && Boolean(errors.solana_address)}
+                    helperText={touched.solana_address && errors.solana_address}
                   />
                 </Grid>
 
