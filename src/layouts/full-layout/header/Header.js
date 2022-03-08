@@ -294,6 +294,23 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
           </Box>
 
           <ProfileDropdown fullName={full_name} email={email} level={level} image={image} />
+          {level.toLowerCase() === 'administrator' && (
+            <Button
+              sx={{
+                mt: 2,
+                display: 'block',
+                width: '100%',
+              }}
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                console.log('init');
+              }}
+            >
+              {t('Solana Init Store')}
+            </Button>
+          )}
+
           <Link
             style={{
               textDecoration: 'none',

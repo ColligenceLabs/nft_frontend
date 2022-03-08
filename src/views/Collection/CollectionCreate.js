@@ -111,7 +111,7 @@ const CollectionCreate = () => {
       } else if (klaytn.wallet === 'kaikas') {
         await activate(kaikas, null, true);
       }
-    } else if (name === 'solana')  {
+    } else if (name === 'solana') {
       if (!solana.wallet && !solana.address) {
         alert('지갑연결 필요');
         return;
@@ -139,6 +139,7 @@ const CollectionCreate = () => {
             type: 'KIP17',
             tokenUri: '',
             symbol: '',
+            maximum_supply: '',
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
@@ -157,6 +158,11 @@ const CollectionCreate = () => {
               } else if (['category'].includes(value)) {
                 values[value].forEach((category) => formData.append(value, category));
               }
+            }
+
+            if (values.maximum_supply !== '') {
+              formData.append('maximum_supply', values.maximum_supply);
+              formData.append('type', 'SPLToken');
             }
 
             let newContract;
@@ -393,6 +399,7 @@ const CollectionCreate = () => {
                     />
                   )}
                 </Grid>
+
                 <Grid item lg={12} md={12} sm={12} xs={12}>
                   <Divider
                     sx={{
@@ -404,60 +411,110 @@ const CollectionCreate = () => {
                     {t('Smart Contract Information')}
                   </Typography>
                 </Grid>
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel>{t('Type')}</CustomFormLabel>
-                  <RadioGroup
-                    aria-label="gender"
-                    defaultValue="radio1"
-                    name="type"
-                    value={values.type}
-                    onChange={isSubmitting ? null : handleChange}
-                  >
-                    <Grid container>
-                      <Grid item lg={6} sm={6} xs={6}>
-                        <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
-                      </Grid>
-                      <Grid item lg={6} sm={6} xs={6}>
-                        <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
-                      </Grid>
+                {values.network !== 'solana' ? (
+                  <>
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel>{t('Type')}</CustomFormLabel>
+                      <RadioGroup
+                        aria-label="gender"
+                        defaultValue="radio1"
+                        name="type"
+                        value={values.type}
+                        onChange={isSubmitting ? null : handleChange}
+                      >
+                        <Grid container>
+                          <Grid item lg={6} sm={6} xs={6}>
+                            <FormControlLabel
+                              value="KIP17"
+                              control={<CustomRadio />}
+                              label="KIP17"
+                            />
+                          </Grid>
+                          <Grid item lg={6} sm={6} xs={6}>
+                            <FormControlLabel
+                              value="KIP37"
+                              control={<CustomRadio />}
+                              label="KIP37"
+                            />
+                          </Grid>
+                        </Grid>
+                      </RadioGroup>
                     </Grid>
-                  </RadioGroup>
-                </Grid>
 
-                {values.type === 'KIP17' && (
-                  <Grid item lg={6} md={12} sm={12} xs={12}>
-                    <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
-                    <CustomTextField
-                      id="symbol"
-                      name="symbol"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      disabled={isSubmitting}
-                      value={values.symbol}
-                      onChange={handleChange}
-                      error={touched.symbol && Boolean(errors.symbol)}
-                      helperText={touched.symbol && errors.symbol}
-                    />
-                  </Grid>
-                )}
+                    {values.type === 'KIP17' && (
+                      <Grid item lg={6} md={12} sm={12} xs={12}>
+                        <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
+                        <CustomTextField
+                          id="symbol"
+                          name="symbol"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          disabled={isSubmitting}
+                          value={values.symbol}
+                          onChange={handleChange}
+                          error={touched.symbol && Boolean(errors.symbol)}
+                          helperText={touched.symbol && errors.symbol}
+                        />
+                      </Grid>
+                    )}
 
-                {values.type === 'KIP37' && (
-                  <Grid item lg={6} md={12} sm={12} xs={12}>
-                    <CustomFormLabel htmlFor="tokenUri">{t('IPFS Directory Name')}</CustomFormLabel>
-                    <CustomTextField
-                      id="tokenUri"
-                      name="tokenUri"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      disabled={isSubmitting}
-                      value={values.tokenUri}
-                      onChange={handleChange}
-                      error={touched.tokenUri && Boolean(errors.tokenUri)}
-                      helperText={touched.tokenUri && errors.tokenUri}
-                    />
-                  </Grid>
+                    {values.type === 'KIP37' && (
+                      <Grid item lg={6} md={12} sm={12} xs={12}>
+                        <CustomFormLabel htmlFor="tokenUri">
+                          {t('IPFS Directory Name')}
+                        </CustomFormLabel>
+                        <CustomTextField
+                          id="tokenUri"
+                          name="tokenUri"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          disabled={isSubmitting}
+                          value={values.tokenUri}
+                          onChange={handleChange}
+                          error={touched.tokenUri && Boolean(errors.tokenUri)}
+                          helperText={touched.tokenUri && errors.tokenUri}
+                        />
+                      </Grid>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
+                      <CustomTextField
+                        id="symbol"
+                        name="symbol"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting}
+                        value={values.symbol}
+                        onChange={handleChange}
+                        error={touched.symbol && Boolean(errors.symbol)}
+                        helperText={touched.symbol && errors.symbol}
+                      />
+                    </Grid>
+
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel htmlFor="maximum_supply">
+                        {t('Maximum supply')}
+                      </CustomFormLabel>
+                      <CustomTextField
+                        id="maximum_supply"
+                        name="maximum_supply"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting}
+                        value={values.maximum_supply}
+                        onChange={handleChange}
+                        error={touched.maximum_supply && Boolean(errors.maximum_supply)}
+                        helperText={touched.maximum_supply && errors.maximum_supply}
+                      />
+                    </Grid>
+                  </>
                 )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12}>
