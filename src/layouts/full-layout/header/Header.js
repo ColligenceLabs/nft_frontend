@@ -345,7 +345,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
               }}
             >
               {isLoading
-                ? t('Solana Store Loading...')
+                ? t('Wait while Solana Store Loading...')
                 : store === null
                 ? t('Solana Init Store')
                 : t('Solana Store Initialized')}
