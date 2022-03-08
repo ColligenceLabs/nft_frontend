@@ -176,6 +176,7 @@ const AirDrop = () => {
       page,
       rowsPerPage,
       searchKeyword,
+      undefined,
       level.toLowerCase() === 'creator' ? id : undefined,
     ).then(({ data }) => {
       setRows(data.items);
