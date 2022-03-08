@@ -243,7 +243,7 @@ const CollectionCreate = () => {
 
       if (newCollection) {
         setCollection(newCollection);
-        ret.address = newCollection;
+        ret.address = newCollection.metadataAccount;
       }
     } catch (e) {
       console.log('mintCollection error : ', e);
