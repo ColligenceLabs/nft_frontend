@@ -128,7 +128,7 @@ const Creator = () => {
     });
 
     // TODO : In case of Solana creator add creator here
-    if (solana !== '' && solana !== undefined) {
+    if (newStatus === 'active' && solana !== '' && solana !== undefined) {
       const newWhitelistedCreator = new WhitelistedCreator({
         activated: true,
         address: solana,
