@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Grid,
@@ -23,12 +23,28 @@ import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
 import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbox';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@colligence/metaplex-common';
+import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
-
+  const wallet = useWallet();
+  const { setVisible } = useWalletModal();
+  const phatomWallet = useMemo(() => getPhantomWallet(), []);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    console.log('=====', wallet.publicKey?.toBase58());
+  }, [wallet.publicKey]);
+
+  const connectPhantom = useCallback(async () => {
+      await wallet.select(phatomWallet.name);
+      await (wallet.wallet ? wallet.connect().catch() : setVisible(true));
+  }, [wallet.wallet, wallet.connect, setVisible]);
+
+
 
   return (
     <PageContainer title="Register" description="this is Register page">
@@ -116,6 +132,9 @@ const Register = () => {
                         }}
                         onSubmit={async (data, { setSubmitting }) => {
                           setSubmitting(true);
+
+                          if (data.useSolana)
+                            data.solana_address = wallet.publicKey?.toBase58();
 
                           let formData = new FormData();
                           for (let value in data) {
@@ -305,9 +324,18 @@ const Register = () => {
                                 <FormControlLabel
                                   control={<CustomCheckbox />}
                                   checked={values.useSolana}
-                                  onChange={(event) => {
-                                    console.log(event.target.checked);
-                                    setFieldValue('useSolana', event.target.checked);
+                                  onChange={async (event) => {
+                                    console.log('=====>1', event.target.checked);
+                                    try {
+                                      setFieldValue('useSolana', event.target.checked);
+                                      await connectPhantom();
+                                      console.log('=====>2', event.target.checked);
+                                      console.log('=====>', wallet);
+                                      console.log('=====>', wallet.publicKey?.toBase58());
+                                    } catch (e) {
+                                      console.log(e);
+                                      setFieldValue('useSolana', false);
+                                    }
                                   }}
                                   label="Use Solana?"
                                   sx={{
