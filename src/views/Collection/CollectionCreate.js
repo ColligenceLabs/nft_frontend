@@ -44,6 +44,18 @@ import NETWORKS from '../../components/NetworkSelector/networks';
 import { useSelector } from 'react-redux';
 import { injected, kaikas, walletconnect } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
+import splitAddress from '../../utils/splitAddress';
+import {
+  MAX_METADATA_LEN,
+  useConnection,
+  getAssetCostToStore,
+  Creator,
+  LAMPORT_MULTIPLIER,
+  useConnectionConfig,
+} from '@colligence/metaplex-common';
+import { mintNFT } from '../../solana/actions/nft';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { MintLayout } from '@solana/spl-token';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -81,6 +93,18 @@ const CollectionCreate = () => {
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
   const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
+
+  const wallet = useWallet();
+  const connection = useConnection();
+  const { endpoint } = useConnectionConfig();
+  // Solana Transaction Progress Callback
+  const [nftCreateProgress, setNFTcreateProgress] = useState(0);
+  const [cost, setCost] = useState(0);
+  const [collection, setCollection] = useState(undefined);
+
+  useEffect(() => {
+    console.log('== TX Progress = ', nftCreateProgress);
+  }, [nftCreateProgress]);
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -121,6 +145,113 @@ const CollectionCreate = () => {
     }
     setFieldValue('network', name);
     console.log('지갑연결 완료');
+  };
+
+  const calCost = (files, metadata) => {
+    const rentCall = Promise.all([
+      connection.getMinimumBalanceForRentExemption(MintLayout.span),
+      connection.getMinimumBalanceForRentExemption(MAX_METADATA_LEN),
+    ]);
+    if (files.length)
+      getAssetCostToStore([...files, new File([JSON.stringify(metadata)], 'metadata.json')]).then(
+        async (lamports) => {
+          const sol = lamports / LAMPORT_MULTIPLIER;
+
+          // TODO: cache this and batch in one call
+          const [mintRent, metadataRent] = await rentCall;
+
+          // const uriStr = 'x';
+          // let uriBuilder = '';
+          // for (let i = 0; i < MAX_URI_LENGTH; i++) {
+          //   uriBuilder += uriStr;
+          // }
+
+          const additionalSol = (metadataRent + mintRent) / LAMPORT_MULTIPLIER;
+
+          // TODO: add fees based on number of transactions and signers
+          setCost(sol + additionalSol);
+        },
+      );
+  };
+
+  const mintCollection = async (attributes) => {
+    const fixedCreators = [
+      {
+        key: wallet.publicKey.toBase58(),
+        label: splitAddress(wallet.publicKey.toBase58()),
+        value: wallet.publicKey.toBase58(),
+      },
+    ];
+    // TODO : artCreate/index.tsx 1091 라인 참고하여 share 값 계산 등등 처리할 것
+    const creatorStructs = [...fixedCreators].map(
+      (c) =>
+        new Creator({
+          address: c.value,
+          verified: c.value === wallet.publicKey?.toBase58(),
+          share: 100, // TODO: UI에서 입력받게 할 것인지?
+          // share:
+          //   royalties.find(r => r.creatorKey === c.value)?.amount ||
+          //   Math.round(100 / royalties.length),
+        }),
+    );
+
+    console.log('--->', attributes.image);
+
+    const metadata = {
+      name: attributes.name,
+      symbol: attributes.symbol,
+      // creators: attributes.creators,
+      creators: creatorStructs,
+      // collection: attributes.collection,
+      collection: '',
+      description: attributes.description,
+      // sellerFeeBasisPoints: attributes.seller_fee_basis_points,
+      sellerFeeBasisPoints: 500,
+      // image: attributes.image,
+      image: attributes.image.name,
+      // animation_url: attributes.animation_url,
+      nimation_url: undefined,
+      // attributes: attributes.attributes,
+      attributes: undefined,
+      // external_url: attributes.external_url,
+      external_url: '',
+      properties: {
+        // files: attributes.properties.files,
+        files: [{ uri: attributes.image.name, type: attributes.image.type }],
+        // category: attributes.properties?.category,
+        category: 'image',
+      },
+    };
+
+    const files = [];
+    files.push(attributes.image);
+
+    calCost(files, metadata);
+
+    const ret = {};
+    let newCollection;
+    try {
+      newCollection = await mintNFT(
+        connection,
+        wallet,
+        endpoint.name,
+        files,
+        metadata,
+        setNFTcreateProgress,
+        attributes.maximum_supply,
+      );
+
+      if (newCollection) {
+        setCollection(newCollection);
+        ret.address = newCollection;
+      }
+    } catch (e) {
+      console.log('mintCollection error : ', e);
+    } finally {
+      console.log('mintCollection success : ', newCollection);
+    }
+
+    return ret;
   };
 
   return (
@@ -172,6 +303,7 @@ const CollectionCreate = () => {
               if (values.network === 'solana') {
                 // TODO : Call Solana mint collection here ...
                 console.log('== create solana collection ==>', values);
+                result = await mintCollection(values);
               } else {
                 if (values.type === 'KIP17') {
                   if (window.localStorage.getItem('wallet') === 'kaikas') {
