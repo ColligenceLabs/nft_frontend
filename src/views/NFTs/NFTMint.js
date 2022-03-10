@@ -257,8 +257,6 @@ const NFTMint = () => {
                       setFieldValue('collection', event.target.value);
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
-                          console.log(collection.contract_type);
-                          console.log(collection.network);
                           setTargetNetwork(collection.network);
                           setFieldValue('category', collection.category.toString());
                           setContractAddr(collection.contract_address);
@@ -304,7 +302,7 @@ const NFTMint = () => {
                   )}
                 </Grid>
 
-                {!(contractType === 'solana' || targetNetwork === 'SPLToken') && (
+                {contractType !== 'SPLToken' && (
                   <Grid item lg={6} md={12} sm={12} xs={12}>
                     <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
                     <CustomTextField
@@ -370,7 +368,7 @@ const NFTMint = () => {
                   )}
                 </Grid>
 
-                {!(contractType === 'solana' || targetNetwork === 'SPLToken') && (
+                {contractType !== 'SPLToken' && (
                   <Grid item lg={6} md={12} sm={12} xs={12}>
                     <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
                     <CustomTextField
