@@ -14,8 +14,10 @@ export const useKipContract = (contract, type) => {
   // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
   const abi = type === 'KIP17' ? kip17Abi : kip37Abi;
   return useMemo(
-    () => new ethers.Contract(contract, abi, library?.getSigner()),
-    [library, contract, type],
+    () => {
+      if (type === 'SPLToken') return;
+      return new ethers.Contract(contract, abi, library?.getSigner())
+    }, [library, contract, type]
   );
 };
 
@@ -25,10 +27,11 @@ export const useKipContractWithKaikas = (contract, type) => {
   const { library } = useActiveWeb3React();
   // TODO: mint 할 collection 정보로 부터 contract address 를 보내줌.
   // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
-  // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
   const abi = type === 'KIP17' ? kip17Abi : kip37Abi;
   return useMemo(
-    () => new caver.klay.Contract(abi, contract),
-    [library, contract, type],
+    () => {
+      if (type === 'SPLToken') return;
+      return new caver.klay.Contract(abi, contract)
+    }, [library, contract, type],
   );
 };
