@@ -64,6 +64,8 @@ const NFTMint = () => {
   const connection = useConnection();
   const wallet = useWallet();
   const { accountByMint } = useUserAccounts();
+  const art = useArt(contractAddr);
+  const artMintTokenAccount = accountByMint.get(art.mint);
 
   const walletPubKey = wallet?.publicKey?.toString() || '';
   // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
@@ -91,9 +93,7 @@ const NFTMint = () => {
     const editions = amount;
     const editionNumber = undefined;
 
-    const art = useArt(id);
-    const artMintTokenAccount = accountByMint.get(art.mint);
-
+    console.log('--->', art, artMintTokenAccount);
     try {
       await mintEditionsToWallet(
         art,

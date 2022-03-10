@@ -113,16 +113,6 @@ export const deleteNft = (nfts) => {
   }
 };
 
-export const setSerialsActive = (nftId, tokenId, quantity) => {
-  return axios
-    .put(
-      `${API_URL}/update-serials`,
-      { nftId, tokenId, quantity, onchain: 'true' },
-      { headers: authHeader() },
-    )
-    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
-};
-
 export const setSchedule = (ids, start_date, end_date) => {
   return axios.put(
     `${API_URL}/update-schedule`,
