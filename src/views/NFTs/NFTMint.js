@@ -31,6 +31,7 @@ import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWalle
 import { useArt } from '../../solana/hooks';
 import { useConnection, useUserAccounts } from '@colligence/metaplex-common';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { setSerialsActive } from '../../services/serials.service';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -64,9 +65,11 @@ const NFTMint = () => {
   const connection = useConnection();
   const wallet = useWallet();
   const { accountByMint } = useUserAccounts();
+  console.log('=====>1', accountByMint, contractAddr);
   const art = useArt(contractAddr);
+  console.log('=====>2', art);
   const artMintTokenAccount = accountByMint.get(art.mint);
-
+  console.log('=====>3', artMintTokenAccount);
   const walletPubKey = wallet?.publicKey?.toString() || '';
   // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
   // const artMintTokenAccount = accountByMint.get(art.mint);
@@ -176,9 +179,6 @@ const NFTMint = () => {
                 await registerSolanaNFT(formData)
                   .then(async (res) => {
                     if (res.data.status === 1) {
-                      setErrorMessage(null);
-                      setSuccessRegister(true);
-
                       const nftId = res.data.data._id;
                       const tokenId = res.data.data.metadata.tokenId;
                       const quantity = res.data.data.quantity;
@@ -193,6 +193,8 @@ const NFTMint = () => {
                         // TODO: Let serials status status from inactive to active
                         await setSerialsActive(nftId, tokenId, quantity);
                       }
+                      setErrorMessage(null);
+                      setSuccessRegister(true);
                     } else {
                       setErrorMessage(res.data.message);
                       setSuccessRegister(false);
