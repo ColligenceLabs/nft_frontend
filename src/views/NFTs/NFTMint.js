@@ -17,11 +17,20 @@ import contracts from '../../config/constants/contracts';
 import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
-import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
+import {
+  registerNFT,
+  batchRegisterNFT,
+  registerSolanaNFT,
+  setNftOnchain,
+} from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
+import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWallet';
+import { useArt } from '../../solana/hooks';
+import { useConnection, useUserAccounts } from '@colligence/metaplex-common';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -52,6 +61,14 @@ const NFTMint = () => {
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
+  const connection = useConnection();
+  const wallet = useWallet();
+  const { accountByMint } = useUserAccounts();
+
+  const walletPubKey = wallet?.publicKey?.toString() || '';
+  // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
+  // const artMintTokenAccount = accountByMint.get(art.mint);
+
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
@@ -69,6 +86,32 @@ const NFTMint = () => {
       getCollectionList(id);
     }
   }, [level]);
+
+  const mintEdition = async (id, amount) => {
+    const editions = amount;
+    const editionNumber = undefined;
+
+    const art = useArt(id);
+    const artMintTokenAccount = accountByMint.get(art.mint);
+
+    try {
+      await mintEditionsToWallet(
+        art,
+        wallet,
+        connection,
+        artMintTokenAccount,
+        editions,
+        walletPubKey,
+        editionNumber,
+      );
+    } catch (e) {
+      console.error(e);
+      return FAILURE;
+    } finally {
+      console.log('Success...');
+    }
+    return SUCCESS;
+  };
 
   return (
     <PageContainer title="NFT Mint" description="this is NFT Mint Form page">
@@ -128,22 +171,47 @@ const NFTMint = () => {
                 })
                 .catch((error) => console.log(error));
             } else {
-              await registerNFT(formData)
-                .then(async (res) => {
-                  if (res.data.status === 1) {
-                    setErrorMessage(null);
-                    setSuccessRegister(true);
+              let result = SUCCESS;
+              if (targetNetwork === 'solana') {
+                await registerSolanaNFT(formData)
+                  .then(async (res) => {
+                    if (res.data.status === 1) {
+                      setErrorMessage(null);
+                      setSuccessRegister(true);
 
-                    const nftId = res.data.data._id;
-                    const tokenId = res.data.data.metadata.tokenId;
-                    const tokenUri = res.data.data.ipfs_link;
-                    const quantity = res.data.data.quantity;
+                      const nftId = res.data.data._id;
+                      const tokenId = res.data.data.metadata.tokenId;
+                      const quantity = res.data.data.quantity;
 
-                    // TODO : Actual NFT Minting here
-                    let result = SUCCESS;
-                    if (targetNetwork === 'solana') {
                       // TODO : Call Solana mintEdition here...
+                      result = await mintEdition(contractAddr, quantity);
+                      if (result === FAILURE) {
+                        setErrorMessage('Transaction failed or cancelled.');
+                        setSuccessRegister(false);
+                      } else {
+                        await setNftOnchain(nftId);
+                        // TODO: Let serials status status from inactive to active
+                        await setSerialsActive(nftId, tokenId, quantity);
+                      }
                     } else {
+                      setErrorMessage(res.data.message);
+                      setSuccessRegister(false);
+                    }
+                  })
+                  .catch((error) => console.log(error));
+              } else {
+                await registerNFT(formData)
+                  .then(async (res) => {
+                    if (res.data.status === 1) {
+                      setErrorMessage(null);
+                      setSuccessRegister(true);
+
+                      const nftId = res.data.data._id;
+                      const tokenId = res.data.data.metadata.tokenId;
+                      const tokenUri = res.data.data.ipfs_link;
+                      const quantity = res.data.data.quantity;
+
+                      // TODO : Actual NFT Minting here
                       if (contractType === 'KIP17') {
                         if (window.localStorage.getItem('wallet') === 'kaikas') {
                           result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
@@ -165,13 +233,13 @@ const NFTMint = () => {
                           setSuccessRegister(false);
                         }
                       }
+                    } else {
+                      setErrorMessage(res.data.message);
+                      setSuccessRegister(false);
                     }
-                  } else {
-                    setErrorMessage(res.data.message);
-                    setSuccessRegister(false);
-                  }
-                })
-                .catch((error) => console.log(error));
+                  })
+                  .catch((error) => console.log(error));
+              }
             }
 
             setSubmitting(false);
