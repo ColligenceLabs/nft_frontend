@@ -294,6 +294,8 @@ const CollectionCreate = () => {
             if (values.maximum_supply !== '') {
               formData.append('maximum_supply', values.maximum_supply);
               formData.append('contract_type', 'SPLToken');
+            } else {
+              formData.append('contract_type', values.type);
             }
 
             let newContract;
@@ -346,7 +348,6 @@ const CollectionCreate = () => {
 
             // console.log('newContract == ', newContract);
             formData.append('contract_address', newContract);
-            formData.append('contract_type', values.type);
             formData.append('network', values.network);
 
             await createCollection(formData)

@@ -370,45 +370,47 @@ const NFTMint = () => {
                   )}
                 </Grid>
 
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
-                  <CustomTextField
-                    id="contentFiled"
-                    name="contentFiled"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.content == null ? '' : values.content.name}
-                    // onChange={handleChange}
-                    InputProps={{
-                      startAdornment: (
-                        <Button
-                          component="label"
-                          variant="contained"
-                          size="small"
-                          disabled={isSubmitting || isMinting}
-                          style={{ marginRight: '1rem' }}
-                        >
-                          <DriveFileMoveOutlinedIcon fontSize="small" />
-                          <input
-                            id="content"
-                            style={{ display: 'none' }}
-                            type="file"
-                            name="image"
-                            onChange={(event) => {
-                              setFieldValue('content', event.currentTarget.files[0]);
-                            }}
-                          />
-                        </Button>
-                      ),
-                    }}
-                  />
-                  {touched.content && errors.content && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.content}
-                    </FormHelperText>
-                  )}
-                </Grid>
+                {contractType !== 'SPLToken' && (
+                  <Grid item lg={6} md={12} sm={12} xs={12}>
+                    <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
+                    <CustomTextField
+                      id="contentFiled"
+                      name="contentFiled"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      value={values.content == null ? '' : values.content.name}
+                      // onChange={handleChange}
+                      InputProps={{
+                        startAdornment: (
+                          <Button
+                            component="label"
+                            variant="contained"
+                            size="small"
+                            disabled={isSubmitting || isMinting}
+                            style={{ marginRight: '1rem' }}
+                          >
+                            <DriveFileMoveOutlinedIcon fontSize="small" />
+                            <input
+                              id="content"
+                              style={{ display: 'none' }}
+                              type="file"
+                              name="image"
+                              onChange={(event) => {
+                                setFieldValue('content', event.currentTarget.files[0]);
+                              }}
+                            />
+                          </Button>
+                        ),
+                      }}
+                    />
+                    {touched.content && errors.content && (
+                      <FormHelperText htmlFor="render-select" error>
+                        {errors.content}
+                      </FormHelperText>
+                    )}
+                  </Grid>
+                )}
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
@@ -433,44 +435,48 @@ const NFTMint = () => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
-                  <CustomTextField
-                    id="thumbnailFiled"
-                    name="thumbnailFiled"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.thumbnail == null ? '' : values.thumbnail.name}
-                    InputProps={{
-                      startAdornment: (
-                        <Button
-                          component="label"
-                          variant="contained"
-                          size="small"
-                          disabled={isSubmitting || isMinting}
-                          style={{ marginRight: '1rem' }}
-                        >
-                          <DriveFileMoveOutlinedIcon fontSize="small" />
-                          <input
-                            id="thumbnail"
-                            style={{ display: 'none' }}
-                            type="file"
-                            name="image"
-                            onChange={(event) => {
-                              setFieldValue('thumbnail', event.currentTarget.files[0]);
-                            }}
-                          />
-                        </Button>
-                      ),
-                    }}
-                  />
-                  {touched.thumbnail && errors.thumbnail && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.thumbnail}
-                    </FormHelperText>
-                  )}
-                </Grid>
+
+                {contractType !== 'SPLToken' && (
+                  <Grid item lg={6} md={12} sm={12} xs={12}>
+                    <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
+                    <CustomTextField
+                      id="thumbnailFiled"
+                      name="thumbnailFiled"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      value={values.thumbnail == null ? '' : values.thumbnail.name}
+                      InputProps={{
+                        startAdornment: (
+                          <Button
+                            component="label"
+                            variant="contained"
+                            size="small"
+                            disabled={isSubmitting || isMinting}
+                            style={{ marginRight: '1rem' }}
+                          >
+                            <DriveFileMoveOutlinedIcon fontSize="small" />
+                            <input
+                              id="thumbnail"
+                              style={{ display: 'none' }}
+                              type="file"
+                              name="image"
+                              onChange={(event) => {
+                                setFieldValue('thumbnail', event.currentTarget.files[0]);
+                              }}
+                            />
+                          </Button>
+                        ),
+                      }}
+                    />
+                    {touched.thumbnail && errors.thumbnail && (
+                      <FormHelperText htmlFor="render-select" error>
+                        {errors.thumbnail}
+                      </FormHelperText>
+                    )}
+                  </Grid>
+                )}
+
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>
                   <CustomTextField
