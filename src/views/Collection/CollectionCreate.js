@@ -293,7 +293,7 @@ const CollectionCreate = () => {
 
             if (values.maximum_supply !== '') {
               formData.append('maximum_supply', values.maximum_supply);
-              formData.append('type', 'SPLToken');
+              formData.append('contract_type', 'SPLToken');
             }
 
             let newContract;
