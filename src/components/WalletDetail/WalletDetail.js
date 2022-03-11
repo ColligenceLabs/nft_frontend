@@ -19,6 +19,8 @@ import capitalize from '../../utils/capitalize';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import { styled } from '@mui/material/styles';
+import { setEthereum, setKlaytn, setSolana } from '../../redux/slices/wallets';
+import { useDispatch } from 'react-redux';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   padding: '10px',
@@ -36,14 +38,43 @@ const WalletDetail = ({
   const theme = useTheme();
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   const onClickDisconnect = () => {
-    console.log('on click disconnect');
+    if (connectedWallet.chain === 'solana')
+      dispatch(setSolana({}));
+    else if (connectedWallet.chain === 'ethereum')
+      dispatch(setEthereum({}));
+    else if (connectedWallet.chain === 'klaytn')
+      dispatch(setKlaytn({}));
+    handleCloseDetailModal();
   };
 
   const handleViewExplorer = () => {
-    console.log('view on explorer');
+    let url = '';
+    switch (connectedWallet.chain) {
+      case 'ethereum':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://etherscan.io/address/${connectedWallet.address}`
+            : `https://ropsten.etherscan.io/address/${connectedWallet.address}`;
+        break;
+      case 'klaytn':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://scope.klaytn.com/account/${connectedWallet.address}?tabId=txList`
+            : `https://baobab.scope.klaytn.com/account/${connectedWallet.address}?tabId=txList`;
+        break;
+      case 'solana':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://solscan.io/account/${connectedWallet.address}?cluster=mainnet-beta`
+            : `https://solscan.io/account/${connectedWallet.address}?cluster=devnet`;
+        break;
+    }
+
+    window.open(url, '_blank');
   };
 
   return (

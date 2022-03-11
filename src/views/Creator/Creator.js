@@ -28,6 +28,10 @@ import { getCreatorData } from '../../services/creator.service';
 import { updateAdminsStatus, updateMultiAdminsStatus } from '../../services/admins.service';
 import AdminsDetailModal from '../Admins/AdminsDetailModal';
 import useUserInfo from '../../hooks/useUserInfo';
+import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex';
+import { saveAdmin } from '../../solana/actions/saveAdmin';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { useConnection } from '@colligence/metaplex-common';
 
 const Creator = () => {
   const { t } = useTranslation();
@@ -46,6 +50,9 @@ const Creator = () => {
   const [searchName, setSearchName] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
   const [adminDetailModal, setAdminDetailModal] = useState(false);
+
+  const connection = useConnection();
+  const wallet = useWallet();
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -112,13 +119,27 @@ const Creator = () => {
     setStatusOpen(false);
   };
 
-  const updateStatus = async (id, status) => {
+  const updateStatus = async (id, status, solana) => {
     const newStatus = status === 'active' ? 'inactive' : 'active';
     await updateAdminsStatus(id, newStatus).then((res) => {
       if (res.status === 1) {
         setRows(rows.map((row) => (row._id === id ? { ...row, status: newStatus } : row)));
       }
     });
+
+    // TODO : In case of Solana creator add creator here
+    if (newStatus === 'active' && solana !== '' && solana !== undefined) {
+      const newWhitelistedCreator = new WhitelistedCreator({
+        activated: true,
+        address: solana,
+      });
+      const updatedCreators = { [solana]: newWhitelistedCreator };
+      if (connection && wallet) {
+        // isPublic = always false : we don't permit a public store.
+        await saveAdmin(connection, wallet, false, Object.values(updatedCreators));
+      }
+    }
+
     setStatusOpen(false);
   };
 
@@ -291,7 +312,9 @@ const Creator = () => {
       <StatusDialog
         open={statusOpen}
         handleStatusClose={handleStatusClose}
-        updateStatus={() => updateStatus(selectedAdmin._id, selectedAdmin.status)}
+        updateStatus={() =>
+          updateStatus(selectedAdmin._id, selectedAdmin.status, selectedAdmin.solana_address)
+        }
       />
     </PageContainer>
   );

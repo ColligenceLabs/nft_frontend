@@ -17,11 +17,21 @@ import contracts from '../../config/constants/contracts';
 import { LoadingButton } from '@mui/lab';
 import useCreator from '../../hooks/useCreator';
 import nftRegisterSchema from '../../config/schema/nftMintSchema';
-import { registerNFT, batchRegisterNFT } from '../../services/nft.service';
+import {
+  registerNFT,
+  batchRegisterNFT,
+  registerSolanaNFT,
+  setNftOnchain,
+} from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
+import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWallet';
+import { useArt } from '../../solana/hooks';
+import { useConnection, useUserAccounts } from '@colligence/metaplex-common';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { setSerialsActive } from '../../services/serials.service';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -46,10 +56,23 @@ const NFTMint = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [targetNetwork, setTargetNetwork] = useState('klaytn');
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
+
+  const connection = useConnection();
+  const wallet = useWallet();
+  const { accountByMint } = useUserAccounts();
+  console.log('=====>1', accountByMint, contractAddr);
+  const art = useArt(contractAddr);
+  console.log('=====>2', art);
+  const artMintTokenAccount = accountByMint.get(art.mint);
+  console.log('=====>3', artMintTokenAccount);
+  const walletPubKey = wallet?.publicKey?.toString() || '';
+  // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
+  // const artMintTokenAccount = accountByMint.get(art.mint);
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -68,6 +91,30 @@ const NFTMint = () => {
       getCollectionList(id);
     }
   }, [level]);
+
+  const mintEdition = async (id, amount) => {
+    const editions = amount;
+    const editionNumber = undefined;
+
+    console.log('--->', art, artMintTokenAccount);
+    try {
+      await mintEditionsToWallet(
+        art,
+        wallet,
+        connection,
+        artMintTokenAccount,
+        editions,
+        walletPubKey,
+        editionNumber,
+      );
+    } catch (e) {
+      console.error(e);
+      return FAILURE;
+    } finally {
+      console.log('Success...');
+    }
+    return SUCCESS;
+  };
 
   return (
     <PageContainer title="NFT Mint" description="this is NFT Mint Form page">
@@ -127,46 +174,74 @@ const NFTMint = () => {
                 })
                 .catch((error) => console.log(error));
             } else {
-              await registerNFT(formData)
-                .then(async (res) => {
-                  if (res.data.status === 1) {
-                    setErrorMessage(null);
-                    setSuccessRegister(true);
+              let result = SUCCESS;
+              if (targetNetwork === 'solana') {
+                await registerSolanaNFT(formData)
+                  .then(async (res) => {
+                    if (res.data.status === 1) {
+                      const nftId = res.data.data._id;
+                      const tokenId = res.data.data.metadata.tokenId;
+                      const quantity = res.data.data.quantity;
 
-                    const nftId = res.data.data._id;
-                    const tokenId = res.data.data.metadata.tokenId;
-                    const tokenUri = res.data.data.ipfs_link;
-                    const quantity = res.data.data.quantity;
-
-                    // TODO : Actual NFT Minting here
-                    let result = SUCCESS;
-                    if (contractType === 'KIP17') {
-                      if (window.localStorage.getItem('wallet') === 'kaikas') {
-                        result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
-                      } else {
-                        result = await mintNFT17(tokenId, tokenUri, nftId);
-                      }
+                      // TODO : Call Solana mintEdition here...
+                      result = await mintEdition(contractAddr, quantity);
                       if (result === FAILURE) {
                         setErrorMessage('Transaction failed or cancelled.');
                         setSuccessRegister(false);
+                      } else {
+                        await setNftOnchain(nftId);
+                        // TODO: Let serials status status from inactive to active
+                        await setSerialsActive(nftId, tokenId, quantity);
+                      }
+                      setErrorMessage(null);
+                      setSuccessRegister(true);
+                    } else {
+                      setErrorMessage(res.data.message);
+                      setSuccessRegister(false);
+                    }
+                  })
+                  .catch((error) => console.log(error));
+              } else {
+                await registerNFT(formData)
+                  .then(async (res) => {
+                    if (res.data.status === 1) {
+                      setErrorMessage(null);
+                      setSuccessRegister(true);
+
+                      const nftId = res.data.data._id;
+                      const tokenId = res.data.data.metadata.tokenId;
+                      const tokenUri = res.data.data.ipfs_link;
+                      const quantity = res.data.data.quantity;
+
+                      // TODO : Actual NFT Minting here
+                      if (contractType === 'KIP17') {
+                        if (window.localStorage.getItem('wallet') === 'kaikas') {
+                          result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                        } else {
+                          result = await mintNFT17(tokenId, tokenUri, nftId);
+                        }
+                        if (result === FAILURE) {
+                          setErrorMessage('Transaction failed or cancelled.');
+                          setSuccessRegister(false);
+                        }
+                      } else {
+                        if (window.localStorage.getItem('wallet') === 'kaikas') {
+                          result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                        } else {
+                          result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                        }
+                        if (result === FAILURE) {
+                          setErrorMessage('Transaction failed or cancelled.');
+                          setSuccessRegister(false);
+                        }
                       }
                     } else {
-                      if (window.localStorage.getItem('wallet') === 'kaikas') {
-                        result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
-                      } else {
-                        result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
-                      }
-                      if (result === FAILURE) {
-                        setErrorMessage('Transaction failed or cancelled.');
-                        setSuccessRegister(false);
-                      }
+                      setErrorMessage(res.data.message);
+                      setSuccessRegister(false);
                     }
-                  } else {
-                    setErrorMessage(res.data.message);
-                    setSuccessRegister(false);
-                  }
-                })
-                .catch((error) => console.log(error));
+                  })
+                  .catch((error) => console.log(error));
+              }
             }
 
             setSubmitting(false);
@@ -252,6 +327,7 @@ const NFTMint = () => {
                       setFieldValue('collection', event.target.value);
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
+                          setTargetNetwork(collection.network);
                           setFieldValue('category', collection.category.toString());
                           setContractAddr(collection.contract_address);
                           setContractType(collection.contract_type);
@@ -296,45 +372,47 @@ const NFTMint = () => {
                   )}
                 </Grid>
 
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
-                  <CustomTextField
-                    id="contentFiled"
-                    name="contentFiled"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.content == null ? '' : values.content.name}
-                    // onChange={handleChange}
-                    InputProps={{
-                      startAdornment: (
-                        <Button
-                          component="label"
-                          variant="contained"
-                          size="small"
-                          disabled={isSubmitting || isMinting}
-                          style={{ marginRight: '1rem' }}
-                        >
-                          <DriveFileMoveOutlinedIcon fontSize="small" />
-                          <input
-                            id="content"
-                            style={{ display: 'none' }}
-                            type="file"
-                            name="image"
-                            onChange={(event) => {
-                              setFieldValue('content', event.currentTarget.files[0]);
-                            }}
-                          />
-                        </Button>
-                      ),
-                    }}
-                  />
-                  {touched.content && errors.content && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.content}
-                    </FormHelperText>
-                  )}
-                </Grid>
+                {contractType !== 'SPLToken' && (
+                  <Grid item lg={6} md={12} sm={12} xs={12}>
+                    <CustomFormLabel htmlFor="content">{t('Content')}</CustomFormLabel>
+                    <CustomTextField
+                      id="contentFiled"
+                      name="contentFiled"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      value={values.content == null ? '' : values.content.name}
+                      // onChange={handleChange}
+                      InputProps={{
+                        startAdornment: (
+                          <Button
+                            component="label"
+                            variant="contained"
+                            size="small"
+                            disabled={isSubmitting || isMinting}
+                            style={{ marginRight: '1rem' }}
+                          >
+                            <DriveFileMoveOutlinedIcon fontSize="small" />
+                            <input
+                              id="content"
+                              style={{ display: 'none' }}
+                              type="file"
+                              name="image"
+                              onChange={(event) => {
+                                setFieldValue('content', event.currentTarget.files[0]);
+                              }}
+                            />
+                          </Button>
+                        ),
+                      }}
+                    />
+                    {touched.content && errors.content && (
+                      <FormHelperText htmlFor="render-select" error>
+                        {errors.content}
+                      </FormHelperText>
+                    )}
+                  </Grid>
+                )}
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="amount">{t('Amount')}</CustomFormLabel>
@@ -359,44 +437,48 @@ const NFTMint = () => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
-                  <CustomTextField
-                    id="thumbnailFiled"
-                    name="thumbnailFiled"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.thumbnail == null ? '' : values.thumbnail.name}
-                    InputProps={{
-                      startAdornment: (
-                        <Button
-                          component="label"
-                          variant="contained"
-                          size="small"
-                          disabled={isSubmitting || isMinting}
-                          style={{ marginRight: '1rem' }}
-                        >
-                          <DriveFileMoveOutlinedIcon fontSize="small" />
-                          <input
-                            id="thumbnail"
-                            style={{ display: 'none' }}
-                            type="file"
-                            name="image"
-                            onChange={(event) => {
-                              setFieldValue('thumbnail', event.currentTarget.files[0]);
-                            }}
-                          />
-                        </Button>
-                      ),
-                    }}
-                  />
-                  {touched.thumbnail && errors.thumbnail && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.thumbnail}
-                    </FormHelperText>
-                  )}
-                </Grid>
+
+                {contractType !== 'SPLToken' && (
+                  <Grid item lg={6} md={12} sm={12} xs={12}>
+                    <CustomFormLabel htmlFor="thumbnail">{t('Thumbnail')}</CustomFormLabel>
+                    <CustomTextField
+                      id="thumbnailFiled"
+                      name="thumbnailFiled"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      value={values.thumbnail == null ? '' : values.thumbnail.name}
+                      InputProps={{
+                        startAdornment: (
+                          <Button
+                            component="label"
+                            variant="contained"
+                            size="small"
+                            disabled={isSubmitting || isMinting}
+                            style={{ marginRight: '1rem' }}
+                          >
+                            <DriveFileMoveOutlinedIcon fontSize="small" />
+                            <input
+                              id="thumbnail"
+                              style={{ display: 'none' }}
+                              type="file"
+                              name="image"
+                              onChange={(event) => {
+                                setFieldValue('thumbnail', event.currentTarget.files[0]);
+                              }}
+                            />
+                          </Button>
+                        ),
+                      }}
+                    />
+                    {touched.thumbnail && errors.thumbnail && (
+                      <FormHelperText htmlFor="render-select" error>
+                        {errors.thumbnail}
+                      </FormHelperText>
+                    )}
+                  </Grid>
+                )}
+
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>
                   <CustomTextField

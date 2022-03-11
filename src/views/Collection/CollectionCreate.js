@@ -44,6 +44,18 @@ import NETWORKS from '../../components/NetworkSelector/networks';
 import { useSelector } from 'react-redux';
 import { injected, kaikas, walletconnect } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
+import splitAddress from '../../utils/splitAddress';
+import {
+  MAX_METADATA_LEN,
+  useConnection,
+  getAssetCostToStore,
+  Creator,
+  LAMPORT_MULTIPLIER,
+  useConnectionConfig,
+} from '@colligence/metaplex-common';
+import { mintNFT } from '../../solana/actions/nft';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { MintLayout } from '@solana/spl-token';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -82,6 +94,18 @@ const CollectionCreate = () => {
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
   const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
+  const wallet = useWallet();
+  const connection = useConnection();
+  const { endpoint } = useConnectionConfig();
+  // Solana Transaction Progress Callback
+  const [nftCreateProgress, setNFTcreateProgress] = useState(0);
+  const [cost, setCost] = useState(0);
+  const [collection, setCollection] = useState(undefined);
+
+  useEffect(() => {
+    console.log('== TX Progress = ', nftCreateProgress);
+  }, [nftCreateProgress]);
+
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
@@ -111,7 +135,7 @@ const CollectionCreate = () => {
       } else if (klaytn.wallet === 'kaikas') {
         await activate(kaikas, null, true);
       }
-    } else if (name === 'solana')  {
+    } else if (name === 'solana') {
       if (!solana.wallet && !solana.address) {
         alert('지갑연결 필요');
         return;
@@ -121,6 +145,113 @@ const CollectionCreate = () => {
     }
     setFieldValue('network', name);
     console.log('지갑연결 완료');
+  };
+
+  const calCost = (files, metadata) => {
+    const rentCall = Promise.all([
+      connection.getMinimumBalanceForRentExemption(MintLayout.span),
+      connection.getMinimumBalanceForRentExemption(MAX_METADATA_LEN),
+    ]);
+    if (files.length)
+      getAssetCostToStore([...files, new File([JSON.stringify(metadata)], 'metadata.json')]).then(
+        async (lamports) => {
+          const sol = lamports / LAMPORT_MULTIPLIER;
+
+          // TODO: cache this and batch in one call
+          const [mintRent, metadataRent] = await rentCall;
+
+          // const uriStr = 'x';
+          // let uriBuilder = '';
+          // for (let i = 0; i < MAX_URI_LENGTH; i++) {
+          //   uriBuilder += uriStr;
+          // }
+
+          const additionalSol = (metadataRent + mintRent) / LAMPORT_MULTIPLIER;
+
+          // TODO: add fees based on number of transactions and signers
+          setCost(sol + additionalSol);
+        },
+      );
+  };
+
+  const mintCollection = async (attributes) => {
+    const fixedCreators = [
+      {
+        key: wallet.publicKey.toBase58(),
+        label: splitAddress(wallet.publicKey.toBase58()),
+        value: wallet.publicKey.toBase58(),
+      },
+    ];
+    // TODO : artCreate/index.tsx 1091 라인 참고하여 share 값 계산 등등 처리할 것
+    const creatorStructs = [...fixedCreators].map(
+      (c) =>
+        new Creator({
+          address: c.value,
+          verified: c.value === wallet.publicKey?.toBase58(),
+          share: 100, // TODO: UI에서 입력받게 할 것인지?
+          // share:
+          //   royalties.find(r => r.creatorKey === c.value)?.amount ||
+          //   Math.round(100 / royalties.length),
+        }),
+    );
+
+    console.log('--->', attributes.image);
+
+    const metadata = {
+      name: attributes.name,
+      symbol: attributes.symbol,
+      // creators: attributes.creators,
+      creators: creatorStructs,
+      // collection: attributes.collection,
+      collection: '',
+      description: attributes.description,
+      // sellerFeeBasisPoints: attributes.seller_fee_basis_points,
+      sellerFeeBasisPoints: 500,
+      // image: attributes.image,
+      image: attributes.image.name,
+      // animation_url: attributes.animation_url,
+      nimation_url: undefined,
+      // attributes: attributes.attributes,
+      attributes: undefined,
+      // external_url: attributes.external_url,
+      external_url: '',
+      properties: {
+        // files: attributes.properties.files,
+        files: [{ uri: attributes.image.name, type: attributes.image.type }],
+        // category: attributes.properties?.category,
+        category: 'image',
+      },
+    };
+
+    const files = [];
+    files.push(attributes.image);
+
+    calCost(files, metadata);
+
+    const ret = {};
+    let newCollection;
+    try {
+      newCollection = await mintNFT(
+        connection,
+        wallet,
+        endpoint.name,
+        files,
+        metadata,
+        setNFTcreateProgress,
+        attributes.maximum_supply,
+      );
+
+      if (newCollection) {
+        setCollection(newCollection);
+        ret.address = newCollection.metadataAccount;
+      }
+    } catch (e) {
+      console.log('mintCollection error : ', e);
+    } finally {
+      console.log('mintCollection success : ', newCollection);
+    }
+
+    return ret;
   };
 
   return (
@@ -139,6 +270,7 @@ const CollectionCreate = () => {
             type: 'KIP17',
             tokenUri: '',
             symbol: '',
+            maximum_supply: '',
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
@@ -159,12 +291,21 @@ const CollectionCreate = () => {
               }
             }
 
+            if (values.maximum_supply !== '') {
+              formData.append('maximum_supply', values.maximum_supply);
+              formData.append('contract_type', 'SPLToken');
+            } else {
+              formData.append('contract_type', values.type);
+            }
+
             let newContract;
             if (useKAS === 'false') {
               // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
               let result;
               if (values.network === 'solana') {
+                // TODO : Call Solana mint collection here ...
                 console.log('== create solana collection ==>', values);
+                result = await mintCollection(values);
               } else {
                 if (values.type === 'KIP17') {
                   if (window.localStorage.getItem('wallet') === 'kaikas') {
@@ -207,7 +348,7 @@ const CollectionCreate = () => {
 
             // console.log('newContract == ', newContract);
             formData.append('contract_address', newContract);
-            formData.append('contract_type', values.type);
+            formData.append('network', values.network);
 
             await createCollection(formData)
               .then((res) => {
@@ -393,6 +534,7 @@ const CollectionCreate = () => {
                     />
                   )}
                 </Grid>
+
                 <Grid item lg={12} md={12} sm={12} xs={12}>
                   <Divider
                     sx={{
@@ -404,60 +546,110 @@ const CollectionCreate = () => {
                     {t('Smart Contract Information')}
                   </Typography>
                 </Grid>
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel>{t('Type')}</CustomFormLabel>
-                  <RadioGroup
-                    aria-label="gender"
-                    defaultValue="radio1"
-                    name="type"
-                    value={values.type}
-                    onChange={isSubmitting ? null : handleChange}
-                  >
-                    <Grid container>
-                      <Grid item lg={6} sm={6} xs={6}>
-                        <FormControlLabel value="KIP17" control={<CustomRadio />} label="KIP17" />
-                      </Grid>
-                      <Grid item lg={6} sm={6} xs={6}>
-                        <FormControlLabel value="KIP37" control={<CustomRadio />} label="KIP37" />
-                      </Grid>
+                {values.network !== 'solana' ? (
+                  <>
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel>{t('Type')}</CustomFormLabel>
+                      <RadioGroup
+                        aria-label="gender"
+                        defaultValue="radio1"
+                        name="type"
+                        value={values.type}
+                        onChange={isSubmitting ? null : handleChange}
+                      >
+                        <Grid container>
+                          <Grid item lg={6} sm={6} xs={6}>
+                            <FormControlLabel
+                              value="KIP17"
+                              control={<CustomRadio />}
+                              label="KIP17"
+                            />
+                          </Grid>
+                          <Grid item lg={6} sm={6} xs={6}>
+                            <FormControlLabel
+                              value="KIP37"
+                              control={<CustomRadio />}
+                              label="KIP37"
+                            />
+                          </Grid>
+                        </Grid>
+                      </RadioGroup>
                     </Grid>
-                  </RadioGroup>
-                </Grid>
 
-                {values.type === 'KIP17' && (
-                  <Grid item lg={6} md={12} sm={12} xs={12}>
-                    <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
-                    <CustomTextField
-                      id="symbol"
-                      name="symbol"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      disabled={isSubmitting}
-                      value={values.symbol}
-                      onChange={handleChange}
-                      error={touched.symbol && Boolean(errors.symbol)}
-                      helperText={touched.symbol && errors.symbol}
-                    />
-                  </Grid>
-                )}
+                    {values.type === 'KIP17' && (
+                      <Grid item lg={6} md={12} sm={12} xs={12}>
+                        <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
+                        <CustomTextField
+                          id="symbol"
+                          name="symbol"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          disabled={isSubmitting}
+                          value={values.symbol}
+                          onChange={handleChange}
+                          error={touched.symbol && Boolean(errors.symbol)}
+                          helperText={touched.symbol && errors.symbol}
+                        />
+                      </Grid>
+                    )}
 
-                {values.type === 'KIP37' && (
-                  <Grid item lg={6} md={12} sm={12} xs={12}>
-                    <CustomFormLabel htmlFor="tokenUri">{t('IPFS Directory Name')}</CustomFormLabel>
-                    <CustomTextField
-                      id="tokenUri"
-                      name="tokenUri"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      disabled={isSubmitting}
-                      value={values.tokenUri}
-                      onChange={handleChange}
-                      error={touched.tokenUri && Boolean(errors.tokenUri)}
-                      helperText={touched.tokenUri && errors.tokenUri}
-                    />
-                  </Grid>
+                    {values.type === 'KIP37' && (
+                      <Grid item lg={6} md={12} sm={12} xs={12}>
+                        <CustomFormLabel htmlFor="tokenUri">
+                          {t('IPFS Directory Name')}
+                        </CustomFormLabel>
+                        <CustomTextField
+                          id="tokenUri"
+                          name="tokenUri"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          disabled={isSubmitting}
+                          value={values.tokenUri}
+                          onChange={handleChange}
+                          error={touched.tokenUri && Boolean(errors.tokenUri)}
+                          helperText={touched.tokenUri && errors.tokenUri}
+                        />
+                      </Grid>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
+                      <CustomTextField
+                        id="symbol"
+                        name="symbol"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting}
+                        value={values.symbol}
+                        onChange={handleChange}
+                        error={touched.symbol && Boolean(errors.symbol)}
+                        helperText={touched.symbol && errors.symbol}
+                      />
+                    </Grid>
+
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel htmlFor="maximum_supply">
+                        {t('Maximum supply')}
+                      </CustomFormLabel>
+                      <CustomTextField
+                        id="maximum_supply"
+                        name="maximum_supply"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting}
+                        value={values.maximum_supply}
+                        onChange={handleChange}
+                        error={touched.maximum_supply && Boolean(errors.maximum_supply)}
+                        helperText={touched.maximum_supply && errors.maximum_supply}
+                      />
+                    </Grid>
+                  </>
                 )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12}>

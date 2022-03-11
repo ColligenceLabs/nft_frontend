@@ -70,7 +70,7 @@ const Solana = () => {
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
 
   const connection = useConnection();
-  const { store } = useMeta();
+  const { store, isFetching, isLoading } = useMeta();
   const { setStoreForOwner } = useStore();
 
   const { accountByMint } = useUserAccounts();
@@ -82,6 +82,7 @@ const Solana = () => {
   const walletPubKey = wallet?.publicKey?.toString() || '';
 
   const [updatedCreators, setUpdatedCreators] = useState({});
+  const [msgStatus, setMsgStatus] = useState('Store Loading...');
 
   // useEffect(() => {
   //   if (!process.env.NEXT_PUBLIC_STORE_OWNER_ADDRESS) {
@@ -119,6 +120,12 @@ const Solana = () => {
     console.log('Sell clicked');
     console.log(splitAddress(wallet.publicKey.toBase58()));
   };
+
+  useEffect(() => {
+    if (!isLoading && !isFetching) {
+      setMsgStatus('Store Loaded !!');
+    }
+  }, [isLoading, isFetching]);
 
   const mintCollection = async () => {
     // TODO : artCreate/index.tsx 1091 라인 참고
@@ -253,12 +260,16 @@ const Solana = () => {
 
     setIsInitalizingStore(true);
 
-    await saveAdmin(connection, wallet, false, [
-      new WhitelistedCreator({
-        address: wallet.publicKey.toBase58(),
-        activated: true,
-      }),
-    ]);
+    if (wallet.connected && !isLoading && !isFetching && !store) {
+      await saveAdmin(connection, wallet, false, [
+        new WhitelistedCreator({
+          address: wallet.publicKey.toBase58(),
+          activated: true,
+        }),
+      ]);
+    } else {
+      console.log('Store already initialized...');
+    }
 
     // TODO: process errors
 
@@ -371,6 +382,7 @@ const Solana = () => {
             }}
           />
         </div>
+        <div style={{ width: '500px', marginTop: '20px' }}>{msgStatus}</div>
       </Grid>
     </div>
   );

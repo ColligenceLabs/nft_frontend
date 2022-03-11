@@ -30,6 +30,15 @@ export const registerNFT = (formData) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const registerSolanaNFT = (formData) => {
+  return axios
+    .post(`${API_URL}/solanacreate`, formData, { headers: authHeader() })
+    .then((res) => {
+      return res;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const deployNFT17 = (formData) => {
   return axios
     .post(`${API_URL}/kas/deploy17`, formData, { headers: authHeader() })
