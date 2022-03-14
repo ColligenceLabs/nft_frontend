@@ -84,9 +84,9 @@ export async function mintEditionsToWallet(
     const instructionBatch = instructions[i];
     const signerBatch = signers[i];
     console.log('Running batch', i);
-    if (instructionBatch.length >= 2)
+    if (instructionBatch.length >= 2) {
       // Pump em through!
-      await sendTransactions(
+      const rlt = await sendTransactions(
         connection,
         wallet,
         instructionBatch,
@@ -94,14 +94,17 @@ export async function mintEditionsToWallet(
         SequenceType.StopOnFailure,
         'single',
       );
-    else
-      await sendTransactionWithRetry(
+      console.log('--mint result 1-->', rlt);
+    } else {
+      const rlt = await sendTransactionWithRetry(
         connection,
         wallet,
         instructionBatch[0],
         signerBatch[0],
         'single',
       );
+      console.log('--mint result 2-->', rlt);
+    }
     console.log('Done');
   }
 }

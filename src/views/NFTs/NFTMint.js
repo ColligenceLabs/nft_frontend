@@ -32,6 +32,8 @@ import { useArt } from '../../solana/hooks';
 import { useConnection, useUserAccounts } from '@colligence/metaplex-common';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { setSerialsActive } from '../../services/serials.service';
+import { useItems } from '../../solana/hooks/useItems';
+import { ArtworkViewState } from '../../solana/hooks/types';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -70,6 +72,8 @@ const NFTMint = () => {
   console.log('=====>2', art);
   const artMintTokenAccount = accountByMint.get(art.mint);
   console.log('=====>3', artMintTokenAccount);
+  const userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
+
   const walletPubKey = wallet?.publicKey?.toString() || '';
   // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
   // const artMintTokenAccount = accountByMint.get(art.mint);
@@ -91,6 +95,10 @@ const NFTMint = () => {
       getCollectionList(id);
     }
   }, [level]);
+
+  useEffect(() => {
+    console.log('-- userItems ->', userItems);
+  }, [userItems]);
 
   const mintEdition = async (id, amount) => {
     const editions = amount;
