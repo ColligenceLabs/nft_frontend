@@ -38,7 +38,7 @@ export const useItems = ({
     }
   });
 
-  if (master === undefined) return items;
+  if (master === undefined || master === '' || master === null) return items;
   console.log('== masterEdition ==>', master);
 
   return items.filter(
