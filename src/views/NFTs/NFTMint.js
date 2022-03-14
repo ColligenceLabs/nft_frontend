@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Formik } from 'formik';
-import { Grid, MenuItem, Button, Paper, FormHelperText, Snackbar, Alert } from '@mui/material';
+import {
+  Grid,
+  MenuItem,
+  Button,
+  Paper,
+  FormHelperText,
+  Snackbar,
+  Alert,
+  Backdrop,
+  CircularProgress,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
@@ -64,6 +74,7 @@ const NFTMint = () => {
   const [mintAmount, setMintAmount] = useState(0);
   const [nftId, setNftId] = useState('');
   const [tokenId, setTokenId] = useState('');
+  const [openBackdrop, setOpenBackdrop] = useState(false);
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
@@ -99,15 +110,18 @@ const NFTMint = () => {
   useEffect(() => {
     console.log('-->', isLoading, targetNetwork);
     if (targetNetwork === 'solana') {
-      if (isLoading)
+      if (isLoading) {
+        setOpenBackdrop(true);
         console.log('show loader.');
-      else
+      } else {
+        setOpenBackdrop(false);
         console.log('hide loader.');
+      }
     } else {
+      setOpenBackdrop(false);
       console.log('hide loader.');
     }
   }, [isLoading, targetNetwork]);
-
 
   useEffect(() => {
     if (level.toLowerCase() === 'creator') {
@@ -630,6 +644,13 @@ const NFTMint = () => {
             </form>
           )}
         </Formik>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={openBackdrop}
+          onClick={() => setOpenBackdrop(false)}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <WalletDialog
           isOpenConnectModal={isOpenConnectModal}
           handleCloseModal={handleCloseModal}
