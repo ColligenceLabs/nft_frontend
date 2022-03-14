@@ -29,7 +29,7 @@ import WalletDialog from '../../components/WalletDialog';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
 import { mintEditionsToWallet } from '../../solana/actions/mintEditionsIntoWallet';
 import { useArt } from '../../solana/hooks';
-import { useConnection, useUserAccounts } from '@colligence/metaplex-common';
+import { useConnection, useUserAccounts, useMeta } from '@colligence/metaplex-common';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { setSerialsActive } from '../../services/serials.service';
 import { useItems } from '../../solana/hooks/useItems';
@@ -72,6 +72,7 @@ const NFTMint = () => {
   const connection = useConnection();
   const wallet = useWallet();
   const { accountByMint } = useUserAccounts();
+  const { isLoading } = useMeta();
   console.log('=====>1', accountByMint, contractAddr);
   const art = useArt(contractAddr);
   console.log('=====>2', art);
@@ -94,6 +95,19 @@ const NFTMint = () => {
       })
       .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    console.log('-->', isLoading, targetNetwork);
+    if (targetNetwork === 'solana') {
+      if (isLoading)
+        console.log('show loader.');
+      else
+        console.log('hide loader.');
+    } else {
+      console.log('hide loader.');
+    }
+  }, [isLoading, targetNetwork]);
+
 
   useEffect(() => {
     if (level.toLowerCase() === 'creator') {
