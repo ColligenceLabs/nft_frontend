@@ -41,9 +41,13 @@ export const useItems = ({
   if (master === undefined || master === '' || master === null) return items;
   console.log('== masterEdition ==>', master);
 
-  return items.filter(
-    (item) => item.masterEdition === undefined && item.edition.info.parent === master,
-  );
+  return items
+    .filter((item) => item.masterEdition === undefined && item.edition.info.parent === master)
+    .sort(
+      (a: item, b: item) =>
+        parseInt(a.edition.info.edition.toString(), 16) -
+        parseInt(b.edition.info.edition.toString(), 16),
+    );
 
   // if (activeKey === ArtworkViewState.Owned) {
   //   return [...userMetadataWithPacks, ...packsBasedOnProvingProcesses];
