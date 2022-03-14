@@ -563,24 +563,27 @@ const NFTMint = () => {
                     </FormHelperText>
                   )}
                 </Grid>
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                  <CustomTextField
-                    id="description"
-                    name="description"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    disabled={isSubmitting || isMinting}
-                    value={values.description}
-                    onChange={handleChange}
-                  />
-                  {touched.description && errors.description && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.description}
-                    </FormHelperText>
-                  )}
-                </Grid>
+                {targetNetwork !== 'solana' && (
+                  <Grid item lg={6} md={12} sm={12} xs={12}>
+                    <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
+                    <CustomTextField
+                      id="description"
+                      name="description"
+                      variant="outlined"
+                      fullWidth
+                      size="small"
+                      disabled={isSubmitting || isMinting}
+                      value={values.description}
+                      onChange={handleChange}
+                    />
+                    {touched.description && errors.description && (
+                      <FormHelperText htmlFor="render-select" error>
+                        {errors.description}
+                      </FormHelperText>
+                    )}
+                  </Grid>
+                )}
+
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="price">{t('Price')}</CustomFormLabel>
                   <CustomTextField

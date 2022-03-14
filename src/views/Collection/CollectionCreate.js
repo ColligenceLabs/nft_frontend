@@ -271,6 +271,7 @@ const CollectionCreate = () => {
             tokenUri: '',
             symbol: '',
             maximum_supply: '',
+            description: '',
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
@@ -294,6 +295,7 @@ const CollectionCreate = () => {
             if (values.maximum_supply !== '') {
               formData.append('maximum_supply', values.maximum_supply);
               formData.append('contract_type', 'SPLToken');
+              formData.append('description', values.description);
             } else {
               formData.append('contract_type', values.type);
             }
@@ -648,6 +650,25 @@ const CollectionCreate = () => {
                         error={touched.maximum_supply && Boolean(errors.maximum_supply)}
                         helperText={touched.maximum_supply && errors.maximum_supply}
                       />
+                    </Grid>
+
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
+                      <CustomTextField
+                        id="description"
+                        name="description"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting}
+                        value={values.description}
+                        onChange={handleChange}
+                      />
+                      {touched.description && errors.description && (
+                        <FormHelperText htmlFor="render-select" error>
+                          {errors.description}
+                        </FormHelperText>
+                      )}
                     </Grid>
                   </>
                 )}

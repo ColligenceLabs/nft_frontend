@@ -9,7 +9,7 @@ const nftRegisterSchema = yup.object({
   amount: yup.number('Enter amount').required('Amount is required'),
   // thumbnail: yup.mixed().required('You need to provide a file'),
   externalURL: yup.string('Enter externalURL').required('External URL is required'),
-  description: yup.string('Enter description').required('Description is required'),
+  // description: yup.string('Enter description').required('Description is required'),
   price: yup.number('Enter price').required('Price is required'),
 });
 
