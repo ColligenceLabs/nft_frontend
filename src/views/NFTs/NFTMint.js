@@ -59,6 +59,11 @@ const NFTMint = () => {
   const [successRegister, setSuccessRegister] = useState(false);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [targetNetwork, setTargetNetwork] = useState('klaytn');
+  const [curCount, setCurCount] = useState(0);
+  const [beforeCount, setBeforeCount] = useState(0);
+  const [mintAmount, setMintAmount] = useState(0);
+  const [nftId, setNftId] = useState('');
+  const [tokenId, setTokenId] = useState('');
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
@@ -72,7 +77,7 @@ const NFTMint = () => {
   console.log('=====>2', art);
   const artMintTokenAccount = accountByMint.get(art.mint);
   console.log('=====>3', artMintTokenAccount);
-  const userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
+  let userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
 
   const walletPubKey = wallet?.publicKey?.toString() || '';
   // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
@@ -96,8 +101,24 @@ const NFTMint = () => {
     }
   }, [level]);
 
-  useEffect(() => {
+  useEffect(async () => {
     console.log('-- userItems ->', userItems);
+    setCurCount(userItems.length);
+    // TODO: Let serials status status from inactive to active & set contract_address
+    if (mintAmount > 0 && curCount === beforeCount + mintAmount) {
+      const newItems = userItems.filter(
+        (item) => parseInt(item.edition.info.edition.words[0], 10) > userItems.length - mintAmount,
+      );
+      await setSerialsActive(
+        nftId,
+        tokenId,
+        mintAmount,
+        newItems.map((item) => item.metadata.pubkey),
+      );
+
+      setErrorMessage(null);
+      setSuccessRegister(true);
+    }
   }, [userItems]);
 
   const mintEdition = async (id, amount) => {
@@ -163,6 +184,7 @@ const NFTMint = () => {
               }
             }
             formData.append('quantity', values['amount']);
+            setMintAmount(values['amount']);
             formData.append('collection_id', values['collection']);
             formData.append('file', values['content']);
             formData.append('thumbnail', values['thumbnail']);
@@ -190,19 +212,21 @@ const NFTMint = () => {
                       const nftId = res.data.data._id;
                       const tokenId = res.data.data.metadata.tokenId;
                       const quantity = res.data.data.quantity;
+                      setNftId(nftId);
+                      setTokenId(tokenId);
 
                       // TODO : Call Solana mintEdition here...
+                      setBeforeCount(curCount);
                       result = await mintEdition(contractAddr, quantity);
                       if (result === FAILURE) {
                         setErrorMessage('Transaction failed or cancelled.');
                         setSuccessRegister(false);
                       } else {
                         await setNftOnchain(nftId);
-                        // TODO: Let serials status status from inactive to active
-                        await setSerialsActive(nftId, tokenId, quantity);
                       }
-                      setErrorMessage(null);
-                      setSuccessRegister(true);
+                      // Move to useEffect to get pubkeys minted newly
+                      // setErrorMessage(null);
+                      // setSuccessRegister(true);
                     } else {
                       setErrorMessage(res.data.message);
                       setSuccessRegister(false);

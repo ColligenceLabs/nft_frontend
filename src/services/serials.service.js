@@ -19,11 +19,11 @@ export const getSerialsData = (page, rowsPerPage, searchStatus, searchNftId) => 
     );
 };
 
-export const setSerialsActive = (nftId, tokenId, quantity) => {
+export const setSerialsActive = (nftId, tokenId, quantity, pubkeys) => {
   return axios
     .put(
       `${API_URL}/update-serials`,
-      { nftId, tokenId, quantity, onchain: 'true' },
+      { nftId, tokenId, quantity, onchain: 'true', pubkeys },
       { headers: authHeader() },
     )
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
