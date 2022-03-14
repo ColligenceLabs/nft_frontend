@@ -82,8 +82,8 @@ const NFTMint = () => {
 
   const connection = useConnection();
   const wallet = useWallet();
-  const { accountByMint } = useUserAccounts();
-  const { isLoading } = useMeta();
+  const { userAccounts, accountByMint } = useUserAccounts();
+  const { isLoading, update, pullUserMetadata } = useMeta();
   console.log('=====>1', accountByMint, contractAddr);
   const art = useArt(contractAddr);
   console.log('=====>2', art);
@@ -131,6 +131,12 @@ const NFTMint = () => {
   }, [level]);
 
   useEffect(async () => {
+    // Refresh meta include the collection just created
+    update();
+    await pullUserMetadata({ userTokenAccount: userAccounts });
+  }, [collectionList]);
+
+  useEffect(async () => {
     console.log('-- userItems ->', userItems);
     setCurCount(userItems.length);
     // TODO: Let serials status status from inactive to active & set contract_address
@@ -148,7 +154,7 @@ const NFTMint = () => {
       setErrorMessage(null);
       setSuccessRegister(true);
     }
-  }, [userItems]);
+  }, [userItems, isLoading]);
 
   const mintEdition = async (id, amount) => {
     const editions = amount;
