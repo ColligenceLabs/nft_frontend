@@ -103,7 +103,7 @@ const CollectionCreate = () => {
   const [collection, setCollection] = useState(undefined);
 
   useEffect(() => {
-    console.log('== TX Progress = ', nftCreateProgress);
+    console.log('= TX Progress Step => ', nftCreateProgress);
   }, [nftCreateProgress]);
 
   const handleCloseModal = async () => {
@@ -195,8 +195,6 @@ const CollectionCreate = () => {
         }),
     );
 
-    console.log('--->', attributes.image);
-
     const metadata = {
       name: attributes.name,
       symbol: attributes.symbol,
@@ -282,7 +280,7 @@ const CollectionCreate = () => {
             }
 
             let formData = new FormData();
-            console.log(values.network);
+            // console.log(values.network);
 
             for (let value in values) {
               if (['name', 'creator_id', 'image'].includes(value)) {
@@ -306,7 +304,7 @@ const CollectionCreate = () => {
               let result;
               if (values.network === 'solana') {
                 // TODO : Call Solana mint collection here ...
-                console.log('== create solana collection ==>', values);
+                // console.log('== create solana collection ==>', values);
                 result = await mintCollection(values);
               } else {
                 if (values.type === 'KIP17') {
@@ -388,7 +386,7 @@ const CollectionCreate = () => {
                     value={values.network}
                     disabled={isSubmitting}
                     onChange={(event) => {
-                      console.log(event.target);
+                      // console.log(event.target);
                       activateNetwork(event.target.value, setFieldValue);
                     }}
                     fullWidth

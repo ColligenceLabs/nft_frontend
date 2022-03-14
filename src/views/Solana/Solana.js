@@ -112,10 +112,6 @@ const Solana = () => {
     setUpdatedCreators({ [newCreator]: newWhitelistedCreator });
   }, [newCreator]);
 
-  const onCreate = async () => {
-    console.log('Create clicked');
-  };
-
   const onSell = async () => {
     console.log('Sell clicked');
     console.log(splitAddress(wallet.publicKey.toBase58()));
@@ -249,7 +245,7 @@ const Solana = () => {
   };
 
   const addCreator = async (address) => {
-    console.log('==addCreator==>', updatedCreators);
+    // console.log('==addCreator==>', updatedCreators);
     await saveAdmin(connection, wallet, store.public, Object.values(updatedCreators));
   };
 

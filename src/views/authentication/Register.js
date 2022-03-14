@@ -35,16 +35,14 @@ const Register = () => {
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    console.log('=====', wallet.publicKey?.toBase58());
-  }, [wallet.publicKey]);
+  // useEffect(() => {
+  //   console.log('=====', wallet.publicKey?.toBase58());
+  // }, [wallet.publicKey]);
 
   const connectPhantom = useCallback(async () => {
-      await wallet.select(phatomWallet.name);
-      await (wallet.wallet ? wallet.connect().catch() : setVisible(true));
+    await wallet.select(phatomWallet.name);
+    await (wallet.wallet ? wallet.connect().catch() : setVisible(true));
   }, [wallet.wallet, wallet.connect, setVisible]);
-
-
 
   return (
     <PageContainer title="Register" description="this is Register page">
@@ -133,8 +131,7 @@ const Register = () => {
                         onSubmit={async (data, { setSubmitting }) => {
                           setSubmitting(true);
 
-                          if (data.useSolana)
-                            data.solana_address = wallet.publicKey?.toBase58();
+                          if (data.useSolana) data.solana_address = wallet.publicKey?.toBase58();
 
                           let formData = new FormData();
                           for (let value in data) {

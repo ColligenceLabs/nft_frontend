@@ -138,7 +138,6 @@ const WalletDialog = ({ isOpenConnectModal, handleCloseModal, activate }) => {
 
   const onClickWallet = async (wallet) => {
     try {
-      console.log('--->', wallet.name);
       if (wallet.name === 'MetaMask') {
         await activate(injected, null, true);
         dispatch(setActivatingConnector(injected));

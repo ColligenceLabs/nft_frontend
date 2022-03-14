@@ -84,11 +84,11 @@ const NFTMint = () => {
   const wallet = useWallet();
   const { userAccounts, accountByMint } = useUserAccounts();
   const { isLoading, update, pullUserMetadata } = useMeta();
-  console.log('=====>1', accountByMint, contractAddr);
+  // console.log('1=====>', accountByMint, contractAddr);
   const art = useArt(contractAddr);
-  console.log('=====>2', art);
+  // console.log('2=====>', art);
   const artMintTokenAccount = accountByMint.get(art.mint);
-  console.log('=====>3', artMintTokenAccount);
+  // console.log('3=====>', artMintTokenAccount);
   let userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
   const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
@@ -109,18 +109,17 @@ const NFTMint = () => {
   };
 
   useEffect(() => {
-    console.log('-->', isLoading, targetNetwork);
     if (targetNetwork === 'solana') {
       if (isLoading) {
         setOpenBackdrop(true);
-        console.log('show loader.');
+        // console.log('show loader.');
       } else {
         setOpenBackdrop(false);
-        console.log('hide loader.');
+        // console.log('hide loader.');
       }
     } else {
       setOpenBackdrop(false);
-      console.log('hide loader.');
+      // console.log('hide loader.');
     }
   }, [isLoading, targetNetwork]);
 
@@ -137,7 +136,7 @@ const NFTMint = () => {
   }, [collectionList]);
 
   useEffect(async () => {
-    console.log('-- userItems ->', userItems);
+    // console.log('-- userItems ->', userItems);
     setCurCount(userItems.length);
     // TODO: Let serials status status from inactive to active & set contract_address
     if (mintAmount > 0 && curCount === beforeCount + mintAmount) {
@@ -160,7 +159,7 @@ const NFTMint = () => {
     const editions = amount;
     const editionNumber = undefined;
 
-    console.log('--->', art, artMintTokenAccount);
+    // console.log('--->', art, artMintTokenAccount);
     try {
       await mintEditionsToWallet(
         art,
@@ -240,7 +239,12 @@ const NFTMint = () => {
               let result = SUCCESS;
               if (targetNetwork === 'solana') {
                 if (art.maxSupply < art.supply + values['amount']) {
-                  setErrorMessage('maximum supply exceed. maximum supply is ' + art.maxSupply + ' and current supply is ' + art.supply);
+                  setErrorMessage(
+                    'maximum supply exceed. maximum supply is ' +
+                      art.maxSupply +
+                      ' and current supply is ' +
+                      art.supply,
+                  );
                   setSuccessRegister(false);
                   setSubmitting(false);
                   return;
@@ -400,14 +404,20 @@ const NFTMint = () => {
                     onChange={(event) => {
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
-                          console.log('1111',collection.network);
+                          console.log('1111', collection.network);
                           if (collection.network === 'solana' && solana.address === undefined) {
                             setErrorMessage('connect phantom wallet');
                             return;
-                          } else if (collection.network === 'klaytn' && klaytn.address === undefined){
+                          } else if (
+                            collection.network === 'klaytn' &&
+                            klaytn.address === undefined
+                          ) {
                             setErrorMessage('connect wallet for klaytn');
                             return;
-                          } else if (collection.network === 'ethereum' && ethereum.address === undefined){
+                          } else if (
+                            collection.network === 'ethereum' &&
+                            ethereum.address === undefined
+                          ) {
                             setErrorMessage('connect wallet for ethereum');
                             return;
                           }
