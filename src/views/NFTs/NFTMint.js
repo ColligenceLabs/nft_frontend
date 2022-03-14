@@ -115,7 +115,7 @@ const NFTMint = () => {
         mintAmount,
         newItems.map((item) => item.metadata.pubkey),
       );
-
+      setBeforeCount(curCount);
       setErrorMessage(null);
       setSuccessRegister(true);
     }
