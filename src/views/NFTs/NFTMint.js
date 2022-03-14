@@ -90,6 +90,7 @@ const NFTMint = () => {
   const artMintTokenAccount = accountByMint.get(art.mint);
   console.log('=====>3', artMintTokenAccount);
   let userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
+  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
   const walletPubKey = wallet?.publicKey?.toString() || '';
   // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
@@ -196,13 +197,11 @@ const NFTMint = () => {
             type: '0',
           }}
           onSubmit={async (values, { setSubmitting }) => {
-            setSubmitting(true);
-
             if (account === undefined) {
               setIsOpenConnectModal(true);
               return;
             }
-
+            setSubmitting(true);
             let formData = new FormData();
             for (let value in values) {
               if (
@@ -234,6 +233,12 @@ const NFTMint = () => {
             } else {
               let result = SUCCESS;
               if (targetNetwork === 'solana') {
+                if (art.maxSupply < art.supply + values['amount']) {
+                  setErrorMessage('maximum supply exceed. maximum supply is ' + art.maxSupply + ' and current supply is ' + art.supply);
+                  setSuccessRegister(false);
+                  setSubmitting(false);
+                  return;
+                }
                 await registerSolanaNFT(formData)
                   .then(async (res) => {
                     if (res.data.status === 1) {
@@ -265,9 +270,6 @@ const NFTMint = () => {
                 await registerNFT(formData)
                   .then(async (res) => {
                     if (res.data.status === 1) {
-                      setErrorMessage(null);
-                      setSuccessRegister(true);
-
                       const nftId = res.data.data._id;
                       const tokenId = res.data.data.metadata.tokenId;
                       const tokenUri = res.data.data.ipfs_link;
@@ -283,6 +285,9 @@ const NFTMint = () => {
                         if (result === FAILURE) {
                           setErrorMessage('Transaction failed or cancelled.');
                           setSuccessRegister(false);
+                        } else {
+                          setErrorMessage(null);
+                          setSuccessRegister(true);
                         }
                       } else {
                         if (window.localStorage.getItem('wallet') === 'kaikas') {
@@ -293,6 +298,9 @@ const NFTMint = () => {
                         if (result === FAILURE) {
                           setErrorMessage('Transaction failed or cancelled.');
                           setSuccessRegister(false);
+                        } else {
+                          setErrorMessage(null);
+                          setSuccessRegister(true);
                         }
                       }
                     } else {
@@ -384,9 +392,20 @@ const NFTMint = () => {
                     value={values.collection}
                     disabled={isSubmitting || isMinting}
                     onChange={(event) => {
-                      setFieldValue('collection', event.target.value);
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
+                          console.log('1111',collection.network);
+                          if (collection.network === 'solana' && solana.address === undefined) {
+                            setErrorMessage('connect phantom wallet');
+                            return;
+                          } else if (collection.network === 'klaytn' && klaytn.address === undefined){
+                            setErrorMessage('connect wallet for klaytn');
+                            return;
+                          } else if (collection.network === 'ethereum' && ethereum.address === undefined){
+                            setErrorMessage('connect wallet for ethereum');
+                            return;
+                          }
+                          setFieldValue('collection', event.target.value);
                           setTargetNetwork(collection.network);
                           setFieldValue('category', collection.category.toString());
                           setContractAddr(collection.contract_address);
@@ -395,6 +414,7 @@ const NFTMint = () => {
                           collection.contract_type === 'KIP17'
                             ? setFieldValue('amount', '1')
                             : setFieldValue('amount', '');
+                          setErrorMessage('');
                         }
                       });
                     }}
