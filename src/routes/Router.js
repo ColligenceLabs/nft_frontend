@@ -31,13 +31,27 @@ const RewardCreate = Loadable(lazy(() => import('../views/Reward/RewardCreate'))
 const UserProfile = Loadable(lazy(() => import('../views/UserProfile/UserProfile')));
 const Solana = Loadable(lazy(() => import('../views/Solana')));
 
+const NftMarketHome = Loadable(lazy(() => import('../views/NftsMarket/Home')));
+const NftMarket = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarket')));
+const NftDetail = Loadable(lazy(() => import('../views/NftsMarket/NFTDetail')));
+
 /* ****Routes***** */
 const Router = (isLoggedIn) => [
   {
     path: '/',
+    element: <BlankLayout />,
+    children: [
+      { path: '/', element: <NftMarketHome /> },
+      { path: '/market', element: <NftMarket /> },
+      { path: '/market/:id', element: <NftDetail /> },
+    ],
+  },
+
+  {
+    path: '/',
     element: isLoggedIn ? <FullLayout /> : <Navigate to="/auth/login" />,
     children: [
-      { path: '/', element: <Navigate to="/dashboard" /> },
+      // { path: '/', element: <NftMarket /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
       { path: '/user', exact: true, element: <User /> },
       { path: '/admins', exact: true, element: <Admins /> },
