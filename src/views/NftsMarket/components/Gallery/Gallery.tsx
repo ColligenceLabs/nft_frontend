@@ -1,30 +1,15 @@
 import React, { useState } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import Lightbox from 'react-image-lightbox';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
-
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Box, ImageList, ImageListItem, Button } from '@mui/material';
 
 const Gallery = (): JSX.Element => {
   const theme = useTheme();
-  const [currentImage, setCurrentImage] = useState(0);
-  const [currentImages, setCurrentImages] = useState([]);
-  const [viewerIsOpen, setViewerIsOpen] = useState(false);
-
-  const openLightbox = (index: number): void => {
-    setCurrentImage(index);
-    setViewerIsOpen(false);
-    setViewerIsOpen(true);
-  };
-
-  const closeLightbox = (): void => {
-    setCurrentImage(0);
-    setViewerIsOpen(false);
-  };
-
+  const [toggler, setToggler] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
@@ -79,9 +64,8 @@ const Gallery = (): JSX.Element => {
               />
             </svg>
           }
-          onClick={() => openLightbox(0)}
         >
-          Open the gallery
+          Move to market
         </Button>
       </Box>
       <Box>
@@ -94,7 +78,10 @@ const Gallery = (): JSX.Element => {
                 src={item.src}
                 alt="..."
                 effect="blur"
-                onClick={() => openLightbox(i)}
+                onClick={() => {
+                  setSelectedImage(item.source);
+                  // setToggler(!toggler);
+                }}
                 style={{
                   objectFit: 'cover',
                   // cursor: 'pointer',
@@ -106,33 +93,7 @@ const Gallery = (): JSX.Element => {
           ))}
         </ImageList>
       </Box>
-
-      {/*<FsLightbox*/}
-      {/*  toggler={viewerIsOpen}*/}
-      {/*  sources={[*/}
-      {/*    'https://assets.maccarianagency.com/backgrounds/img5.jpg',*/}
-      {/*    'https://i.imgur.com/fsyrScY.jpg',*/}
-      {/*  ]}*/}
-      {/*  disableLocalStorage*/}
-      {/*/>*/}
-
-      {/*{viewerIsOpen && (*/}
-      {/*  <Lightbox*/}
-      {/*    mainSrc={photos[currentImage].src}*/}
-      {/*    nextSrc={photos[(currentImage + 1) % photos.length].src}*/}
-      {/*    prevSrc={photos[(currentImage + photos.length - 1) % photos.length].src}*/}
-      {/*    onCloseRequest={() => closeLightbox()}*/}
-      {/*    onMovePrevRequest={() =>*/}
-      {/*      setCurrentImage((currentImage + photos.length - 1) % photos.length)*/}
-      {/*    }*/}
-      {/*    onMoveNextRequest={() => setCurrentImage((currentImage + 1) % photos.length)}*/}
-      {/*    // reactModalStyle={{ overlay: { zIndex: 1500 } }}*/}
-      {/*    reactModalProps={{*/}
-      {/*      appElement: document.querySelector('#root'),*/}
-      {/*      overlay: { zIndex: 1500 },*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*)}*/}
+      <FsLightbox toggler={toggler} sources={[selectedImage]} type="image" />
     </Box>
   );
 };

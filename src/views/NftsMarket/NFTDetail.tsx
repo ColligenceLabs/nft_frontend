@@ -1,30 +1,16 @@
 import React, { useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { ItemProps } from './types';
+import { Link } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
-import NFTsList from './components/NFTsList';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
-import Lightbox from 'react-image-lightbox';
-
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Card,
-  CardHeader,
-  CardMedia,
-  Grid,
-  Typography,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// @ts-ignore
+import FsLightbox from 'fslightbox-react';
+import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 
 const mock = {
   id: 0,
-  image: 'https://assets.maccarianagency.com/backgrounds/img10.jpg',
+  image: 'http://www.gcilbo.kr/news/photo/201712/5564_4708_1133.png',
   description:
     'Pigments is an exploration of colour and spatial distortion. Each instance is an abstract representation aimed at evoking a micro or macro-environment; from unknown substances, or oil in a canvas, to nebular formations. The pieces are animated, meant to be experienced live. The piece can run endlessly, with infinite output. To run it smoothly you need a capable GPU. If this proves to be too computationally intensive, or if you prefer a static view, feel free to press the spacebar.',
   name: 'Pigments #569,',
@@ -38,24 +24,15 @@ const mock = {
   price: 200,
 };
 
-const NFTDetail = ({ item }: ItemProps) => {
-  const { id } = useParams();
-  const [viewerIsOpen, setViewerIsOpen] = useState(false);
-
-  const openLightbox = () => {
-    // setViewerIsOpen(true);
-  };
-
-  const closeLightbox = (): void => {
-    // setViewerIsOpen(false);
-  };
+const NFTDetail = () => {
+  const [toggler, setToggler] = useState(false);
 
   return (
     <MarketLayout>
       <Container>
         <Grid container>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <Card onClick={openLightbox}>
+            <Card onClick={() => setToggler(!toggler)}>
               <CardMedia component={'img'} image={mock.image} alt={mock.name} />
             </Card>
           </Grid>
@@ -146,16 +123,8 @@ const NFTDetail = ({ item }: ItemProps) => {
             </Box>
           </Grid>
         </Grid>
+        <FsLightbox toggler={toggler} sources={[mock.image]} type="image" />
       </Container>
-      {viewerIsOpen && (
-        <Lightbox
-          mainSrc={mock.image}
-          onCloseRequest={() => closeLightbox()}
-          reactModalProps={{
-            overlay: { zIndex: 1500 },
-          }}
-        />
-      )}
     </MarketLayout>
   );
 };
