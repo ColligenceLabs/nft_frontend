@@ -6,9 +6,10 @@ import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ProfileButton from '../../../../components/ProfileButton/ProfileButton';
 import { useSelector } from 'react-redux';
+import { StoreTypes } from '../../../../views/NftsMarket/types';
 
 const Topbar = (): JSX.Element => {
-  const { user } = useSelector((state) => state?.auth);
+  const { user } = useSelector((state: StoreTypes) => state.auth);
   return (
     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={1}>
       <LogoIcon />
