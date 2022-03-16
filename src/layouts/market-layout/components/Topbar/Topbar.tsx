@@ -4,8 +4,12 @@ import Button from '@mui/material/Button';
 import LogoIcon from '../../../full-layout/logo/LogoIcon';
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import ProfileButton from '../../../../components/ProfileButton/ProfileButton';
+import { useSelector } from 'react-redux';
 
 const Topbar = (): JSX.Element => {
+  const { user } = useSelector((state) => state?.auth);
+  console.log(user);
   return (
     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={1}>
       <LogoIcon />
@@ -34,17 +38,20 @@ const Topbar = (): JSX.Element => {
             </Typography>
           </Link>
         </Box>
-
         <Box marginLeft={4}>
-          <Button
-            variant="contained"
-            color="primary"
-            component="a"
-            href="/auth/login"
-            size={'small'}
-          >
-            Login
-          </Button>
+          {user === null ? (
+            <Button
+              variant="contained"
+              color="primary"
+              component="a"
+              href="/auth/login"
+              size={'small'}
+            >
+              Login
+            </Button>
+          ) : (
+            <ProfileButton />
+          )}
         </Box>
       </Box>
     </Box>
