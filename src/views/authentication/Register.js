@@ -246,6 +246,7 @@ const Register = () => {
                                   <MenuItem value="administrator">Administrator</MenuItem>
                                   <MenuItem value="creator">Creator</MenuItem>
                                   <MenuItem value="operator">Operator</MenuItem>
+                                  <MenuItem value="user">User</MenuItem>
                                 </CustomSelect>
                                 {touched.level && errors.level && (
                                   <FormHelperText htmlFor="render-select" error>
