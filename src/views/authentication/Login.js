@@ -32,7 +32,11 @@ const Login = () => {
       .then((res) => {
         if (res.status === 1) {
           setErrorMessage('');
-          navigate('/dashboard');
+          if (res.user.infor.level === 'user') {
+            navigate('/');
+          } else {
+            navigate('/dashboard');
+          }
         } else {
           setErrorMessage(res.message);
         }
