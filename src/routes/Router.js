@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
+import useUserInfo from '../hooks/useUserInfo';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -36,7 +37,7 @@ const NftMarket = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarket')))
 const NftDetail = Loadable(lazy(() => import('../views/NftsMarket/NFTDetail')));
 
 /* ****Routes***** */
-const Router = (isLoggedIn) => [
+const Router = (isLoggedIn, level) => [
   {
     path: '/',
     element: <BlankLayout />,
@@ -49,7 +50,7 @@ const Router = (isLoggedIn) => [
 
   {
     path: '/',
-    element: isLoggedIn ? <FullLayout /> : <Navigate to="/auth/login" />,
+    element: isLoggedIn && !(level === 'user') ? <FullLayout /> : <Navigate to="/" />,
     children: [
       // { path: '/', element: <NftMarket /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
