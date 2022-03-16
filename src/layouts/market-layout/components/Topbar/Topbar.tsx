@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux';
 
 const Topbar = (): JSX.Element => {
   const { user } = useSelector((state) => state?.auth);
-  console.log(user);
   return (
     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={1}>
       <LogoIcon />
