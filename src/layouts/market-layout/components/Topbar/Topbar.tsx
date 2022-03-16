@@ -40,15 +40,27 @@ const Topbar = (): JSX.Element => {
         </Box>
         <Box marginLeft={4}>
           {user === null ? (
-            <Button
-              variant="contained"
-              color="primary"
-              component="a"
-              href="/auth/login"
-              size={'small'}
-            >
-              Login
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                component="a"
+                href="/auth/login"
+                size={'small'}
+                sx={{ mr: 1 }}
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                component="a"
+                href="/auth/market-register"
+                size={'small'}
+              >
+                Register
+              </Button>
+            </>
           ) : (
             <ProfileButton />
           )}

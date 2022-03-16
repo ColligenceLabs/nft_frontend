@@ -35,6 +35,7 @@ const Solana = Loadable(lazy(() => import('../views/Solana')));
 const NftMarketHome = Loadable(lazy(() => import('../views/NftsMarket/Home')));
 const NftMarket = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarket')));
 const NftDetail = Loadable(lazy(() => import('../views/NftsMarket/NFTDetail')));
+const NftMarketRegister = Loadable(lazy(() => import('../views/NftsMarket/MarketRegister')));
 
 /* ****Routes***** */
 const Router = (isLoggedIn, level) => [
@@ -81,6 +82,7 @@ const Router = (isLoggedIn, level) => [
       { path: '404', element: <Error /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      { path: 'market-register', element: <NftMarketRegister /> },
       { path: 'reset-password', element: <ResetPassword /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

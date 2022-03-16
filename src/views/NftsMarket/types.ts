@@ -33,3 +33,25 @@ export interface UserAuthProps {
     refreshToken: string;
   };
 }
+
+export interface RegisterForm {
+  full_name?: string | '';
+  email: string;
+  password: string;
+  repeatPassword: string;
+  level: string;
+  image: File | null;
+  description: string;
+}
+
+export interface RegisterResponse {
+  status: number;
+  data: {
+    _id: string;
+    full_name: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  message: string;
+}
