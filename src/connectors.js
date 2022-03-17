@@ -19,7 +19,7 @@ const RPC_URL_3 = `https://ropsten.infura.io/v3/${infuraApiKey}`;
 const RPC_URL_4 = `https://rinkeby.infura.io/v3/${infuraApiKey}`;
 
 const POLLING_INTERVAL = 12000;
-const RPC_URLS = {
+export const RPC_URLS = {
   1: RPC_URL_1,
   3: RPC_URL_3,
   4: RPC_URL_4,

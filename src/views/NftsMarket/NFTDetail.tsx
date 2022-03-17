@@ -7,6 +7,9 @@ import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
+import useMarket from '../../hooks/useMarket';
+import { useKipContract } from '../../hooks/useContract';
+import { getUserNFTs } from '../../services/nft.service';
 
 const mock = {
   id: 0,
@@ -26,6 +29,29 @@ const mock = {
 
 const NFTDetail = () => {
   const [toggler, setToggler] = useState(false);
+
+  const contractAddress = '0x74E56722Bb871da2E8dE2b73f4F0bEEfdB0b5c6C';
+  const { buyNFT, sellNFT, listNFT } = useMarket();
+  const nftContract = useKipContract(contractAddress, 'KIP17');
+
+  const buyTest = async () => {
+    const tokenId = 1;
+    await buyNFT(nftContract, tokenId, '0.1');
+  }
+
+  const sellTest = async () => {
+    const tokenId = 1;
+    await sellNFT(nftContract, tokenId, '0.1');
+  }
+
+  const listTest = async () => {
+    await listNFT(contractAddress);
+  }
+
+  const userNFTs = async () => {
+    const nfts = await getUserNFTs('0xaDEDbF58aBF28A94ecC2efd44090B514d4b5D18', 100);
+    console.log(nfts);
+  }
 
   return (
     <MarketLayout>
@@ -117,7 +143,7 @@ const NFTDetail = () => {
                     <Typography variant={'h1'}>{mock.price} klay</Typography>
                   </Box>
 
-                  <Button variant={'contained'}>Buy</Button>
+                  <Button variant={'contained'} onClick={userNFTs}>Buy</Button>
                 </Box>
               </Box>
             </Box>
