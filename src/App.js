@@ -5,11 +5,13 @@ import { useSelector } from 'react-redux';
 import ThemeSettings from './layouts/full-layout/customizer/ThemeSettings';
 import Router from './routes/Router';
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import useUserInfo from './hooks/useUserInfo';
 
 const App = () => {
   const theme = ThemeSettings();
   const { isLoggedIn } = useSelector((state) => state.auth);
-  const routing = useRoutes(Router(isLoggedIn));
+  const { level } = useUserInfo();
+  const routing = useRoutes(Router(isLoggedIn, level));
 
   return (
     <ThemeProvider theme={theme}>

@@ -157,7 +157,8 @@ const ProfileButton = () => {
             </Typography>
             <Typography
               variant="h5"
-              fontWeight="700"
+              // fontWeight="700"
+              color="primary"
               sx={{
                 ml: 1,
               }}

@@ -1,6 +1,7 @@
 import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full-layout/loadable/Loadable';
+import useUserInfo from '../hooks/useUserInfo';
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full-layout/FullLayout')));
@@ -34,9 +35,10 @@ const Solana = Loadable(lazy(() => import('../views/Solana')));
 const NftMarketHome = Loadable(lazy(() => import('../views/NftsMarket/Home')));
 const NftMarket = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarket')));
 const NftDetail = Loadable(lazy(() => import('../views/NftsMarket/NFTDetail')));
+const NftMarketRegister = Loadable(lazy(() => import('../views/NftsMarket/MarketRegister')));
 
 /* ****Routes***** */
-const Router = (isLoggedIn) => [
+const Router = (isLoggedIn, level) => [
   {
     path: '/',
     element: <BlankLayout />,
@@ -49,7 +51,7 @@ const Router = (isLoggedIn) => [
 
   {
     path: '/',
-    element: isLoggedIn ? <FullLayout /> : <Navigate to="/auth/login" />,
+    element: isLoggedIn && !(level === 'user') ? <FullLayout /> : <Navigate to="/" />,
     children: [
       // { path: '/', element: <NftMarket /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
@@ -80,6 +82,7 @@ const Router = (isLoggedIn) => [
       { path: '404', element: <Error /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      { path: 'market-register', element: <NftMarketRegister /> },
       { path: 'reset-password', element: <ResetPassword /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],

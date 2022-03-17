@@ -6,9 +6,10 @@ import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import ProfileButton from '../../../../components/ProfileButton/ProfileButton';
 import { useSelector } from 'react-redux';
+import { StoreTypes } from '../../../../views/NftsMarket/types';
 
 const Topbar = (): JSX.Element => {
-  const { user } = useSelector((state) => state?.auth);
+  const { user } = useSelector((state: StoreTypes) => state.auth);
   return (
     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={1}>
       <LogoIcon />
@@ -39,15 +40,27 @@ const Topbar = (): JSX.Element => {
         </Box>
         <Box marginLeft={4}>
           {user === null ? (
-            <Button
-              variant="contained"
-              color="primary"
-              component="a"
-              href="/auth/login"
-              size={'small'}
-            >
-              Login
-            </Button>
+            <>
+              <Button
+                variant="contained"
+                color="primary"
+                component="a"
+                href="/auth/login"
+                size={'small'}
+                sx={{ mr: 1 }}
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                component="a"
+                href="/auth/market-register"
+                size={'small'}
+              >
+                Register
+              </Button>
+            </>
           ) : (
             <ProfileButton />
           )}
