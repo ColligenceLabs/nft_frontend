@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { parseUnits } from 'ethers/lib/utils';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import useActiveWeb3React from './useActiveWeb3React';
 import { IPFS_URL, ALT_URL, FAILURE, SUCCESS } from '../config/constants/consts';
 import { useMarketContract, useTokenContract } from './useContract';
@@ -17,7 +17,7 @@ export function calculateGasMargin(value) {
 const useMarket = () => {
   const marketContract = useMarketContract();
   const tokenContract = useTokenContract();
-  const { library } = useActiveWeb3React();
+  const { library, account } = useActiveWeb3React();
 
   const sellNFT = useCallback(
     async (nftContract, tokenId, price) => {
@@ -65,7 +65,7 @@ const useMarket = () => {
 
       try {
         tx = await marketContract.readyToSellToken(nftContract.address, tokenId, parsedPrice, {
-          from: library.address,
+          from: account,
           gasPrice,
           gasLimit: calculateGasMargin(gasLimit),
         });
@@ -77,102 +77,67 @@ const useMarket = () => {
       }
       return SUCCESS;
     },
-    [library],
+    [library, account],
   );
 
   const buyNFT = useCallback(
-    async () => {
+    async (nftContract, tokenId, price) => {
       console.log('buy!');
       const gasPrice = await caver.klay.getGasPrice();
       let tx;
+      let gasLimit;
       // approve
+      const parsedPrice = parseUnits(price, 'gwei').toString();
+      const amount = ethers.BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+      try {
+        gasLimit = await tokenContract.estimateGas.approve(marketContract.address, parsedPrice);
+        console.log('buyNFT approve estimateGas', gasLimit);
+      } catch (e) {
+        console.log('buyNFT approve estimateGas fail.', e);
+        return FAILURE;
+      }
+
+      try {
+        tx = await tokenContract.approve(marketContract.address, parsedPrice, {
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+        });
+        const receipt = await tx.wait();
+        console.log('buyNFT approve receipt', receipt);
+      } catch (e) {
+        console.log('buyNFT approve fail.', e);
+        return FAILURE;
+      }
+
+      const allowance = await tokenContract.allowance(account, marketContract.address);
+      console.log(allowance.toString());
 
       // buy
+      try {
+        console.log(nftContract.address, tokenId, parsedPrice);
+        gasLimit = await marketContract.estimateGas.buyToken(nftContract.address, tokenId, parsedPrice);
+        console.log('buyNFT buyToken estimateGas', gasLimit);
+      } catch (e) {
+        console.log('buyNFT buyToken estimateGas fail.', e);
+        return FAILURE;
+      }
+
+      try {
+        tx = await marketContract.buyToken(nftContract.address, tokenId, parsedPrice, {
+          from: account,
+          gasPrice,
+          gasLimit: calculateGasMargin(gasLimit),
+        });
+        const receipt = await tx.wait();
+        console.log('buyNFT buyToken receipt', receipt);
+      } catch (e) {
+        console.log('buyNFT buyToken fail.', e);
+        return FAILURE;
+      }
 
       return SUCCESS;
-      // const gasPrice = parseUnits('750', 'gwei').toString();
-      //
-      // let tx;
-      //
-      // // check token_id
-      // const creator = await contract.creators(tokenId);
-      //
-      // if (creator === '0x0000000000000000000000000000000000000000') {
-      //   // gasLimit 계산
-      //   const gasLimit = await contract.estimateGas.create(tokenId, amount, tokenUri);
-      //
-      //   // mint 요청
-      //   try {
-      //     tx = await contract.create(tokenId, amount, tokenUri, {
-      //       from: account,
-      //       gasPrice,
-      //       gasLimit: calculateGasMargin(gasLimit),
-      //       // gasLimit: 2000000,
-      //     });
-      //
-      //     // receipt 대기
-      //     let receipt;
-      //     try {
-      //       receipt = await tx.wait();
-      //       if (receipt.status === 1) {
-      //         await setNftOnchain(nftId);
-      //       }
-      //     } catch (e) {
-      //       console.log(e);
-      //       return FAILURE;
-      //     }
-      //     await setIsMinting(false);
-      //     return SUCCESS;
-      //   } catch (e) {
-      //     console.log(e);
-      //     await setIsMinting(false);
-      //     return FAILURE;
-      //   }
-      // } else if (creator === account) {
-      //   // KIP37의 경우 신규 Token ID를 create 한 후 추가로 mint 할 수 있으나... mint 함수를 인식하지 못하는 문제가 있음.
-      //   // mintBatch 함수는 ok...
-      //   // gasLimit 계산
-      //   const tids = [];
-      //   const amounts = [];
-      //   tids.push(tokenId);
-      //   amounts.push(amount);
-      //   // TODO : TypeError: contract.estimateGas.mint is not a function
-      //   // Klaytn KIP17 스마트컨트랙 수정하여 해결됨.
-      //   const gasLimit = await contract.estimateGas.mint(tokenId, account, amount);
-      //   // const gasLimit = await contract.estimateGas.mintBatch(account, tids, amounts);
-      //
-      //   // mint 요청
-      //   try {
-      //     // TODO : TypeError: contract.mint is not a function
-      //     tx = await contract.mint(tokenId, account, amount, {
-      //       // tx = await contract.mintBatch(account, tids, amounts, {
-      //       from: account,
-      //       gasPrice,
-      //       // gasLimit: calculateGasMargin(gasLimit),
-      //       gasLimit: 2000000,
-      //     });
-      //
-      //     // receipt 대기
-      //     let receipt;
-      //     try {
-      //       receipt = await tx.wait();
-      //       if (receipt.status === 1) {
-      //         await setNftOnchain(nftId);
-      //       }
-      //     } catch (e) {
-      //       console.log(e);
-      //       return FAILURE;
-      //     }
-      //     await setIsMinting(false);
-      //     return SUCCESS;
-      //   } catch (e) {
-      //     console.log(e);
-      //     await setIsMinting(false);
-      //     return FAILURE;
-      //   }
-      // }
     },
-    [library],
+    [library, account],
   );
 
   const listNFT = useCallback(

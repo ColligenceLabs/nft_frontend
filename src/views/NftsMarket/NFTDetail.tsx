@@ -29,11 +29,13 @@ const mock = {
 const NFTDetail = () => {
   const [toggler, setToggler] = useState(false);
 
+  const contractAddress = '0x74E56722Bb871da2E8dE2b73f4F0bEEfdB0b5c6C';
   const { buyNFT, sellNFT, listNFT } = useMarket();
-  const nftContract = useKipContract('0x74E56722Bb871da2E8dE2b73f4F0bEEfdB0b5c6C', 'KIP17');
+  const nftContract = useKipContract(contractAddress, 'KIP17');
 
-  const buy = async () => {
-    await buyNFT();
+  const buyTest = async () => {
+    const tokenId = 1;
+    await buyNFT(nftContract, tokenId, '0.1');
   }
 
   const sellTest = async () => {
@@ -42,7 +44,7 @@ const NFTDetail = () => {
   }
 
   const listTest = async () => {
-    await listNFT('0x74E56722Bb871da2E8dE2b73f4F0bEEfdB0b5c6C');
+    await listNFT(contractAddress);
   }
 
   return (
@@ -135,7 +137,7 @@ const NFTDetail = () => {
                     <Typography variant={'h1'}>{mock.price} klay</Typography>
                   </Box>
 
-                  <Button variant={'contained'} onClick={listTest}>Buy</Button>
+                  <Button variant={'contained'} onClick={buyTest}>Buy</Button>
                 </Box>
               </Box>
             </Box>
