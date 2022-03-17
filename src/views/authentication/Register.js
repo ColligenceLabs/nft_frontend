@@ -26,12 +26,14 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
+import { useNavigate } from 'react-router';
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const wallet = useWallet();
   const { setVisible } = useWalletModal();
+  const navigate = useNavigate();
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
   const { t } = useTranslation();
 
@@ -71,6 +73,7 @@ const Register = () => {
                       Success in sign up
                     </Typography>
                     <Typography
+                      variant="h6"
                       component={Link}
                       to="/auth/login"
                       fontWeight="500"
@@ -80,7 +83,7 @@ const Register = () => {
                         color: 'primary.main',
                       }}
                     >
-                      Sign In
+                      Login
                     </Typography>
                   </Box>
                 ) : (
@@ -97,6 +100,7 @@ const Register = () => {
                         Already have an Account?
                       </Typography>
                       <Typography
+                        variant="h6"
                         component={Link}
                         to="/auth/login"
                         fontWeight="500"
@@ -106,7 +110,7 @@ const Register = () => {
                           color: 'primary.main',
                         }}
                       >
-                        Sign In
+                        Login
                       </Typography>
                     </Box>
 
@@ -142,6 +146,7 @@ const Register = () => {
 
                           if (res.data.status === 1) {
                             setErrorMessage(null);
+                            // navigate('/auth/login');
                             setSuccessRegister(true);
                           } else {
                             setErrorMessage(res.data.message);
