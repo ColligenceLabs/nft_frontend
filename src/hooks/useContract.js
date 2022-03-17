@@ -3,6 +3,8 @@ import { ethers } from 'ethers';
 import contracts from '../config/constants/contracts';
 import kip17Abi from '../config/abi/kip17.json';
 import kip37Abi from '../config/abi/kip37.json';
+import marketAbi from '../config/abi/market.json';
+import tokenAbi from '../config/abi/erc20.json';
 import useActiveWeb3React from './useActiveWeb3React';
 import Caver from 'caver-js';
 import { kip17Data } from '../contracts';
@@ -33,5 +35,25 @@ export const useKipContractWithKaikas = (contract, type) => {
       if (type === 'SPLToken') return;
       return new caver.klay.Contract(abi, contract)
     }, [library, contract, type],
+  );
+};
+
+export const useMarketContract = () => {
+  const { library } = useActiveWeb3React();
+  const contract = contracts.market[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
+  return useMemo(
+    () => {
+      return new ethers.Contract(contract, marketAbi, library?.getSigner())
+    }, [library]
+  );
+};
+
+export const useTokenContract = () => {
+  const { library } = useActiveWeb3React();
+  const token = contracts.quoteToken[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
+  return useMemo(
+    () => {
+      return new ethers.Contract(token, tokenAbi, library?.getSigner())
+    }, [library]
   );
 };
