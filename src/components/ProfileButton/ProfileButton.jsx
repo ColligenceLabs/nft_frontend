@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom';
 import { logout } from '../../redux/slices/auth';
 import creatorImage from '../../assets/images/users/creator.png';
 import adminImage from '../../assets/images/users/admin.png';
+import userImage from '../../assets/images/users/user.png';
+
 import ProfileDropdown from '../../layouts/full-layout/header/ProfileDropdown';
 import { useTheme } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
@@ -64,7 +66,12 @@ const ProfileButton = () => {
 
   let userimg;
   if (image === undefined || image === '') {
-    userimg = level.toLowerCase() === 'creator' ? creatorImage : adminImage;
+    userimg =
+      level.toLowerCase() === 'creator'
+        ? creatorImage
+        : level.toLowerCase() === 'admin'
+        ? adminImage
+        : userImage;
   } else {
     userimg = image.replace(
       'https://nftbedev.talken.io/talkenNft/uploads',

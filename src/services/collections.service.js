@@ -24,6 +24,19 @@ export const getCollectionData = (page, rowsPerPage, id, searchKeyword, searchSt
   );
 };
 
+export const getCollectionById = (id) => {
+  let url = `${API_URL}/detail/${id}`;
+  return (
+    axios
+      // .get(`${API_URL}/indexs${pageQuery}${subQuery}`, { headers: authHeader() })
+      .get(url, { headers: authHeader() })
+      .then((response) => {
+        return response.data.data;
+      })
+      .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)))
+  );
+};
+
 export const getDetailCollection = () => {
   return axios
     .get(`${API_URL}/detail/id`, { headers: authHeader() })
@@ -62,6 +75,7 @@ const collectionsService = {
   getCollectionData,
   getCollectionsByCreatorId,
   deleteCollections,
+  getCollectionById,
 };
 
 export default collectionsService;

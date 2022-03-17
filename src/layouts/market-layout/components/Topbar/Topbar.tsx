@@ -34,7 +34,7 @@ const Topbar = (): JSX.Element => {
               fontSize={{ xs: '12px', md: '14px' }}
               fontWeight={700}
             >
-              NFTs Market
+              Collections
             </Typography>
           </Link>
         </Box>

@@ -9,12 +9,202 @@ export interface StoreTypes {
   nft: Reducer;
 }
 
-export interface ItemProps {
-  item: {
-    id: number;
+export interface CollectionDetailResponse {
+  network: string;
+  category: string[];
+  maximum_supply: number;
+  status: string;
+  _id: string;
+  name: string;
+  cover_image: string;
+  creator_id: {
+    _id: string;
+    full_name: string;
     image: string;
+  };
+  contract_address: string;
+  contract_type: string;
+  path: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CollectionResponse {
+  status: number;
+  data: {
+    header: object;
+    items: [
+      {
+        _id: string;
+        name: string;
+        description: string;
+        cover_image: string;
+        creator_id: {
+          full_name: string;
+          image: string;
+          _id: string;
+        };
+      },
+    ];
+  };
+  message: string;
+}
+
+export interface CollectionType {
+  item: {
+    _id: string;
+    name: string;
     description: string;
-    title: string;
+    cover_image: string;
+  };
+}
+
+export interface CollectionItemType {
+  id: string;
+  name: string;
+  description: string;
+  cover_image: string;
+  creator_image: string;
+}
+
+export interface NFTResponse {
+  status: number;
+  data: {
+    header: object;
+    items: [
+      {
+        metadata: {
+          name: string;
+          description: string;
+          image: string;
+          alt_url: string;
+          content_Type: string;
+          cid: string;
+          tokenId: string;
+          total_minted: string;
+          external_url: string;
+          attributes: [];
+          minted_by: string;
+          thumbnail: string;
+          creator_icon: string;
+          category: string[];
+        };
+        quantity: number;
+        quantity_selling: number;
+        price: number;
+        category: string[];
+        onchain: string;
+        start_date: Date;
+        end_date: Date;
+        type: number;
+        selling_status: number;
+        transfered: number;
+        status: string;
+        _id: string;
+        collection_id: {
+          network: string;
+          category: string[];
+          maximum_supply: number;
+          status: string;
+          _id: string;
+          name: string;
+          cover_image: string;
+          creator_id: string;
+          contract_address: string;
+          contract_type: string;
+          path: string;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+        creator_id: {
+          admin_address: string;
+          solana_address: string;
+          contract_admin_address: string;
+          status: string;
+          _id: string;
+          full_name: string;
+          email: string;
+          level: string;
+          image: string;
+          description: string;
+          createdAt: Date;
+          updatedAt: Date;
+        };
+        description: string;
+        ipfs_link: string;
+        createdAt: Date;
+        updatedAtDate: Date;
+        selling: boolean;
+      },
+    ];
+  };
+  message: string;
+}
+
+export interface NFTType {
+  item: {
+    metadata: {
+      name: string;
+      description: string;
+      image: string;
+      alt_url: string;
+      content_Type: string;
+      cid: string;
+      tokenId: string;
+      total_minted: string;
+      external_url: string;
+      attributes: [];
+      minted_by: string;
+      thumbnail: string;
+      creator_icon: string;
+      category: string[];
+    };
+    quantity: number;
+    quantity_selling: number;
+    price: number;
+    category: string[];
+    onchain: string;
+    start_date: Date;
+    end_date: Date;
+    type: number;
+    selling_status: number;
+    transfered: number;
+    status: string;
+    _id: string;
+    collection_id: {
+      network: string;
+      category: string[];
+      maximum_supply: number;
+      status: string;
+      _id: string;
+      name: string;
+      cover_image: string;
+      creator_id: string;
+      contract_address: string;
+      contract_type: string;
+      path: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    creator_id: {
+      admin_address: string;
+      solana_address: string;
+      contract_admin_address: string;
+      status: string;
+      _id: string;
+      full_name: string;
+      email: string;
+      level: string;
+      image: string;
+      description: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    description: string;
+    ipfs_link: string;
+    createdAt: Date;
+    updatedAtDate: Date;
+    selling: boolean;
   };
 }
 
