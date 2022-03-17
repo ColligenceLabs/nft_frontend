@@ -122,7 +122,7 @@ const MarketRegister = () => {
                           color: 'primary.main',
                         }}
                       >
-                        Go Register
+                        Become a creator
                       </Typography>
                     </Box>
 
