@@ -9,6 +9,7 @@ import FsLightbox from 'fslightbox-react';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract } from '../../hooks/useContract';
+import { getUserNFTs } from '../../services/nft.service';
 
 const mock = {
   id: 0,
@@ -45,6 +46,11 @@ const NFTDetail = () => {
 
   const listTest = async () => {
     await listNFT(contractAddress);
+  }
+
+  const userNFTs = async () => {
+    const nfts = await getUserNFTs('0xaDEDbF58aBF28A94ecC2efd44090B514d4b5D18', 100);
+    console.log(nfts);
   }
 
   return (
@@ -137,7 +143,7 @@ const NFTDetail = () => {
                     <Typography variant={'h1'}>{mock.price} klay</Typography>
                   </Box>
 
-                  <Button variant={'contained'} onClick={buyTest}>Buy</Button>
+                  <Button variant={'contained'} onClick={userNFTs}>Buy</Button>
                 </Box>
               </Box>
             </Box>
