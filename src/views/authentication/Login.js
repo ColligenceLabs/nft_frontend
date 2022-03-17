@@ -73,9 +73,12 @@ const Login = () => {
                       mr: 1,
                     }}
                   >
-                    New to this system?
+                    Create Account.
                   </Typography>
+                </Box>
+                <Box display={'flex'} gap={'0.5rem'}>
                   <Typography
+                    variant="h6"
                     component={Link}
                     to="/auth/register"
                     fontWeight="500"
@@ -85,7 +88,23 @@ const Login = () => {
                       color: 'primary.main',
                     }}
                   >
-                    Create an account
+                    Are you Admin or Creator?
+                  </Typography>
+                  <Typography color="textSecondary" variant="h6" fontWeight="500">
+                    or
+                  </Typography>
+                  <Typography
+                    variant="h6"
+                    component={Link}
+                    to="/auth/market-register"
+                    fontWeight="500"
+                    sx={{
+                      display: 'block',
+                      textDecoration: 'none',
+                      color: 'primary.main',
+                    }}
+                  >
+                    Are you Market User?
                   </Typography>
                 </Box>
                 <Box

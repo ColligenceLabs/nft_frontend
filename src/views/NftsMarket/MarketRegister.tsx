@@ -13,11 +13,13 @@ import { useWalletModal } from '@colligence/metaplex-common';
 import { getPhantomWallet } from '@solana/wallet-adapter-wallets';
 import { useTranslation } from 'react-i18next';
 import { RegisterForm } from './types';
+import { useNavigate } from 'react-router';
 
 const MarketRegister = () => {
   const [errorMessage, setErrorMessage] = useState<any>();
   const [successRegister, setSuccessRegister] = useState(false);
   const wallet = useWallet();
+  const navigate = useNavigate();
   const { setVisible } = useWalletModal();
   const phatomWallet = useMemo(() => getPhantomWallet(), []);
   const { t } = useTranslation();
@@ -64,6 +66,7 @@ const MarketRegister = () => {
                       Success in sign up
                     </Typography>
                     <Typography
+                      variant="h6"
                       component={Link}
                       to="/auth/login"
                       fontWeight="500"
@@ -73,12 +76,12 @@ const MarketRegister = () => {
                         color: 'primary.main',
                       }}
                     >
-                      Sign In
+                      Login
                     </Typography>
                   </Box>
                 ) : (
-                  <div>
-                    <Box display="flex" alignItems="center">
+                  <Box>
+                    <Box display="flex" alignItems="center" sx={{ mt: 1 }}>
                       <Typography
                         color="textSecondary"
                         variant="h6"
@@ -90,6 +93,7 @@ const MarketRegister = () => {
                         Already have an Account?
                       </Typography>
                       <Typography
+                        variant="h6"
                         component={Link}
                         to="/auth/login"
                         fontWeight="500"
@@ -99,20 +103,22 @@ const MarketRegister = () => {
                           color: 'primary.main',
                         }}
                       >
-                        Sign In
+                        Login
                       </Typography>
+                    </Box>
+                    <Box display={'flex'}>
                       <Typography
                         color="textSecondary"
                         variant="h6"
                         fontWeight="400"
                         sx={{
                           mr: 1,
-                          ml: 5,
                         }}
                       >
                         Register creator or admin?
                       </Typography>
                       <Typography
+                        variant="h6"
                         component={Link}
                         to="/auth/register"
                         fontWeight="500"
@@ -147,6 +153,7 @@ const MarketRegister = () => {
                           console.log(res);
                           if (res?.data.status === 1) {
                             setErrorMessage(null);
+                            // navigate('/auth/login');
                             setSuccessRegister(true);
                           } else {
                             setErrorMessage(res?.data.message);
@@ -331,7 +338,7 @@ const MarketRegister = () => {
                         )}
                       </Formik>
                     </Box>
-                  </div>
+                  </Box>
                 )}
               </Box>
             </Grid>
