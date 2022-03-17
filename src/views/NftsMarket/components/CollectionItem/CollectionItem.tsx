@@ -18,7 +18,6 @@ const CollectionItem: React.FC<CollectionItemType> = ({
     'http://localhost:4000/talkenNft',
   );
 
-  console.log(description);
   return (
     <>
       <Link to={`/market/collection/${id}`} style={{ textDecoration: 'none' }}>
@@ -65,7 +64,9 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               {name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {description && description.slice(0, 200)}...
+              {description && description.length > 200
+                ? `${description.slice(0, 200)}...`
+                : description}
             </Typography>
           </CardContent>
         </Card>
