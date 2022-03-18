@@ -386,7 +386,10 @@ const CollectionCreate = () => {
                     disabled={isSubmitting}
                     onChange={(event) => {
                       // console.log(event.target);
-                      activateNetwork(event.target.value, setFieldValue);
+                      if (!useKAS || event.target.value !== 'klaytn')
+                        activateNetwork(event.target.value, setFieldValue);
+                      else
+                        setFieldValue('network', event.target.value);
                     }}
                     fullWidth
                     size="small"

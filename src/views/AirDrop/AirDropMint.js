@@ -250,6 +250,22 @@ const AirDropMint = () => {
                       setFieldValue('collection', event.target.value);
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
+                          if (collection.network === 'solana' && solana.address === undefined) {
+                            setErrorMessage('connect phantom wallet');
+                            return;
+                          } else if (
+                            collection.network === 'klaytn' &&
+                            klaytn.address === undefined && !useKAS
+                          ) {
+                            setErrorMessage('connect wallet for klaytn');
+                            return;
+                          } else if (
+                            collection.network === 'ethereum' &&
+                            ethereum.address === undefined
+                          ) {
+                            setErrorMessage('connect wallet for ethereum');
+                            return;
+                          }
                           setContractAddr(collection.contract_address);
                           setContractType(collection.contract_type);
                           process.env.REACT_APP_USE_KAS === 'false' &&

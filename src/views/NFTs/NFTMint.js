@@ -404,13 +404,12 @@ const NFTMint = () => {
                     onChange={(event) => {
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
-                          console.log('1111', collection.network);
                           if (collection.network === 'solana' && solana.address === undefined) {
                             setErrorMessage('connect phantom wallet');
                             return;
                           } else if (
                             collection.network === 'klaytn' &&
-                            klaytn.address === undefined
+                            klaytn.address === undefined && !useKAS
                           ) {
                             setErrorMessage('connect wallet for klaytn');
                             return;
