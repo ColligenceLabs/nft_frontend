@@ -33,7 +33,7 @@ const AirDropMint = () => {
   // TODO : change for mainnet 1001 -> 8217
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
-  const { account, activate } = useWeb3React();
+  const { account, activate, library } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
   const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(
@@ -140,7 +140,7 @@ const AirDropMint = () => {
                     // TODO : Actual NFT Minting here
                     let result = SUCCESS;
                     if (contractType === 'KIP17') {
-                      if (window.localStorage.getItem('wallet') === 'kaikas') {
+                      if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
                         result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
                       } else {
                         result = await mintNFT17(tokenId, tokenUri, nftId);
@@ -150,7 +150,7 @@ const AirDropMint = () => {
                         setSuccessRegister(false);
                       }
                     } else {
-                      if (window.localStorage.getItem('wallet') === 'kaikas') {
+                      if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
                         result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
                       } else {
                         result = await mintNFT37(tokenId, quantity, tokenUri, nftId);

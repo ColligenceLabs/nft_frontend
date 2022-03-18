@@ -24,8 +24,7 @@ import { LoadingButton } from '@mui/lab';
 
 const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   const theme = useTheme();
-
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
 
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
@@ -93,7 +92,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
           setErrorMessage(error);
         });
     } else {
-      if (window.localStorage.getItem('wallet') === 'kaikas') {
+      if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
         const [success, error] = await transferNFTWithKaikas(
           tokenId,
           toAddress,
