@@ -21,6 +21,7 @@ import useUserInfo from '../../hooks/useUserInfo';
 import WalletDialog from '../../components/WalletDialog';
 import airdropMintSchema from '../../config/schema/airdropMintSchema';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
+import { useSelector } from 'react-redux';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -45,6 +46,7 @@ const AirDropMint = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
