@@ -55,7 +55,7 @@ const NFTCollection = () => {
             }}
           >
             <Typography variant={'h1'}>{data?.name}</Typography>
-            <Typography variant={'body1'}>{data?.name}</Typography>
+            <Typography variant={'body1'}>{data?.description}</Typography>
           </Box>
         </Box>
         <Container>

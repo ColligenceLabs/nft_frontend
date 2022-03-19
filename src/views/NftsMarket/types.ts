@@ -16,6 +16,7 @@ export interface CollectionDetailResponse {
   status: string;
   _id: string;
   name: string;
+  description: string;
   cover_image: string;
   creator_id: {
     _id: string;

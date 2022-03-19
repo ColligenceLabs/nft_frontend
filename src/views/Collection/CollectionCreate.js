@@ -307,7 +307,7 @@ const CollectionCreate = () => {
                 result = await mintCollection(values);
               } else {
                 if (values.type === 'KIP17') {
-                  if (window.localStorage.getItem('wallet') === 'kaikas') {
+                  if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
                     result = await deployKIP17WithKaikas(
                       values.name,
                       values.symbol,
@@ -318,7 +318,7 @@ const CollectionCreate = () => {
                     result = await deployKIP17(values.name, values.symbol, account, library);
                   }
                 } else if (values.type === 'KIP37') {
-                  if (window.localStorage.getItem('wallet') === 'kaikas') {
+                  if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
                     result = await deployKIP37WithKaikas(values.tokenUri, account, library);
                   } else {
                     result = await deployKIP37(values.tokenUri, account, library);
