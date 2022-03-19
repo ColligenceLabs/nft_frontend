@@ -19,6 +19,7 @@ export async function saveAdmin(
   isPublic: boolean,
   whitelistedCreators: WhitelistedCreator[],
 ) {
+  // TODO : Solana 체인 문제 발생 시... Creator activate할 때 에러 발생. Store Meta DAta 로딩에 시간 소요...
   if (!wallet.publicKey) throw new WalletNotConnectedError();
 
   const signers: Array<Keypair[]> = [];
