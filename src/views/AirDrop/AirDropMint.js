@@ -268,10 +268,10 @@ const AirDropMint = () => {
                             setErrorMessage('connect wallet for ethereum');
                             return;
                           }
+                          console.log(useKAS, collection.contract_type);
                           setContractAddr(collection.contract_address);
                           setContractType(collection.contract_type);
-                          process.env.REACT_APP_USE_KAS === 'false' &&
-                          collection.contract_type === 'KIP17'
+                          useKAS === 'false' && collection.contract_type === 'KIP17'
                             ? setFieldValue('amount', '1')
                             : setFieldValue('amount', '');
                         }
@@ -346,7 +346,7 @@ const AirDropMint = () => {
                     disabled={isSubmitting || isMinting}
                     value={values.amount}
                     onChange={
-                      process.env.REACT_APP_USE_KAS === 'false' && contractType === 'KIP17'
+                      useKAS === 'false' && contractType === 'KIP17'
                         ? null
                         : handleChange
                     }

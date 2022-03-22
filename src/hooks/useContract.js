@@ -43,17 +43,30 @@ export const useMarketContract = () => {
   const contract = contracts.market[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
   return useMemo(
     () => {
-      return new ethers.Contract(contract, marketAbi, library?.getSigner())
+      if (!library) return;
+      if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:') {
+        return new ethers.Contract(contract, marketAbi, library?.getSigner());
+      }
+      else {
+        const caver = new Caver(window.klaytn);
+        return new caver.klay.Contract(marketAbi, contract);
+      }
     }, [library]
   );
 };
 
 export const useTokenContract = () => {
   const { library } = useActiveWeb3React();
-  const token = contracts.quoteToken[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
+  const tokenAddress = contracts.quoteToken[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
   return useMemo(
     () => {
-      return new ethers.Contract(token, tokenAbi, library?.getSigner())
+      if (!library) return;
+      if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:')
+        return new ethers.Contract(tokenAddress, tokenAbi, library?.getSigner());
+      else {
+        const caver = new Caver(window.klaytn);
+        return new caver.klay.Contract(tokenAbi, tokenAddress);
+      }
     }, [library]
   );
 };

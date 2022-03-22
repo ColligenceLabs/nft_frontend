@@ -8,8 +8,9 @@ import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import FsLightbox from 'fslightbox-react';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
-import { useKipContract } from '../../hooks/useContract';
+import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import { getUserNFTs } from '../../services/nft.service';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 
 const mock = {
   id: 0,
@@ -30,18 +31,21 @@ const mock = {
 const NFTDetail = () => {
   const [toggler, setToggler] = useState(false);
 
-  const contractAddress = '0x74E56722Bb871da2E8dE2b73f4F0bEEfdB0b5c6C';
+  const contractAddress = '0xe1c53ab564de73c181df56aa350677297b857662';
   const { buyNFT, sellNFT, listNFT } = useMarket();
+  const { library, account } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
-
+  const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
   const buyTest = async () => {
     const tokenId = 1;
-    await buyNFT(nftContract, tokenId, '0.1');
+    const isKaikas = library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+    await buyNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
   }
 
   const sellTest = async () => {
     const tokenId = 1;
-    await sellNFT(nftContract, tokenId, '0.1');
+    const isKaikas = library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+    await sellNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
   }
 
   const listTest = async () => {
@@ -49,7 +53,7 @@ const NFTDetail = () => {
   }
 
   const userNFTs = async () => {
-    const nfts = await getUserNFTs('0xaDEDbF58aBF28A94ecC2efd44090B514d4b5D18', 100);
+    const nfts = await getUserNFTs(account, 100);
     console.log(nfts);
   }
 
@@ -143,7 +147,10 @@ const NFTDetail = () => {
                     <Typography variant={'h1'}>{mock.price} klay</Typography>
                   </Box>
 
-                  <Button variant={'contained'} onClick={userNFTs}>Buy</Button>
+                  <Button variant={'contained'} onClick={userNFTs}>userNFTs</Button>
+                  <Button variant={'contained'} onClick={sellTest}>sell</Button>
+                  <Button variant={'contained'} onClick={buyTest}>buy</Button>
+                  <Button variant={'contained'} onClick={listTest}>market</Button>
                 </Box>
               </Box>
             </Box>

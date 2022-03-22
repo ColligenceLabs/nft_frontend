@@ -13,7 +13,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
 }) => {
   const theme = useTheme();
 
-  const avatarImage = creator_image.replace(
+  const avatarImage = creator_image?.replace(
     'https://nftbedev.talken.io/talkenNft/uploads',
     'http://localhost:4000/talkenNft',
   );

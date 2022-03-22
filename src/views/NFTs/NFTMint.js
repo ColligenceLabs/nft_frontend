@@ -420,13 +420,13 @@ const NFTMint = () => {
                             setErrorMessage('connect wallet for ethereum');
                             return;
                           }
+                          console.log(useKAS, collection.contract_type);
                           setFieldValue('collection', event.target.value);
                           setTargetNetwork(collection.network);
                           setFieldValue('category', collection.category.toString());
                           setContractAddr(collection.contract_address);
                           setContractType(collection.contract_type);
-                          process.env.REACT_APP_USE_KAS === 'false' &&
-                          collection.contract_type === 'KIP17'
+                          useKAS === 'false' && collection.contract_type === 'KIP17'
                             ? setFieldValue('amount', '1')
                             : setFieldValue('amount', '');
                           setErrorMessage('');

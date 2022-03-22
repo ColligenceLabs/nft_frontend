@@ -37,7 +37,7 @@ const NFTCollection = () => {
             }}
           >
             <img
-              src={data?.creator_id?.image.replace(
+              src={data?.creator_id?.image?.replace(
                 'https://nftbedev.talken.io/talkenNft/uploads',
                 'http://localhost:4000/talkenNft',
               )}
