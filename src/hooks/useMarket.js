@@ -69,7 +69,7 @@ const useMarket = () => {
       // const approved = await nftContract.getApproved(tokenId);
       // console.log(approved);
 
-      const parsedPrice = parseUnits(price, 'gwei').toString();
+      const parsedPrice = parseUnits(price, 'ether').toString();
       // sell
       try {
         if (!isKaikas)
@@ -119,7 +119,7 @@ const useMarket = () => {
       let tx;
       let gasLimit;
       // approve
-      const parsedPrice = parseUnits(price, 'gwei').toString();
+      const parsedPrice = parseUnits(price, 'ether').toString();
       try {
         console.log(marketContract);
         if (!isKaikas) {
