@@ -248,7 +248,8 @@ const NFTs = () => {
                         onClick={() => copyToClipBoard(row.collection_id?.contract_address)}
                       >
                         <Typography color="textSecondary" variant="h6">
-                          {splitAddress(row.collection_id?.contract_address)}
+                          {/* TODO : collection_id 가 null 인 경우 발생 원인 확인 필요. */}
+                          {splitAddress(row.collection_id?.contract_address ?? '')}
                         </Typography>
                       </TableCell>
                       <TableCell>
