@@ -4,9 +4,10 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market`;
 
-export const getMarketCollectionData = (page, rowsPerPage, id, searchKeyword, searchStatus) => {
+export const getMarketCollectionData = (categoryKeyword) => {
+  const category = categoryKeyword === 'all' ? '' : categoryKeyword;
   return axios
-    .get(`${API_URL}/indexs`)
+    .get(`${API_URL}/indexs?category=${category}`)
     .then((response) => {
       return response.data;
     })

@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import CollectionItem from '../CollectionItem';
 import useSWR from 'swr';
 import { CollectionResponse } from '../../types';
 import { getMarketCollectionData } from '../../../../services/market.service';
 
-const CollectionList = (): JSX.Element => {
-  const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs`;
+interface SelectedCategoryProp {
+  selectedCategory: {
+    id: number;
+    category: string;
+  };
+}
 
-  const { data, error } = useSWR<CollectionResponse>(API_URL, getMarketCollectionData);
-  console.log(data);
+const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
+  const [categoryKeyword, setCategoryKeyword] = useState('');
+  const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs`;
+  const { data, error, mutate } = useSWR<CollectionResponse>(API_URL, () =>
+    getMarketCollectionData(selectedCategory.category.toLowerCase()),
+  );
+  //
+  useEffect(() => {
+    // if (selectedCategory?.category !== undefined) {
+    //   setCategoryKeyword(selectedCategory.category.toLowerCase());
+    mutate();
+    // }
+  }, [selectedCategory]);
+
   return (
     <Box>
       <Grid container spacing={4}>
