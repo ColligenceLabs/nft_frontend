@@ -3,6 +3,7 @@ import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from './components/Container';
 import CollectionList from './components/CollectionList/CollectionList';
 import { Box, useTheme, Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categories = [
   { id: 0, category: 'All' },
@@ -14,6 +15,9 @@ const categories = [
 
 const NFTsMarket = () => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
   const [selectedCategory, setSelectedCategory] = useState({
     id: 0,
     category: 'All',
@@ -34,7 +38,7 @@ const NFTsMarket = () => {
           mt: 7,
           display: 'flex',
           justifyContent: 'center',
-          gap: '2rem',
+          gap: smDown ? '0.2rem' : '2rem',
         }}
       >
         {categories.map((category, index) => (
