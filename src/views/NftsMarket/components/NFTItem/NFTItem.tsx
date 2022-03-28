@@ -12,7 +12,6 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
       <Link to={`/market/${item._id}/detail`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
-            maxWidth: 345,
             p: 0,
             textDecoration: 'none',
             transition: 'all .2s ease-in-out',

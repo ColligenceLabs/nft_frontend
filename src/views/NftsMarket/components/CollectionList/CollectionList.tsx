@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Box, Grid } from '@mui/material';
 import CollectionItem from '../CollectionItem';
 import useSWR from 'swr';
@@ -13,7 +13,6 @@ interface SelectedCategoryProp {
 }
 
 const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
-  const [categoryKeyword, setCategoryKeyword] = useState('');
   const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs`;
   const { data, error, mutate } = useSWR<CollectionResponse>(API_URL, () =>
     getMarketCollectionData(selectedCategory.category.toLowerCase()),
@@ -32,7 +31,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
         {!error &&
           data &&
           data?.data?.items.map((item) => (
-            <Grid item xs={12} sm={6} md={4} key={item._id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
               <CollectionItem
                 id={item._id}
                 name={item.name}

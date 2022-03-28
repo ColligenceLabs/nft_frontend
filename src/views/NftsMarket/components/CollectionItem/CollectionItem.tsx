@@ -24,7 +24,6 @@ const CollectionItem: React.FC<CollectionItemType> = ({
       <Link to={`/market/collection/${id}`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
-            maxWidth: 345,
             p: 0,
             textDecoration: 'none',
             transition: 'all .2s ease-in-out',

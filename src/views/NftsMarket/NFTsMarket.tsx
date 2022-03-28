@@ -47,7 +47,7 @@ const NFTsMarket = () => {
             sx={{
               borderBottom:
                 selectedCategory.id === category.id
-                  ? `3px solid ${theme.palette.primary.main}`
+                  ? `2px solid ${theme.palette.primary.main}`
                   : '',
               pb: '5px',
               px: '15px',
