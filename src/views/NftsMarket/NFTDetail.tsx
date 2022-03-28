@@ -9,7 +9,7 @@ import FsLightbox from 'fslightbox-react';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
-import { getUserNFTs } from '../../services/nft.service';
+import { getUserNFTs, sellNFTsBatch } from '../../services/nft.service';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 
 const mock = {
@@ -31,7 +31,8 @@ const mock = {
 const NFTDetail = () => {
   const [toggler, setToggler] = useState(false);
 
-  const contractAddress = '0xe1c53ab564de73c181df56aa350677297b857662';
+  // const contractAddress = '0xe1c53ab564de73c181df56aa350677297b857662';
+  const contractAddress = '0x464b60257a0e6c77b1cc2515c86593daa83e665e';
   const { buyNFT, sellNFT, listNFT } = useMarket();
   const { library, account } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
@@ -55,6 +56,12 @@ const NFTDetail = () => {
   const userNFTs = async () => {
     const nfts = await getUserNFTs(account, 100);
     console.log(nfts);
+  }
+
+  const sellNFTs = async () => {
+    const nft_id = '623d7d5f0058e509f6bb03a3';
+    const result = await sellNFTsBatch(nft_id, '10');
+    console.log(result);
   }
 
   return (
@@ -151,6 +158,7 @@ const NFTDetail = () => {
                   <Button variant={'contained'} onClick={sellTest}>sell</Button>
                   <Button variant={'contained'} onClick={buyTest}>buy</Button>
                   <Button variant={'contained'} onClick={listTest}>market</Button>
+                  <Button variant={'contained'} onClick={sellNFTs}>sellBatch</Button>
                 </Box>
               </Box>
             </Box>

@@ -136,3 +136,17 @@ export const getUserNFTs = (address, size) => {
       error.response?.status === 401 ? authService.logout() : console.log(error);
     });
 };
+
+export const sellNFTsBatch = (nft_id, price) => {
+  const url = `${API_URL}/batch-sell?nft_id=${nft_id}&price=${price}`;
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
