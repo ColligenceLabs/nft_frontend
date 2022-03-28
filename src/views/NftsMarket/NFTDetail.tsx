@@ -162,6 +162,9 @@ const NFTDetail = () => {
                     <Button variant={'contained'} onClick={listTest}>
                       market
                     </Button>
+                    <Button variant={'contained'} onClick={sellNFTs}>
+                      sellBatch
+                    </Button>
                   </Box>
                 </Box>
               </Box>
