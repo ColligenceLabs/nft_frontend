@@ -2,22 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { NFTResponse, NFTType } from '../../types';
-
-const mock = {
-  id: 'wef12332d',
-  name: 'Candy Hunter #8962',
-  description:
-    "Glory, Fame, a taste of the world's sweetest treats. Only those who are brave enough to venture into Sweetopia are worthy of these claims.",
-  price: 200,
-  image:
-    'https://lh3.googleusercontent.com/1CELJj-3YMsnJSlGFR0ZPnUDHa_JqIphWNVhf3-z3orCOHqmkljiYvplm_mMGmL_j11aXITMHxuO0KFztBqHktwpCVJbgJg1BF1Q5wM=w600',
-  author: 'helloljho',
-};
-
-interface NftItemType {
-  id: string;
-}
+import { NFTType } from '../../types';
 
 const NFTItem: React.FC<NFTType> = ({ item }) => {
   const theme = useTheme();

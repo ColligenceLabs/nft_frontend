@@ -1,9 +1,21 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 import authService from './auth.service';
-import { useCallback } from 'react';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
+
+export const nftDetail = (id) => {
+  return axios
+    .get(`${API_URL}/detail/${id}`, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
 
 export const getNFTData = (type, page, rowsPerPage, searchKeyword, collectionId, creator_id) => {
   let url = `${API_URL}/indexs?type=${type}&page=${page + 1}&perPage=${rowsPerPage}&onchain=true`;

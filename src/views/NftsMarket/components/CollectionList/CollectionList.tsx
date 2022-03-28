@@ -10,7 +10,6 @@ const CollectionList = (): JSX.Element => {
     '/admin-api/collection/indexs',
     getCollectionData,
   );
-  console.log(data);
   return (
     <Box>
       <Grid container spacing={4}>
