@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from './components/Container';
 import CollectionList from './components/CollectionList/CollectionList';
-import { Box, useTheme, Typography, Divider } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Box, useTheme, Typography } from '@mui/material';
 
 const categories = [
   { id: 0, category: 'All' },
@@ -22,7 +21,7 @@ const NFTsMarket = () => {
 
   return (
     <MarketLayout>
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
         <Typography variant={'h1'} fontWeight={800}>
           Collections
         </Typography>

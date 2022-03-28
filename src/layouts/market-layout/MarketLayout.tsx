@@ -5,9 +5,9 @@ import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { Topbar } from './components';
-
 import { useSelector } from 'react-redux';
 import Container from './components/Container';
+import MarketSidebar from './sidebar/MarketSidebar';
 
 interface Props {
   children: React.ReactNode;
@@ -21,12 +21,8 @@ interface Props {
 }
 
 const MarketLayout = ({ children, bgcolor = 'transparent' }: Props): JSX.Element => {
-  const customizer = useSelector((state: any) => state.CustomizerReducer);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const theme = useTheme();
-  const isMd = useMediaQuery(theme.breakpoints.up('md'), {
-    defaultMatches: true,
-  });
-
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 38,
@@ -39,11 +35,13 @@ const MarketLayout = ({ children, bgcolor = 'transparent' }: Props): JSX.Element
         sx={{
           top: 0,
           backgroundColor: trigger ? theme.palette.background.paper : bgcolor,
+          boxShadow: 8,
         }}
         elevation={trigger ? 1 : 0}
       >
+        <MarketSidebar isSidebarOpen={isSidebarOpen} onSidebarClose={() => setSidebarOpen(false)} />
         <Container paddingY={1}>
-          <Topbar />
+          <Topbar toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
         </Container>
       </AppBar>
 

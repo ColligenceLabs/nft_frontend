@@ -28,7 +28,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
 
   return (
     <Box>
-      <Grid container spacing={4}>
+      <Grid container>
         {!error &&
           data &&
           data?.data?.items.map((item) => (

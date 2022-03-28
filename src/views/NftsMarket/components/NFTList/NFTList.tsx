@@ -18,11 +18,11 @@ const NFTList = () => {
   );
   return (
     <Box>
-      <Grid container spacing={4}>
+      <Grid container>
         {!error &&
           data &&
           data?.data?.items.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={3} key={index}>
               <NFTItem item={item} />
             </Grid>
           ))}

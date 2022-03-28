@@ -42,7 +42,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               alignItems: 'center',
             }}
           >
-            <CardMedia component="img" height="150" image={cover_image} alt="green iguana" />
+            <CardMedia component="img" height="200" image={cover_image} alt="green iguana" />
             <Box
               sx={{
                 display: 'flex',
