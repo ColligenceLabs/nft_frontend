@@ -16,7 +16,7 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
             p: 0,
             textDecoration: 'none',
             transition: 'all .2s ease-in-out',
-            border: '0.1px solid gray',
+            border: '0.1px solid #d6d6d6',
             borderRadius: '25px',
             '&:hover': {
               transform: `translateY(-${theme.spacing(1 / 2)})`,
