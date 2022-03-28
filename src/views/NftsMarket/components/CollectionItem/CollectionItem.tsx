@@ -10,6 +10,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
   cover_image,
   description,
   creator_image,
+  creator_fullName,
 }) => {
   const theme = useTheme();
 
@@ -23,19 +24,30 @@ const CollectionItem: React.FC<CollectionItemType> = ({
       <Link to={`/market/collection/${id}`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
-            maxWidth: 345,
             p: 0,
             textDecoration: 'none',
             transition: 'all .2s ease-in-out',
-            border: '0.1px solid gray',
+            border: '0.1px solid #d6d6d6',
             borderRadius: '25px',
             '&:hover': {
               transform: `translateY(-${theme.spacing(1 / 2)})`,
             },
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <CardMedia component="img" height="150" image={cover_image} alt="green iguana" />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            <CardMedia
+              component="img"
+              height="200"
+              image={cover_image}
+              alt="green iguana"
+              sx={{ borderBottom: '0.1px solid #d6d6d6' }}
+            />
             <Box
               sx={{
                 display: 'flex',
@@ -44,7 +56,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
                 width: '50px',
                 height: '50px',
                 marginTop: '-25px',
-                border: '3px solid white',
+                border: '3px solid #f1f1f1f1',
                 borderRadius: '100%',
                 p: 3,
               }}
@@ -59,13 +71,26 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               />
             </Box>
           </Box>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {name}
-            </Typography>
+          <CardContent sx={{ textAlign: 'center' }}>
+            <Typography variant="h4">{name}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.5rem',
+                mb: '10px',
+              }}
+            >
+              <Typography variant={'caption'}>by </Typography>
+              <Typography variant={'caption'} color={'primary'}>
+                {creator_fullName}
+              </Typography>
+            </Box>
+
             <Typography variant="body2" color="text.secondary">
               {description && description.length > 200
-                ? `${description.slice(0, 200)}...`
+                ? `${description.slice(0, 100)}...`
                 : description}
             </Typography>
           </CardContent>

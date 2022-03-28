@@ -7,13 +7,15 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { getCollectionById } from '../../services/collections.service';
 import { CollectionDetailResponse } from './types';
+import { getNFTsByCollectionId } from '../../services/market.service';
 
 const NFTCollection = () => {
   const { id } = useParams();
   const { data, error } = useSWR<CollectionDetailResponse>(
     `/admin-api/collection/detail/${id}`,
-    () => getCollectionById(id),
+    () => getNFTsByCollectionId(id),
   );
+  console.log(data);
 
   return (
     <>
@@ -22,7 +24,7 @@ const NFTCollection = () => {
           <Box sx={{ width: 1, height: '250px' }}>
             <img
               src={data?.cover_image}
-              alt={'test'}
+              alt={data?.name}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
           </Box>
@@ -55,6 +57,21 @@ const NFTCollection = () => {
             }}
           >
             <Typography variant={'h1'}>{data?.name}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.5rem',
+                mb: '10px',
+              }}
+            >
+              <Typography variant={'body1'}>Created by</Typography>
+              <Typography variant={'body1'} color={'primary'}>
+                {data?.creator_id?.full_name}
+              </Typography>
+            </Box>
+
             <Typography variant={'body1'}>{data?.description}</Typography>
           </Box>
         </Box>

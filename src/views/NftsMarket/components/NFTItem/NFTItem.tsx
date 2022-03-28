@@ -2,22 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { NFTResponse, NFTType } from '../../types';
-
-const mock = {
-  id: 'wef12332d',
-  name: 'Candy Hunter #8962',
-  description:
-    "Glory, Fame, a taste of the world's sweetest treats. Only those who are brave enough to venture into Sweetopia are worthy of these claims.",
-  price: 200,
-  image:
-    'https://lh3.googleusercontent.com/1CELJj-3YMsnJSlGFR0ZPnUDHa_JqIphWNVhf3-z3orCOHqmkljiYvplm_mMGmL_j11aXITMHxuO0KFztBqHktwpCVJbgJg1BF1Q5wM=w600',
-  author: 'helloljho',
-};
-
-interface NftItemType {
-  id: string;
-}
+import { NFTType } from '../../types';
+import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 
 const NFTItem: React.FC<NFTType> = ({ item }) => {
   const theme = useTheme();
@@ -26,11 +12,10 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
       <Link to={`/market/${item._id}/detail`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
-            maxWidth: 345,
-            p: 2,
+            p: 0,
             textDecoration: 'none',
             transition: 'all .2s ease-in-out',
-            border: '0.1px solid gray',
+            border: '0.1px solid #d6d6d6',
             borderRadius: '25px',
             '&:hover': {
               transform: `translateY(-${theme.spacing(1 / 2)})`,
@@ -40,18 +25,35 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <CardMedia
               component="img"
-              height="250"
+              height="270"
               image={item?.metadata?.image}
               alt={item?.metadata?.name}
             />
           </Box>
           <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {item?.metadata?.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {item?.metadata?.description}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Box>
+                <Typography variant="h6" color="text.secondary">
+                  {item?.collection_id?.name}
+                </Typography>
+                <Typography variant="h4">{item?.metadata?.name}</Typography>
+              </Box>
+              <Box>
+                <Typography variant="h6" color="text.secondary">
+                  Price
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                  }}
+                >
+                  <img src={klayLogo} alt="klay" height="16px" />
+                  <Typography variant="h4">{item?.price}</Typography>
+                </Box>
+              </Box>
+            </Box>
           </CardContent>
         </Card>
       </Link>

@@ -1,27 +1,23 @@
 import React from 'react';
-import MarketLayout from '../../../../layouts/market-layout/MarketLayout';
-import { Box, Grid, Typography } from '@mui/material';
-import Container from '../Container';
-import CollectionItem from '../CollectionItem';
+import { Box, Grid } from '@mui/material';
 import NFTItem from '../NFTItem';
 import { useParams } from 'react-router-dom';
-import useUserInfo from '../../../../hooks/useUserInfo';
 import useSWR from 'swr';
-import { NFTResponse, NFTType } from '../../types';
-import { getNFTData } from '../../../../services/nft.service';
+import { NFTResponse } from '../../types';
+import { getMarketNFTData } from '../../../../services/market.service';
 
 const NFTList = () => {
   const { id } = useParams();
   const { data, error } = useSWR<NFTResponse>('/admin-api/nft/indexs', () =>
-    getNFTData(0, undefined, undefined, undefined, id, undefined),
+    getMarketNFTData(0, undefined, undefined, undefined, id, undefined),
   );
   return (
     <Box>
-      <Grid container spacing={4}>
+      <Grid container>
         {!error &&
           data &&
           data?.data?.items.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
               <NFTItem item={item} />
             </Grid>
           ))}

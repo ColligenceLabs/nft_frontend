@@ -1,7 +1,6 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 import authService from './auth.service';
-import { useCallback } from 'react';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
 
