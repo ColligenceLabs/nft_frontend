@@ -60,7 +60,7 @@ const NFTDetail = () => {
 
   const sellNFTs = async () => {
     const nft_id = '623d7d5f0058e509f6bb03a3';
-    const result = await sellNFTsBatch(nft_id, '10');
+    const result = await sellNFTsBatch(nft_id);
     console.log(result);
   }
 

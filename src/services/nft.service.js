@@ -137,8 +137,8 @@ export const getUserNFTs = (address, size) => {
     });
 };
 
-export const sellNFTsBatch = (nft_id, price) => {
-  const url = `${API_URL}/batch-sell?nft_id=${nft_id}&price=${price}`;
+export const sellNFTsBatch = (nft_id) => {
+  const url = `${API_URL}/batch-sell?nft_id=${nft_id}`;
   return axios
     .get(url, {
       headers: authHeader(),
