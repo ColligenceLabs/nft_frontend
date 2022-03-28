@@ -66,6 +66,7 @@ export interface CollectionItemType {
   description: string;
   cover_image: string;
   creator_image: string;
+  creator_fullName: string;
 }
 
 export interface NFTResponse {

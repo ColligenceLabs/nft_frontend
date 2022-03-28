@@ -10,6 +10,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
   cover_image,
   description,
   creator_image,
+  creator_fullName,
 }) => {
   const theme = useTheme();
 
@@ -34,7 +35,13 @@ const CollectionItem: React.FC<CollectionItemType> = ({
             },
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <CardMedia component="img" height="150" image={cover_image} alt="green iguana" />
             <Box
               sx={{
@@ -44,7 +51,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
                 width: '50px',
                 height: '50px',
                 marginTop: '-25px',
-                border: '3px solid white',
+                border: '3px solid #f1f1f1f1',
                 borderRadius: '100%',
                 p: 3,
               }}
@@ -59,13 +66,26 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               />
             </Box>
           </Box>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {name}
-            </Typography>
+          <CardContent sx={{ textAlign: 'center' }}>
+            <Typography variant="h4">{name}</Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                gap: '0.5rem',
+                mb: '10px',
+              }}
+            >
+              <Typography variant={'caption'}>by </Typography>
+              <Typography variant={'caption'} color={'primary'}>
+                {creator_fullName}
+              </Typography>
+            </Box>
+
             <Typography variant="body2" color="text.secondary">
               {description && description.length > 200
-                ? `${description.slice(0, 200)}...`
+                ? `${description.slice(0, 100)}...`
                 : description}
             </Typography>
           </CardContent>

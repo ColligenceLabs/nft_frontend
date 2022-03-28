@@ -9,11 +9,12 @@ import useUserInfo from '../../../../hooks/useUserInfo';
 import useSWR from 'swr';
 import { NFTResponse, NFTType } from '../../types';
 import { getNFTData } from '../../../../services/nft.service';
+import { getMarketNFTData } from '../../../../services/market.service';
 
 const NFTList = () => {
   const { id } = useParams();
   const { data, error } = useSWR<NFTResponse>('/admin-api/nft/indexs', () =>
-    getNFTData(0, undefined, undefined, undefined, id, undefined),
+    getMarketNFTData(0, undefined, undefined, undefined, id, undefined),
   );
   return (
     <Box>

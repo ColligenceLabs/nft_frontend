@@ -4,19 +4,6 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
 
-export const nftDetail = (id) => {
-  return axios
-    .get(`${API_URL}/detail/${id}`, {
-      headers: authHeader(),
-    })
-    .then((response) => {
-      return response.data;
-    })
-    .catch((error) => {
-      error.response?.status === 401 ? authService.logout() : console.log(error);
-    });
-};
-
 export const getNFTData = (type, page, rowsPerPage, searchKeyword, collectionId, creator_id) => {
   let url = `${API_URL}/indexs?type=${type}&page=${page + 1}&perPage=${rowsPerPage}&onchain=true`;
   url = searchKeyword !== undefined ? `${url}&keyword=${searchKeyword}` : url;

@@ -29,7 +29,7 @@ export const getCollectionById = (id) => {
   return (
     axios
       // .get(`${API_URL}/indexs${pageQuery}${subQuery}`, { headers: authHeader() })
-      .get(url, { headers: authHeader() })
+      .get(url)
       .then((response) => {
         return response.data.data;
       })

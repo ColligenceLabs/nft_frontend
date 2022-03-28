@@ -9,9 +9,10 @@ import FsLightbox from 'fslightbox-react';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
-import { getUserNFTs, nftDetail } from '../../services/nft.service';
+import { getUserNFTs } from '../../services/nft.service';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useSWR from 'swr';
+import { nftDetail } from '../../services/market.service';
 
 const NFTDetail = () => {
   const { id } = useParams();

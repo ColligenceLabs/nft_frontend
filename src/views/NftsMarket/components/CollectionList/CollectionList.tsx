@@ -2,14 +2,14 @@ import React from 'react';
 import { Box, Grid } from '@mui/material';
 import CollectionItem from '../CollectionItem';
 import useSWR from 'swr';
-import { getCollectionData } from '../../../../services/collections.service';
 import { CollectionResponse } from '../../types';
+import { getMarketCollectionData } from '../../../../services/market.service';
 
 const CollectionList = (): JSX.Element => {
-  const { data, error } = useSWR<CollectionResponse>(
-    '/admin-api/collection/indexs',
-    getCollectionData,
-  );
+  const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs`;
+
+  const { data, error } = useSWR<CollectionResponse>(API_URL, getMarketCollectionData);
+  console.log(data);
   return (
     <Box>
       <Grid container spacing={4}>
@@ -23,6 +23,7 @@ const CollectionList = (): JSX.Element => {
                 description={item.description}
                 cover_image={item.cover_image}
                 creator_image={item?.creator_id?.image}
+                creator_fullName={item?.creator_id?.full_name}
               />
             </Grid>
           ))}
