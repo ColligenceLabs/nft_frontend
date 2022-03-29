@@ -8,6 +8,7 @@ import { Topbar } from './components';
 import { useSelector } from 'react-redux';
 import Container from './components/Container';
 import MarketSidebar from './sidebar/MarketSidebar';
+import Footer from './components/Footer';
 
 interface Props {
   children: React.ReactNode;
@@ -46,7 +47,9 @@ const MarketLayout = ({ children, bgcolor = 'transparent' }: Props): JSX.Element
       </AppBar>
 
       <main>{children}</main>
-      <Container paddingY={4}>{/*<Footer />*/}</Container>
+      {/*<Container paddingY={4}>*/}
+      <Footer />
+      {/*</Container>*/}
     </Box>
   );
 };

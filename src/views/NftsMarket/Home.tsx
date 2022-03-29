@@ -1,29 +1,33 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { Features, Folio, Gallery, Hero, Services } from './components';
+import { Hero } from './components';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
+import TrendingAllCategory from './components/TrendingAllCategory/TrendingAllCategory';
+import TopCollections from './components/TopCollections';
+import Introduction from './components/Introduction';
 
 const Home = (): JSX.Element => {
   return (
     <MarketLayout colorInvert={true}>
-      <Hero />
       <Container>
-        <Folio />
+        <Hero />
       </Container>
       <Box bgcolor={'alternate.main'}>
         <Container>
-          <Services />
+          <TrendingAllCategory />
+        </Container>
+      </Box>
+      <Box bgcolor={'alternate.main'}>
+        <Container>
+          <TopCollections />
         </Container>
       </Box>
       <Box bgcolor={'primary.main'}>
         <Container>
-          <Features />
+          <Introduction />
         </Container>
       </Box>
-      <Container>
-        <Gallery />
-      </Container>
     </MarketLayout>
   );
 };

@@ -30,6 +30,7 @@ const NFTsMarket = () => {
           NFT Marketplace
         </Typography>
       </Box>
+
       <Box
         sx={{
           borderBottom: '1px solid',
