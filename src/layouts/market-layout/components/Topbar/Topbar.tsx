@@ -76,7 +76,7 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
                 display: 'flex',
                 justifyContent: 'center',
                 textAlign: 'center',
-                mr: '20px',
+                mx: '20px',
               }}
             >
               <Link to="/market" style={{ textDecoration: 'none' }}>
@@ -86,7 +86,7 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
                   // fontSize={{ xs: '12px', md: '14px' }}
                   fontWeight={700}
                 >
-                  Collections
+                  NFT Marketplace
                 </Typography>
               </Link>
               <Box

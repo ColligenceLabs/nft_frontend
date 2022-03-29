@@ -27,7 +27,7 @@ const NFTsMarket = () => {
     <MarketLayout>
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
         <Typography variant={'h1'} fontWeight={800}>
-          Collections
+          NFT Marketplace
         </Typography>
       </Box>
       <Box
