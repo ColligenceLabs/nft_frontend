@@ -22,7 +22,7 @@ import { targetNetwork } from '../../config';
 import { setupNetwork } from '../../utils/wallet';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useWallet';
 
-const ProfileButton = () => {
+const ProfileButton = ({ useMarket }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [isOpenSnackbar, setIsOpenSnackbar] = useState({
@@ -205,7 +205,13 @@ const ProfileButton = () => {
           </Box>
         </Box>
 
-        <ProfileDropdown fullName={full_name} email={email} level={level} image={image} />
+        <ProfileDropdown
+          useMarket={useMarket}
+          fullName={full_name}
+          email={email}
+          level={level}
+          image={image}
+        />
         {level.toLowerCase() === 'administrator' && (
           <Button
             sx={{

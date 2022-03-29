@@ -302,7 +302,7 @@ export interface RegisterForm {
   password: string;
   repeatPassword: string;
   level: string;
-  image: File | null;
+  image?: File | null;
   description: string;
 }
 

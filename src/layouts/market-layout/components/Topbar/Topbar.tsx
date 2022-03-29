@@ -10,6 +10,10 @@ import { StoreTypes } from '../../../../views/NftsMarket/types';
 import { useTheme } from '@mui/material/styles';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
+import { useWeb3React } from '@web3-react/core';
+import WalletDialog from '../../../../components/WalletDialog';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import WalletInfo from '../../../../components/WalletInfo';
 
 const Topbar = ({ toggleSidebar }: any): JSX.Element => {
   // @ts-ignore
@@ -17,6 +21,17 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
   const theme = useTheme();
   const { user } = useSelector((state: StoreTypes) => state.auth);
   const { pathname } = useLocation();
+
+  const context = useWeb3React();
+  const { connector, library, activate, account } = context;
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+
+  // @ts-ignore
+  const { balance, talBalance } = useSelector((state) => state.wallet);
+
+  const handleCloseModal = async () => {
+    setIsOpenConnectModal(false);
+  };
 
   return (
     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={1}>
@@ -103,7 +118,28 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
               <FeatherIcon icon="menu" width="20" height="20" />
             </IconButton>
           </Box>
-        )}
+        )}{' '}
+        <Box>
+          {connector ? (
+            <>
+              <IconButton>
+                <AccountBalanceWalletIcon color="primary" />
+              </IconButton>
+              {!!library && !smDown && (
+                <WalletInfo walletAddress={account} balance={balance} disconnect={true} />
+              )}
+            </>
+          ) : (
+            <IconButton onClick={() => setIsOpenConnectModal(true)}>
+              <AccountBalanceWalletIcon />
+            </IconButton>
+          )}
+          <WalletDialog
+            isOpenConnectModal={isOpenConnectModal}
+            handleCloseModal={handleCloseModal}
+            activate={activate}
+          />
+        </Box>
         <Box>
           {user === null ? (
             <>
@@ -128,7 +164,7 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
               </Button>
             </>
           ) : (
-            <ProfileButton />
+            <ProfileButton useMarket={true} />
           )}
         </Box>
       </Box>

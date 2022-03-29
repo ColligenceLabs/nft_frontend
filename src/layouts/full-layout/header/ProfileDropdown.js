@@ -5,7 +5,7 @@ import FeatherIcon from 'feather-icons-react';
 import adminImage from '../../../assets/images/users/admin.png';
 import creatorImage from '../../../assets/images/users/creator.png';
 
-const ProfileDropdown = ({ fullName, email, level, image }) => {
+const ProfileDropdown = ({ useMarket, fullName, email, level, image }) => {
   let userimg;
   if (image === undefined || image === '') {
     userimg = level.toLowerCase() === 'creator' ? creatorImage : adminImage;
@@ -82,7 +82,7 @@ const ProfileDropdown = ({ fullName, email, level, image }) => {
             pb: 3,
           }}
           component={Link}
-          to="/profile"
+          to={useMarket ? '/market/profile' : '/profile'}
         >
           <Box display="flex" alignItems="center">
             <Button
