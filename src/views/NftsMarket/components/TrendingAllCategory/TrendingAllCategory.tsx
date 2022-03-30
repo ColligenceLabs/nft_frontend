@@ -41,7 +41,7 @@ const TrendingAllCategory = () => {
           <Box key={index}>
             <CardMedia
               component="img"
-              sx={{ px: '10px' }}
+              sx={{ px: '10px', height: '450px' }}
               image={item}
               alt="Live from space album cover"
             />
