@@ -8,7 +8,7 @@ export const Menuitems = [
     href: '/',
   },
   {
-    title: 'NFT Marketplace',
+    title: 'Marketplace',
     icon: <StorefrontOutlinedIcon width="20" height="20" />,
     href: '/market',
   },

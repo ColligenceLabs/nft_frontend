@@ -6,6 +6,11 @@ import InsertPhotoTwoToneIcon from '@mui/icons-material/InsertPhotoTwoTone';
 import LoyaltyTwoToneIcon from '@mui/icons-material/LoyaltyTwoTone';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import wallet_icon from '../../../../assets/images/landing_icon/introduction_wallet.svg';
+import collection_icon from '../../../../assets/images/landing_icon/introduction_collection.svg';
+import nft_icon from '../../../../assets/images/landing_icon/introduction_nft.svg';
+import taal_icon from '../../../../assets/images/landing_icon/introduction_taal.svg';
+import marketLogo from '../../../../assets/images/logos/market-logo.svg';
 
 const Introduction = () => {
   const theme = useTheme();
@@ -47,7 +52,8 @@ const Introduction = () => {
             p: '20px',
           }}
         >
-          <AccountBalanceWalletTwoToneIcon sx={{ fontSize: '60px' }} />
+          {/*<AccountBalanceWalletTwoToneIcon sx={{ fontSize: '60px' }} />*/}
+          <img src={wallet_icon} width="60px" alt="wallet_icon" />
           <Typography variant={'h3'} color={'text.primary'}>
             Set up your wallet
           </Typography>
@@ -70,7 +76,8 @@ const Introduction = () => {
             p: '20px',
           }}
         >
-          <DashboardTwoToneIcon sx={{ fontSize: '60px' }} />
+          {/*<DashboardTwoToneIcon sx={{ fontSize: '60px' }} />*/}
+          <img src={collection_icon} width="60px" alt="collection_icon" />
           <Typography variant={'h3'} color={'text.primary'}>
             Create your collection
           </Typography>
@@ -93,7 +100,7 @@ const Introduction = () => {
             p: '20px',
           }}
         >
-          <InsertPhotoTwoToneIcon sx={{ fontSize: '60px' }} />
+          <img src={nft_icon} width="60px" alt="nft_icon" />
           <Typography variant={'h3'} color={'text.primary'}>
             Add your NFTs
           </Typography>
@@ -116,7 +123,7 @@ const Introduction = () => {
             p: '20px',
           }}
         >
-          <LoyaltyTwoToneIcon sx={{ fontSize: '60px' }} />
+          <img src={taal_icon} width="60px" alt="taal_icon" />
           <Typography variant={'h3'} color={'text.primary'}>
             List them for sale
           </Typography>

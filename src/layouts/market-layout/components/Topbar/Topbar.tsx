@@ -86,7 +86,7 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
                   // fontSize={{ xs: '12px', md: '14px' }}
                   fontWeight={700}
                 >
-                  NFT Marketplace
+                  Marketplace
                 </Typography>
               </Link>
               <Box
