@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import CollectionItem from '../CollectionItem';
 import useSWR from 'swr';
 import { CollectionResponse } from '../../types';
@@ -42,6 +42,21 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
               />
             </Grid>
           ))}
+        {!error && data && data?.data?.items.length.toString() === '0' && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              border: '1px solid #d6d6d6',
+              borderRadius: '30px',
+              minHeight: '400px',
+            }}
+          >
+            <Typography variant={'h2'}>No items to display</Typography>
+          </Box>
+        )}
       </Grid>
     </Box>
   );
