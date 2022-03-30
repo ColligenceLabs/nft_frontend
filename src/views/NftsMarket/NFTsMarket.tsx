@@ -11,6 +11,15 @@ const categories = [
   { id: 2, category: 'Game' },
   { id: 3, category: 'Graffiti' },
   { id: 4, category: 'Other' },
+  { id: 5, category: 'Art' },
+  { id: 6, category: 'Collectibles' },
+  { id: 7, category: 'Domain Names' },
+  { id: 8, category: 'Music' },
+  { id: 9, category: 'Photography' },
+  { id: 10, category: 'Sports' },
+  { id: 11, category: 'Trading Cards' },
+  { id: 12, category: 'Utility' },
+  { id: 13, category: 'Virtual Worlds' },
 ];
 
 const NFTsMarket = () => {
@@ -51,7 +60,7 @@ const NFTsMarket = () => {
                   ? `2px solid ${theme.palette.primary.main}`
                   : '',
               pb: '5px',
-              px: '15px',
+              px: '5px',
               cursor: 'pointer',
               color:
                 selectedCategory.id === category.id
@@ -60,7 +69,7 @@ const NFTsMarket = () => {
             }}
             onClick={() => setSelectedCategory(category)}
           >
-            <Typography fontWeight={selectedCategory.id === category.id ? 800 : ''}>
+            <Typography variant={'h6'} fontWeight={selectedCategory.id === category.id ? 800 : ''}>
               {category.category}
             </Typography>
           </Box>

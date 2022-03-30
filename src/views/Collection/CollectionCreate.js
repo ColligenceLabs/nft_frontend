@@ -12,7 +12,6 @@ import {
   Alert,
   FormHelperText,
   Snackbar,
-  CircularProgress,
   CardMedia,
 } from '@mui/material';
 import { Formik } from 'formik';
@@ -25,7 +24,6 @@ import PageContainer from '../../components/container/PageContainer';
 import CustomRadio from '../../components/forms/custom-elements/CustomRadio';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
-import { getCreatorData } from '../../services/creator.service';
 import { createCollection } from '../../services/collections.service';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -43,7 +41,6 @@ import WalletDialog from '../../components/WalletDialog';
 import NETWORKS from '../../components/NetworkSelector/networks';
 import { useSelector } from 'react-redux';
 import { injected, kaikas, walletconnect } from '../../connectors';
-import { setActivatingConnector } from '../../redux/slices/wallet';
 import splitAddress from '../../utils/splitAddress';
 import {
   MAX_METADATA_LEN,
@@ -62,11 +59,16 @@ const COLLECTION_CATEGORY = [
   { value: 'top', title: 'Top' },
   { value: 'game', title: 'Game' },
   { value: 'graffiti', title: 'Graffiti' },
+  { value: 'art', title: 'Art' },
+  { value: 'collectibles', title: 'Collectibles' },
+  { value: 'domainNames', title: 'Domain Names' },
+  { value: 'music', title: 'Music' },
+  { value: 'photography', title: 'Photography' },
+  { value: 'sports', title: 'Sports' },
+  { value: 'tradingCards', title: 'Trading Cards' },
+  { value: 'utility', title: 'Utility' },
+  { value: 'virtualWorlds', title: 'Virtual Worlds' },
 ];
-
-const StyledButton = styled(Button)`
-  width: 100px;
-`;
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -307,7 +309,10 @@ const CollectionCreate = () => {
                 result = await mintCollection(values);
               } else {
                 if (values.type === 'KIP17') {
-                  if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
+                  if (
+                    library.connection.url !== 'metamask' &&
+                    library.connection.url !== 'eip-1193:'
+                  ) {
                     result = await deployKIP17WithKaikas(
                       values.name,
                       values.symbol,
@@ -318,7 +323,10 @@ const CollectionCreate = () => {
                     result = await deployKIP17(values.name, values.symbol, account, library);
                   }
                 } else if (values.type === 'KIP37') {
-                  if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
+                  if (
+                    library.connection.url !== 'metamask' &&
+                    library.connection.url !== 'eip-1193:'
+                  ) {
                     result = await deployKIP37WithKaikas(values.tokenUri, account, library);
                   } else {
                     result = await deployKIP37(values.tokenUri, account, library);
@@ -388,8 +396,7 @@ const CollectionCreate = () => {
                       // console.log(event.target);
                       if (!useKAS || event.target.value !== 'klaytn')
                         activateNetwork(event.target.value, setFieldValue);
-                      else
-                        setFieldValue('network', event.target.value);
+                      else setFieldValue('network', event.target.value);
                     }}
                     fullWidth
                     size="small"
