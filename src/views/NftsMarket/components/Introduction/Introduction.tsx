@@ -10,7 +10,7 @@ import wallet_icon from '../../../../assets/images/landing_icon/introduction_wal
 import collection_icon from '../../../../assets/images/landing_icon/introduction_collection.svg';
 import nft_icon from '../../../../assets/images/landing_icon/introduction_nft.svg';
 import taal_icon from '../../../../assets/images/landing_icon/introduction_taal.svg';
-import marketLogo from '../../../../assets/images/logos/market-logo.svg';
+import market_icon from '../../../../assets/images/landing_icon/introduction_market.svg';
 
 const Introduction = () => {
   const theme = useTheme();
@@ -49,15 +49,15 @@ const Introduction = () => {
             alignItems: 'center',
             textAlign: 'center',
             gap: '0.5rem',
-            p: '20px',
+            p: '25px',
           }}
         >
           {/*<AccountBalanceWalletTwoToneIcon sx={{ fontSize: '60px' }} />*/}
           <img src={wallet_icon} width="60px" alt="wallet_icon" />
-          <Typography variant={'h3'} color={'text.primary'}>
+          <Typography variant={'h4'} color={'text.primary'}>
             Set up your wallet
           </Typography>
-          <Typography variant={'h5'} color={'text.primary'}>
+          <Typography variant={'h6'} color={'text.primary'}>
             Once you’ve set up your wallet of choice, connect it to OpenSea by clicking the wallet
             icon in the top right corner. Learn about the wallets we support.
           </Typography>
@@ -73,38 +73,18 @@ const Introduction = () => {
             alignItems: 'center',
             textAlign: 'center',
             gap: '0.5rem',
-            p: '20px',
+            p: '25px',
           }}
         >
           {/*<DashboardTwoToneIcon sx={{ fontSize: '60px' }} />*/}
-          <img src={collection_icon} width="60px" alt="collection_icon" />
-          <Typography variant={'h3'} color={'text.primary'}>
-            Create your collection
+          <img src={nft_icon} width="60px" alt="collection_icon" />
+          <Typography variant={'h4'} color={'text.primary'}>
+            Create or add your NFTs
           </Typography>
-          <Typography variant={'h5'} color={'text.primary'}>
-            Click My Collections and set up your collection. Add social links, a description,
-            profile & banner images, and set a secondary sales fee.
+          <Typography variant={'h6'} color={'text.primary'}>
+            Be a creator to make your collection and mint your NFTs.
           </Typography>
-        </Grid>
-        <Grid
-          item
-          sm={12}
-          md={6}
-          lg={3}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            gap: '0.5rem',
-            p: '20px',
-          }}
-        >
-          <img src={nft_icon} width="60px" alt="nft_icon" />
-          <Typography variant={'h3'} color={'text.primary'}>
-            Add your NFTs
-          </Typography>
-          <Typography variant={'h5'} color={'text.primary'}>
+          <Typography variant={'h6'} color={'text.primary'}>
             Upload your work (image, video, audio, or 3D art), add a title and description, and
             customize your NFTs with properties, stats, and unlockable content.
           </Typography>
@@ -120,16 +100,39 @@ const Introduction = () => {
             alignItems: 'center',
             textAlign: 'center',
             gap: '0.5rem',
-            p: '20px',
+            p: '25px',
+          }}
+        >
+          <img src={market_icon} width="60px" alt="nft_icon" />
+          <Typography variant={'h4'} color={'text.primary'}>
+            List them for sale
+          </Typography>
+          <Typography variant={'h6'} color={'text.primary'}>
+            Choose between auctions, fixed-price listings, and declining-price listings. You choose
+            how you want to sell your NFTs, and we help you sell them!
+          </Typography>
+        </Grid>
+        <Grid
+          item
+          sm={12}
+          md={6}
+          lg={3}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            gap: '0.5rem',
+            p: '25px',
           }}
         >
           <img src={taal_icon} width="60px" alt="taal_icon" />
-          <Typography variant={'h3'} color={'text.primary'}>
-            List them for sale
+          <Typography variant={'h4'} color={'text.primary'}>
+            Staking NFTs & Support Creators
           </Typography>
-          <Typography variant={'h5'} color={'text.primary'}>
-            Choose between auctions, fixed-price listings, and declining-price listings. You choose
-            how you want to sell your NFTs, and we help you sell them!
+          <Typography variant={'h6'} color={'text.primary'}>
+            Share profits by supporting creators&apos; creative activities, or create additional
+            profits in addition to trading profits through staking of NFTs.
           </Typography>
         </Grid>
       </Grid>
