@@ -1,13 +1,8 @@
 import React from 'react';
-import { Box, CardMedia, Grid, Typography } from '@mui/material';
-import AccountBalanceWalletTwoToneIcon from '@mui/icons-material/AccountBalanceWalletTwoTone';
-import DashboardTwoToneIcon from '@mui/icons-material/DashboardTwoTone';
-import InsertPhotoTwoToneIcon from '@mui/icons-material/InsertPhotoTwoTone';
-import LoyaltyTwoToneIcon from '@mui/icons-material/LoyaltyTwoTone';
+import { Box, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import wallet_icon from '../../../../assets/images/landing_icon/introduction_wallet.svg';
-import collection_icon from '../../../../assets/images/landing_icon/introduction_collection.svg';
 import nft_icon from '../../../../assets/images/landing_icon/introduction_nft.svg';
 import taal_icon from '../../../../assets/images/landing_icon/introduction_taal.svg';
 import market_icon from '../../../../assets/images/landing_icon/introduction_market.svg';
@@ -52,7 +47,6 @@ const Introduction = () => {
             p: '25px',
           }}
         >
-          {/*<AccountBalanceWalletTwoToneIcon sx={{ fontSize: '60px' }} />*/}
           <img src={wallet_icon} width="60px" alt="wallet_icon" />
           <Typography variant={'h4'} color={'text.primary'}>
             Set up your wallet
@@ -76,7 +70,6 @@ const Introduction = () => {
             p: '25px',
           }}
         >
-          {/*<DashboardTwoToneIcon sx={{ fontSize: '60px' }} />*/}
           <img src={nft_icon} width="60px" alt="collection_icon" />
           <Typography variant={'h4'} color={'text.primary'}>
             Create or add your NFTs
