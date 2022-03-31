@@ -52,6 +52,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
               border: '1px solid #d6d6d6',
               borderRadius: '30px',
               minHeight: '400px',
+              m: '15px',
             }}
           >
             <Typography variant={'h2'}>No items to display</Typography>
