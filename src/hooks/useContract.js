@@ -17,7 +17,7 @@ export const useKipContract = (contract, type) => {
   const abi = type === 'KIP17' ? kip17Abi : kip37Abi;
   return useMemo(
     () => {
-      if (type === 'SPLToken') return;
+      if (type === 'SPLToken' || !contract) return;
       return new ethers.Contract(contract, abi, library?.getSigner())
     }, [library, contract, type]
   );
@@ -32,7 +32,7 @@ export const useKipContractWithKaikas = (contract, type) => {
   const abi = type === 'KIP17' ? kip17Abi : kip37Abi;
   return useMemo(
     () => {
-      if (type === 'SPLToken') return;
+      if (type === 'SPLToken' || !contract) return;
       return new caver.klay.Contract(abi, contract)
     }, [library, contract, type],
   );
