@@ -123,7 +123,7 @@ export const setSchedule = (ids, start_date, end_date) => {
 };
 
 export const getUserNFTs = (address, size) => {
-  const url = `${API_URL}/user-nfts?address=${address}&type=nft&size=${size}`;
+  const url = `${API_URL}/user-nfts?address=${address}&size=${size}`;
   return axios
     .get(url, {
       headers: authHeader(),
