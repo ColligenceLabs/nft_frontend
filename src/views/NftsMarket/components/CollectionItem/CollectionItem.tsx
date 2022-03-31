@@ -89,7 +89,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
             </Box>
 
             <Typography variant="body2" color="text.secondary">
-              {description && description.length > 200
+              {description && description.length > 100
                 ? `${description.slice(0, 100)}...`
                 : description}
             </Typography>
