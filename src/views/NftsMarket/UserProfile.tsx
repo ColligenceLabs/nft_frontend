@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from '../../layouts/market-layout/components/Container';
-import { Alert, Box, IconButton, Snackbar, Typography } from '@mui/material';
+import { Alert, Box, Grid, IconButton, Snackbar, Typography } from '@mui/material';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import useUserInfo from '../../hooks/useUserInfo';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
@@ -10,6 +10,8 @@ import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import { useWeb3React } from '@web3-react/core';
 import splitAddress from '../../utils/splitAddress';
 import WalletDialog from '../../components/WalletDialog';
+import { getUserNFTs } from '../../services/nft.service';
+import NFTItem from './components/NFTItem';
 
 const UserProfile = () => {
   const { image, full_name, description } = useUserInfo();
@@ -20,6 +22,18 @@ const UserProfile = () => {
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
+  const [myNfts, setMyNfts] = useState([]);
+
+  useEffect(() => {
+    const fetchMyNfts = async () => {
+      const nfts = await getUserNFTs(account, 100);
+      setMyNfts(nfts.data);
+      console.log(nfts);
+    };
+
+    fetchMyNfts();
+  }, [getUserNFTs, account]);
+
   return (
     <MarketLayout>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -107,17 +121,39 @@ const UserProfile = () => {
       <Container>
         <Box
           sx={{
+            borderBottom: '1px solid',
+            borderColor: `#d9d9d9`,
+            width: '100%',
+            py: 2,
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            border: '1px solid #d6d6d6',
-            borderRadius: '30px',
-            minHeight: '300px',
           }}
         >
-          <Typography variant={'h2'}>No items to display</Typography>
+          <Typography variant={'h3'} fontWeight={800}>
+            My NFTs
+          </Typography>
         </Box>
+        {myNfts !== null && myNfts.length > 0 ? (
+          myNfts.map((item, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <NFTItem item={item} />
+            </Grid>
+          ))
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              border: '1px solid #d6d6d6',
+              borderRadius: '30px',
+              minHeight: '300px',
+            }}
+          >
+            <Typography variant={'h2'}>No items to display</Typography>
+          </Box>
+        )}
 
         <WalletDialog
           isOpenConnectModal={isOpenConnectModal}

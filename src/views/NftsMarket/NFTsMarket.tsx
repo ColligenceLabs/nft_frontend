@@ -7,10 +7,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categories = [
   { id: 0, value: 'all', category: 'All' },
-  { id: 1, value: 'top', category: 'Top' },
-  { id: 2, value: 'game', category: 'Game' },
-  { id: 3, value: 'graffiti', category: 'Graffiti' },
-  { id: 4, value: 'other', category: 'Other' },
+  // { id: 1, value: 'top', category: 'Top' },
+  // { id: 2, value: 'game', category: 'Game' },
+  // { id: 3, value: 'graffiti', category: 'Graffiti' },
+  // { id: 4, value: 'other', category: 'Other' },
   { id: 5, value: 'art', category: 'Art' },
   { id: 6, value: 'collectibles', category: 'Collectibles' },
   { id: 7, value: 'domainNames', category: 'Domain Names' },
