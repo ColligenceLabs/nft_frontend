@@ -32,6 +32,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
             '&:hover': {
               transform: `translateY(-${theme.spacing(1 / 2)})`,
             },
+            minHeight: '400px',
           }}
         >
           <Box

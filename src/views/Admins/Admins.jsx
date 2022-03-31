@@ -220,7 +220,9 @@ const Admins = () => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
-                          {row.description}
+                          {row.description?.length > 20
+                            ? `${row.description.slice(0, 20)}...`
+                            : row.description}
                         </Typography>
                       </TableCell>
                       <TableCell>

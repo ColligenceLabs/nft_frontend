@@ -6,20 +6,20 @@ import { Box, useTheme, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categories = [
-  { id: 0, category: 'All' },
-  { id: 1, category: 'Top' },
-  { id: 2, category: 'Game' },
-  { id: 3, category: 'Graffiti' },
-  { id: 4, category: 'Other' },
-  { id: 5, category: 'Art' },
-  { id: 6, category: 'Collectibles' },
-  { id: 7, category: 'Domain Names' },
-  { id: 8, category: 'Music' },
-  { id: 9, category: 'Photography' },
-  { id: 10, category: 'Sports' },
-  { id: 11, category: 'Trading Cards' },
-  { id: 12, category: 'Utility' },
-  { id: 13, category: 'Virtual Worlds' },
+  { id: 0, value: 'all', category: 'All' },
+  // { id: 1, value: 'top', category: 'Top' },
+  // { id: 2, value: 'game', category: 'Game' },
+  // { id: 3, value: 'graffiti', category: 'Graffiti' },
+  // { id: 4, value: 'other', category: 'Other' },
+  { id: 5, value: 'art', category: 'Art' },
+  { id: 6, value: 'collectibles', category: 'Collectibles' },
+  { id: 7, value: 'domainNames', category: 'Domain Names' },
+  { id: 8, value: 'music', category: 'Music' },
+  { id: 9, value: 'photography', category: 'Photography' },
+  { id: 10, value: 'sports', category: 'Sports' },
+  { id: 11, value: 'tradingCards', category: 'Trading Cards' },
+  { id: 12, value: 'utility', category: 'Utility' },
+  { id: 13, value: 'virtualWorlds', category: 'Virtual Worlds' },
 ];
 
 const NFTsMarket = () => {
@@ -30,6 +30,7 @@ const NFTsMarket = () => {
   const [selectedCategory, setSelectedCategory] = useState({
     id: 0,
     category: 'All',
+    value: 'all',
   });
 
   return (
