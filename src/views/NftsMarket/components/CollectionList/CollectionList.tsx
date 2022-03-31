@@ -9,13 +9,14 @@ interface SelectedCategoryProp {
   selectedCategory: {
     id: number;
     category: string;
+    value: string;
   };
 }
 
 const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
   const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs`;
   const { data, error, mutate } = useSWR<CollectionResponse>(API_URL, () =>
-    getMarketCollectionData(selectedCategory.category.toLowerCase()),
+    getMarketCollectionData(selectedCategory.value),
   );
   //
   useEffect(() => {

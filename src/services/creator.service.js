@@ -13,20 +13,30 @@ export const getCreatorData = (page = undefined, rowsPerPage, searchName, search
   url = searchName !== undefined ? `${url}&full_name=${searchName}` : url;
   url = searchStatus !== undefined ? `${url}&status=${searchStatus}` : url;
 
-  return (
-    axios
-      .get(url, {
-        headers: authHeader(),
-      })
-      .then((response) => {
-        return response.data;
-      })
-      .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)))
-  );
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
+export const getAllCreatorData = (url) => {
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
 const creatorService = {
   getCreatorData,
+  getAllCreatorData,
 };
 
 export default creatorService;

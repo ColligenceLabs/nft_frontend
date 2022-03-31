@@ -103,6 +103,7 @@ const NFTMint = () => {
   const getCollectionList = async (id) => {
     await getCollectionsByCreatorId(id)
       .then(({ data }) => {
+        console.log(data);
         setCollectionList(data.filter((row) => row.status === 'active'));
       })
       .catch((error) => console.log(error));
@@ -287,7 +288,10 @@ const NFTMint = () => {
 
                       // TODO : Actual NFT Minting here
                       if (contractType === 'KIP17') {
-                        if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
+                        if (
+                          library.connection.url !== 'metamask' &&
+                          library.connection.url !== 'eip-1193:'
+                        ) {
                           result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
                         } else {
                           result = await mintNFT17(tokenId, tokenUri, nftId);
@@ -300,7 +304,10 @@ const NFTMint = () => {
                           setSuccessRegister(true);
                         }
                       } else {
-                        if (library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:') {
+                        if (
+                          library.connection.url !== 'metamask' &&
+                          library.connection.url !== 'eip-1193:'
+                        ) {
                           result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
                         } else {
                           result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
@@ -404,12 +411,14 @@ const NFTMint = () => {
                     onChange={(event) => {
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
+                          console.log(collection.category);
                           if (collection.network === 'solana' && solana.address === undefined) {
                             setErrorMessage('connect phantom wallet');
                             return;
                           } else if (
                             collection.network === 'klaytn' &&
-                            klaytn.address === undefined && !useKAS
+                            klaytn.address === undefined &&
+                            !useKAS
                           ) {
                             setErrorMessage('connect wallet for klaytn');
                             return;

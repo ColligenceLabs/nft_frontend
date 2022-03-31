@@ -1,4 +1,4 @@
-import { getCreatorData } from '../services/creator.service';
+import { getAllCreatorData } from '../services/creator.service';
 import { useEffect, useState } from 'react';
 import useUserInfo from './useUserInfo';
 import useSWR from 'swr';
@@ -8,7 +8,7 @@ const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin/indexs?leve
 function useCreator() {
   const [creatorList, setCreatorList] = useState();
 
-  const { data } = useSWR(API_URL, getCreatorData);
+  const { data } = useSWR(API_URL, getAllCreatorData);
   const { level, id } = useUserInfo();
 
   useEffect(() => {
