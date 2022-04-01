@@ -68,7 +68,7 @@ const Hero = (): JSX.Element => {
               variant="contained"
               color="primary"
               size="large"
-              fullWidth={!isMd ? false : true}
+              fullWidth={isMd ? false : true}
             >
               Start now
             </Button>
