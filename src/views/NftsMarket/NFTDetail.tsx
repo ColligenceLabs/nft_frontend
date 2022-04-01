@@ -9,10 +9,10 @@ import FsLightbox from 'fslightbox-react';
 import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
-import { getUserNFTs, sellNFTsBatch } from '../../services/nft.service';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
+import { selectTokenId, cancelBuy } from '../../services/nft.service';
 
 const NFTDetail = () => {
   const { id } = useParams();
@@ -20,16 +20,16 @@ const NFTDetail = () => {
   const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
-  const contractAddress = '0xe1c53ab564de73c181df56aa350677297b857662';
+  const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
-  const { library, account } = useActiveWeb3React();
+  const { library } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
   const buyTest = async () => {
     const tokenId = 1;
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-    await buyNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
+    await buyNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '10');
   };
 
   const sellTest = async () => {
@@ -43,14 +43,9 @@ const NFTDetail = () => {
     await listNFT(contractAddress);
   };
 
-  const userNFTs = async () => {
-    const nfts = await getUserNFTs(account, 100);
-  };
-
-  const sellNFTs = async () => {
-    const nft_id = '623d7d5f0058e509f6bb03a3';
-    const result = await sellNFTsBatch(nft_id);
-    console.log(result);
+  const test = async () => {
+    const test = await selectTokenId(id);
+    console.log(test);
   }
 
   return (
@@ -150,9 +145,6 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
                     </Box>
 
-                    <Button variant={'contained'} onClick={userNFTs}>
-                      userNFTs
-                    </Button>
                     <Button variant={'contained'} onClick={sellTest}>
                       sell
                     </Button>
@@ -162,8 +154,8 @@ const NFTDetail = () => {
                     <Button variant={'contained'} onClick={listTest}>
                       market
                     </Button>
-                    <Button variant={'contained'} onClick={sellNFTs}>
-                      sellBatch
+                    <Button variant={'contained'} onClick={test}>
+                      test
                     </Button>
                   </Box>
                 </Box>

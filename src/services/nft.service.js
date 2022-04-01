@@ -149,3 +149,31 @@ export const sellNFTsBatch = (nft_id) => {
       error.response?.status === 401 ? authService.logout() : console.log(error);
     });
 };
+
+export const selectTokenId = (nft_id) => {
+  const url = `${API_URL}/select-tokenid?nft_id=${nft_id}`;
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
+
+export const cancelBuy = (nft_id, tokenId) => {
+  const url = `${API_URL}/cancel-buy?nft_id=${nft_id}&token_id=${tokenId}`;
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
