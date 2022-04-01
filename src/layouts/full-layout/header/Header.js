@@ -1,32 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import FeatherIcon from 'feather-icons-react';
-import { useTranslation } from 'react-i18next';
-
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Menu,
-  Typography,
-  Avatar,
-  Button,
-  Snackbar,
-  Alert,
-  useMediaQuery,
-} from '@mui/material';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import { AppBar, Box, IconButton, Toolbar, Snackbar, Alert } from '@mui/material';
 import PropTypes from 'prop-types';
 import LanguageSelector from '../../../components/LanguageSelector/LanguageSelector';
 import ThemeSelector from '../../../components/ThemeSelector/ThemeSelector';
 import WalletDialog from '../../../components/WalletDialog';
-import WalletInfo from '../../../components/WalletInfo';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useEagerConnect, useInactiveListener } from '../../../hooks/useWallet';
-
-import { targetNetwork, targetNetworkMsg } from '../../../config';
+import { targetNetworkMsg } from '../../../config';
 import { useTheme } from '@mui/styles';
 import NetworkSelector from '../../../components/NetworkSelector';
 import WalletConnector from '../../../components/WalletConnector';
@@ -42,16 +24,12 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
 
   const { vertical, horizontal, open } = isOpenSnackbar;
   const theme = useTheme();
-  const smDown = useMediaQuery((theme) => theme.breakpoints.down('sm'));
-  const { t } = useTranslation();
 
   const context = useWeb3React();
-  const { connector, library, activate, account } = context;
-  const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
+  const { activate } = context;
+  const { activatingConnector } = useSelector((state) => state.wallet);
 
-  // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
   const handleCloseModal = async () => {
@@ -97,26 +75,6 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         <Box flexGrow={1} />
 
         <NetworkSelector />
-
-        {connector ? (
-          <>
-            <IconButton>
-              <AccountBalanceWalletIcon color="primary" />
-            </IconButton>
-            {!!library && !smDown && (
-              <WalletInfo
-                walletAddress={account}
-                balance={balance}
-                talBalance={talBalance}
-                disconnect={true}
-              />
-            )}
-          </>
-        ) : (
-          <IconButton onClick={() => setIsOpenConnectModal(true)}>
-            <AccountBalanceWalletIcon />
-          </IconButton>
-        )}
 
         <Box
           sx={{

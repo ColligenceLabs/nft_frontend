@@ -14,7 +14,6 @@ import adminImage from '../../assets/images/users/admin.png';
 import userImage from '../../assets/images/users/user.png';
 
 import ProfileDropdown from '../../layouts/full-layout/header/ProfileDropdown';
-import { useTheme } from '@mui/styles';
 import { useWeb3React } from '@web3-react/core';
 import { updateWallet } from '../../services/admins.service';
 import { getWalletBalance, setActivatingConnector, setBalance } from '../../redux/slices/wallet';
@@ -24,23 +23,20 @@ import { useEagerConnect, useInactiveListener } from '../../hooks/useWallet';
 
 const ProfileButton = ({ useMarket }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
-  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
-  const [isOpenSnackbar, setIsOpenSnackbar] = useState({
-    open: false,
-    vertical: 'top',
-    horizontal: 'center',
-  });
+  // const [isOpenSnackbar, setIsOpenSnackbar] = useState({
+  //   open: false,
+  //   vertical: 'top',
+  //   horizontal: 'center',
+  // });
 
-  const { vertical, horizontal, open } = isOpenSnackbar;
-  const theme = useTheme();
-  const smDown = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const { t } = useTranslation();
 
   const { from } = useSelector((state) => state.nft);
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { connector, library, activate, account } = context;
-  const { activatingConnector, balance, talBalance } = useSelector((state) => state.wallet);
+  const { connector, library, account } = context;
+  const { activatingConnector } = useSelector((state) => state.wallet);
   const {
     user: {
       infor: { full_name, email, level, image, id },
@@ -148,32 +144,36 @@ const ProfileButton = ({ useMarket }) => {
             sx={{
               width: '30px',
               height: '30px',
+              border: '1px solid #d6d6d6',
+              boxShadow: 3,
             }}
           />
-          <Box
-            sx={{
-              display: {
-                xs: 'none',
-                sm: 'flex',
-              },
-              alignItems: 'center',
-            }}
-          >
-            <Typography color="textSecondary" variant="h5" fontWeight="400" sx={{ ml: 1 }}>
-              Hi,
-            </Typography>
-            <Typography
-              variant="h5"
-              // fontWeight="700"
-              color="primary"
+          {!mdDown && (
+            <Box
               sx={{
-                ml: 1,
+                display: {
+                  xs: 'none',
+                  sm: 'flex',
+                },
+                alignItems: 'center',
               }}
             >
-              {full_name}
-            </Typography>
-            <FeatherIcon icon="chevron-down" width="20" height="20" />
-          </Box>
+              <Typography color="textSecondary" variant="h5" fontWeight="400" sx={{ ml: 1 }}>
+                Hi,
+              </Typography>
+              <Typography
+                variant="h5"
+                // fontWeight="700"
+                color="primary"
+                sx={{
+                  ml: 1,
+                }}
+              >
+                {full_name}
+              </Typography>
+              <FeatherIcon icon="chevron-down" width="20" height="20" />
+            </Box>
+          )}
         </Box>
       </Button>
       <Menu

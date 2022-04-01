@@ -133,27 +133,31 @@ const UserProfile = () => {
             My NFTs
           </Typography>
         </Box>
-        {myNfts !== null && myNfts.length > 0 ? (
-          myNfts.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <NFTItem item={item} />
+        <Grid container>
+          {myNfts !== null && myNfts.length > 0 ? (
+            myNfts.map((item, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <NFTItem item={item} />
+              </Grid>
+            ))
+          ) : (
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  border: '1px solid #d6d6d6',
+                  borderRadius: '30px',
+                  minHeight: '300px',
+                }}
+              >
+                <Typography variant={'h2'}>No items to display</Typography>
+              </Box>
             </Grid>
-          ))
-        ) : (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              border: '1px solid #d6d6d6',
-              borderRadius: '30px',
-              minHeight: '300px',
-            }}
-          >
-            <Typography variant={'h2'}>No items to display</Typography>
-          </Box>
-        )}
+          )}
+        </Grid>
 
         <WalletDialog
           isOpenConnectModal={isOpenConnectModal}
