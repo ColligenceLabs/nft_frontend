@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Slider from 'react-slick';
-import { CardMedia } from '@mui/material';
 import nft1 from '../../../../assets/images/products/landing_nft1.png';
 import nft2 from '../../../../assets/images/products/landing_nft2.png';
 
@@ -69,7 +68,7 @@ const Hero = (): JSX.Element => {
               variant="contained"
               color="primary"
               size="large"
-              fullWidth={isMd ? false : true}
+              fullWidth={!isMd ? false : true}
             >
               Start now
             </Button>
@@ -90,41 +89,43 @@ const Hero = (): JSX.Element => {
       <Grid
         item
         // container
-        // alignItems={'center'}
-        // justifyContent={'center'}
+        // display={'flex'}
+        alignItems={'center'}
+        justifyContent={'center'}
         xs={12}
         md={6}
         // data-aos="flip-left"
         // data-aos-easing="ease-out-cubic"
         // data-aos-duration="2000"
       >
-        <Slider {...settings}>
-          {[nft1, nft2].map((item, index) => (
-            <Box
-              key={index}
-              component={LazyLoadImage}
-              height={1}
-              width={1}
-              src={item}
-              alt="..."
-              effect="blur"
-              boxShadow={3}
-              borderRadius={2}
-              maxWidth={600}
-              sx={{
-                filter: theme.palette.mode === 'dark' ? 'brightness(0.7)' : 'none',
-              }}
-            />
-            // <CardMedia
-            //   key={index}
-            //   component="img"
-            //   sx={{ width: 300 }}
-            //   image={item}
-            //   alt="Live from space album cover"
-            // />
-          ))}
-        </Slider>
-
+        <Box sx={{ px: '30px' }}>
+          <Slider {...settings}>
+            {[nft1, nft2].map((item, index) => (
+              <Box
+                key={index}
+                component={LazyLoadImage}
+                height={1}
+                width={1}
+                src={item}
+                alt="..."
+                effect="blur"
+                boxShadow={3}
+                borderRadius={2}
+                // maxWidth={600}
+                sx={{
+                  filter: theme.palette.mode === 'dark' ? 'brightness(0.7)' : 'none',
+                }}
+              />
+              // <CardMedia
+              //   key={index}
+              //   component="img"
+              //   sx={{ width: 300 }}
+              //   image={item}
+              //   alt="Live from space album cover"
+              // />
+            ))}
+          </Slider>
+        </Box>
         {/*<Box*/}
         {/*  component={LazyLoadImage}*/}
         {/*  height={1}*/}
