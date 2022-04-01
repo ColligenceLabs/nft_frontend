@@ -13,6 +13,7 @@ import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
 import { selectTokenId, cancelBuy } from '../../services/nft.service';
+import { FAILURE } from '../../config/constants/consts';
 
 const NFTDetail = () => {
   const { id } = useParams();
@@ -25,28 +26,29 @@ const NFTDetail = () => {
   const { library } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
-  const buyTest = async () => {
-    const tokenId = 1;
+  const buy = async () => {
+    // 지갑연결 여부 확인 필요.
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-    await buyNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '10');
+    // tokenId 를 구해온다.
+    const tokenId = await selectTokenId(id);
+    // tokenId 를 사용 구입 진행.
+    const result = await buyNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '10');
+    // 실패인 경우 원복.
+    if (result === FAILURE)
+      await cancelBuy(id, tokenId);
   };
 
-  const sellTest = async () => {
-    const tokenId = 1;
-    const isKaikas =
-      library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-    await sellNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
-  };
-
-  const listTest = async () => {
-    await listNFT(contractAddress);
-  };
-
-  const test = async () => {
-    const test = await selectTokenId(id);
-    console.log(test);
-  }
+  // const sellTest = async () => {
+  //   const tokenId = 1;
+  //   const isKaikas =
+  //     library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+  //   await sellNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
+  // };
+  //
+  // const listTest = async () => {
+  //   await listNFT(contractAddress);
+  // };
 
   return (
     <MarketLayout>
@@ -145,18 +147,15 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
                     </Box>
 
-                    <Button variant={'contained'} onClick={sellTest}>
-                      sell
-                    </Button>
-                    <Button variant={'contained'} onClick={buyTest}>
+                    {/*<Button variant={'contained'} onClick={sellTest}>*/}
+                    {/*  sell*/}
+                    {/*</Button>*/}
+                    <Button variant={'contained'} onClick={buy}>
                       buy
                     </Button>
-                    <Button variant={'contained'} onClick={listTest}>
-                      market
-                    </Button>
-                    <Button variant={'contained'} onClick={test}>
-                      test
-                    </Button>
+                    {/*<Button variant={'contained'} onClick={listTest}>*/}
+                    {/*  market*/}
+                    {/*</Button>*/}
                   </Box>
                 </Box>
               </Box>
