@@ -27,8 +27,6 @@ const Hero = (): JSX.Element => {
     defaultMatches: true,
   });
 
-  console.log(isMd);
-
   return (
     <Grid container spacing={4}>
       <Grid item container xs={12} md={6} alignItems={'center'}>

@@ -5,17 +5,14 @@ import { Box, Typography } from '@mui/material';
 import NFTList from './components/NFTList';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
-import { getCollectionById } from '../../services/collections.service';
 import { CollectionDetailResponse } from './types';
 import { getNFTsByCollectionId } from '../../services/market.service';
 
 const NFTCollection = () => {
   const { id } = useParams();
-  const { data, error } = useSWR<CollectionDetailResponse>(
-    `/admin-api/collection/detail/${id}`,
-    () => getNFTsByCollectionId(id),
+  const { data } = useSWR<CollectionDetailResponse>(`/admin-api/collection/detail/${id}`, () =>
+    getNFTsByCollectionId(id),
   );
-  console.log(data);
 
   return (
     <>
@@ -23,7 +20,7 @@ const NFTCollection = () => {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Box sx={{ width: 1, height: '250px' }}>
             <img
-              src={data?.cover_image}
+              src={data?.image_link}
               alt={data?.name}
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />

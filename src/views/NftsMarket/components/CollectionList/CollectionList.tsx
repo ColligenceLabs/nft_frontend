@@ -18,12 +18,9 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
   const { data, error, mutate } = useSWR<CollectionResponse>(API_URL, () =>
     getMarketCollectionData(selectedCategory.value),
   );
-  //
+
   useEffect(() => {
-    // if (selectedCategory?.category !== undefined) {
-    //   setCategoryKeyword(selectedCategory.category.toLowerCase());
     mutate();
-    // }
   }, [selectedCategory]);
 
   return (
@@ -37,7 +34,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
                 id={item._id}
                 name={item.name}
                 description={item.description}
-                cover_image={item.cover_image}
+                cover_image={item.image_link}
                 creator_image={item?.creator_id?.image}
                 creator_fullName={item?.creator_id?.full_name}
               />

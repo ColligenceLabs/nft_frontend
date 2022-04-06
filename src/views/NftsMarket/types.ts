@@ -26,6 +26,7 @@ export interface CollectionDetailResponse {
   contract_address: string;
   contract_type: string;
   path: string;
+  image_link: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +46,8 @@ export interface CollectionResponse {
           image: string;
           _id: string;
         };
+        path: string;
+        image_link: string;
       },
     ];
   };

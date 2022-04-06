@@ -34,10 +34,13 @@ const NFTDetail = () => {
     const tokenId = await selectTokenId(id);
     const price = data?.data?.price;
     // tokenId 를 사용 구입 진행.
-    const result = await buyNFT(isKaikas ? nftContractWithKaikas : nftContract, parseInt(tokenId, 16), price);
+    const result = await buyNFT(
+      isKaikas ? nftContractWithKaikas : nftContract,
+      parseInt(tokenId, 16),
+      price,
+    );
     // 실패인 경우 원복.
-    if (result === FAILURE)
-      await cancelBuy(id, tokenId);
+    if (result === FAILURE) await cancelBuy(id, tokenId);
   };
 
   // const sellTest = async () => {
@@ -60,7 +63,7 @@ const NFTDetail = () => {
               <Card onClick={() => setToggler(!toggler)}>
                 <CardMedia
                   component={'img'}
-                  image={data?.data?.metadata?.image}
+                  image={data?.data?.metadata?.alt_url}
                   alt={data?.data?.metadata?.name}
                 />
               </Card>
@@ -162,7 +165,7 @@ const NFTDetail = () => {
               </Box>
             </Grid>
           </Grid>
-          <FsLightbox toggler={toggler} sources={[data?.data?.metadata?.image]} type="image" />
+          <FsLightbox toggler={toggler} sources={[data?.data?.metadata?.alt_url]} type="image" />
         </Container>
       )}
     </MarketLayout>
