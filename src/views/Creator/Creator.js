@@ -162,7 +162,7 @@ const Creator = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = rowsPerPage - rows.length;
+  // const emptyRows = rowsPerPage - rows.length;
 
   const fetchCreator = async () => {
     await getCreatorData(page, rowsPerPage, searchName, searchStatus).then(({ data }) => {
@@ -234,7 +234,9 @@ const Creator = () => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
-                          {row.description}
+                          {row.description.length > 20
+                            ? `${row.description.slice(0, 20)}...`
+                            : row.description}
                         </Typography>
                       </TableCell>
                       <TableCell>
