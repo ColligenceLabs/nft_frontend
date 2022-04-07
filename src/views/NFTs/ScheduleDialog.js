@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
+import { LoadingButton } from '@mui/lab';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -70,6 +71,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleChangeStart = (newValue) => {
     setStartDate(newValue);
   };
@@ -79,6 +81,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   };
 
   const handleSchedule = async () => {
+    setLoading(true);
     const res = await setSchedule(selected, startDate, endDate);
     if (res.data.status === 1) {
       setErrorMessage(null);
@@ -87,6 +90,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       setSuccessFlag(false);
       setErrorMessage(res.data.message);
     }
+    setLoading(false);
     setOpenSnackbar(true);
     handleCloseModal();
   };
@@ -146,9 +150,12 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
           <Button variant="outlined" onClick={handleCloseModal}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleSchedule}>
+          <LoadingButton loading={loading} variant="contained" onClick={handleSchedule}>
             Confirm
-          </Button>
+          </LoadingButton>
+          {/*<Button variant="contained" onClick={handleSchedule}>*/}
+          {/*  Confirm*/}
+          {/*</Button>*/}
         </DialogActions>
       </Dialog>
       <Snackbar
