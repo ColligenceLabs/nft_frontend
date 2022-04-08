@@ -40,7 +40,8 @@ const useMarket = () => {
         }
       } catch (e) {
         console.log('approve estimateGas fail.', e);
-        return FAILURE;
+        // return FAILURE;
+        throw e;
       }
       console.log('gasLimit:', gasLimit);
       console.log('library:', library);
@@ -63,7 +64,8 @@ const useMarket = () => {
         }
       } catch (e) {
         console.log('approve fail.', e);
-        return FAILURE;
+        // return FAILURE;
+        throw e;
       }
       console.log('approve success.');
       // const approved = await nftContract.getApproved(tokenId);
@@ -81,7 +83,8 @@ const useMarket = () => {
             });
       } catch (e) {
         console.log('readyToSell estimateGas fail.', e);
-        return FAILURE;
+        // return FAILURE;
+        throw e;
       }
       console.log('readyToSellToken gasLimit:', gasLimit);
 
@@ -104,7 +107,8 @@ const useMarket = () => {
         }
       } catch (e) {
         console.log('readyToSell fail.', e);
-        return FAILURE;
+        // return FAILURE;
+        throw e;
       }
       return SUCCESS;
     },
