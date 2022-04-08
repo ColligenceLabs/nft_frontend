@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -14,11 +14,22 @@ import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
 import { selectTokenId, cancelBuy } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
+import ReactPlayer from 'react-player';
 
 const NFTDetail = () => {
   const { id } = useParams();
+  const params = useLocation();
   const [toggler, setToggler] = useState(false);
-  const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
+
+  let API_URL;
+
+  console.log(params);
+  if (params.state === null) {
+    console.log('from market page');
+    API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
+  } else {
+    console.log('from talken app');
+  }
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
   const contractAddress = data?.data?.collection_id?.contract_address;
@@ -60,13 +71,35 @@ const NFTDetail = () => {
         <Container>
           <Grid container>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <Card onClick={() => setToggler(!toggler)}>
-                <CardMedia
-                  component={'img'}
-                  image={data?.data?.metadata?.alt_url}
-                  alt={data?.data?.metadata?.name}
-                />
-              </Card>
+              {data?.data?.metadata?.content_Type === 'mp4' ? (
+                <Card
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '600px',
+                  }}
+                >
+                  <ReactPlayer
+                    config={{ file: { attributes: { controlsList: 'nodownload' } } }}
+                    url={data?.data?.metadata?.alt_url}
+                    width="100%"
+                    height="100%"
+                    controls={true}
+                    light={false}
+                    pip={true}
+                    playIcon={<button>Play</button>}
+                  />
+                </Card>
+              ) : (
+                <Card onClick={() => setToggler(!toggler)}>
+                  <CardMedia
+                    component="img"
+                    image={data?.data?.metadata?.alt_url}
+                    alt={data?.data?.metadata?.name}
+                  />
+                </Card>
+              )}
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Box

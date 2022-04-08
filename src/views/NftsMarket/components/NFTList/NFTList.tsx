@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import NFTItem from '../NFTItem';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -21,6 +21,26 @@ const NFTList = () => {
               <NFTItem item={item} />
             </Grid>
           ))}
+        {!error && data === undefined && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              width: '100%',
+              border: '1px solid #d6d6d6',
+              borderRadius: '30px',
+              height: '100vh',
+              m: '15px',
+            }}
+          >
+            <CircularProgress />
+            <Typography sx={{ mt: 2 }} variant={'h4'} color={'primary'}>
+              Loading...
+            </Typography>
+          </Box>
+        )}
       </Grid>
     </Box>
   );

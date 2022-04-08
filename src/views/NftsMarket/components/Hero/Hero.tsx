@@ -1,5 +1,6 @@
 import React from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+
 import { alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
@@ -9,10 +10,11 @@ import Grid from '@mui/material/Grid';
 import Slider from 'react-slick';
 import nft1 from '../../../../assets/images/products/landing_nft1.png';
 import nft2 from '../../../../assets/images/products/landing_nft2.png';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = (): JSX.Element => {
   const theme = useTheme();
-
+  const navigate = useNavigate();
   const settings = {
     dots: true,
     infinite: true,
@@ -26,6 +28,12 @@ const Hero = (): JSX.Element => {
   const isMd = useMediaQuery(theme.breakpoints.up('md'), {
     defaultMatches: true,
   });
+
+  function navigateToPage() {
+    navigate('/market/detail', {
+      state: { contract_address: '0x92b3f5bd683a5f0b1bcd2160043d08a73d938fbb', token_id: '0x9' },
+    });
+  }
 
   return (
     <Grid container spacing={4}>
@@ -78,24 +86,14 @@ const Hero = (): JSX.Element => {
               marginTop={{ xs: 2, sm: 0 }}
               marginLeft={{ sm: 2 }}
               fullWidth={isMd ? false : true}
+              onClick={navigateToPage}
             >
               Learn more
             </Box>
           </Box>
         </Box>
       </Grid>
-      <Grid
-        item
-        // container
-        // display={'flex'}
-        alignItems={'center'}
-        justifyContent={'center'}
-        xs={12}
-        md={6}
-        // data-aos="flip-left"
-        // data-aos-easing="ease-out-cubic"
-        // data-aos-duration="2000"
-      >
+      <Grid item alignItems={'center'} justifyContent={'center'} xs={12} md={6}>
         <Box sx={{ px: '30px' }}>
           <Slider {...settings}>
             {[nft1, nft2].map((item, index) => (
@@ -114,30 +112,9 @@ const Hero = (): JSX.Element => {
                   filter: theme.palette.mode === 'dark' ? 'brightness(0.7)' : 'none',
                 }}
               />
-              // <CardMedia
-              //   key={index}
-              //   component="img"
-              //   sx={{ width: 300 }}
-              //   image={item}
-              //   alt="Live from space album cover"
-              // />
             ))}
           </Slider>
         </Box>
-        {/*<Box*/}
-        {/*  component={LazyLoadImage}*/}
-        {/*  height={1}*/}
-        {/*  width={1}*/}
-        {/*  src={'https://assets.maccarianagency.com/screenshots/dashboard.png'}*/}
-        {/*  alt="..."*/}
-        {/*  effect="blur"*/}
-        {/*  boxShadow={3}*/}
-        {/*  borderRadius={2}*/}
-        {/*  maxWidth={600}*/}
-        {/*  sx={{*/}
-        {/*    filter: theme.palette.mode === 'dark' ? 'brightness(0.7)' : 'none',*/}
-        {/*  }}*/}
-        {/*/>*/}
       </Grid>
     </Grid>
   );
