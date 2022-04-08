@@ -14,6 +14,7 @@ import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
 import { selectTokenId, cancelBuy } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
+import ReactPlayer from 'react-player';
 
 const NFTDetail = () => {
   const { id } = useParams();
@@ -60,13 +61,35 @@ const NFTDetail = () => {
         <Container>
           <Grid container>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <Card onClick={() => setToggler(!toggler)}>
-                <CardMedia
-                  component={'img'}
-                  image={data?.data?.metadata?.alt_url}
-                  alt={data?.data?.metadata?.name}
-                />
-              </Card>
+              {data?.data?.metadata?.content_Type === 'mp4' ? (
+                <Card
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '600px',
+                  }}
+                >
+                  <ReactPlayer
+                    config={{ file: { attributes: { controlsList: 'nodownload' } } }}
+                    url={data?.data?.metadata?.alt_url}
+                    width="100%"
+                    height="100%"
+                    controls={true}
+                    light={false}
+                    pip={true}
+                    playIcon={<button>Play</button>}
+                  />
+                </Card>
+              ) : (
+                <Card onClick={() => setToggler(!toggler)}>
+                  <CardMedia
+                    component="img"
+                    image={data?.data?.metadata?.alt_url}
+                    alt={data?.data?.metadata?.name}
+                  />
+                </Card>
+              )}
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Box

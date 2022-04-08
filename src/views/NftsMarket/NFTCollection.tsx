@@ -69,7 +69,9 @@ const NFTCollection = () => {
               </Typography>
             </Box>
 
-            <Typography variant={'body1'}>{data?.description}</Typography>
+            <Typography sx={{ px: 3, textAlign: 'center' }} variant={'body1'}>
+              {data?.description}
+            </Typography>
           </Box>
         </Box>
         <Container>

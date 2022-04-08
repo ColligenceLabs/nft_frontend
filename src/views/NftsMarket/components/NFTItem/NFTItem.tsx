@@ -24,9 +24,9 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <CardMedia
-              component="img"
+              component={'img'}
               height="270"
-              image={item?.metadata?.alt_url}
+              image={item?.metadata?.thumbnail}
               alt={item?.metadata?.name}
             />
           </Box>
