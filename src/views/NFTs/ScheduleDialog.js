@@ -18,6 +18,13 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import { LoadingButton } from '@mui/lab';
+import useMarket from '../../hooks/useMarket';
+import { getSerialsData } from '../../services/serials.service';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
+import { nftDetail } from '../../services/market.service';
+import kip17Abi from '../../config/abi/kip17.json';
+import { ethers } from 'ethers';
+import Caver from 'caver-js';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -72,23 +79,76 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { library } = useActiveWeb3React();
+  const { sellNFT } = useMarket();
+  const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
+
   const handleChangeStart = (newValue) => {
     setStartDate(newValue);
   };
+
+  const getNftContract = (contract) => {
+    const isKaikas =
+      library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+    if (isKaikas){
+      const caver = new Caver(window.klaytn);
+      return new caver.klay.Contract(kip17Abi, contract);
+    }
+    else {
+      return new ethers.Contract(contract, kip17Abi, library?.getSigner());
+    }
+  }
 
   const handleChangeEnd = (newValue) => {
     setEndDate(newValue);
   };
 
+  const handleSellNFTs = async () => {
+    for (let i = 0; i < selected.length; i++) {
+      const serials = await getSerialsData(0, 10000, 'active', selected[i]);
+      const nftInfo = await nftDetail(selected[i]);
+      console.log(nftInfo);
+
+      const nftContract = getNftContract(nftInfo.data.collection_id.contract_address);
+      for (let j = 0; j < serials.data.items.length; j++) {
+        if (serials.data.items[j].owner_id === null) {
+          await sellNFT(nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
+          // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
+        }
+      }
+    }
+  }
+
   const handleSchedule = async () => {
+    if (useKAS !== 'true' && !library) {
+      // 지갑 연결 확인 필요.
+      alert('지갑을 연결하세요.');
+      handleCloseModal();
+      return;
+    }
     setLoading(true);
-    const res = await setSchedule(selected, startDate, endDate);
-    if (res.data.status === 1) {
-      setErrorMessage(null);
-      setSuccessFlag(true);
-    } else {
+
+    try {
+      if (useKAS !== 'true') {
+        // 선택된 nft들을 market contract readyToSell 호출
+        await handleSellNFTs();
+      }
+
+      const res = await setSchedule(selected, startDate, endDate, useKAS);
+
+      if (res.data.status === 1) {
+        setErrorMessage(null);
+        setSuccessFlag(true);
+      } else {
+        setSuccessFlag(false);
+        setErrorMessage(res.data.message);
+      }
+    } catch (e) {
       setSuccessFlag(false);
-      setErrorMessage(res.data.message);
+      if (e.data)
+        setErrorMessage(e.data.message);
+      else
+        setErrorMessage(e.message);
     }
     setLoading(false);
     setOpenSnackbar(true);
