@@ -49,7 +49,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
               width: '100%',
               border: '1px solid #d6d6d6',
               borderRadius: '30px',
-              minHeight: '400px',
+              height: '100vh',
               m: '15px',
             }}
           >
@@ -66,7 +66,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
               width: '100%',
               border: '1px solid #d6d6d6',
               borderRadius: '30px',
-              minHeight: '400px',
+              height: '100vh',
               m: '15px',
             }}
           >
