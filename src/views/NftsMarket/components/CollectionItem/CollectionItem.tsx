@@ -1,8 +1,9 @@
 import React from 'react';
-import { Avatar, Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Avatar, Box, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { CollectionItemType } from '../../types';
+import ImageViewer from '../../../../components/ImageViewer';
 
 const CollectionItem: React.FC<CollectionItemType> = ({
   id,
@@ -42,13 +43,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               alignItems: 'center',
             }}
           >
-            <CardMedia
-              component="img"
-              height="200"
-              image={cover_image}
-              alt="green iguana"
-              sx={{ borderBottom: '0.1px solid #d6d6d6' }}
-            />
+            <ImageViewer src={cover_image} alt={name} height={'200px'} />
             <Box
               sx={{
                 display: 'flex',
