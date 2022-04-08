@@ -9,7 +9,7 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
   const theme = useTheme();
   return (
     <>
-      <Link to={`/market/${item._id}/detail`} style={{ textDecoration: 'none' }}>
+      <Link to={`/market/detail/${item._id}`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
             p: 0,

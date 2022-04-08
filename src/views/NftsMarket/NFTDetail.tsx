@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -18,8 +18,18 @@ import ReactPlayer from 'react-player';
 
 const NFTDetail = () => {
   const { id } = useParams();
+  const params = useLocation();
   const [toggler, setToggler] = useState(false);
-  const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
+
+  let API_URL;
+
+  console.log(params);
+  if (params.state === null) {
+    console.log('from market page');
+    API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
+  } else {
+    console.log('from talken app');
+  }
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
   const contractAddress = data?.data?.collection_id?.contract_address;
