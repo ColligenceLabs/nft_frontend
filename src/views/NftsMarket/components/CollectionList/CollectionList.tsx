@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import CollectionItem from '../CollectionItem';
 import useSWR from 'swr';
 import { CollectionResponse } from '../../types';
@@ -54,6 +54,26 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
             }}
           >
             <Typography variant={'h2'}>No items to display</Typography>
+          </Box>
+        )}
+        {!error && data === undefined && (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'column',
+              width: '100%',
+              border: '1px solid #d6d6d6',
+              borderRadius: '30px',
+              minHeight: '400px',
+              m: '15px',
+            }}
+          >
+            <CircularProgress />
+            <Typography sx={{ mt: 2 }} variant={'h4'} color={'primary'}>
+              Loading...
+            </Typography>
           </Box>
         )}
       </Grid>
