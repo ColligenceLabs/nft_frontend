@@ -123,7 +123,8 @@ const useMarket = () => {
       let tx;
       let gasLimit;
       // approve
-      const parsedPrice = parseUnits(price, 'ether').toString();
+      console.log('===>', price);
+      const parsedPrice = parseUnits(price.toString(), 'ether').toString();
       try {
         console.log(marketContract);
         if (!isKaikas) {

@@ -43,11 +43,12 @@ const NFTDetail = () => {
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
     const tokenId = await selectTokenId(id);
+    console.log('=====>', tokenId, parseInt(tokenId.data, 16));
     const price = data?.data?.price;
     // tokenId 를 사용 구입 진행.
     const result = await buyNFT(
       isKaikas ? nftContractWithKaikas : nftContract,
-      parseInt(tokenId, 16),
+      parseInt(tokenId.data, 16),
       price,
     );
     // 실패인 경우 원복.
