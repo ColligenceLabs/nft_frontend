@@ -1,12 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Card, CardContent, CardMedia, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { NFTType } from '../../types';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
+// @ts-ignore
+import FeatherIcon from 'feather-icons-react';
+import ImageViewer from '../../../../components/ImageViewer';
 
 const NFTItem: React.FC<NFTType> = ({ item }) => {
   const theme = useTheme();
+
   return (
     <>
       <Link to={`/market/detail/${item._id}`} style={{ textDecoration: 'none' }}>
@@ -20,21 +24,57 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
             '&:hover': {
               transform: `translateY(-${theme.spacing(1 / 2)})`,
             },
+            zIndex: 80,
           }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <CardMedia
-              component={'img'}
-              height="270"
-              image={item?.metadata?.thumbnail}
+            {item?.metadata?.content_Type === 'mp4' && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  width: '100%',
+                  zIndex: 1000,
+                  pt: 1.5,
+                  pr: 2,
+                }}
+              >
+                <Box
+                  sx={{
+                    border: '1px solid white',
+                    borderRadius: '50%',
+                    backgroundColor: 'gray',
+                    opacity: 0.6,
+                    width: '40px',
+                    height: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  boxShadow={3}
+                >
+                  <FeatherIcon icon="video" height="24" color={'white'} />
+                </Box>
+              </Box>
+            )}
+
+            <ImageViewer
+              src={item?.metadata?.thumbnail}
               alt={item?.metadata?.name}
+              style={{
+                marginTop: item?.metadata?.content_Type === 'mp4' ? '-52px' : '0px',
+              }}
+              height={'270px'}
             />
           </Box>
-          <CardContent>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+          <CardContent sx={{ minHeight: '109px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'top' }}>
               <Box>
                 <Typography variant="h6" color="text.secondary">
-                  {item?.collection_id?.name}
+                  {item?.collection_id?.name.length > 30
+                    ? `${item?.collection_id?.name.slice(0, 27)}...`
+                    : item?.collection_id?.name}
                 </Typography>
                 <Typography variant="h4">{item?.metadata?.name}</Typography>
               </Box>
@@ -50,7 +90,7 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
                   }}
                 >
                   <img src={klayLogo} alt="klay" height="16px" />
-                  <Typography variant="h4">{item?.price}</Typography>
+                  <Typography variant="h6">{item?.price}</Typography>
                 </Box>
               </Box>
             </Box>

@@ -6,7 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
-import { Box, Button, Card, CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Typography } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
@@ -15,6 +15,7 @@ import { nftDetail } from '../../services/market.service';
 import { selectTokenId, cancelBuy } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
+import ImageViewer from '../../components/ImageViewer';
 
 const NFTDetail = () => {
   const { id } = useParams();
@@ -94,11 +95,15 @@ const NFTDetail = () => {
                 </Card>
               ) : (
                 <Card onClick={() => setToggler(!toggler)}>
-                  <CardMedia
-                    component="img"
-                    image={data?.data?.metadata?.alt_url}
+                  <ImageViewer
+                    src={data?.data?.metadata?.alt_url}
                     alt={data?.data?.metadata?.name}
                   />
+                  {/*<CardMedia*/}
+                  {/*  component="img"*/}
+                  {/*  image={data?.data?.metadata?.alt_url}*/}
+                  {/*  alt={data?.data?.metadata?.name}*/}
+                  {/*/>*/}
                 </Card>
               )}
             </Grid>
