@@ -16,12 +16,13 @@ import { selectTokenId, cancelBuy } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
 import ImageViewer from '../../components/ImageViewer';
+import { LoadingButton } from '@mui/lab';
 
 const NFTDetail = () => {
   const { id } = useParams();
   const params = useLocation();
   const [toggler, setToggler] = useState(false);
-
+  const [buyFlag, setBuyFlag] = useState(false);
   let API_URL;
 
   console.log(params);
@@ -40,6 +41,7 @@ const NFTDetail = () => {
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
   const buy = async () => {
     // 지갑연결 여부 확인 필요.
+    setBuyFlag(true);
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
@@ -54,6 +56,7 @@ const NFTDetail = () => {
     );
     // 실패인 경우 원복.
     if (result === FAILURE) await cancelBuy(id, tokenId);
+    setBuyFlag(false);
   };
 
   // const sellTest = async () => {
@@ -193,9 +196,12 @@ const NFTDetail = () => {
                     {/*<Button variant={'contained'} onClick={sellTest}>*/}
                     {/*  sell*/}
                     {/*</Button>*/}
-                    <Button variant={'contained'} onClick={buy}>
-                      buy
-                    </Button>
+                    {/*<Button variant={'contained'} onClick={buy}>*/}
+                    {/*  buy*/}
+                    {/*</Button>*/}
+                    <LoadingButton onClick={buy} loading={buyFlag} variant="contained">
+                      Buy
+                    </LoadingButton>
                     {/*<Button variant={'contained'} onClick={listTest}>*/}
                     {/*  market*/}
                     {/*</Button>*/}
