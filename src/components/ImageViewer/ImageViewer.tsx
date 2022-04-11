@@ -43,27 +43,6 @@ function ImageViewer({ src, alt, style, height }: IProps) {
       style={style}
       height={height}
     />
-    // <Box sx={{ height: height }}>
-    //   {isLoad ? (
-    //     <CardMedia
-    //       ref={imgRef}
-    //       component={'img'}
-    //       src={src}
-    //       alt={alt}
-    //       style={style}
-    //       // height={height}
-    //     />
-    //   ) : (
-    //     <CardMedia
-    //       ref={imgRef}
-    //       component={'img'}
-    //       src={PLACE_HOLDER}
-    //       alt={alt}
-    //       style={style}
-    //       // height={height}
-    //     />
-    //   )}
-    // </Box>
   );
 }
 

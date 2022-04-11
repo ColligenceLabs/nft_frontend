@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { Box, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import CollectionItem from '../CollectionItem';
-import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import { CollectionResponse } from '../../types';
-import { getMarketCollectionData } from '../../../../services/market.service';
 
 interface SelectedCategoryProp {
   selectedCategory: {
@@ -13,11 +12,29 @@ interface SelectedCategoryProp {
   };
 }
 
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const PAGE_SIZE = 6;
+
 const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
-  const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs`;
-  const { data, error, mutate } = useSWR<CollectionResponse>(API_URL, () =>
-    getMarketCollectionData(selectedCategory.value),
+  const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<CollectionResponse>(
+    (index) =>
+      `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs?page=${
+        index + 1
+      }&perPage=${PAGE_SIZE}&category=${
+        selectedCategory.value === 'all' ? '' : selectedCategory.value
+      }`,
+    fetcher,
   );
+
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore =
+    isLoadingInitialData || (size > 0 && data && typeof data[size - 1] === 'undefined');
+  // @ts-ignore
+  const isEmpty = data?.[0]?.data?.items.length === 0;
+
+  // @ts-ignore
+  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+  const isRefreshing = isValidating && data && data.length === size;
 
   useEffect(() => {
     mutate();
@@ -28,19 +45,22 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
       <Grid container>
         {!error &&
           data &&
-          data?.data?.items.map((item) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
-              <CollectionItem
-                id={item._id}
-                name={item.name}
-                description={item.description}
-                cover_image={item.image_link}
-                creator_image={item?.creator_id?.image}
-                creator_fullName={item?.creator_id?.full_name}
-              />
-            </Grid>
-          ))}
-        {!error && data && data?.data?.items.length.toString() === '0' && (
+          data.map((result: CollectionResponse) => {
+            return result.data?.items.map((item) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={item._id}>
+                <CollectionItem
+                  id={item._id}
+                  name={item.name}
+                  description={item.description}
+                  cover_image={item.image_link}
+                  creator_image={item?.creator_id?.image}
+                  creator_fullName={item?.creator_id?.full_name}
+                />
+              </Grid>
+            ));
+          })}
+
+        {isReachingEnd && (
           <Box
             sx={{
               display: 'flex',
@@ -76,6 +96,16 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
             </Typography>
           </Box>
         )}
+        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
+          <Button
+            fullWidth
+            variant={'contained'}
+            disabled={isLoadingMore || isReachingEnd}
+            onClick={() => setSize(size + 1)}
+          >
+            {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
+          </Button>
+        </Grid>
       </Grid>
     </Box>
   );

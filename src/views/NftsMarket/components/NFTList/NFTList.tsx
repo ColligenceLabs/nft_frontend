@@ -1,26 +1,47 @@
 import React from 'react';
-import { Box, CircularProgress, Grid, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import NFTItem from '../NFTItem';
 import { useParams } from 'react-router-dom';
-import useSWR from 'swr';
+
+import useSWRInfinite from 'swr/infinite';
 import { NFTResponse } from '../../types';
-import { getMarketNFTData } from '../../../../services/market.service';
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+const PAGE_SIZE = 2;
 
 const NFTList = () => {
   const { id } = useParams();
-  const { data, error } = useSWR<NFTResponse>('/admin-api/nft/indexs', () =>
-    getMarketNFTData(0, undefined, undefined, undefined, id, undefined),
+  const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<NFTResponse>(
+    (index) =>
+      `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?type=0&page=${
+        index + 1
+      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}`,
+    fetcher,
   );
+
+  const isLoadingInitialData = !data && !error;
+  const isLoadingMore =
+    isLoadingInitialData || (size > 0 && data && typeof data[size - 1] === 'undefined');
+  // @ts-ignore
+  const isEmpty = data?.[0]?.data?.items.length === 0;
+
+  // @ts-ignore
+  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+  const isRefreshing = isValidating && data && data.length === size;
+
   return (
     <Box>
       <Grid container>
         {!error &&
           data &&
-          data?.data?.items.map((item, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <NFTItem item={item} />
-            </Grid>
-          ))}
+          data.map((result: NFTResponse) => {
+            return result.data?.items.map((item, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                <NFTItem item={item} />
+              </Grid>
+            ));
+          })}
+
         {!error && data === undefined && (
           <Box
             sx={{
@@ -41,6 +62,16 @@ const NFTList = () => {
             </Typography>
           </Box>
         )}
+        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
+          <Button
+            fullWidth
+            variant={'contained'}
+            disabled={isLoadingMore || isReachingEnd}
+            onClick={() => setSize(size + 1)}
+          >
+            {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
+          </Button>
+        </Grid>
       </Grid>
     </Box>
   );
