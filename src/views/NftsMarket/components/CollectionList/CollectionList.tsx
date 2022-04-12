@@ -39,6 +39,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
     mutate();
   }, [selectedCategory]);
 
+  console.log(size);
   return (
     <Box>
       <Grid container>
@@ -75,7 +76,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
             <Typography variant={'h2'}>No items to display</Typography>
           </Box>
         )}
-        {!error && data === undefined && (
+        {!error && data?.[size - 1] === undefined && (
           <Box
             sx={{
               display: 'flex',

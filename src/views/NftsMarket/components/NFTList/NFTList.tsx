@@ -43,7 +43,7 @@ const NFTList = () => {
             ));
           })}
 
-        {!error && data === undefined && (
+        {!error && data?.[size - 1] === undefined && (
           <Box
             sx={{
               display: 'flex',
