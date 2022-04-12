@@ -21,7 +21,6 @@ const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id, name }) => {
     mutate();
   }, [name, mutate]);
 
-  console.log(data);
   return (
     <Box>
       <Grid container>
