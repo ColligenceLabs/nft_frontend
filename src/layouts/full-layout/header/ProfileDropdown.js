@@ -96,7 +96,7 @@ const ProfileDropdown = ({ useMarket, fullName, email, level, image }) => {
                 borderRadius: '10px',
               }}
             >
-              <FeatherIcon icon="dollar-sign" width="18" height="18" />
+              <FeatherIcon icon="dollar-sign" width="18" height="18" color={'white'} />
             </Button>
 
             <Box
