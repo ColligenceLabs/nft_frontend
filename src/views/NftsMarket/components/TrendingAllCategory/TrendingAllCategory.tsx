@@ -1,19 +1,11 @@
-import { Box, CardMedia, Typography, useTheme } from '@mui/material';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
 import React from 'react';
+import { Box, CardMedia, Typography, useTheme } from '@mui/material';
 import Slider from 'react-slick';
-import img1 from '../../../../assets/images/products/s1.jpg';
-import img2 from '../../../../assets/images/products/s2.jpg';
-import img3 from '../../../../assets/images/products/s3.jpg';
-import img4 from '../../../../assets/images/products/s4.jpg';
-import img5 from '../../../../assets/images/products/s5.jpg';
-import img6 from '../../../../assets/images/products/s6.jpg';
-import img7 from '../../../../assets/images/products/s7.jpg';
-import img8 from '../../../../assets/images/products/s8.jpg';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled } from '@mui/material/styles';
+import useSWR from 'swr';
+import { CollectionResponse } from '../../types';
+import { Link } from 'react-router-dom';
 
 const StyledPrevArrow = styled(Box)`
   z-index: 1000;
@@ -47,28 +39,17 @@ function NextArrow(props: any) {
   );
 }
 
-function Arrow(props: any) {
-  const theme = useTheme();
-  const { className, style, onClick, direction, color } = props;
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        color: theme.palette.primary.main,
-      }}
-      onClick={onClick}
-    >
-      {direction === 'next' ? <ArrowForwardIosIcon /> : <ArrowBackIosIcon />}
-    </div>
-  );
-}
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const TrendingAllCategory = () => {
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
+  const { data, error } = useSWR<CollectionResponse>(
+    `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexsR?count=5`,
+    fetcher,
+  );
 
   const settings = {
     dots: true,
@@ -76,35 +57,53 @@ const TrendingAllCategory = () => {
     speed: 500,
     slidesToShow: mdDown ? 1 : 4,
     slidesToScroll: 1,
-
     nextArrow: <NextArrow />,
-    // prevArrow: <Arrow direction="prev" />,
     prevArrow: <PrevArrow />,
   };
 
   return (
     <Box sx={{ mt: '30px' }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', mb: '50px' }}>
-        <Typography fontSize={'30px'} fontWeight={'700'}>
-          Trending in
-        </Typography>
-        <Typography fontSize={'30px'} fontWeight={'700'} color={'primary'}>
-          all cateogry
-        </Typography>
-      </Box>
-
-      <Slider {...settings}>
-        {[img1, img2, img3, img4, img5, img6, img7, img8].map((item, index) => (
-          <Box key={index}>
-            <CardMedia
-              component="img"
-              sx={{ px: '10px', height: '450px' }}
-              image={item}
-              alt="Live from space album cover"
-            />
+      {data && !error && (
+        <>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', mb: '50px' }}>
+            <Typography fontSize={'30px'} fontWeight={'700'}>
+              Trending in
+            </Typography>
+            <Typography fontSize={'30px'} fontWeight={'700'} color={'primary'}>
+              all collections
+            </Typography>
           </Box>
-        ))}
-      </Slider>
+
+          <Slider {...settings}>
+            {data?.data?.items.map((item, index) => (
+              <Box
+                key={index}
+                component={Link}
+                to={`/market/collection/${item._id}`}
+                sx={{ position: 'relative' }}
+              >
+                <CardMedia
+                  component="img"
+                  sx={{ px: '10px', height: '450px' }}
+                  image={item.image_link}
+                  alt="Live from space album cover"
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    right: '20px',
+                    bottom: '10px',
+                    p: 1,
+                    backgroundColor: 'rgba(240, 250, 245, 0.5)',
+                  }}
+                >
+                  <Typography color={'text.primary'}>{item.name}</Typography>
+                </Box>
+              </Box>
+            ))}
+          </Slider>
+        </>
+      )}
     </Box>
   );
 };
