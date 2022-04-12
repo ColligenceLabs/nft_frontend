@@ -7,7 +7,7 @@ import useSWRInfinite from 'swr/infinite';
 import { NFTResponse } from '../../types';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 4;
 
 const NFTList = () => {
   const { id } = useParams();
