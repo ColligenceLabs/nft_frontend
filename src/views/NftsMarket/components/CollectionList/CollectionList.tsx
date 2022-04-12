@@ -97,14 +97,11 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
         )}
         {!isEmpty && (
           <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
-            <Button
-              fullWidth
-              variant={'contained'}
-              disabled={isLoadingMore || isReachingEnd}
-              onClick={() => setSize(size + 1)}
-            >
-              {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more Collections' : 'Load more'}
-            </Button>
+            {!(isLoadingMore || isReachingEnd) && (
+              <Button fullWidth variant={'contained'} onClick={() => setSize(size + 1)}>
+                {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
+              </Button>
+            )}
           </Grid>
         )}
       </Grid>
