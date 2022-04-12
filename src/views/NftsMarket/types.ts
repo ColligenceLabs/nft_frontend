@@ -34,7 +34,13 @@ export interface CollectionDetailResponse {
 export interface CollectionResponse {
   status: number;
   data: {
-    header: object;
+    headers: {
+      x_next_page: number;
+      x_page: number;
+      x_pages_count: number;
+      x_per_page: number;
+      x_total_count: number;
+    };
     items: [
       {
         _id: string;
@@ -75,7 +81,13 @@ export interface CollectionItemType {
 export interface NFTResponse {
   status: number;
   data: {
-    header: object;
+    headers: {
+      x_next_page: number;
+      x_page: number;
+      x_pages_count: number;
+      x_per_page: number;
+      x_total_count: number;
+    };
     items: [
       {
         metadata: {

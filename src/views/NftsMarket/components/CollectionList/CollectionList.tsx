@@ -13,7 +13,7 @@ interface SelectedCategoryProp {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 8;
 
 const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
   const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<CollectionResponse>(
@@ -31,9 +31,8 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
     isLoadingInitialData || (size > 0 && data && typeof data[size - 1] === 'undefined');
   // @ts-ignore
   const isEmpty = data?.[0]?.data?.items.length === 0;
-
-  // @ts-ignore
-  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.data?.headers?.x_pages_count <= size);
   const isRefreshing = isValidating && data && data.length === size;
 
   useEffect(() => {
@@ -60,7 +59,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
             ));
           })}
 
-        {isReachingEnd && (
+        {isEmpty && (
           <Box
             sx={{
               display: 'flex',
@@ -69,7 +68,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
               width: '100%',
               border: '1px solid #d6d6d6',
               borderRadius: '30px',
-              height: '100vh',
+              height: '300px',
               m: '15px',
             }}
           >
@@ -86,7 +85,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
               width: '100%',
               border: '1px solid #d6d6d6',
               borderRadius: '30px',
-              height: '100vh',
+              height: '300px',
               m: '15px',
             }}
           >
@@ -96,16 +95,18 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
             </Typography>
           </Box>
         )}
-        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
-          <Button
-            fullWidth
-            variant={'contained'}
-            disabled={isLoadingMore || isReachingEnd}
-            onClick={() => setSize(size + 1)}
-          >
-            {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
-          </Button>
-        </Grid>
+        {!isEmpty && (
+          <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
+            <Button
+              fullWidth
+              variant={'contained'}
+              disabled={isLoadingMore || isReachingEnd}
+              onClick={() => setSize(size + 1)}
+            >
+              {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more Collections' : 'Load more'}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
