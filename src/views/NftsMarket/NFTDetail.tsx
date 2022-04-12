@@ -6,7 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
-import { Box, Button, Card, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Typography, useTheme } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
@@ -17,12 +17,23 @@ import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
 import ImageViewer from '../../components/ImageViewer';
 import { LoadingButton } from '@mui/lab';
+import MoreNFTs from './components/MoreNFTs';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import AppsIcon from '@mui/icons-material/Apps';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const NFTDetail = () => {
+  const theme = useTheme();
+
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
   const { id } = useParams();
   const params = useLocation();
   const [toggler, setToggler] = useState(false);
   const [buyFlag, setBuyFlag] = useState(false);
+  const [showMoreItem, setShowMoreItem] = useState(true);
+
   let API_URL;
 
   console.log(params);
@@ -97,7 +108,7 @@ const NFTDetail = () => {
                   />
                 </Card>
               ) : (
-                <Card onClick={() => setToggler(!toggler)}>
+                <Card sx={{ p: 0, m: 0 }} onClick={() => setToggler(!toggler)}>
                   <ImageViewer
                     src={data?.data?.metadata?.alt_url}
                     alt={data?.data?.metadata?.name}
@@ -111,29 +122,27 @@ const NFTDetail = () => {
               )}
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <Box
-                sx={{
-                  p: 3,
-                }}
-              >
-                <Typography variant={'h4'} color={'primary'}>
-                  {data?.data?.collection_id?.name}
-                </Typography>
-                <Typography variant={'h1'}>{data?.data?.metadata?.name}</Typography>
-                <Box display={'flex'} sx={{ mt: 2 }}>
-                  <Typography variant={'h4'}>Author by</Typography>
-                  <Typography variant={'h4'} color={'primary'} sx={{ ml: 1, fontWeight: 800 }}>
-                    {data?.data?.creator_id?.full_name}
+              <Box sx={{ p: smDown ? 0 : 2 }}>
+                <Box sx={{ p: 1 }}>
+                  <Typography variant={'h4'} color={'primary'}>
+                    {data?.data?.collection_id?.name}
                   </Typography>
+                  <Typography variant={'h1'}>{data?.data?.metadata?.name}</Typography>
+                  <Box display={'flex'} sx={{ mt: 2 }}>
+                    <Typography variant={'h4'}>Author by</Typography>
+                    <Typography variant={'h4'} color={'primary'} sx={{ ml: 1, fontWeight: 800 }}>
+                      {data?.data?.creator_id?.full_name}
+                    </Typography>
+                  </Box>
                 </Box>
                 <Box
                   sx={{
                     mt: 2,
-                    border: '0.5px solid gray',
+                    border: '0.5px solid #d6d6d6',
                     borderRadius: 2,
                   }}
                 >
-                  <Box sx={{ borderBottom: 0.5, borderColor: 'gray', p: 2 }}>
+                  <Box sx={{ borderBottom: 0.5, borderColor: '#d6d6d6', p: 2 }}>
                     <Typography variant={'h4'}>Information</Typography>
                   </Box>
                   <Box sx={{ p: 2, maxHeight: 200, overflow: 'hidden', overflowY: 'scroll' }}>
@@ -162,11 +171,11 @@ const NFTDetail = () => {
                 <Box
                   sx={{
                     mt: 2,
-                    border: '0.5px solid gray',
+                    border: '0.5px solid #d6d6d6',
                     borderRadius: 2,
                   }}
                 >
-                  <Box sx={{ borderBottom: 0.5, borderColor: 'gray', p: 2 }}>
+                  <Box sx={{ borderBottom: 0.5, borderColor: '#d6d6d6', p: 2 }}>
                     <Box
                       display={'flex'}
                       justifyContent={'flex-start'}
@@ -206,6 +215,74 @@ const NFTDetail = () => {
                     {/*  market*/}
                     {/*</Button>*/}
                   </Box>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Box
+                sx={{
+                  // px: 3,
+                  py: smDown ? 0 : 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    mt: 2,
+                    border: '0.5px solid #d6d6d6',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      borderBottom: showMoreItem ? 0.5 : 0,
+                      borderColor: '#d6d6d6',
+                      p: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        gap: '0.2rem',
+                      }}
+                    >
+                      <AppsIcon />
+                      <Typography variant={'h4'}>More From This Collection</Typography>
+                    </Box>
+                    <KeyboardArrowUpIcon
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => setShowMoreItem((cur) => !cur)}
+                    />
+                  </Box>
+                  {showMoreItem && (
+                    <>
+                      <Box
+                        sx={{
+                          p: smDown ? 0 : 2,
+                          overflow: 'hidden',
+                          overflowY: 'scroll',
+                          backgroundColor: '#f0faf5',
+                        }}
+                      >
+                        <MoreNFTs collection_id={data?.data?.collection_id._id} />
+                      </Box>
+                      <Box
+                        sx={{ borderTop: 0.5, borderColor: '#d6d6d6', p: 2, textAlign: 'center' }}
+                      >
+                        <Button
+                          component={Link}
+                          to={`/market/collection/${data?.data?.collection_id?._id}`}
+                          variant={'outlined'}
+                        >
+                          View NFTs in this Collection
+                        </Button>
+                      </Box>
+                    </>
+                  )}
                 </Box>
               </Box>
             </Grid>
