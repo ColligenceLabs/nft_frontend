@@ -26,7 +26,8 @@ const NFTList = () => {
   const isEmpty = data?.[0]?.data?.items.length === 0;
 
   // @ts-ignore
-  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.data?.headers?.x_pages_count <= size);
   const isRefreshing = isValidating && data && data.length === size;
 
   return (
@@ -62,16 +63,18 @@ const NFTList = () => {
             </Typography>
           </Box>
         )}
-        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
-          <Button
-            fullWidth
-            variant={'contained'}
-            disabled={isLoadingMore || isReachingEnd}
-            onClick={() => setSize(size + 1)}
-          >
-            {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
-          </Button>
-        </Grid>
+        {!isEmpty && (
+          <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
+            <Button
+              fullWidth
+              variant={'contained'}
+              disabled={isLoadingMore || isReachingEnd}
+              onClick={() => setSize(size + 1)}
+            >
+              {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
