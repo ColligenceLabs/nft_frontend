@@ -6,7 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
-import { Box, Button, Card, Grid, Typography, useTheme } from '@mui/material';
+import { Alert, Box, Button, Card, Grid, Snackbar, Typography, useTheme } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
@@ -21,10 +21,13 @@ import MoreNFTs from './components/MoreNFTs';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import AppsIcon from '@mui/icons-material/Apps';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+// @ts-ignore
+import FeatherIcon from 'feather-icons-react';
+import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 
 const NFTDetail = () => {
   const theme = useTheme();
-
+  const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
   });
@@ -113,11 +116,6 @@ const NFTDetail = () => {
                     src={data?.data?.metadata?.alt_url}
                     alt={data?.data?.metadata?.name}
                   />
-                  {/*<CardMedia*/}
-                  {/*  component="img"*/}
-                  {/*  image={data?.data?.metadata?.alt_url}*/}
-                  {/*  alt={data?.data?.metadata?.name}*/}
-                  {/*/>*/}
                 </Card>
               )}
             </Grid>
@@ -142,18 +140,33 @@ const NFTDetail = () => {
                     borderRadius: 2,
                   }}
                 >
-                  <Box sx={{ borderBottom: 0.5, borderColor: '#d6d6d6', p: 2 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      borderBottom: 0.5,
+                      borderColor: '#d6d6d6',
+                      p: 2,
+                    }}
+                  >
+                    <FeatherIcon icon="info" width="20" />
                     <Typography variant={'h4'}>Information</Typography>
                   </Box>
                   <Box sx={{ p: 2, maxHeight: 200, overflow: 'hidden', overflowY: 'scroll' }}>
                     <Typography variant={'subtitle2'} color={'primary'}>
                       Contract Address
                     </Typography>
-                    <Typography variant={'body2'} sx={{ paddingX: 1 }}>
-                      <Link to={''} style={{ textDecoration: 'none' }}>
-                        {data?.data?.collection_id?.contract_address}
-                      </Link>
+
+                    <Typography
+                      variant={'body2'}
+                      sx={{ cursor: 'pointer', paddingX: 1 }}
+                      onClick={() => copyToClipBoard(data?.data?.collection_id?.contract_address)}
+                    >
+                      {data?.data?.collection_id?.contract_address}
                     </Typography>
+
                     <Typography variant={'subtitle2'} color={'primary'} sx={{ mt: 1 }}>
                       Description
                     </Typography>
@@ -177,10 +190,12 @@ const NFTDetail = () => {
                 >
                   <Box sx={{ borderBottom: 0.5, borderColor: '#d6d6d6', p: 2 }}>
                     <Box
-                      display={'flex'}
-                      justifyContent={'flex-start'}
-                      alignItems={'center'}
-                      gap={'0.25rem'}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                      }}
                     >
                       <AccessTimeIcon fontSize={'small'} />
                       <Typography variant={'h4'}>
@@ -202,18 +217,9 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
                     </Box>
 
-                    {/*<Button variant={'contained'} onClick={sellTest}>*/}
-                    {/*  sell*/}
-                    {/*</Button>*/}
-                    {/*<Button variant={'contained'} onClick={buy}>*/}
-                    {/*  buy*/}
-                    {/*</Button>*/}
                     <LoadingButton onClick={buy} loading={buyFlag} variant="contained">
                       Buy
                     </LoadingButton>
-                    {/*<Button variant={'contained'} onClick={listTest}>*/}
-                    {/*  market*/}
-                    {/*</Button>*/}
                   </Box>
                 </Box>
               </Box>
@@ -221,7 +227,6 @@ const NFTDetail = () => {
             <Grid item xs={12} sm={12} md={12} lg={12}>
               <Box
                 sx={{
-                  // px: 3,
                   py: smDown ? 0 : 3,
                 }}
               >
@@ -288,6 +293,22 @@ const NFTDetail = () => {
             </Grid>
           </Grid>
           <FsLightbox toggler={toggler} sources={[data?.data?.metadata?.alt_url]} type="image" />
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={copyDone}
+            autoHideDuration={2000}
+            onClose={() => {
+              setCopyDone(false);
+            }}
+          >
+            <Alert
+              variant="filled"
+              severity={copyResult ? 'success' : 'error'}
+              sx={{ width: '100%' }}
+            >
+              {copyMessage}
+            </Alert>
+          </Snackbar>
         </Container>
       )}
     </MarketLayout>
