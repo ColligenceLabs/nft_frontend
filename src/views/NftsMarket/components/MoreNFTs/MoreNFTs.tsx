@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import useSWR from 'swr';
 import { NFTResponse } from '../../types';
@@ -6,15 +6,21 @@ import NFTItem from '../NFTItem';
 
 interface MoreNFTsProps {
   collection_id: string;
+  name: string;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id }) => {
-  const { data, error } = useSWR<NFTResponse>(
-    `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?page=1&perPage=4&onchain=true&collection_id=${collection_id}&type=0`,
+const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id, name }) => {
+  const { data, error, mutate } = useSWR<NFTResponse>(
+    `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsR?onchain=true&collection_id=${collection_id}&type=0&status=active`,
     fetcher,
   );
+
+  useEffect(() => {
+    mutate();
+  }, [name, mutate]);
+
   console.log(data);
   return (
     <Box>

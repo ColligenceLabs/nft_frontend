@@ -122,9 +122,16 @@ const NFTDetail = () => {
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Box sx={{ p: smDown ? 0 : 2 }}>
                 <Box sx={{ p: 1 }}>
-                  <Typography variant={'h4'} color={'primary'}>
+                  <Typography
+                    component={Link}
+                    to={`/market/collection/${data?.data?.collection_id?._id}`}
+                    variant={'h4'}
+                    color={'primary'}
+                    sx={{ textDecoration: 'none' }}
+                  >
                     {data?.data?.collection_id?.name}
                   </Typography>
+
                   <Typography variant={'h1'}>{data?.data?.metadata?.name}</Typography>
                   <Box display={'flex'} sx={{ mt: 2 }}>
                     <Typography variant={'h4'}>Author by</Typography>
@@ -273,7 +280,10 @@ const NFTDetail = () => {
                           backgroundColor: '#f0faf5',
                         }}
                       >
-                        <MoreNFTs collection_id={data?.data?.collection_id._id} />
+                        <MoreNFTs
+                          collection_id={data?.data?.collection_id._id}
+                          name={data?.data?.metadata?.name}
+                        />
                       </Box>
                       <Box
                         sx={{ borderTop: 0.5, borderColor: '#d6d6d6', p: 2, textAlign: 'center' }}
