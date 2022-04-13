@@ -6,7 +6,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
-import { Box, Button, Card, Grid, Typography } from '@mui/material';
+import { Alert, Box, Button, Card, Grid, Snackbar, Typography, useTheme } from '@mui/material';
 import useMarket from '../../hooks/useMarket';
 import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContract';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
@@ -16,11 +16,26 @@ import { selectTokenId, cancelBuy } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
 import ImageViewer from '../../components/ImageViewer';
+import { LoadingButton } from '@mui/lab';
+import MoreNFTs from './components/MoreNFTs';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import AppsIcon from '@mui/icons-material/Apps';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+// @ts-ignore
+import FeatherIcon from 'feather-icons-react';
+import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 
 const NFTDetail = () => {
+  const theme = useTheme();
+  const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
   const { id } = useParams();
   const params = useLocation();
   const [toggler, setToggler] = useState(false);
+  const [buyFlag, setBuyFlag] = useState(false);
+  const [showMoreItem, setShowMoreItem] = useState(true);
 
   let API_URL;
 
@@ -40,6 +55,7 @@ const NFTDetail = () => {
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
   const buy = async () => {
     // 지갑연결 여부 확인 필요.
+    setBuyFlag(true);
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
@@ -54,6 +70,7 @@ const NFTDetail = () => {
     );
     // 실패인 경우 원복.
     if (result === FAILURE) await cancelBuy(id, tokenId);
+    setBuyFlag(false);
   };
 
   // const sellTest = async () => {
@@ -94,54 +111,69 @@ const NFTDetail = () => {
                   />
                 </Card>
               ) : (
-                <Card onClick={() => setToggler(!toggler)}>
+                <Card sx={{ p: 0, m: 0 }} onClick={() => setToggler(!toggler)}>
                   <ImageViewer
                     src={data?.data?.metadata?.alt_url}
                     alt={data?.data?.metadata?.name}
                   />
-                  {/*<CardMedia*/}
-                  {/*  component="img"*/}
-                  {/*  image={data?.data?.metadata?.alt_url}*/}
-                  {/*  alt={data?.data?.metadata?.name}*/}
-                  {/*/>*/}
                 </Card>
               )}
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>
-              <Box
-                sx={{
-                  p: 3,
-                }}
-              >
-                <Typography variant={'h4'} color={'primary'}>
-                  {data?.data?.collection_id?.name}
-                </Typography>
-                <Typography variant={'h1'}>{data?.data?.metadata?.name}</Typography>
-                <Box display={'flex'} sx={{ mt: 2 }}>
-                  <Typography variant={'h4'}>Author by</Typography>
-                  <Typography variant={'h4'} color={'primary'} sx={{ ml: 1, fontWeight: 800 }}>
-                    {data?.data?.creator_id?.full_name}
+              <Box sx={{ p: smDown ? 0 : 2 }}>
+                <Box sx={{ p: 1 }}>
+                  <Typography
+                    component={Link}
+                    to={`/market/collection/${data?.data?.collection_id?._id}`}
+                    variant={'h4'}
+                    color={'primary'}
+                    sx={{ textDecoration: 'none' }}
+                  >
+                    {data?.data?.collection_id?.name}
                   </Typography>
+
+                  <Typography variant={'h1'}>{data?.data?.metadata?.name}</Typography>
+                  <Box display={'flex'} sx={{ mt: 2 }}>
+                    <Typography variant={'h4'}>Author by</Typography>
+                    <Typography variant={'h4'} color={'primary'} sx={{ ml: 1, fontWeight: 800 }}>
+                      {data?.data?.creator_id?.full_name}
+                    </Typography>
+                  </Box>
                 </Box>
                 <Box
                   sx={{
                     mt: 2,
-                    border: '0.5px solid gray',
+                    border: '0.5px solid #d6d6d6',
                     borderRadius: 2,
                   }}
                 >
-                  <Box sx={{ borderBottom: 0.5, borderColor: 'gray', p: 2 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      borderBottom: 0.5,
+                      borderColor: '#d6d6d6',
+                      p: 2,
+                    }}
+                  >
+                    <FeatherIcon icon="info" width="20" />
                     <Typography variant={'h4'}>Information</Typography>
                   </Box>
                   <Box sx={{ p: 2, maxHeight: 200, overflow: 'hidden', overflowY: 'scroll' }}>
                     <Typography variant={'subtitle2'} color={'primary'}>
                       Contract Address
                     </Typography>
-                    <Typography variant={'body2'} sx={{ paddingX: 1 }}>
-                      <Link to={''} style={{ textDecoration: 'none' }}>
-                        {data?.data?.collection_id?.contract_address}
-                      </Link>
+
+                    <Typography
+                      variant={'body2'}
+                      sx={{ cursor: 'pointer', paddingX: 1 }}
+                      onClick={() => copyToClipBoard(data?.data?.collection_id?.contract_address)}
+                    >
+                      {data?.data?.collection_id?.contract_address}
                     </Typography>
+
                     <Typography variant={'subtitle2'} color={'primary'} sx={{ mt: 1 }}>
                       Description
                     </Typography>
@@ -159,16 +191,18 @@ const NFTDetail = () => {
                 <Box
                   sx={{
                     mt: 2,
-                    border: '0.5px solid gray',
+                    border: '0.5px solid #d6d6d6',
                     borderRadius: 2,
                   }}
                 >
-                  <Box sx={{ borderBottom: 0.5, borderColor: 'gray', p: 2 }}>
+                  <Box sx={{ borderBottom: 0.5, borderColor: '#d6d6d6', p: 2 }}>
                     <Box
-                      display={'flex'}
-                      justifyContent={'flex-start'}
-                      alignItems={'center'}
-                      gap={'0.25rem'}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                      }}
                     >
                       <AccessTimeIcon fontSize={'small'} />
                       <Typography variant={'h4'}>
@@ -190,21 +224,101 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
                     </Box>
 
-                    {/*<Button variant={'contained'} onClick={sellTest}>*/}
-                    {/*  sell*/}
-                    {/*</Button>*/}
-                    <Button variant={'contained'} onClick={buy}>
-                      buy
-                    </Button>
-                    {/*<Button variant={'contained'} onClick={listTest}>*/}
-                    {/*  market*/}
-                    {/*</Button>*/}
+                    <LoadingButton onClick={buy} loading={buyFlag} variant="contained">
+                      Buy
+                    </LoadingButton>
                   </Box>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Box
+                sx={{
+                  py: smDown ? 0 : 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    mt: 2,
+                    border: '0.5px solid #d6d6d6',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      borderBottom: showMoreItem ? 0.5 : 0,
+                      borderColor: '#d6d6d6',
+                      p: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        gap: '0.2rem',
+                      }}
+                    >
+                      <AppsIcon />
+                      <Typography variant={'h4'}>More From This Collection</Typography>
+                    </Box>
+                    <KeyboardArrowUpIcon
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => setShowMoreItem((cur) => !cur)}
+                    />
+                  </Box>
+                  {showMoreItem && (
+                    <>
+                      <Box
+                        sx={{
+                          p: smDown ? 0 : 2,
+                          overflow: 'hidden',
+                          overflowY: 'scroll',
+                          backgroundColor: '#f0faf5',
+                        }}
+                      >
+                        <MoreNFTs
+                          collection_id={data?.data?.collection_id._id}
+                          name={data?.data?.metadata?.name}
+                        />
+                      </Box>
+                      <Box
+                        sx={{ borderTop: 0.5, borderColor: '#d6d6d6', p: 2, textAlign: 'center' }}
+                      >
+                        <Button
+                          component={Link}
+                          to={`/market/collection/${data?.data?.collection_id?._id}`}
+                          variant={'outlined'}
+                        >
+                          View NFTs in this Collection
+                        </Button>
+                      </Box>
+                    </>
+                  )}
                 </Box>
               </Box>
             </Grid>
           </Grid>
           <FsLightbox toggler={toggler} sources={[data?.data?.metadata?.alt_url]} type="image" />
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            open={copyDone}
+            autoHideDuration={2000}
+            onClose={() => {
+              setCopyDone(false);
+            }}
+          >
+            <Alert
+              variant="filled"
+              severity={copyResult ? 'success' : 'error'}
+              sx={{ width: '100%' }}
+            >
+              {copyMessage}
+            </Alert>
+          </Snackbar>
         </Container>
       )}
     </MarketLayout>

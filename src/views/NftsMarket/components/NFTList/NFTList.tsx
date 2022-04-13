@@ -7,11 +7,11 @@ import useSWRInfinite from 'swr/infinite';
 import { NFTResponse } from '../../types';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 4;
 
 const NFTList = () => {
   const { id } = useParams();
-  const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<NFTResponse>(
+  const { data, size, setSize, error, isValidating } = useSWRInfinite<NFTResponse>(
     (index) =>
       `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?type=0&page=${
         index + 1
@@ -26,7 +26,8 @@ const NFTList = () => {
   const isEmpty = data?.[0]?.data?.items.length === 0;
 
   // @ts-ignore
-  const isReachingEnd = isEmpty || (data && data[data.length - 1]?.length < PAGE_SIZE);
+  const isReachingEnd =
+    isEmpty || (data && data[data.length - 1]?.data?.headers?.x_pages_count <= size);
   const isRefreshing = isValidating && data && data.length === size;
 
   return (
@@ -42,7 +43,7 @@ const NFTList = () => {
             ));
           })}
 
-        {!error && data === undefined && (
+        {!error && data?.[size - 1] === undefined && (
           <Box
             sx={{
               display: 'flex',
@@ -62,16 +63,15 @@ const NFTList = () => {
             </Typography>
           </Box>
         )}
-        <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
-          <Button
-            fullWidth
-            variant={'contained'}
-            disabled={isLoadingMore || isReachingEnd}
-            onClick={() => setSize(size + 1)}
-          >
-            {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'Load more'}
-          </Button>
-        </Grid>
+        {!isEmpty && (
+          <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2, mt: 2 }}>
+            {!(isLoadingMore || isReachingEnd) && (
+              <Button fullWidth variant={'contained'} onClick={() => setSize(size + 1)}>
+                {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'MORE'}
+              </Button>
+            )}
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
