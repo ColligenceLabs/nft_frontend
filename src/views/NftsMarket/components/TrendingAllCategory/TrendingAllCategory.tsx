@@ -94,10 +94,11 @@ const TrendingAllCategory = () => {
                     right: '20px',
                     bottom: '10px',
                     p: 1,
-                    backgroundColor: 'rgba(240, 250, 245, 0.5)',
+                    // backgroundColor: 'rgba(240, 250, 245, 0.5)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
                   }}
                 >
-                  <Typography color={'text.primary'}>{item.name}</Typography>
+                  <Typography color={'white'}>{item.name}</Typography>
                 </Box>
               </Box>
             ))}
