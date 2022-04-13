@@ -5,7 +5,7 @@ import NumbersIcon from '@mui/icons-material/Numbers';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
-// import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import GestureOutlinedIcon from '@mui/icons-material/GestureOutlined';
 
@@ -72,6 +72,11 @@ export const Menuitems = [
     title: 'Solana',
     icon: <PeopleAltOutlinedIcon width="20" height="20" />,
     href: '/solana',
+  },
+  {
+    title: 'Collection Request',
+    icon: <AddPhotoAlternateIcon width="20" height="20" />,
+    href: '/collection-request',
   },
   // {
   //   title: 'Reward',

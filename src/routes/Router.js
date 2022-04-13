@@ -30,6 +30,7 @@ const Reward = Loadable(lazy(() => import('../views/Reward')));
 const RewardCreate = Loadable(lazy(() => import('../views/Reward/RewardCreate')));
 const UserProfile = Loadable(lazy(() => import('../views/UserProfile/UserProfile')));
 const Solana = Loadable(lazy(() => import('../views/Solana')));
+const CollectionRequest = Loadable(lazy(() => import('../views/CollectionRequest')));
 
 const NftMarketHome = Loadable(lazy(() => import('../views/NftsMarket/Home')));
 const NftMarket = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarket')));
@@ -58,7 +59,7 @@ const Router = (isLoggedIn, level) => [
   },
   {
     path: '/',
-    element: isLoggedIn && (level === 'administrator') ? <FullLayout /> : <Navigate to="/" />,
+    element: isLoggedIn && level === 'administrator' ? <FullLayout /> : <Navigate to="/" />,
     children: [
       { path: '/admins', exact: true, element: <Admins /> },
       { path: '/creator', exact: true, element: <Creator /> },
@@ -66,13 +67,19 @@ const Router = (isLoggedIn, level) => [
       { path: '/trace', exact: true, element: <Serials /> },
       { path: '/trace/create', exact: true, element: <SerialsCreate /> },
       { path: '/solana', exact: true, element: <Solana /> },
+      { path: '/collection-request', exact: true, element: <CollectionRequest /> },
       { path: '*', element: <Navigate to="/auth/404" /> },
     ],
   },
 
   {
     path: '/',
-    element: isLoggedIn && (level === 'administrator' || level === 'Creator') ? <FullLayout /> : <Navigate to="/" />,
+    element:
+      isLoggedIn && (level === 'administrator' || level === 'Creator') ? (
+        <FullLayout />
+      ) : (
+        <Navigate to="/" />
+      ),
     children: [
       // { path: '/', element: <NftMarket /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
