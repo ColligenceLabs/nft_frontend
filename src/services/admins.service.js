@@ -45,21 +45,19 @@ export const updateMultiAdminsStatus = (id, data) => {
 };
 
 export const updateWallet = (id, address) => {
-  return (
-    axios
-      .put(
-        `${API_URL}/update-mine/${id}`,
-        {
-          admin_address: address,
-        },
-        { headers: authHeader() },
-      )
-      .then((response) => {
-        return response.data;
-      })
-      // .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
-      .catch((error) => console.log(error))
-  );
+  return axios
+    .put(
+      `${API_URL}/update-mine/${id}`,
+      {
+        admin_address: address,
+      },
+      { headers: authHeader() },
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+  // .catch((error) => console.log(error))
 };
 
 const adminsService = {
