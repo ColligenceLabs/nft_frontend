@@ -272,6 +272,7 @@ const CollectionCreate = () => {
             symbol: '',
             maximum_supply: '',
             description: '',
+            contractAddress: undefined,
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
@@ -279,7 +280,8 @@ const CollectionCreate = () => {
             if (account === undefined && useKAS === 'false') {
               setIsOpenConnectModal(true);
               return;
-            } if (account === undefined && useKAS === 'true' && values.network !== 'klaytn') {
+            }
+            if (account === undefined && useKAS === 'true' && values.network !== 'klaytn') {
               setIsOpenConnectModal(true);
               return;
             }
@@ -304,11 +306,10 @@ const CollectionCreate = () => {
 
             // formData 에 contract_address 추가(test data 로 실행되도록 하드코딩)
             // const contractAddress = '0xda90e97c376c5d51c82d7346e39b4b79af82d7ff'; // kas api
-            const contractAddress = '0xE1C53Ab564de73C181DF56aa350677297B857662'; // metamask??
-
+            // const contractAddress = '0xE1C53Ab564de73C181DF56aa350677297B857662'; // metamask??
 
             let newContract;
-            if (!contractAddress) {
+            if (!values.contractAddress && values.contractAddress !== '') {
               if (useKAS === 'false') {
                 // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
                 let result;
@@ -355,7 +356,7 @@ const CollectionCreate = () => {
                 });
               }
             } else {
-              newContract = contractAddress;
+              newContract = values.contractAddress;
               formData.append('typed_contract', 'true');
             }
 
@@ -652,6 +653,23 @@ const CollectionCreate = () => {
                         />
                       </Grid>
                     )}
+                    <Grid item lg={6} md={12} sm={12} xs={12}>
+                      <CustomFormLabel htmlFor="contractAddress">
+                        {t('Contract Address')}
+                      </CustomFormLabel>
+                      <CustomTextField
+                        id="contractAddress"
+                        name="contractAddress"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting}
+                        value={values.contractAddress}
+                        onChange={handleChange}
+                        error={touched.contractAddress && Boolean(errors.contractAddress)}
+                        helperText={touched.contractAddress && errors.contractAddress}
+                      />
+                    </Grid>
                   </>
                 ) : (
                   <>
