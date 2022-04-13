@@ -69,7 +69,7 @@ const NFTDetail = () => {
       price,
     );
     // 실패인 경우 원복.
-    if (result === FAILURE) await cancelBuy(id, tokenId);
+    if (result === FAILURE) await cancelBuy(id, tokenId.data);
     setBuyFlag(false);
   };
 
