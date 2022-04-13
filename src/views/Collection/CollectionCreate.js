@@ -276,7 +276,10 @@ const CollectionCreate = () => {
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
 
-            if (account === undefined) {
+            if (account === undefined && useKAS === 'false') {
+              setIsOpenConnectModal(true);
+              return;
+            } if (account === undefined && useKAS === 'true' && values.network !== 'klaytn') {
               setIsOpenConnectModal(true);
               return;
             }
@@ -299,55 +302,65 @@ const CollectionCreate = () => {
               formData.append('contract_type', values.type);
             }
 
+            // formData 에 contract_address 추가(test data 로 실행되도록 하드코딩)
+            // const contractAddress = '0xda90e97c376c5d51c82d7346e39b4b79af82d7ff'; // kas api
+            const contractAddress = '0xE1C53Ab564de73C181DF56aa350677297B857662'; // metamask??
+
+
             let newContract;
-            if (useKAS === 'false') {
-              // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
-              let result;
-              if (values.network === 'solana') {
-                // TODO : Call Solana mint collection here ...
-                // console.log('== create solana collection ==>', values);
-                result = await mintCollection(values);
-              } else {
-                if (values.type === 'KIP17') {
-                  if (
-                    library.connection.url !== 'metamask' &&
-                    library.connection.url !== 'eip-1193:'
-                  ) {
-                    result = await deployKIP17WithKaikas(
-                      values.name,
-                      values.symbol,
-                      account,
-                      library,
-                    );
-                  } else {
-                    result = await deployKIP17(values.name, values.symbol, account, library);
-                  }
-                } else if (values.type === 'KIP37') {
-                  if (
-                    library.connection.url !== 'metamask' &&
-                    library.connection.url !== 'eip-1193:'
-                  ) {
-                    result = await deployKIP37WithKaikas(values.tokenUri, account, library);
-                  } else {
-                    result = await deployKIP37(values.tokenUri, account, library);
+            if (!contractAddress) {
+              if (useKAS === 'false') {
+                // TODO: 스미트컨트랙 배포하고 새로운 스마트컨트랙 주소 획득
+                let result;
+                if (values.network === 'solana') {
+                  // TODO : Call Solana mint collection here ...
+                  // console.log('== create solana collection ==>', values);
+                  result = await mintCollection(values);
+                } else {
+                  if (values.type === 'KIP17') {
+                    if (
+                      library.connection.url !== 'metamask' &&
+                      library.connection.url !== 'eip-1193:'
+                    ) {
+                      result = await deployKIP17WithKaikas(
+                        values.name,
+                        values.symbol,
+                        account,
+                        library,
+                      );
+                    } else {
+                      result = await deployKIP17(values.name, values.symbol, account, library);
+                    }
+                  } else if (values.type === 'KIP37') {
+                    if (
+                      library.connection.url !== 'metamask' &&
+                      library.connection.url !== 'eip-1193:'
+                    ) {
+                      result = await deployKIP37WithKaikas(values.tokenUri, account, library);
+                    } else {
+                      result = await deployKIP37(values.tokenUri, account, library);
+                    }
                   }
                 }
+                newContract = result.address;
+              } else {
+                // TODO: KAS로 스마트컨트랙 배포
+                const alias = `${values.symbol.toLowerCase()}-${Math.floor(Math.random() * 1000)}`;
+                await deployNFT17({
+                  name: values.name,
+                  symbol: values.symbol,
+                  alias,
+                }).then((res) => {
+                  newContract = res.data.data.address;
+                });
               }
-              newContract = result.address;
             } else {
-              // TODO: KAS로 스마트컨트랙 배포
-              const alias = `${values.symbol.toLowerCase()}-${Math.floor(Math.random() * 1000)}`;
-              await deployNFT17({
-                name: values.name,
-                symbol: values.symbol,
-                alias,
-              }).then((res) => {
-                newContract = res.data.data.address;
-              });
+              newContract = contractAddress;
+              formData.append('typed_contract', 'true');
             }
 
             if (!newContract) {
-              setErrorMessage('');
+              setErrorMessage('contract deploy fail.');
               setSuccessRegister(false);
               setSubmitting(false);
               return;
