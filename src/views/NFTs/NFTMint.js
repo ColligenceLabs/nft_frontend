@@ -10,8 +10,10 @@ import {
   Alert,
   Backdrop,
   CircularProgress,
+  Box,
+  Select,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
@@ -50,9 +52,27 @@ const Container = styled(Paper)(({ theme }) => ({
   borderRadius: '7px',
 }));
 
+const PRICE_TYPE = [
+  {
+    value: 'klaytn',
+    types: [
+      { value: 'talk', caption: 'TALK' },
+      { value: 'klay', caption: 'KLAY' },
+    ],
+  },
+  {
+    value: 'ethereum',
+    types: [
+      { value: 'talk', caption: 'TALK' },
+      { value: 'eth', caption: 'ETH' },
+    ],
+  },
+  { value: 'solana', types: ['SOL'] },
+];
+
 const NFTMint = () => {
   const { t } = useTranslation();
-
+  const theme = useTheme();
   // TODO : change for mainnet 1001 -> 8217
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
@@ -75,6 +95,7 @@ const NFTMint = () => {
   const [nftId, setNftId] = useState('');
   const [tokenId, setTokenId] = useState('');
   const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [priceTypes, setPriceTypes] = useState([]);
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
@@ -156,6 +177,11 @@ const NFTMint = () => {
     }
   }, [userItems, isLoading]);
 
+  useEffect(() => {
+    console.log(`targetNetwork : ${targetNetwork}`);
+    PRICE_TYPE.filter((item) => (item.value === targetNetwork ? setPriceTypes(item.types) : null));
+  }, [targetNetwork]);
+
   const mintEdition = async (id, amount) => {
     const editions = amount;
     const editionNumber = undefined;
@@ -198,6 +224,7 @@ const NFTMint = () => {
             externalURL: '',
             description: '',
             price: '',
+            price_type: '',
             contract_type: '',
             auto: 'false',
             type: '0',
@@ -411,7 +438,6 @@ const NFTMint = () => {
                     onChange={(event) => {
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
-                          console.log(collection.category);
                           if (collection.network === 'solana' && solana.address === undefined) {
                             setErrorMessage('connect phantom wallet');
                             return;
@@ -624,22 +650,51 @@ const NFTMint = () => {
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="price">{t('Price')}</CustomFormLabel>
-                  <CustomTextField
-                    id="price"
-                    name="price"
-                    variant="outlined"
-                    type="number"
-                    fullWidth
-                    size="small"
-                    disabled={isSubmitting || isMinting}
-                    value={values.price}
-                    onChange={handleChange}
-                  />
-                  {touched.price && errors.price && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.price}
-                    </FormHelperText>
-                  )}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'top',
+                      gap: 2,
+                    }}
+                  >
+                    <Select
+                      sx={{
+                        minWidth: 90,
+                        borderColor: `${
+                          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#dee3e9'
+                        }`,
+                        opacity: '1',
+                      }}
+                      value={values.price_type}
+                      size="small"
+                      onChange={(event) => {
+                        setFieldValue('price_type', event.target.value);
+                      }}
+                    >
+                      {priceTypes.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.caption}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <CustomTextField
+                      id="price"
+                      name="price"
+                      variant="outlined"
+                      type="number"
+                      fullWidth
+                      size="small"
+                      disabled={isSubmitting || isMinting}
+                      value={values.price}
+                      onChange={handleChange}
+                    />
+                    {touched.price && errors.price && (
+                      <FormHelperText htmlFor="render-select" error>
+                        {errors.price}
+                      </FormHelperText>
+                    )}
+                  </Box>
                 </Grid>
                 <Snackbar
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
