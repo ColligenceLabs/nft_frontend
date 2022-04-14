@@ -6,10 +6,14 @@ import splitAddress from '../../utils/splitAddress';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import { useTheme } from '@mui/material/styles';
 import WalletDialog from '../WalletDialog';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const WalletButton = () => {
   const context = useWeb3React();
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
   const { connector, activate, deactivate, account } = context;
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const [walletInfo, setWalletInfo] = React.useState(null);
@@ -43,20 +47,12 @@ const WalletButton = () => {
       </IconButton>
       <Menu
         anchorEl={walletInfo}
-        // keepMounted
+        keepMounted
         open={Boolean(walletInfo)}
         onClose={handleCloseWalletInfo}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
         sx={{
           '& .MuiMenu-paper': {
-            width: '250px',
+            width: smDown ? '100%' : '300px',
             right: 0,
             top: '70px !important',
           },
