@@ -15,7 +15,7 @@ const NFTList = () => {
     (index) =>
       `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?type=0&page=${
         index + 1
-      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}`,
+      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true`,
     fetcher,
   );
 
@@ -37,7 +37,7 @@ const NFTList = () => {
           data &&
           data.map((result: NFTResponse) => {
             return result.data?.items.map((item, index) => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
                 <NFTItem item={item} />
               </Grid>
             ));

@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 import { CollectionItemType } from '../../types';
 import ImageViewer from '../../../../components/ImageViewer';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const CollectionItem: React.FC<CollectionItemType> = ({
   id,
@@ -15,6 +16,9 @@ const CollectionItem: React.FC<CollectionItemType> = ({
 }) => {
   const theme = useTheme();
 
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
   const avatarImage = creator_image?.replace(
     'https://nftbedev.talken.io/talkenNft/uploads',
     'http://localhost:4000/talkenNft',
@@ -26,6 +30,8 @@ const CollectionItem: React.FC<CollectionItemType> = ({
         <Card
           sx={{
             p: 0,
+            m: smDown ? 0.5 : 1,
+            mt: 2,
             textDecoration: 'none',
             transition: 'all .2s ease-in-out',
             border: '0.1px solid #d6d6d6',
@@ -33,7 +39,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
             '&:hover': {
               transform: `translateY(-${theme.spacing(1 / 2)})`,
             },
-            minHeight: '400px',
+            // minHeight: smDown ? '150px' : '400px',
           }}
         >
           <Box
@@ -43,7 +49,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               alignItems: 'center',
             }}
           >
-            <ImageViewer src={cover_image} alt={name} height={'200px'} />
+            <ImageViewer src={cover_image} alt={name} height={smDown ? '150px' : '200px'} />
             <Box
               sx={{
                 display: 'flex',
@@ -67,15 +73,17 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               />
             </Box>
           </Box>
-          <CardContent sx={{ textAlign: 'center' }}>
-            <Typography variant="h4">{name}</Typography>
+          <CardContent sx={{ textAlign: smDown ? 'left' : 'center', p: 2 }}>
+            <Typography variant={smDown ? 'caption' : 'h4'}>
+              {name.length > 20 ? `${name.slice(0, 20)}...` : name}
+            </Typography>
             <Box
               sx={{
                 display: 'flex',
-                justifyContent: 'center',
+                justifyContent: smDown ? 'flex-start' : 'center',
                 alignItems: 'center',
                 gap: '0.5rem',
-                mb: '10px',
+                mb: smDown ? '0px' : '10px',
               }}
             >
               <Typography variant={'caption'}>by </Typography>
@@ -84,11 +92,13 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               </Typography>
             </Box>
 
-            <Typography variant="body2" color="text.secondary">
-              {description && description.length > 100
-                ? `${description.slice(0, 100)}...`
-                : description}
-            </Typography>
+            {!smDown && (
+              <Typography variant="body2" color="text.secondary">
+                {description && description.length > 100
+                  ? `${description.slice(0, 100)}...`
+                  : description}
+              </Typography>
+            )}
           </CardContent>
         </Card>
       </Link>
