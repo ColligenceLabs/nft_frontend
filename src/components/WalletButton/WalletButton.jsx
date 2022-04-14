@@ -42,19 +42,26 @@ const WalletButton = () => {
         />
       </IconButton>
       <Menu
-        id="profile-menu"
         anchorEl={walletInfo}
-        keepMounted
+        // keepMounted
         open={Boolean(walletInfo)}
         onClose={handleCloseWalletInfo}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         sx={{
           '& .MuiMenu-paper': {
-            width: '385px',
+            width: '250px',
             right: 0,
             top: '70px !important',
           },
           '& .MuiList-padding': {
-            p: '30px',
+            p: '10px',
           },
         }}
       >

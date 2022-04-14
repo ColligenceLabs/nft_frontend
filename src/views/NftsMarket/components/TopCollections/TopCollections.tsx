@@ -125,7 +125,7 @@ const TopCollections = () => {
               display: 'flex',
               justifyContent: 'flex-start',
               alignItems: 'center',
-              width: '300px',
+              width: smDown ? '100%' : '300px',
               gap: '0.5rem',
               borderBottom: '0.5px solid #d6d6d6',
             }}

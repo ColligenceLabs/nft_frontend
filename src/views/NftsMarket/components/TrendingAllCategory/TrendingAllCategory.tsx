@@ -98,7 +98,9 @@ const TrendingAllCategory = () => {
                     backgroundColor: 'rgba(0, 0, 0, 0.3)',
                   }}
                 >
-                  <Typography color={'white'}>{item.name}</Typography>
+                  <Typography color={'white'} fontSize={'x-large'} fontWeight={800}>
+                    {item.name.length > 20 ? item.name.slice(0, 20) : item.name}
+                  </Typography>
                 </Box>
               </Box>
             ))}
