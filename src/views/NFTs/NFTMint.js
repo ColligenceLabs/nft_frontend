@@ -52,7 +52,7 @@ const Container = styled(Paper)(({ theme }) => ({
   borderRadius: '7px',
 }));
 
-const PRICE_TYPE = [
+const QUOTE_TOKEN = [
   {
     value: 'klaytn',
     types: [
@@ -179,7 +179,7 @@ const NFTMint = () => {
 
   useEffect(() => {
     console.log(`targetNetwork : ${targetNetwork}`);
-    PRICE_TYPE.filter((item) => (item.value === targetNetwork ? setPriceTypes(item.types) : null));
+    QUOTE_TOKEN.filter((item) => (item.value === targetNetwork ? setPriceTypes(item.types) : null));
   }, [targetNetwork]);
 
   const mintEdition = async (id, amount) => {
@@ -224,7 +224,7 @@ const NFTMint = () => {
             externalURL: '',
             description: '',
             price: '',
-            price_type: '',
+            quote: '',
             contract_type: '',
             auto: 'false',
             type: '0',
@@ -666,10 +666,10 @@ const NFTMint = () => {
                         }`,
                         opacity: '1',
                       }}
-                      value={values.price_type}
+                      value={values.quote}
                       size="small"
                       onChange={(event) => {
-                        setFieldValue('price_type', event.target.value);
+                        setFieldValue('quote', event.target.value);
                       }}
                     >
                       {priceTypes.map((item, index) => (
