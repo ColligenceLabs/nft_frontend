@@ -93,7 +93,7 @@ const ProfileButton = ({ useMarket }) => {
         ) {
           // chainId가 targetNetwork가 아니고 알파월렛이 아니면
 
-          setIsOpenSnackbar({ open: true, vertical: 'top', horizontal: 'center' });
+          // setIsOpenSnackbar({ open: true, vertical: 'top', horizontal: 'center' });
         } else {
           dispatch(getWalletBalance(account, library));
         }
