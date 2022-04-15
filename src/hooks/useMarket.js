@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { parseUnits } from 'ethers/lib/utils';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import useActiveWeb3React from './useActiveWeb3React';
 import { FAILURE, SUCCESS } from '../config/constants/consts';
 import { useMarketContract, useTokenContract } from './useContract';
@@ -9,6 +9,8 @@ import Caver from 'caver-js';
 const rpcUrl = RPC_URLS[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
 const caver = new Caver(rpcUrl);
 import quoteTokens from '../config/constants/quoteTokens';
+// import contracts from '../config/constants/contracts';
+import tokenAbi from '../config/abi/erc20.json';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -17,8 +19,19 @@ export function calculateGasMargin(value) {
 
 const useMarket = () => {
   const marketContract = useMarketContract();
-  const tokenContract = useTokenContract();
+  // const tokenContract = useTokenContract();
   const { library, account } = useActiveWeb3React();
+
+  const getTokenContract = (tokenAddress) => {
+    const { library } = useActiveWeb3React();
+    if (!library) return;
+    if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:')
+      return new ethers.Contract(tokenAddress, tokenAbi, library?.getSigner());
+    else {
+      const caver = new Caver(window.klaytn);
+      return new caver.klay.Contract(tokenAbi, tokenAddress);
+    }
+  };
 
   const sellNFT = useCallback(
     async (nftContract, tokenId, price, quote) => {
@@ -145,7 +158,10 @@ const useMarket = () => {
       let gasLimit;
       // approve
       console.log('===>', price, quote);
+      const quoteToken = quoteTokens[quote][process.env.REACT_APP_CHAIN_ID];
+      const tokenContract = getTokenContract(quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
+
       if (quote !== 'eth' && quote !== 'klay') {
         try {
           console.log(marketContract);
@@ -184,13 +200,15 @@ const useMarket = () => {
           console.log('buyNFT approve fail.', e);
           return FAILURE;
         }
-      }
 
-      let allowance;
-      if (!isKaikas) allowance = await tokenContract.allowance(account, marketContract.address);
-      else
-        allowance = await tokenContract.methods.allowance(account, marketContract._address).call();
-      console.log(allowance.toString());
+        let allowance;
+        if (!isKaikas) allowance = await tokenContract.allowance(account, marketContract.address);
+        else
+          allowance = await tokenContract.methods
+            .allowance(account, marketContract._address)
+            .call();
+        console.log(allowance.toString());
+      }
 
       // buy
       if (quote !== 'eth' && quote !== 'klay') {
