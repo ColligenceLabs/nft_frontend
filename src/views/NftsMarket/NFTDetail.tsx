@@ -62,11 +62,13 @@ const NFTDetail = () => {
     const tokenId = await selectTokenId(id);
     console.log('=====>', tokenId, parseInt(tokenId.data, 16));
     const price = data?.data?.price;
+    const quote = data?.data?.quote;
     // tokenId 를 사용 구입 진행.
     const result = await buyNFT(
       isKaikas ? nftContractWithKaikas : nftContract,
       parseInt(tokenId.data, 16),
       price,
+      quote,
     );
     // 실패인 경우 원복.
     if (result === FAILURE) await cancelBuy(id, tokenId.data);

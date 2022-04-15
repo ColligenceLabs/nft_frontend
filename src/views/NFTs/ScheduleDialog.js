@@ -112,7 +112,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       const nftContract = getNftContract(nftInfo.data.collection_id.contract_address);
       for (let j = 0; j < serials.data.items.length; j++) {
         if (serials.data.items[j].owner_id === null) {
-          await sellNFT(nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
+          await sellNFT(nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price, nftInfo.data.quote);
           // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
         }
       }
