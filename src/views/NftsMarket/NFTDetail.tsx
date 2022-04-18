@@ -50,6 +50,7 @@ const NFTDetail = () => {
   }
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
+  console.log(data);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
   const { library, account, activate } = useActiveWeb3React();
@@ -217,7 +218,20 @@ const NFTDetail = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Box sx={{ p: 2 }}>
+                  <Box sx={{ pt: 2, px: 2 }}>
+                    <Typography variant={'subtitle2'} color={'primary'}>
+                      Selling Quantity
+                    </Typography>
+                    <Box
+                      display={'flex'}
+                      justifyContent={'flex-start'}
+                      alignItems={'center'}
+                      gap={'0.5rem'}
+                    >
+                      <Typography variant={'h1'}>{data?.data?.quantity_selling}</Typography>
+                    </Box>
+                  </Box>
+                  <Box sx={{ py: 1, px: 2 }}>
                     <Typography variant={'subtitle2'} color={'primary'}>
                       Price
                     </Typography>
