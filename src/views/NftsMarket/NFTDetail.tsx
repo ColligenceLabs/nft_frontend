@@ -24,6 +24,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
+import WalletDialog from '../../components/WalletDialog';
 
 const NFTDetail = () => {
   const theme = useTheme();
@@ -33,6 +34,7 @@ const NFTDetail = () => {
   });
   const { id } = useParams();
   const params = useLocation();
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [toggler, setToggler] = useState(false);
   const [buyFlag, setBuyFlag] = useState(false);
   const [showMoreItem, setShowMoreItem] = useState(true);
@@ -50,7 +52,7 @@ const NFTDetail = () => {
 
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
-  const { library } = useActiveWeb3React();
+  const { library, account, activate } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
   const buy = async () => {
@@ -75,6 +77,9 @@ const NFTDetail = () => {
     setBuyFlag(false);
   };
 
+  const handleCloseModal = async () => {
+    setIsOpenConnectModal(false);
+  };
   // const sellTest = async () => {
   //   const tokenId = 1;
   //   const isKaikas =
@@ -226,9 +231,15 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
                     </Box>
 
-                    <LoadingButton onClick={buy} loading={buyFlag} variant="contained">
-                      Buy
-                    </LoadingButton>
+                    {account === undefined ? (
+                      <Button variant="contained" onClick={() => setIsOpenConnectModal(true)}>
+                        Connect Wallet
+                      </Button>
+                    ) : (
+                      <LoadingButton onClick={buy} loading={buyFlag} variant="contained">
+                        Buy
+                      </LoadingButton>
+                    )}
                   </Box>
                 </Box>
               </Box>
@@ -321,6 +332,11 @@ const NFTDetail = () => {
               {copyMessage}
             </Alert>
           </Snackbar>
+          <WalletDialog
+            isOpenConnectModal={isOpenConnectModal}
+            handleCloseModal={handleCloseModal}
+            activate={activate}
+          />
         </Container>
       )}
     </MarketLayout>
