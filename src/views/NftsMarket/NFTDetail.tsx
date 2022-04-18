@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
@@ -49,9 +49,10 @@ const NFTDetail = () => {
   } else {
     console.log('from talken app');
   }
-  const { data, error } = useSWR(API_URL, () => nftDetail(id));
+  const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
 
   console.log(data);
+  const [sellingQuantity, setSellingQuantity] = useState(0);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
   const { library, account, activate } = useActiveWeb3React();
@@ -60,6 +61,7 @@ const NFTDetail = () => {
   const buy = async () => {
     // 지갑연결 여부 확인 필요.
     setBuyFlag(true);
+    setSellingQuantity((curr: number) => curr - 1);
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
@@ -80,7 +82,10 @@ const NFTDetail = () => {
     );
     // 실패인 경우 원복.
     console.log('=====>', tokenId, parseInt(tokenId.data, 16));
-    if (result === FAILURE) await cancelBuy(id, tokenId.data);
+    if (result === FAILURE) {
+      await cancelBuy(id, tokenId.data);
+      setSellingQuantity((curr: number) => curr + 1);
+    }
     setBuyFlag(false);
   };
 
@@ -97,6 +102,10 @@ const NFTDetail = () => {
   // const listTest = async () => {
   //   await listNFT(contractAddress);
   // };
+
+  useEffect(() => {
+    setSellingQuantity(data?.data?.quantity_selling);
+  }, [data?.data?.quantity_selling]);
 
   return (
     <MarketLayout>
@@ -234,7 +243,7 @@ const NFTDetail = () => {
                       alignItems={'center'}
                       gap={'0.5rem'}
                     >
-                      <Typography variant={'h1'}>{data?.data?.quantity_selling}</Typography>
+                      <Typography variant={'h1'}>{sellingQuantity}</Typography>
                     </Box>
                   </Box>
                   <Box sx={{ py: 1, px: 2 }}>
@@ -253,7 +262,9 @@ const NFTDetail = () => {
                       {data?.data?.quote === 'talk' && (
                         <img src={talkLogo} alt="klay" height="24px" />
                       )}
-                      <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
+                      <Typography variant={'h1'}>
+                        {data?.data?.price} {data?.data?.quote}
+                      </Typography>
                     </Box>
 
                     {account === undefined ? (
@@ -261,8 +272,13 @@ const NFTDetail = () => {
                         Connect Wallet
                       </Button>
                     ) : (
-                      <LoadingButton onClick={buy} loading={buyFlag} variant="contained">
-                        Buy
+                      <LoadingButton
+                        onClick={buy}
+                        disabled={sellingQuantity === 0}
+                        loading={buyFlag}
+                        variant="contained"
+                      >
+                        {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                       </LoadingButton>
                     )}
                   </Box>

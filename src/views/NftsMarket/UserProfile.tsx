@@ -26,8 +26,10 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchMyNfts = async () => {
+      if (!account) return;
       const nfts = await getUserNFTs(account, 100);
-      setMyNfts(nfts.data);
+      console.log(nfts.data.nfts);
+      setMyNfts(nfts.data.nfts);
       console.log(nfts);
     };
 
