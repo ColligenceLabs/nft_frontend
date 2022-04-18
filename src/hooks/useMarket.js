@@ -11,6 +11,7 @@ const caver = new Caver(rpcUrl);
 import quoteTokens from '../config/constants/quoteTokens';
 // import contracts from '../config/constants/contracts';
 import tokenAbi from '../config/abi/erc20.json';
+import {targetNetwork} from '../config';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -23,7 +24,6 @@ const useMarket = () => {
   const { library, account } = useActiveWeb3React();
 
   const getTokenContract = (tokenAddress) => {
-    const { library } = useActiveWeb3React();
     if (!library) return;
     if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:')
       return new ethers.Contract(tokenAddress, tokenAbi, library?.getSigner());
@@ -39,7 +39,7 @@ const useMarket = () => {
       console.log('sell!');
       const gasPrice = await caver.klay.getGasPrice();
       console.log('gasPrice', gasPrice);
-      const quoteToken = quoteTokens[quote][process.env.REACT_APP_CHAIN_ID];
+      const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
       let tx;
@@ -150,15 +150,15 @@ const useMarket = () => {
 
   const buyNFT = useCallback(
     async (nftContract, tokenId, price, quote) => {
-      console.log('buy!');
+      console.log('buy!', tokenId);
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
       let tx;
       let gasLimit;
       // approve
-      console.log('===>', price, quote);
-      const quoteToken = quoteTokens[quote][process.env.REACT_APP_CHAIN_ID];
+      console.log('===>', price, quote, quoteTokens[quote]);
+      const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
       const tokenContract = getTokenContract(quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
 

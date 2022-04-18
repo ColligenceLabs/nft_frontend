@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useWeb3React } from '@web3-react/core'
+import { targetNetwork } from '../config';
 
 /**
  * Provides a web3 provider with or without user's signer
@@ -17,7 +18,7 @@ const useActiveWeb3React = () => {
     }
   }, [library])
 
-  return { library: provider, chainId: chainId ?? parseInt(process.env.REACT_APP_CHAIN_ID, 10), ...web3React }
+  return { library: provider, chainId: chainId ?? parseInt(targetNetwork), ...web3React }
 }
 
 export default useActiveWeb3React
