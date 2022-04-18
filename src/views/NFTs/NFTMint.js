@@ -238,7 +238,9 @@ const NFTMint = () => {
             let formData = new FormData();
             for (let value in values) {
               if (
-                ['name', 'price', 'contract_type', 'auto', 'type', 'description'].includes(value)
+                ['name', 'price', 'contract_type', 'auto', 'type', 'description', 'quote'].includes(
+                  value,
+                )
               ) {
                 formData.append(value, values[value]);
               }
