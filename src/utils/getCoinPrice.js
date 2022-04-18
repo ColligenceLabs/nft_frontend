@@ -246,8 +246,9 @@ export function getCoinPrice() {
       const talkUsd = response.data.11552.quote.USD.price;
       const talkKrw = response.data.11552.quote.KRW.price
 
-      result.push({klay: {USD: klayUsd, KRW: klayKrw}})
-      result.push({talk: {USD: talkUsd, KRW: talkKrw}})
+      result.push({klay: {USD: klayUsd, KRW: klayKrw}});
+      result.push({talk: {USD: talkUsd, KRW: talkKrw}});
+
       return result;
     })
     .catch((error) =>
