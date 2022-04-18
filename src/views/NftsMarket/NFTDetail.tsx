@@ -64,7 +64,11 @@ const NFTDetail = () => {
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
     const tokenId = await selectTokenId(id);
-    console.log('=====>', tokenId, parseInt(tokenId.data, 16));
+    if (tokenId.status === 0) {
+      console.log('판매가능한 nft가 존재하지 않습니다.');
+      setBuyFlag(false);
+      return;
+    }
     const price = data?.data?.price;
     const quote = data?.data?.quote;
     // tokenId 를 사용 구입 진행.
@@ -75,6 +79,7 @@ const NFTDetail = () => {
       quote,
     );
     // 실패인 경우 원복.
+    console.log('=====>', tokenId, parseInt(tokenId.data, 16));
     if (result === FAILURE) await cancelBuy(id, tokenId.data);
     setBuyFlag(false);
   };
