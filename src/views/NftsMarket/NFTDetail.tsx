@@ -4,6 +4,7 @@ import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
+import talkLogo from '../../assets/images/logos/talken_icon.png';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
 import { Alert, Box, Button, Card, Grid, Snackbar, Typography, useTheme } from '@mui/material';
@@ -241,7 +242,12 @@ const NFTDetail = () => {
                       alignItems={'center'}
                       gap={'0.5rem'}
                     >
-                      <img src={klayLogo} alt="klay" height="22px" />
+                      {data?.data?.quote === 'klay' && (
+                        <img src={klayLogo} alt="klay" height="24px" />
+                      )}
+                      {data?.data?.quote === 'talk' && (
+                        <img src={talkLogo} alt="klay" height="24px" />
+                      )}
                       <Typography variant={'h1'}>{data?.data?.price} klay</Typography>
                     </Box>
 

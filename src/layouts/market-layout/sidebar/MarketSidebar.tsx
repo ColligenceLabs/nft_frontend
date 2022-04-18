@@ -1,6 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Box, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';

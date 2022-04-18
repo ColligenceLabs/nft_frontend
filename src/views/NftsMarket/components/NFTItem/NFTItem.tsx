@@ -4,6 +4,7 @@ import { Box, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { NFTType } from '../../types';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
+import talkLogo from '../../../../assets/images/logos/talken_icon.png';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
 import ImageViewer from '../../../../components/ImageViewer';
@@ -101,7 +102,9 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
                     gap: '0.5rem',
                   }}
                 >
-                  <img src={klayLogo} alt="klay" height="16px" />
+                  {item?.quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
+                  {item?.quote === 'talk' && <img src={talkLogo} alt="klay" height="16px" />}
+                  {/*<img src={klayLogo} alt="klay" height="16px" />*/}
                   <Typography variant="h6">{item?.price}</Typography>
                 </Box>
               </Box>

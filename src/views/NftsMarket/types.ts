@@ -248,6 +248,7 @@ export interface NFTType {
     };
     quantity: number;
     quantity_selling: number;
+    quote: string;
     price: number;
     category: string[];
     onchain: string;
