@@ -61,6 +61,10 @@ const chartOption = {
   },
 };
 
+function isArray(what) {
+  return Object.prototype.toString.call(what) === '[object Array]';
+}
+
 const Last30days = () => {
   const { t } = useTranslation();
 
@@ -74,21 +78,25 @@ const Last30days = () => {
       let nftArray = [];
       let collectionArray = [];
       let categoryArray = [];
-      res.data.map((item) => {
-        if (item.name === 'total_revenue') {
-          categoryArray = categoryArray.concat(
-            new Date(item.createdAt).toLocaleDateString('ko-KR', {
-              month: '2-digit',
-              day: '2-digit',
-              year: 'numeric',
-            }),
-          );
-          totalArray = totalArray.concat(item.value);
-        } else if (item.name === 'nft_revenue') {
-          nftArray = nftArray.concat(item.value);
-        } else if (item.name === 'collection_revenue')
-          collectionArray = collectionArray.concat(item.value);
-      });
+      // TODO: Line Chart CursorNotFound 해결 필요
+      // 임시 방어 코드
+      if (isArray(res.data)) {
+        res.data.map((item) => {
+          if (item.name === 'total_revenue') {
+            categoryArray = categoryArray.concat(
+              new Date(item.createdAt).toLocaleDateString('ko-KR', {
+                month: '2-digit',
+                day: '2-digit',
+                year: 'numeric',
+              }),
+            );
+            totalArray = totalArray.concat(item.value);
+          } else if (item.name === 'nft_revenue') {
+            nftArray = nftArray.concat(item.value);
+          } else if (item.name === 'collection_revenue')
+            collectionArray = collectionArray.concat(item.value);
+        });
+      }
 
       setChartData([
         { name: 'total_revenue', data: totalArray },
