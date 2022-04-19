@@ -56,10 +56,10 @@ import { MintLayout } from '@solana/spl-token';
 import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
 
 const COLLECTION_CATEGORY = [
-  { value: 'other', title: 'Other' },
-  { value: 'top', title: 'Top' },
-  { value: 'game', title: 'Game' },
-  { value: 'graffiti', title: 'Graffiti' },
+  // { value: 'other', title: 'Other' },
+  // { value: 'top', title: 'Top' },
+  // { value: 'game', title: 'Game' },
+  // { value: 'graffiti', title: 'Graffiti' },
   { value: 'art', title: 'Art' },
   { value: 'collectibles', title: 'Collectibles' },
   { value: 'domainNames', title: 'Domain Names' },
