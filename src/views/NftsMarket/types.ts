@@ -109,6 +109,7 @@ export interface NFTResponse {
         quantity: number;
         quantity_selling: number;
         price: number;
+        quote: string;
         category: string[];
         onchain: string;
         start_date: Date;
