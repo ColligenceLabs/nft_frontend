@@ -6,14 +6,15 @@ import NFTItem from '../NFTItem';
 
 interface MoreNFTsProps {
   collection_id: string;
+  nft_id: string;
   name: string;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id, name }) => {
+const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id, name, nft_id }) => {
   const { data, error, mutate } = useSWR<NFTResponse>(
-    `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsR?onchain=true&collection_id=${collection_id}&type=0&status=active`,
+    `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsR?onchain=true&onSale=true&collection_id=${collection_id}&nft_id=${nft_id}&type=0&status=active`,
     fetcher,
   );
 

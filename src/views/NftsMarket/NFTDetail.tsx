@@ -334,6 +334,7 @@ const NFTDetail = () => {
                         }}
                       >
                         <MoreNFTs
+                          nft_id={id!}
                           collection_id={data?.data?.collection_id._id}
                           name={data?.data?.metadata?.name}
                         />
