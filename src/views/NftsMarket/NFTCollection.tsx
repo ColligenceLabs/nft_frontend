@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from './components/Container';
 import { Box, Typography } from '@mui/material';
@@ -19,7 +19,13 @@ const NFTCollection = () => {
     <>
       <MarketLayout>
         {!error && data && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <Box sx={{ width: 1, height: '250px' }}>
               <img
                 src={data?.image_link}
@@ -82,6 +88,10 @@ const NFTCollection = () => {
             </Box>
           </Box>
         )}
+
+        <Box
+          sx={{ borderBottom: '1px solid', borderColor: `#d9d9d9`, width: '100%', pt: '30px' }}
+        />
 
         <Container>
           <NFTList />
