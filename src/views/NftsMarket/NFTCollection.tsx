@@ -96,11 +96,14 @@ const NFTCollection = () => {
                 sx={{
                   px: 3,
                   textAlign: 'center',
-                  background: showAll ? 'none' : 'linear-gradient(to bottom, #000, #fff)',
+                  background: showAll
+                    ? 'none'
+                    : `linear-gradient(to bottom, ${theme.palette.text.secondary}, #fff)`,
                   WebkitBackgroundClip: showAll ? 'none' : 'text',
                   WebkitTextFillColor: showAll ? 'none' : 'transparent',
                 }}
                 variant={'body1'}
+                color="text.secondary"
               >
                 {showAll ? data?.description : `${data?.description.slice(0, smDown ? 150 : 300)}`}
               </Typography>
