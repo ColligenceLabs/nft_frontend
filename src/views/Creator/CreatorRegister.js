@@ -12,6 +12,7 @@ import { register } from '../../services/auth.service';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { LoadingButton } from '@mui/lab';
 import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
+import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -216,12 +217,22 @@ const CreatorRegister = () => {
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                  <CustomTextField
+                  {/*<CustomTextField*/}
+                  {/*  id="description"*/}
+                  {/*  name="description"*/}
+                  {/*  variant="outlined"*/}
+                  {/*  fullWidth*/}
+                  {/*  size="small"*/}
+                  {/*  value={values.description}*/}
+                  {/*  onChange={handleChange}*/}
+                  {/*  error={touched.description && Boolean(errors.description)}*/}
+                  {/*  helperText={touched.description && errors.description}*/}
+                  {/*/>*/}
+                  <CustomTextarea
+                    maxRows={5}
+                    minRows={5}
                     id="description"
                     name="description"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
                     value={values.description}
                     onChange={handleChange}
                     error={touched.description && Boolean(errors.description)}
@@ -284,12 +295,7 @@ const CreatorRegister = () => {
                 )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <LoadingButton
-                    type="submit"
-                    loading={isSubmitting}
-                    variant="outlined"
-                    variant="contained"
-                  >
+                  <LoadingButton type="submit" loading={isSubmitting} variant="contained">
                     {t('Confirm')}
                   </LoadingButton>
                 </Grid>

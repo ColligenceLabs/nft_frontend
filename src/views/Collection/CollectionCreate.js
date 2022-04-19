@@ -53,6 +53,7 @@ import {
 import { mintNFT } from '../../solana/actions/nft';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { MintLayout } from '@solana/spl-token';
+import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
 
 const COLLECTION_CATEGORY = [
   { value: 'other', title: 'Other' },
@@ -559,12 +560,14 @@ const CollectionCreate = () => {
                 </Grid>
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                  <CustomTextField
+                  <CustomTextarea
                     id="description"
                     name="description"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
+                    maxRows={5}
+                    minRows={5}
+                    // variant="outlined"
+                    // fullWidth
+                    // size="small"
                     disabled={isSubmitting}
                     value={values.description}
                     onChange={handleChange}
