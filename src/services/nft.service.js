@@ -150,6 +150,19 @@ export const sellNFTsBatch = (nft_id) => {
     });
 };
 
+export const getUserNftSerialsData = (searchNftId, owner) => {
+  let url = `${API_URL}/user-serials?nft_id=${searchNftId}&owner_id=${owner}`;
+
+  return axios
+    .get(url, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) =>
+      error.response.status === 401 ? (window.location.href = '/auth/login') : console.log(error),
+    );
+};
+
 export const selectTokenId = (nft_id) => {
   const url = `${API_URL}/select-tokenid?nft_id=${nft_id}`;
   return axios

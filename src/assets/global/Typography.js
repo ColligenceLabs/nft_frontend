@@ -1,5 +1,5 @@
 const typography = {
-  fontFamily: "'DM Sans', sans-serif",
+  fontFamily: "'Poppins', sans-serif",
   body1: {
     fontWeight: 400, // or 'bold'
   },

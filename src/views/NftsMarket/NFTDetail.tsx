@@ -59,7 +59,6 @@ const NFTDetail = () => {
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
   const buy = async () => {
-    // 지갑연결 여부 확인 필요.
     setBuyFlag(true);
     setSellingQuantity((curr: number) => curr - 1);
     const isKaikas =
@@ -335,6 +334,7 @@ const NFTDetail = () => {
                         }}
                       >
                         <MoreNFTs
+                          nft_id={id!}
                           collection_id={data?.data?.collection_id._id}
                           name={data?.data?.metadata?.name}
                         />

@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from './components/Container';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, IconButton } from '@mui/material';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import NFTList from './components/NFTList';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { CollectionDetailResponse } from './types';
 import { getNFTsByCollectionId } from '../../services/market.service';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const NFTCollection = () => {
   const { id } = useParams();
@@ -14,12 +18,24 @@ const NFTCollection = () => {
     `/admin-api/collection/detail/${id}`,
     () => getNFTsByCollectionId(id),
   );
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
+
+  const [showAll, setShowAll] = useState(false);
 
   return (
     <>
       <MarketLayout>
         {!error && data && (
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <Box sx={{ width: 1, height: '250px' }}>
               <img
                 src={data?.image_link}
@@ -76,12 +92,31 @@ const NFTCollection = () => {
                 </Typography>
               </Box>
 
-              <Typography sx={{ px: 3, textAlign: 'center' }} variant={'body1'}>
-                {data?.description}
+              <Typography
+                sx={{
+                  px: 3,
+                  textAlign: 'center',
+                  background: showAll
+                    ? 'none'
+                    : `linear-gradient(to bottom, ${theme.palette.text.secondary}, #fff)`,
+                  WebkitBackgroundClip: showAll ? 'none' : 'text',
+                  WebkitTextFillColor: showAll ? 'none' : 'transparent',
+                }}
+                variant={'body1'}
+                color="text.secondary"
+              >
+                {showAll ? data?.description : `${data?.description.slice(0, smDown ? 150 : 300)}`}
               </Typography>
+              <IconButton onClick={() => setShowAll((curr) => !curr)}>
+                {showAll ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              </IconButton>
             </Box>
           </Box>
         )}
+
+        <Box
+          sx={{ borderBottom: '1px solid', borderColor: `#d9d9d9`, width: '100%', pt: '30px' }}
+        />
 
         <Container>
           <NFTList />

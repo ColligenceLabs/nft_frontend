@@ -12,6 +12,7 @@ import { register } from '../../services/auth.service';
 import CustomSelect from '../../components/forms/custom-elements/CustomSelect';
 import { LoadingButton } from '@mui/lab';
 import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
+import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -82,8 +83,6 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.full_name}
                     onChange={handleChange}
-                    // error={touched.full_name && Boolean(errors.full_name)}
-                    // helperText={touched.full_name && errors.full_name}
                   />
                   {touched.full_name && errors.full_name && (
                     <FormHelperText htmlFor="render-select" error>
@@ -102,8 +101,6 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.email}
                     onChange={handleChange}
-                    // error={touched.email && Boolean(errors.email)}
-                    // helperText={touched.email && errors.email}
                   />
                   {touched.email && errors.email && (
                     <FormHelperText htmlFor="render-select" error>
@@ -123,8 +120,6 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.password}
                     onChange={handleChange}
-                    // error={touched.password && Boolean(errors.password)}
-                    // helperText={touched.password && errors.password}
                   />
                   {touched.password && errors.password && (
                     <FormHelperText htmlFor="render-select" error>
@@ -143,8 +138,6 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.repeatPassword}
                     onChange={handleChange}
-                    // error={touched.repeatPassword && Boolean(errors.repeatPassword)}
-                    // helperText={touched.repeatPassword && errors.repeatPassword}
                   />
                   {touched.repeatPassword && errors.repeatPassword && (
                     <FormHelperText htmlFor="render-select" error>
@@ -163,8 +156,6 @@ const CreatorRegister = () => {
                     defaultValue="creator"
                     fullWidth
                     size="small"
-                    // error={touched.level && Boolean(errors.level)}
-                    // helperText={touched.repeatPassword && errors.repeatPassword}
                   >
                     <MenuItem value="creator">Creator</MenuItem>
                   </CustomSelect>
@@ -184,7 +175,6 @@ const CreatorRegister = () => {
                     fullWidth
                     size="small"
                     value={values.image == null ? '' : values.image.name}
-                    // onChange={handleChange}
                     InputProps={{
                       startAdornment: (
                         <Button
@@ -216,17 +206,21 @@ const CreatorRegister = () => {
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                  <CustomTextField
+                  <CustomTextarea
+                    maxRows={5}
+                    minRows={5}
                     id="description"
                     name="description"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
                     value={values.description}
                     onChange={handleChange}
-                    error={touched.description && Boolean(errors.description)}
-                    helperText={touched.description && errors.description}
+                    // error={touched.description && Boolean(errors.description)}
+                    // helperText={touched.description && errors.description}
                   />
+                  {touched.description && errors.description && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.description}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
@@ -241,9 +235,12 @@ const CreatorRegister = () => {
                     size="small"
                     value={values.solana_address}
                     onChange={handleChange}
-                    error={touched.solana_address && Boolean(errors.solana_address)}
-                    helperText={touched.solana_address && errors.solana_address}
                   />
+                  {touched.solana_address && errors.solana_address && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.solana_address}
+                    </FormHelperText>
+                  )}
                 </Grid>
 
                 <Snackbar
@@ -284,12 +281,7 @@ const CreatorRegister = () => {
                 )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <LoadingButton
-                    type="submit"
-                    loading={isSubmitting}
-                    variant="outlined"
-                    variant="contained"
-                  >
+                  <LoadingButton type="submit" loading={isSubmitting} variant="contained">
                     {t('Confirm')}
                   </LoadingButton>
                 </Grid>

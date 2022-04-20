@@ -46,6 +46,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { setSerialsActive } from '../../services/serials.service';
 import { useItems } from '../../solana/hooks/useItems';
 import { ArtworkViewState } from '../../solana/hooks/types';
+import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -632,12 +633,14 @@ const NFTMint = () => {
                 {targetNetwork !== 'solana' && (
                   <Grid item lg={6} md={12} sm={12} xs={12}>
                     <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                    <CustomTextField
+                    <CustomTextarea
                       id="description"
                       name="description"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
+                      maxRows={5}
+                      minRows={5}
+                      // variant="outlined"
+                      // fullWidth
+                      // size="small"
                       disabled={isSubmitting || isMinting}
                       value={values.description}
                       onChange={handleChange}
@@ -660,42 +663,51 @@ const NFTMint = () => {
                       gap: 2,
                     }}
                   >
-                    <Select
-                      sx={{
-                        minWidth: 90,
-                        borderColor: `${
-                          theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#dee3e9'
-                        }`,
-                        opacity: '1',
-                      }}
-                      value={values.quote}
-                      size="small"
-                      onChange={(event) => {
-                        setFieldValue('quote', event.target.value);
-                      }}
-                    >
-                      {priceTypes.map((item, index) => (
-                        <MenuItem key={index} value={item.value}>
-                          {item.caption}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                    <CustomTextField
-                      id="price"
-                      name="price"
-                      variant="outlined"
-                      type="number"
-                      fullWidth
-                      size="small"
-                      disabled={isSubmitting || isMinting}
-                      value={values.price}
-                      onChange={handleChange}
-                    />
-                    {touched.price && errors.price && (
-                      <FormHelperText htmlFor="render-select" error>
-                        {errors.price}
-                      </FormHelperText>
-                    )}
+                    <Box>
+                      <Select
+                        sx={{
+                          minWidth: 90,
+                          borderColor: `${
+                            theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : '#dee3e9'
+                          }`,
+                          opacity: '1',
+                        }}
+                        value={values.quote}
+                        size="small"
+                        onChange={(event) => {
+                          setFieldValue('quote', event.target.value);
+                        }}
+                      >
+                        {priceTypes.map((item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.caption}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {touched.quote && errors.quote && (
+                        <FormHelperText htmlFor="render-select" error>
+                          {errors.quote}
+                        </FormHelperText>
+                      )}
+                    </Box>
+                    <Box sx={{ width: '100%' }}>
+                      <CustomTextField
+                        id="price"
+                        name="price"
+                        variant="outlined"
+                        type="number"
+                        fullWidth
+                        size="small"
+                        disabled={isSubmitting || isMinting}
+                        value={values.price}
+                        onChange={handleChange}
+                      />
+                      {touched.price && errors.price && (
+                        <FormHelperText htmlFor="render-select" error>
+                          {errors.price}
+                        </FormHelperText>
+                      )}
+                    </Box>
                   </Box>
                 </Grid>
                 <Snackbar
