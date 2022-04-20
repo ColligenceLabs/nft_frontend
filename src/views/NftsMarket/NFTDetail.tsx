@@ -44,11 +44,12 @@ const NFTDetail = () => {
   const [buyFlag, setBuyFlag] = useState(false);
   const [showMoreItem, setShowMoreItem] = useState(true);
   const [myNFT, setMyNFT] = useState(null);
+  const [sellPrice, setSellPrice] = useState('0');
 
   let API_URL;
 
   // dapp route
-  console.log(params);
+  // console.log(params);
   if (params.state === null) {
     // console.log('from market page');
     API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
@@ -115,7 +116,6 @@ const NFTDetail = () => {
 
   useEffect(() => {
     getUserNftSerialsData(id, account).then((res) => {
-      console.log(res.data);
       setMyNFT(res.data);
     });
   }, [getUserNftSerialsData, id, account]);
@@ -307,9 +307,11 @@ const NFTDetail = () => {
                           name="price"
                           variant="outlined"
                           type="number"
-                          disabled
                           size="small"
-                          // value={row.price}
+                          value={sellPrice}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setSellPrice(e.target.value)
+                          }
                         />
                         <Button
                           // onClick={buy}
