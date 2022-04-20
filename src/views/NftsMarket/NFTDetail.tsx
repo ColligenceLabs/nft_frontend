@@ -27,6 +27,8 @@ import FeatherIcon from 'feather-icons-react';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import WalletDialog from '../../components/WalletDialog';
 import { useWeb3React } from '@web3-react/core';
+import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
+import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 
 const NFTDetail = () => {
   const theme = useTheme();
@@ -45,16 +47,17 @@ const NFTDetail = () => {
 
   let API_URL;
 
+  // dapp route
   console.log(params);
   if (params.state === null) {
-    console.log('from market page');
+    // console.log('from market page');
     API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
   } else {
     console.log('from talken app');
   }
+
   const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
 
-  console.log(data);
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
@@ -111,10 +114,10 @@ const NFTDetail = () => {
   }, [data?.data?.quantity_selling]);
 
   useEffect(() => {
-    console.log('getUserNftsSerialsData');
-    console.log(id);
-    console.log(account);
-    getUserNftSerialsData(id, account).then((res) => setMyNFT(res.data));
+    getUserNftSerialsData(id, account).then((res) => {
+      console.log(res.data);
+      setMyNFT(res.data);
+    });
   }, [getUserNftSerialsData, id, account]);
 
   return (
@@ -256,51 +259,69 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{sellingQuantity}</Typography>
                     </Box>
                   </Box>
-                  <Box sx={{ py: 1, px: 2 }}>
-                    <Typography variant={'subtitle2'} color={'primary'}>
-                      Price
-                    </Typography>
-                    <Box
-                      display={'flex'}
-                      justifyContent={'flex-start'}
-                      alignItems={'center'}
-                      gap={'0.5rem'}
-                    >
-                      {data?.data?.quote === 'klay' && (
-                        <img src={klayLogo} alt="klay" height="24px" />
-                      )}
-                      {data?.data?.quote === 'talk' && (
-                        <img src={talkLogo} alt="klay" height="24px" />
-                      )}
-                      <Typography variant={'h1'}>
-                        {data?.data?.price} {data?.data?.quote}
+                  {myNFT === null ? (
+                    <Box sx={{ py: 1, px: 2 }}>
+                      <Typography variant={'subtitle2'} color={'primary'}>
+                        Price
                       </Typography>
-                    </Box>
+                      <Box
+                        display={'flex'}
+                        justifyContent={'flex-start'}
+                        alignItems={'center'}
+                        gap={'0.5rem'}
+                      >
+                        {data?.data?.quote === 'klay' && (
+                          <img src={klayLogo} alt="klay" height="24px" />
+                        )}
+                        {data?.data?.quote === 'talk' && (
+                          <img src={talkLogo} alt="klay" height="24px" />
+                        )}
+                        <Typography variant={'h1'}>
+                          {data?.data?.price} {data?.data?.quote}
+                        </Typography>
+                      </Box>
 
-                    {account === undefined ? (
-                      <Button variant="contained" onClick={() => setIsOpenConnectModal(true)}>
-                        Connect Wallet
-                      </Button>
-                    ) : myNFT === null ? (
-                      <LoadingButton
-                        onClick={buy}
-                        disabled={sellingQuantity === 0}
-                        loading={buyFlag}
-                        variant="contained"
-                      >
-                        {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
-                      </LoadingButton>
-                    ) : (
-                      <Button
-                        // onClick={buy}
-                        // disabled={sellingQuantity === 0}
-                        // loading={buyFlag}
-                        variant="contained"
-                      >
-                        Sell
-                      </Button>
-                    )}
-                  </Box>
+                      {account === undefined ? (
+                        <Button variant="contained" onClick={() => setIsOpenConnectModal(true)}>
+                          Connect Wallet
+                        </Button>
+                      ) : (
+                        <LoadingButton
+                          onClick={buy}
+                          disabled={sellingQuantity === 0}
+                          loading={buyFlag}
+                          variant="contained"
+                        >
+                          {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
+                        </LoadingButton>
+                      )}
+                    </Box>
+                  ) : (
+                    <Box sx={{ py: 1, px: 2 }}>
+                      <Typography variant={'subtitle2'} color={'primary'}>
+                        Price
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: '1rem' }}>
+                        <CustomTextField
+                          id="price"
+                          name="price"
+                          variant="outlined"
+                          type="number"
+                          disabled
+                          size="small"
+                          // value={row.price}
+                        />
+                        <Button
+                          // onClick={buy}
+                          // disabled={sellingQuantity === 0}
+                          // loading={buyFlag}
+                          variant="contained"
+                        >
+                          Sell
+                        </Button>
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </Grid>
