@@ -13,7 +13,7 @@ import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContrac
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
-import { selectTokenId, cancelBuy } from '../../services/nft.service';
+import { selectTokenId, cancelBuy, getUserNftSerialsData } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
 import ImageViewer from '../../components/ImageViewer';
@@ -26,6 +26,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FeatherIcon from 'feather-icons-react';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import WalletDialog from '../../components/WalletDialog';
+import { useWeb3React } from '@web3-react/core';
 
 const NFTDetail = () => {
   const theme = useTheme();
@@ -33,12 +34,14 @@ const NFTDetail = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
   });
+
   const { id } = useParams();
   const params = useLocation();
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [toggler, setToggler] = useState(false);
   const [buyFlag, setBuyFlag] = useState(false);
   const [showMoreItem, setShowMoreItem] = useState(true);
+  const [myNFT, setMyNFT] = useState(null);
 
   let API_URL;
 
@@ -58,6 +61,7 @@ const NFTDetail = () => {
   const { library, account, activate } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
+
   const buy = async () => {
     setBuyFlag(true);
     setSellingQuantity((curr: number) => curr - 1);
@@ -106,12 +110,19 @@ const NFTDetail = () => {
     setSellingQuantity(data?.data?.quantity_selling);
   }, [data?.data?.quantity_selling]);
 
+  useEffect(() => {
+    console.log('getUserNftsSerialsData');
+    console.log(id);
+    console.log(account);
+    getUserNftSerialsData(id, account).then((res) => setMyNFT(res.data));
+  }, [getUserNftSerialsData, id, account]);
+
   return (
     <MarketLayout>
       {data && !error && (
         <Container>
           <Grid container>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={6} md={6} sm={12} xs={12} sx={{ p: 2 }}>
               {data?.data?.metadata?.content_Type === 'mp4' ? (
                 <Card
                   sx={{
@@ -270,7 +281,7 @@ const NFTDetail = () => {
                       <Button variant="contained" onClick={() => setIsOpenConnectModal(true)}>
                         Connect Wallet
                       </Button>
-                    ) : (
+                    ) : myNFT === null ? (
                       <LoadingButton
                         onClick={buy}
                         disabled={sellingQuantity === 0}
@@ -279,12 +290,21 @@ const NFTDetail = () => {
                       >
                         {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                       </LoadingButton>
+                    ) : (
+                      <Button
+                        // onClick={buy}
+                        // disabled={sellingQuantity === 0}
+                        // loading={buyFlag}
+                        variant="contained"
+                      >
+                        Sell
+                      </Button>
                     )}
                   </Box>
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Grid item xs={12} sm={12} md={12} lg={12} sx={{ p: 2 }}>
               <Box
                 sx={{
                   py: smDown ? 0 : 3,
