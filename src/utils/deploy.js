@@ -3,7 +3,7 @@ import { kip17Data, kip37Data } from '../contracts';
 import Caver from 'caver-js';
 // import { useWeb3React } from '@web3-react/core';
 import { mkDirIPFS } from '../hooks/useNFT';
-import { IPFS_URL } from '../config/constants/consts';
+import { IPFS_URL, ALT_URL } from '../config/constants/consts';
 
 export async function deployKIP17(name, symbol, account, library) {
   // hooks can not be called from inside a function
@@ -50,6 +50,8 @@ export async function deployKIP37(name, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
+  console.log('222--------->', name);
+
   const factory = new ContractFactory(
     kip37Data.abi,
     kip37Data.bytecode,
@@ -57,14 +59,16 @@ export async function deployKIP37(name, account, library) {
   );
 
   // TODO : ipfs mkdir
-  try {
-    const hash = await mkDirIPFS(name);
-  } catch (err) {
-    console.log(err);
-  }
+  // try {
+  //   const hash = await mkDirIPFS(name);
+  // } catch (err) {
+  //   console.log(err);
+  // }
   // TODO : 403 forbidden why ?
   // const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
-  const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
+  // const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
+  const tokenUri = `${ALT_URL}/${name}/{id}.json`;
+  // TODO : 백엔드에 디렉토리 생성 API 호출 필요함.
 
   const ret = {};
   const contract = await factory
@@ -139,14 +143,16 @@ export async function deployKIP37WithKaikas(name, account, library) {
   // console.log('=====> ', factory, window.klaytn.selectedAddress);
 
   // TODO : ipfs mkdir
-  try {
-    const hash = await mkDirIPFS(name);
-  } catch (err) {
-    console.log(err);
-  }
+  // try {
+  //   const hash = await mkDirIPFS(name);
+  // } catch (err) {
+  //   console.log(err);
+  // }
   // TODO : 403 forbidden why ?
   // const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
-  const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
+  // const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
+  const tokenUri = `${ALT_URL}/${name}/{id}.json`;
+  // TODO : 백엔드에 디렉토리 생성 API 호출 필요함.
 
   const ret = {};
   const contract = await factory

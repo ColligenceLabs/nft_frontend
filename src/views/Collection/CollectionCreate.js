@@ -298,11 +298,16 @@ const CollectionCreate = () => {
               }
             }
             formData.append('description', values.description);
+            let directory = '';
             if (values.maximum_supply !== '') {
               formData.append('maximum_supply', values.maximum_supply);
               formData.append('contract_type', 'SPLToken');
             } else {
               formData.append('contract_type', values.type);
+              if (values.type === 'KIP37') {
+                directory = values.tokenUri + '-' + Math.random().toString(36).substring(7);
+                formData.append('directory', directory);
+              }
             }
 
             // formData 에 contract_address 추가(test data 로 실행되도록 하드코딩)
@@ -338,9 +343,9 @@ const CollectionCreate = () => {
                       library.connection.url !== 'metamask' &&
                       library.connection.url !== 'eip-1193:'
                     ) {
-                      result = await deployKIP37WithKaikas(values.tokenUri, account, library);
+                      result = await deployKIP37WithKaikas(directory, account, library);
                     } else {
-                      result = await deployKIP37(values.tokenUri, account, library);
+                      result = await deployKIP37(directory, account, library);
                     }
                   }
                 }
