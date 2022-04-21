@@ -10,10 +10,17 @@ import FeatherIcon from 'feather-icons-react';
 import ImageViewer from '../../../../components/ImageViewer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-const NFTItem: React.FC<NFTType> = ({ item }) => {
+interface NFTItemProp {
+  item: NFTType;
+  showLarge: boolean;
+}
+const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
   const theme = useTheme();
 
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
+  const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
   return (
@@ -70,7 +77,7 @@ const NFTItem: React.FC<NFTType> = ({ item }) => {
               style={{
                 marginTop: item?.metadata?.content_Type === 'mp4' ? '-52px' : '0px',
               }}
-              height={smDown ? '170px' : '270px'}
+              height={mdDown ? (showLarge ? '270px' : '170px') : showLarge ? '270px' : '170px'}
             />
           </Box>
 

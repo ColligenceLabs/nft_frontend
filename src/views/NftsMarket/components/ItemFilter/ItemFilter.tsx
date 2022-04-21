@@ -4,12 +4,16 @@ import CustomTextField from '../../../../components/forms/custom-elements/Custom
 import SearchIcon from '@mui/icons-material/Search';
 import CustomSelect from '../../../../components/forms/custom-elements/CustomSelect';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import ViewModeSelector from '../ViewModeSelector';
 
 interface ItemFilterProp {
   filterSet: object;
   setFilterSet: React.Dispatch<React.SetStateAction<{}>>;
   onClickFilter: () => void;
+  showLarge: boolean;
+  onClickViewMode: (flag: boolean) => void;
 }
+
 const SORTING_CATEGORY = [
   { id: 0, value: 'recent', caption: 'Recent' },
   { id: 1, value: 'oldest', caption: 'Oldest' },
@@ -17,7 +21,13 @@ const SORTING_CATEGORY = [
   { id: 3, value: 'priceHighToLow', caption: 'Price High to Low' },
 ];
 
-const ItemFilter: React.FC<ItemFilterProp> = ({ filterSet, setFilterSet, onClickFilter }) => {
+const ItemFilter: React.FC<ItemFilterProp> = ({
+  filterSet,
+  setFilterSet,
+  onClickFilter,
+  showLarge,
+  onClickViewMode,
+}) => {
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
@@ -65,21 +75,35 @@ const ItemFilter: React.FC<ItemFilterProp> = ({ filterSet, setFilterSet, onClick
         gap: 2,
       }}
     >
-      <CustomTextField
-        sx={{ flexGrow: 1 }}
-        size={'small'}
-        placeholder={'Search'}
-        onChange={onChangeSearchKeyword}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position={'start'}>
-              <IconButton>
-                <SearchIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Box
+        sx={
+          smDown
+            ? {
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: 2,
+              }
+            : { flex: 1 }
+        }
+      >
+        <CustomTextField
+          fullWidth
+          sx={{ flexGrow: 1 }}
+          size={'small'}
+          placeholder={'Search'}
+          onChange={onChangeSearchKeyword}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position={'start'}>
+                <IconButton>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        {smDown && <ViewModeSelector showLarge={showLarge} onClickViewMode={onClickViewMode} />}
+      </Box>
       <Box
         sx={{
           display: 'flex',
@@ -125,9 +149,11 @@ const ItemFilter: React.FC<ItemFilterProp> = ({ filterSet, setFilterSet, onClick
             sx={{ flexGrow: 1, maxWidth: mdDown ? '100%' : '120px' }}
           />
         </Box>
+
         <Button size={'small'} variant={'contained'} onClick={onClickFilter}>
           Filter
         </Button>
+        {!smDown && <ViewModeSelector showLarge={showLarge} onClickViewMode={onClickViewMode} />}
       </Box>
     </Box>
   );
