@@ -13,7 +13,7 @@ import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContrac
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
-import { selectTokenId, cancelBuy } from '../../services/nft.service';
+import { selectTokenId, cancelBuy, getUserNftSerialsData } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
 import ImageViewer from '../../components/ImageViewer';
@@ -26,6 +26,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FeatherIcon from 'feather-icons-react';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import WalletDialog from '../../components/WalletDialog';
+import { useWeb3React } from '@web3-react/core';
+import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
+import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 
 const NFTDetail = () => {
   const theme = useTheme();
@@ -33,31 +36,36 @@ const NFTDetail = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
   });
+
   const { id } = useParams();
   const params = useLocation();
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [toggler, setToggler] = useState(false);
   const [buyFlag, setBuyFlag] = useState(false);
   const [showMoreItem, setShowMoreItem] = useState(true);
+  const [myNFT, setMyNFT] = useState(null);
+  const [sellPrice, setSellPrice] = useState('0');
 
   let API_URL;
 
-  console.log(params);
+  // dapp route
+  // console.log(params);
   if (params.state === null) {
-    console.log('from market page');
+    // console.log('from market page');
     API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
   } else {
     console.log('from talken app');
   }
+
   const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
 
-  console.log(data);
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
   const { library, account, activate } = useActiveWeb3React();
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
+
   const buy = async () => {
     setBuyFlag(true);
     setSellingQuantity((curr: number) => curr - 1);
@@ -106,12 +114,18 @@ const NFTDetail = () => {
     setSellingQuantity(data?.data?.quantity_selling);
   }, [data?.data?.quantity_selling]);
 
+  useEffect(() => {
+    getUserNftSerialsData(id, account).then((res) => {
+      setMyNFT(res.data);
+    });
+  }, [getUserNftSerialsData, id, account]);
+
   return (
     <MarketLayout>
       {data && !error && (
         <Container>
           <Grid container>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={6} md={6} sm={12} xs={12} sx={{ p: 2 }}>
               {data?.data?.metadata?.content_Type === 'mp4' ? (
                 <Card
                   sx={{
@@ -245,46 +259,75 @@ const NFTDetail = () => {
                       <Typography variant={'h1'}>{sellingQuantity}</Typography>
                     </Box>
                   </Box>
-                  <Box sx={{ py: 1, px: 2 }}>
-                    <Typography variant={'subtitle2'} color={'primary'}>
-                      Price
-                    </Typography>
-                    <Box
-                      display={'flex'}
-                      justifyContent={'flex-start'}
-                      alignItems={'center'}
-                      gap={'0.5rem'}
-                    >
-                      {data?.data?.quote === 'klay' && (
-                        <img src={klayLogo} alt="klay" height="24px" />
-                      )}
-                      {data?.data?.quote === 'talk' && (
-                        <img src={talkLogo} alt="klay" height="24px" />
-                      )}
-                      <Typography variant={'h1'}>
-                        {data?.data?.price} {data?.data?.quote}
+                  {myNFT === null ? (
+                    <Box sx={{ py: 1, px: 2 }}>
+                      <Typography variant={'subtitle2'} color={'primary'}>
+                        Price
                       </Typography>
-                    </Box>
-
-                    {account === undefined ? (
-                      <Button variant="contained" onClick={() => setIsOpenConnectModal(true)}>
-                        Connect Wallet
-                      </Button>
-                    ) : (
-                      <LoadingButton
-                        onClick={buy}
-                        disabled={sellingQuantity === 0}
-                        loading={buyFlag}
-                        variant="contained"
+                      <Box
+                        display={'flex'}
+                        justifyContent={'flex-start'}
+                        alignItems={'center'}
+                        gap={'0.5rem'}
                       >
-                        {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
-                      </LoadingButton>
-                    )}
-                  </Box>
+                        {data?.data?.quote === 'klay' && (
+                          <img src={klayLogo} alt="klay" height="24px" />
+                        )}
+                        {data?.data?.quote === 'talk' && (
+                          <img src={talkLogo} alt="klay" height="24px" />
+                        )}
+                        <Typography variant={'h1'}>
+                          {data?.data?.price} {data?.data?.quote}
+                        </Typography>
+                      </Box>
+
+                      {account === undefined ? (
+                        <Button variant="contained" onClick={() => setIsOpenConnectModal(true)}>
+                          Connect Wallet
+                        </Button>
+                      ) : (
+                        <LoadingButton
+                          onClick={buy}
+                          disabled={sellingQuantity === 0}
+                          loading={buyFlag}
+                          variant="contained"
+                        >
+                          {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
+                        </LoadingButton>
+                      )}
+                    </Box>
+                  ) : (
+                    <Box sx={{ py: 1, px: 2 }}>
+                      <Typography variant={'subtitle2'} color={'primary'}>
+                        Price
+                      </Typography>
+                      <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: '1rem' }}>
+                        <CustomTextField
+                          id="price"
+                          name="price"
+                          variant="outlined"
+                          type="number"
+                          size="small"
+                          value={sellPrice}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setSellPrice(e.target.value)
+                          }
+                        />
+                        <Button
+                          // onClick={buy}
+                          // disabled={sellingQuantity === 0}
+                          // loading={buyFlag}
+                          variant="contained"
+                        >
+                          Sell
+                        </Button>
+                      </Box>
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={12} md={12} lg={12}>
+            <Grid item xs={12} sm={12} md={12} lg={12} sx={{ p: 2 }}>
               <Box
                 sx={{
                   py: smDown ? 0 : 3,
