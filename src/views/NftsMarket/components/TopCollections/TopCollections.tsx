@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Avatar, Box, Button, Menu, MenuItem, Typography, Divider } from '@mui/material';
-import { mock } from './mock';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import useSWR from 'swr';
+import { TrendingCategoryItem, TrendingCategoryResponse } from '../../types';
 
 interface CategoryTypes {
   id: number;
@@ -14,26 +15,34 @@ interface CategoryTypes {
 const CATEGORY: CategoryTypes[] = [
   {
     id: 0,
-    value: 'last24hours',
+    value: '1',
     caption: 'last 24 hours',
   },
   {
     id: 1,
-    value: 'last7days',
+    value: '7',
     caption: 'last 7 days',
   },
   {
     id: 2,
-    value: 'last30days',
+    value: '30',
     caption: 'last 30 days',
   },
 ];
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const TopCollections = () => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [category, setCategory] = useState<CategoryTypes>(CATEGORY[1]);
 
+  const { data, error } = useSWR<TrendingCategoryResponse>(
+    `${process.env.REACT_APP_API_SERVER}/admin-api/collection/top?days=${category.value}d&size=15&page=0`,
+    fetcher,
+  );
+
+  console.log(data?.data);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -116,7 +125,7 @@ const TopCollections = () => {
           alignItems: 'center',
         }}
       >
-        {mock.map((item, index) => (
+        {data?.data.map((item: TrendingCategoryItem, index: number) => (
           <Box
             key={index}
             sx={{
@@ -132,30 +141,32 @@ const TopCollections = () => {
           >
             <Box>
               <Typography variant={'body2'} fontWeight={700}>
-                {item.id + 1}
+                {index + 1}
               </Typography>
             </Box>
-            <Avatar src={item.image} />
+            <Avatar src={item.image_link} />
             <Box sx={{ flex: 1 }}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography fontSize={'13px'} fontWeight={700}>
-                  {item.title.length > 20 ? `${item.title.slice(0, 20)}...` : item.title}
+                  {item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}
                 </Typography>
-                <Typography
-                  fontSize={'13px'}
-                  fontWeight={700}
-                  color={item.fluctuationRate > 0 ? 'primary' : 'red'}
-                >
-                  {item.fluctuationRate}
-                </Typography>
+                {/*<Typography*/}
+                {/*  fontSize={'13px'}*/}
+                {/*  fontWeight={700}*/}
+                {/*  color={item.fluctuationRate > 0 ? 'primary' : 'red'}*/}
+                {/*>*/}
+                {/*  {item.fluctuationRate}*/}
+                {/*</Typography>*/}
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Typography fontSize={'12px'} color={'text.secondary'}>
-                  Floor price : {item.floorPrice}
+                  Floor price : 2222
                 </Typography>
-                <Typography fontSize={'12px'} color={'text.secondary'}>
-                  {item.price}
-                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
+                    $ {item.total_volume_usd.toFixed(4)}
+                  </Typography>
+                </Box>
               </Box>
             </Box>
           </Box>

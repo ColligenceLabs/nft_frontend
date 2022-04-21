@@ -334,3 +334,31 @@ export interface RegisterResponse {
   };
   message: string;
 }
+
+export interface TrendingCategoryResponse {
+  status: number;
+  data: TrendingCategoryItem[];
+  message: string;
+}
+
+export interface TrendingCategoryItem {
+  network: string;
+  category: [string];
+  maximum_supply: number;
+  status: string;
+  _id: string;
+  name: string;
+  cover_image: string;
+  creator_id: { _id: string };
+  contract_address: string;
+  contract_type: string;
+  path: string;
+  image_link: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  total_volume: number;
+  total_volume_usd: number;
+  total_volume_krw: number;
+}
