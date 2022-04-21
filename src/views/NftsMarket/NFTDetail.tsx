@@ -29,6 +29,8 @@ import WalletDialog from '../../components/WalletDialog';
 import { useWeb3React } from '@web3-react/core';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
+import ItemActivity from './components/ItemActivity';
+import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 
 const NFTDetail = () => {
   const theme = useTheme();
@@ -43,6 +45,7 @@ const NFTDetail = () => {
   const [toggler, setToggler] = useState(false);
   const [buyFlag, setBuyFlag] = useState(false);
   const [showMoreItem, setShowMoreItem] = useState(true);
+  const [showItemActivity, setShowItemActivity] = useState(true);
   const [myNFT, setMyNFT] = useState(null);
   const [sellPrice, setSellPrice] = useState('0');
 
@@ -324,6 +327,49 @@ const NFTDetail = () => {
                       </Box>
                     </Box>
                   )}
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={12} md={12} lg={12} sx={{ p: 2 }}>
+              <Box
+                sx={{
+                  py: smDown ? 0 : 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    mt: 2,
+                    border: '0.5px solid #d6d6d6',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      borderBottom: showMoreItem ? 0.5 : 0,
+                      borderColor: '#d6d6d6',
+                      p: 2,
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                        gap: '0.2rem',
+                      }}
+                    >
+                      <HistoryOutlinedIcon />
+                      <Typography variant={'h4'}>Item Activity</Typography>
+                    </Box>
+                    <KeyboardArrowUpIcon
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => setShowItemActivity((cur) => !cur)}
+                    />
+                  </Box>
+                  {showItemActivity && <ItemActivity />}
                 </Box>
               </Box>
             </Grid>

@@ -12,7 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface NFTItemProp {
   item: NFTType;
-  showLarge: boolean;
+  showLarge?: boolean;
 }
 const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
   const theme = useTheme();

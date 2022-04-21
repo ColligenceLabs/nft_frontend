@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import useSWR from 'swr';
-import { NFTResponse } from '../../types';
+import { NFTResponse, NFTType } from '../../types';
 import NFTItem from '../NFTItem';
 
 interface MoreNFTsProps {
@@ -27,7 +27,7 @@ const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id, name, nft_id }) => {
       <Grid container>
         {!error &&
           data &&
-          data.data?.items.map((item, index) => (
+          data.data?.items.map((item: NFTType, index) => (
             <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
               <NFTItem item={item} />
             </Grid>
