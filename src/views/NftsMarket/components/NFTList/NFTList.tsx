@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 import NFTItem from '../NFTItem';
 import { useParams } from 'react-router-dom';
-
 import useSWRInfinite from 'swr/infinite';
 import { NFTResponse } from '../../types';
+import ItemFilter from '../ItemFilter';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 const PAGE_SIZE = 12;
@@ -12,6 +12,7 @@ const PAGE_SIZE = 12;
 const NFTList = () => {
   const { id } = useParams();
   const [itemCount, setItemCount] = useState(0);
+  const [filterSet, setFilterSet] = useState({});
   const { data, size, setSize, error, isValidating } = useSWRInfinite<NFTResponse>(
     (index) =>
       `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?type=0&page=${
@@ -31,17 +32,26 @@ const NFTList = () => {
     isEmpty || (data && data[data.length - 1]?.data?.headers?.x_pages_count <= size);
   const isRefreshing = isValidating && data && data.length === size;
 
+  const onClickFilter = () => {
+    console.log('filter');
+    console.log(filterSet);
+  };
+
   useEffect(() => {
     data !== undefined && setItemCount(data[0].data.headers.x_total_count);
   }, [data]);
 
+  useEffect(() => {
+    console.log(filterSet);
+  }, [filterSet]);
+
   return (
     <Grid container>
+      <ItemFilter filterSet={filterSet} setFilterSet={setFilterSet} onClickFilter={onClickFilter} />
       <Grid item xs={12} sm={12} md={12} lg={12}>
         <Typography
           variant={'h5'}
           sx={{
-            mt: '-20px',
             mb: '15px',
             px: '15px',
           }}
