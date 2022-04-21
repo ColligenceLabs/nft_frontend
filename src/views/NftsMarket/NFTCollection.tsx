@@ -13,6 +13,8 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const NFTCollection = () => {
+  const [showAll, setShowAll] = useState(false);
+
   const { id } = useParams();
   const { data, error } = useSWR<CollectionDetailResponse>(
     `/admin-api/collection/detail/${id}`,
@@ -22,8 +24,6 @@ const NFTCollection = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
   });
-
-  const [showAll, setShowAll] = useState(false);
 
   return (
     <>
