@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Box, Button, Menu, MenuItem, Typography, Divider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useSWR from 'swr';
 import { TrendingCategoryItem, TrendingCategoryResponse } from '../../types';
+import taal_logo from '../../../../assets/images/landing_icon/introduction_taal.svg';
 
 interface CategoryTypes {
   id: number;
@@ -36,8 +37,9 @@ const TopCollections = () => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [category, setCategory] = useState<CategoryTypes>(CATEGORY[1]);
+  const [emptyItem, setEmptyItem] = useState([0]);
 
-  const { data, error } = useSWR<TrendingCategoryResponse>(
+  const { data } = useSWR<TrendingCategoryResponse>(
     `${process.env.REACT_APP_API_SERVER}/admin-api/collection/top?days=${category.value}d&size=15&page=0`,
     fetcher,
   );
@@ -66,6 +68,15 @@ const TopCollections = () => {
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
   });
+
+  useEffect(() => {
+    if (data?.data && data?.data.length < 15) {
+      const loopCount = 15 - data?.data.length;
+      const arr = Array.from({ length: loopCount }, (v, i) => i);
+      setEmptyItem(arr);
+    }
+  }, [data?.data]);
+
   return (
     <Box
       sx={{
@@ -171,6 +182,53 @@ const TopCollections = () => {
             </Box>
           </Box>
         ))}
+        {emptyItem.length > 0 &&
+          emptyItem.map((item, index) => (
+            <Box
+              key={index}
+              sx={{
+                px: '10px',
+                py: '15px',
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                width: smDown ? '100%' : '300px',
+                gap: '0.5rem',
+                borderBottom: '0.5px solid #d6d6d6',
+              }}
+            >
+              <Box>
+                <Typography variant={'body2'} fontWeight={700}>
+                  -
+                </Typography>
+              </Box>
+              <Avatar src={taal_logo} />
+              <Box sx={{ flex: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography fontSize={'13px'} fontWeight={700}>
+                    No Item
+                  </Typography>
+                  {/*<Typography*/}
+                  {/*  fontSize={'13px'}*/}
+                  {/*  fontWeight={700}*/}
+                  {/*  color={item.fluctuationRate > 0 ? 'primary' : 'red'}*/}
+                  {/*>*/}
+                  {/*  {item.fluctuationRate}*/}
+                  {/*</Typography>*/}
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography fontSize={'12px'} color={'text.secondary'}>
+                    {/*Floor price : 2222*/}
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
+                      {/*$ {item.total_volume_usd.toFixed(4)}*/}
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          ))}
       </Box>
     </Box>
   );
