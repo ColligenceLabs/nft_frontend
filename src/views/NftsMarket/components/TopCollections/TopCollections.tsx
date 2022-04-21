@@ -45,7 +45,6 @@ const TopCollections = () => {
     fetcher,
   );
 
-  console.log(data?.data);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
