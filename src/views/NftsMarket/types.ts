@@ -361,4 +361,5 @@ export interface TrendingCategoryItem {
   total_volume: number;
   total_volume_usd: number;
   total_volume_krw: number;
+  floorPrice: { _id: string; floorPrice: number };
 }

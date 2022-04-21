@@ -6,6 +6,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useSWR from 'swr';
 import { TrendingCategoryItem, TrendingCategoryResponse } from '../../types';
 import taal_logo from '../../../../assets/images/landing_icon/introduction_taal.svg';
+import talk_icon from '../../../../assets/images/logos/talken_icon.png';
+import klay_icon from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
+
 import { Link } from 'react-router-dom';
 
 interface CategoryTypes {
@@ -181,9 +184,41 @@ const TopCollections = () => {
                   {/*</Typography>*/}
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography fontSize={'12px'} color={'text.secondary'}>
-                    Floor price : 2222
-                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                      gap: 1,
+                    }}
+                  >
+                    <Typography fontSize={'12px'} color={'text.secondary'}>
+                      Floor price :
+                    </Typography>
+                    {item?.floorPrice?._id === 'talk' && (
+                      <img
+                        alt="Remy Sharp"
+                        style={{ width: '12px', height: '12px' }}
+                        src={talk_icon}
+                      />
+                    )}
+
+                    {item?.floorPrice?._id === 'klay' && (
+                      <img
+                        alt="Remy Sharp"
+                        style={{ width: '12px', height: '12px' }}
+                        src={klay_icon}
+                      />
+                    )}
+
+                    <Typography fontSize={'12px'} color={'text.secondary'}>
+                      {`${
+                        item?.floorPrice?.floorPrice !== undefined
+                          ? item?.floorPrice?.floorPrice
+                          : '-'
+                      } ${item?.floorPrice?._id !== undefined ? item?.floorPrice?._id : ''}`}
+                    </Typography>
+                  </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
                       $ {item.total_volume_usd.toFixed(4)}
