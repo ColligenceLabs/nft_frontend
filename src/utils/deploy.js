@@ -4,6 +4,7 @@ import Caver from 'caver-js';
 // import { useWeb3React } from '@web3-react/core';
 import { mkDirIPFS } from '../hooks/useNFT';
 import { IPFS_URL, ALT_URL } from '../config/constants/consts';
+import { parseUnits } from 'ethers/lib/utils';
 
 export async function deployKIP17(name, symbol, account, library) {
   // hooks can not be called from inside a function
@@ -16,8 +17,10 @@ export async function deployKIP17(name, symbol, account, library) {
   );
 
   const ret = {};
+  const gasPrice = parseUnits('750', 'gwei').toString();
   const contract = await factory
     .deploy(name, symbol, {
+      gasPrice,
       gasLimit: 7000000,
     })
     .catch(function (err) {
@@ -71,8 +74,10 @@ export async function deployKIP37(name, account, library) {
   // TODO : 백엔드에 디렉토리 생성 API 호출 필요함.
 
   const ret = {};
+  const gasPrice = parseUnits('750', 'gwei').toString();
   const contract = await factory
     .deploy(tokenUri, {
+      gasPrice,
       gasLimit: 7000000,
     })
     .catch(function (err) {
