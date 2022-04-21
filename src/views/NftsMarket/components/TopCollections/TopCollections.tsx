@@ -6,6 +6,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import useSWR from 'swr';
 import { TrendingCategoryItem, TrendingCategoryResponse } from '../../types';
 import taal_logo from '../../../../assets/images/landing_icon/introduction_taal.svg';
+import { Link } from 'react-router-dom';
 
 interface CategoryTypes {
   id: number;
@@ -44,6 +45,7 @@ const TopCollections = () => {
     fetcher,
   );
 
+  console.log(data?.data);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -136,50 +138,62 @@ const TopCollections = () => {
         }}
       >
         {data?.data.map((item: TrendingCategoryItem, index: number) => (
-          <Box
+          <Link
             key={index}
-            sx={{
-              px: '10px',
-              py: '15px',
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              width: smDown ? '100%' : '300px',
-              gap: '0.5rem',
-              borderBottom: '0.5px solid #d6d6d6',
-            }}
+            to={`/market/collection/${item._id}`}
+            style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            <Box>
-              <Typography variant={'body2'} fontWeight={700}>
-                {index + 1}
-              </Typography>
-            </Box>
-            <Avatar src={item.image_link} />
-            <Box sx={{ flex: 1 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography fontSize={'13px'} fontWeight={700}>
-                  {item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}
+            <Box
+              sx={{
+                px: '10px',
+                py: '15px',
+                display: 'flex',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                width: smDown ? '100%' : '300px',
+                gap: '0.5rem',
+                borderBottom: '0.5px solid #d6d6d6',
+                cursor: 'pointer',
+                '&:hover': {
+                  // boxShadow: '60px -16px teal',
+                  // boxShadow: '10px 5px 5px black',
+                  boxShadow: '0px 0px 2px 2px rgba(0, 0, 0, 0.2)',
+                  //
+                },
+              }}
+            >
+              <Box>
+                <Typography variant={'body2'} fontWeight={700}>
+                  {index + 1}
                 </Typography>
-                {/*<Typography*/}
-                {/*  fontSize={'13px'}*/}
-                {/*  fontWeight={700}*/}
-                {/*  color={item.fluctuationRate > 0 ? 'primary' : 'red'}*/}
-                {/*>*/}
-                {/*  {item.fluctuationRate}*/}
-                {/*</Typography>*/}
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Typography fontSize={'12px'} color={'text.secondary'}>
-                  Floor price : 2222
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
-                    $ {item.total_volume_usd.toFixed(4)}
+              <Avatar src={item.image_link} />
+              <Box sx={{ flex: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography fontSize={'13px'} fontWeight={700}>
+                    {item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}
                   </Typography>
+                  {/*<Typography*/}
+                  {/*  fontSize={'13px'}*/}
+                  {/*  fontWeight={700}*/}
+                  {/*  color={item.fluctuationRate > 0 ? 'primary' : 'red'}*/}
+                  {/*>*/}
+                  {/*  {item.fluctuationRate}*/}
+                  {/*</Typography>*/}
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography fontSize={'12px'} color={'text.secondary'}>
+                    Floor price : 2222
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
+                      $ {item.total_volume_usd.toFixed(4)}
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </Box>
-          </Box>
+          </Link>
         ))}
         {emptyItem.length > 0 &&
           emptyItem.map((item, index) => (
