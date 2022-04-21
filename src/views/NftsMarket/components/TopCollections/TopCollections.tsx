@@ -149,7 +149,7 @@ const TopCollections = () => {
                 display: 'flex',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
-                width: smDown ? '100%' : '300px',
+                width: smDown ? '300px' : '350px',
                 gap: '0.5rem',
                 borderBottom: '0.5px solid #d6d6d6',
                 cursor: 'pointer',
@@ -204,7 +204,7 @@ const TopCollections = () => {
                 display: 'flex',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
-                width: smDown ? '100%' : '300px',
+                width: smDown ? '300px' : '350px',
                 gap: '0.5rem',
                 borderBottom: '0.5px solid #d6d6d6',
               }}
@@ -220,23 +220,6 @@ const TopCollections = () => {
                   <Typography fontSize={'13px'} fontWeight={700}>
                     No Item
                   </Typography>
-                  {/*<Typography*/}
-                  {/*  fontSize={'13px'}*/}
-                  {/*  fontWeight={700}*/}
-                  {/*  color={item.fluctuationRate > 0 ? 'primary' : 'red'}*/}
-                  {/*>*/}
-                  {/*  {item.fluctuationRate}*/}
-                  {/*</Typography>*/}
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <Typography fontSize={'12px'} color={'text.secondary'}>
-                    {/*Floor price : 2222*/}
-                  </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
-                      {/*$ {item.total_volume_usd.toFixed(4)}*/}
-                    </Typography>
-                  </Box>
                 </Box>
               </Box>
             </Box>
