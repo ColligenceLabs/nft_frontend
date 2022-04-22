@@ -22,6 +22,24 @@ const categories = [
   { id: 13, value: 'virtualWorlds', category: 'Virtual Worlds' },
 ];
 
+const TaleknArea = () => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        border: '1px solid #d6d6d6',
+        borderRadius: '30px',
+        height: '300px',
+        m: '15px',
+      }}
+    >
+      <Typography variant={'h2'}>Talken Items</Typography>
+    </Box>
+  );
+};
 const NFTsMarket = () => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
@@ -117,8 +135,15 @@ const NFTsMarket = () => {
       )}
 
       <Container style={{ marginTop: '-30px' }}>
-        {selectedCategory.value !== 'talken' && (
+        {selectedCategory.value === 'all' ? (
+          <>
+            <TaleknArea />
+            <CollectionList selectedCategory={selectedCategory} />
+          </>
+        ) : selectedCategory.value !== 'talken' ? (
           <CollectionList selectedCategory={selectedCategory} />
+        ) : (
+          <TaleknArea />
         )}
       </Container>
     </MarketLayout>
