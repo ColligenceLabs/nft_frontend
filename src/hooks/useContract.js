@@ -4,7 +4,7 @@ import contracts from '../config/constants/contracts';
 import kip17Abi from '../config/abi/kip17.json';
 import kip37Abi from '../config/abi/kip37.json';
 // import marketAbi from '../config/abi/market.json';
-import marketAbi from '../config/abi/marketV3.json';
+import marketAbi from '../config/abi/marketV4.json';
 import tokenAbi from '../config/abi/erc20.json';
 import useActiveWeb3React from './useActiveWeb3React';
 import Caver from 'caver-js';
@@ -38,7 +38,7 @@ export const useKipContractWithKaikas = (contract, type) => {
 export const useMarketContract = () => {
   const { library } = useActiveWeb3React();
   // const contract = contracts.market[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
-  const contract = contracts.marketV3[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
+  const contract = contracts.marketV4[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
   return useMemo(() => {
     if (!library) return;
     if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:') {
