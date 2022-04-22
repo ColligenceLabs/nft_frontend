@@ -83,10 +83,15 @@ const NFTDetail = () => {
     }
     const price = data?.data?.price;
     const quote = data?.data?.quote;
+    const quantity = data?.data?.quantity;
     // tokenId 를 사용 구입 진행.
+    // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
+    // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
     const result = await buyNFT(
       isKaikas ? nftContractWithKaikas : nftContract,
       parseInt(tokenId.data, 16),
+      account,
+      quantity,
       price,
       quote,
     );

@@ -90,14 +90,13 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const getNftContract = (contract) => {
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-    if (isKaikas){
+    if (isKaikas) {
       const caver = new Caver(window.klaytn);
       return new caver.klay.Contract(kip17Abi, contract);
-    }
-    else {
+    } else {
       return new ethers.Contract(contract, kip17Abi, library?.getSigner());
     }
-  }
+  };
 
   const handleChangeEnd = (newValue) => {
     setEndDate(newValue);
@@ -112,12 +111,21 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       const nftContract = getNftContract(nftInfo.data.collection_id.contract_address);
       for (let j = 0; j < serials.data.items.length; j++) {
         if (serials.data.items[j].owner_id === null) {
-          await sellNFT(nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price, nftInfo.data.quote);
+          // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
+          // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
+          await sellNFT(
+            nftContract,
+            nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
+            parseInt(serials.data.items[j].token_id, 16),
+            nftInfo.data.quantity,
+            nftInfo.data.price,
+            nftInfo.data.quote,
+          );
           // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
         }
       }
     }
-  }
+  };
 
   const handleSchedule = async () => {
     if (useKAS !== 'true' && !library) {
@@ -145,10 +153,8 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       }
     } catch (e) {
       setSuccessFlag(false);
-      if (e.data)
-        setErrorMessage(e.data.message);
-      else
-        setErrorMessage(e.message);
+      if (e.data) setErrorMessage(e.data.message);
+      else setErrorMessage(e.message);
     }
     setLoading(false);
     setOpenSnackbar(true);
