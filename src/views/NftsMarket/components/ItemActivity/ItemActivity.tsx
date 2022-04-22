@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Box, MenuItem, Pagination, Select, Typography } from '@mui/material';
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { Box, MenuItem, Select, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import talk_icon from '../../../../assets/images/logos/talken_icon.png';
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'; // mint
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; // sale
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'; // list
+import PanToolIcon from '@mui/icons-material/PanTool'; // bid
+import CompareArrowsIcon from '@mui/icons-material/CompareArrows'; // transfer
+import CancelIcon from '@mui/icons-material/Cancel';
 
 import { useTheme } from '@mui/material/styles';
 
@@ -29,54 +36,70 @@ const columns: GridColDef[] = [
     headerName: 'Event',
     sortable: false,
     width: 200,
-    align: 'center',
-    headerAlign: 'center',
+    renderCell: ({ row }) => (
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1 }}>
+        {row.event.toLowerCase() === 'minted' && <AddShoppingCartIcon fontSize={'small'} />}
+        {row.event.toLowerCase() === 'sale' && <ShoppingCartIcon fontSize={'small'} />}
+        {row.event.toLowerCase() === 'bid' && <PanToolIcon fontSize={'small'} />}
+        {row.event.toLowerCase() === 'list' && <LocalOfferIcon fontSize={'small'} />}
+        {row.event.toLowerCase() === 'transfer' && <CompareArrowsIcon fontSize={'small'} />}
+        {row.event.toLowerCase() === 'cancel' && <CancelIcon fontSize={'small'} />}
+        <Typography variant={'h6'}>{row.event}</Typography>
+      </Box>
+    ),
   },
   {
     field: 'price',
     headerName: 'Price',
     sortable: false,
     width: 150,
-    align: 'center',
-    headerAlign: 'center',
+    align: 'left',
+    renderCell: ({ row }) => (
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1 }}>
+        {row.price !== null && row.price !== '' && (
+          <img alt="talk_icon" style={{ width: '16px', height: '16px' }} src={talk_icon} />
+        )}
+        <Typography variant={'h6'}>{row.price}</Typography>
+      </Box>
+    ),
   },
   {
     field: 'from',
     headerName: 'From',
     sortable: false,
     width: 300,
-    align: 'center',
-    headerAlign: 'center',
+    align: 'left',
+    renderCell: ({ row }) => <Typography variant={'h6'}>{row.from}</Typography>,
   },
   {
     field: 'to',
     headerName: 'To',
     sortable: false,
     width: 300,
-    align: 'center',
-    headerAlign: 'center',
+    align: 'left',
+    renderCell: ({ row }) => <Typography variant={'h6'}>{row.to}</Typography>,
   },
   {
     field: 'date',
     headerName: 'Date',
     sortable: false,
     width: 150,
-    align: 'center',
-    headerAlign: 'center',
+    align: 'left',
+    renderCell: ({ row }) => <Typography variant={'h6'}>{row.date}</Typography>,
   },
 ];
 
 const rows = [
-  { id: 1, event: 'Cancel', price: '1', from: 'sueth', to: '', date: 'an hour ago' },
-  { id: 2, event: 'List', price: '1', from: 'sueth', to: '', date: 'an hour ago' },
-  { id: 3, event: 'List', price: '1', from: 'sueth', to: '', date: '2 hour ago' },
+  { id: 1, event: 'Cancel', price: '1', from: 'sueth', to: '', date: '22 Apr 2022 15:56:6' },
+  { id: 2, event: 'List', price: '1', from: 'sueth', to: '', date: '22 Apr 2022 15:50:59' },
+  { id: 3, event: 'List', price: '1', from: 'sueth', to: '', date: '22 Apr 2022 15:46:6' },
   {
     id: 4,
     event: 'Sale',
     price: '0.02',
     from: 'Nightmonster2021',
     to: 'sueth',
-    date: '2 hour ago',
+    date: '22 Apr 2022 7:49:22',
   },
   {
     id: 5,
@@ -84,17 +107,24 @@ const rows = [
     price: '',
     from: 'Nightmonster2021',
     to: 'sueth',
-    date: '2 hour ago',
+    date: '22 Apr 2022 7:37:40',
   },
-  { id: 6, event: 'Bid', price: '0.002', from: 'sueth', to: '', date: '2 hour ago' },
-  { id: 7, event: 'List', price: '0.002', from: 'Nightmonster2021', to: '', date: '2 hour ago' },
+  { id: 6, event: 'Bid', price: '0.002', from: 'sueth', to: '', date: '22 Apr 2022 5:57:32' },
+  {
+    id: 7,
+    event: 'List',
+    price: '0.002',
+    from: 'Nightmonster2021',
+    to: '',
+    date: '21 Apr 2022 18:38:8',
+  },
   {
     id: 8,
     event: 'Minted',
     price: '',
     from: 'Null Address',
     to: 'Nightmonster2021',
-    date: '18 days ago',
+    date: '21 Apr 2022 16:49:10',
   },
 ];
 
