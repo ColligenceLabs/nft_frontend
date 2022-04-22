@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categories = [
   { id: 0, value: 'all', category: 'All' },
-  // { id: 1, value: 'top', category: 'Top' },
+  { id: 1, value: 'talken', category: 'Talken' },
   // { id: 2, value: 'game', category: 'Game' },
   // { id: 3, value: 'graffiti', category: 'Graffiti' },
   // { id: 4, value: 'other', category: 'Other' },
@@ -117,7 +117,9 @@ const NFTsMarket = () => {
       )}
 
       <Container style={{ marginTop: '-30px' }}>
-        <CollectionList selectedCategory={selectedCategory} />
+        {selectedCategory.value !== 'talken' && (
+          <CollectionList selectedCategory={selectedCategory} />
+        )}
       </Container>
     </MarketLayout>
   );
