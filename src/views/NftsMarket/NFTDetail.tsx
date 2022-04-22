@@ -336,11 +336,7 @@ const NFTDetail = () => {
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={12} sx={{ p: 2 }}>
-              <Box
-                sx={{
-                  py: smDown ? 0 : 3,
-                }}
-              >
+              <Box>
                 <Box
                   sx={{
                     mt: 2,
@@ -379,14 +375,9 @@ const NFTDetail = () => {
               </Box>
             </Grid>
             <Grid item xs={12} sm={12} md={12} lg={12} sx={{ p: 2 }}>
-              <Box
-                sx={{
-                  py: smDown ? 0 : 3,
-                }}
-              >
+              <Box>
                 <Box
                   sx={{
-                    mt: 2,
                     border: '0.5px solid #d6d6d6',
                     borderRadius: 2,
                   }}
