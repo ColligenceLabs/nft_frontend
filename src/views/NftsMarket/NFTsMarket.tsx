@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categories = [
   { id: 0, value: 'all', category: 'All' },
-  // { id: 1, value: 'top', category: 'Top' },
+  { id: 1, value: 'talken', category: 'Talken' },
   // { id: 2, value: 'game', category: 'Game' },
   // { id: 3, value: 'graffiti', category: 'Graffiti' },
   // { id: 4, value: 'other', category: 'Other' },
@@ -22,6 +22,24 @@ const categories = [
   { id: 13, value: 'virtualWorlds', category: 'Virtual Worlds' },
 ];
 
+const TaleknArea = () => {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        border: '1px solid #d6d6d6',
+        borderRadius: '30px',
+        height: '300px',
+        m: '15px',
+      }}
+    >
+      <Typography variant={'h2'}>Talken Items</Typography>
+    </Box>
+  );
+};
 const NFTsMarket = () => {
   const theme = useTheme();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
@@ -117,7 +135,16 @@ const NFTsMarket = () => {
       )}
 
       <Container style={{ marginTop: '-30px' }}>
-        <CollectionList selectedCategory={selectedCategory} />
+        {selectedCategory.value === 'all' ? (
+          <>
+            <TaleknArea />
+            <CollectionList selectedCategory={selectedCategory} />
+          </>
+        ) : selectedCategory.value !== 'talken' ? (
+          <CollectionList selectedCategory={selectedCategory} />
+        ) : (
+          <TaleknArea />
+        )}
       </Container>
     </MarketLayout>
   );
