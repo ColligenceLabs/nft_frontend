@@ -60,18 +60,15 @@ const COLLECTION_CATEGORY = [
   // { value: 'top', title: 'Top' },
   // { value: 'game', title: 'Game' },
   // { value: 'graffiti', title: 'Graffiti' },
+  { value: 'talken', title: 'Talken' },
   { value: 'art', title: 'Art' },
-  { value: 'collectibles', title: 'Collectibles' },
-  { value: 'domainNames', title: 'Domain Names' },
-  { value: 'music', title: 'Music' },
-  { value: 'photography', title: 'Photography' },
-  { value: 'sports', title: 'Sports' },
-  { value: 'tradingCards', title: 'Trading Cards' },
-  { value: 'utility', title: 'Utility' },
-  { value: 'virtualWorlds', title: 'Virtual Worlds' },
+  { value: 'collectibles', title: 'Collectibles Names' },
+  { value: 'membership', title: 'Membership' },
+  { value: 'pieces', title: 'Pieces' },
+  { value: 'games', title: 'Games' },
 ];
 
-const Container = styled(Paper)(({ theme }) => ({
+const Container = styled(Paper)(() => ({
   padding: '20px',
   borderRadius: '7px',
 }));

@@ -13,13 +13,9 @@ const categories = [
   // { id: 4, value: 'other', category: 'Other' },
   { id: 5, value: 'art', category: 'Art' },
   { id: 6, value: 'collectibles', category: 'Collectibles' },
-  { id: 7, value: 'domainNames', category: 'Domain Names' },
-  { id: 8, value: 'music', category: 'Music' },
-  { id: 9, value: 'photography', category: 'Photography' },
-  { id: 10, value: 'sports', category: 'Sports' },
-  { id: 11, value: 'tradingCards', category: 'Trading Cards' },
-  { id: 12, value: 'utility', category: 'Utility' },
-  { id: 13, value: 'virtualWorlds', category: 'Virtual Worlds' },
+  { id: 7, value: 'membership', category: 'Membership' },
+  { id: 8, value: 'pieces', category: 'Pieces' },
+  { id: 9, value: 'games', category: 'Games' },
 ];
 
 const TaleknArea = () => {
