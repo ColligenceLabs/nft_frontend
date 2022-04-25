@@ -5,7 +5,9 @@ import authService from './auth.service';
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft`;
 
 export const getNFTData = (type, page, rowsPerPage, searchKeyword, collectionId, creator_id) => {
-  let url = `${API_URL}/indexs?type=${type}&page=${page + 1}&perPage=${rowsPerPage}&onchain=true`;
+  let url = `${API_URL}/indexs?type=${type}&page=${
+    page + 1
+  }&perPage=${rowsPerPage}&onchain=true&createdAt=-1`;
   url = searchKeyword !== undefined ? `${url}&keyword=${searchKeyword}` : url;
   url = collectionId !== undefined ? `${url}&collection_id=${collectionId}` : url;
   url = creator_id !== undefined ? `${url}&creator_id=${creator_id}` : url;
