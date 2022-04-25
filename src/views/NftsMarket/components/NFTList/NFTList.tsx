@@ -31,7 +31,7 @@ const NFTList = () => {
 
   const { data, size, setSize, error, isValidating } = useSWRInfinite<NFTResponse>(
     (index) =>
-      `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?type=0&page=${
+      `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsM?type=0&page=${
         index + 1
       }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true&keyword=${
         filterSet.searchKeyword
