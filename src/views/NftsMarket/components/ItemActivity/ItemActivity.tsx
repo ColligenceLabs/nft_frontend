@@ -12,10 +12,10 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useTheme } from '@mui/material/styles';
 
 const FILTER_ITEM = [
-  { value: 'listing', caption: 'Listing' },
-  { value: 'sales', caption: 'Sales' },
-  { value: 'bids', caption: 'Bids' },
+  { value: 'list', caption: 'List' },
+  { value: 'sale', caption: 'Sale' },
   { value: 'transfer', caption: 'Transfer' },
+  { value: 'minted', caption: 'Minted' },
 ];
 
 const ITEM_HEIGHT = 48;
