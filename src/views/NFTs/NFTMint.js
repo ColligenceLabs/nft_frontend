@@ -654,7 +654,7 @@ const NFTMint = () => {
                 )}
 
                 <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="price">{t('Price')}</CustomFormLabel>
+                  <CustomFormLabel htmlFor="price">{t('Unit Price')}</CustomFormLabel>
                   <Box
                     sx={{
                       display: 'flex',

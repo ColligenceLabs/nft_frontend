@@ -118,6 +118,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
             nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
             parseInt(serials.data.items[j].token_id, 16),
             nftInfo.data.quantity,
+            // TODO : NFT 개당 가격
             nftInfo.data.price,
             nftInfo.data.quote,
           );
