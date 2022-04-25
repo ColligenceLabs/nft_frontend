@@ -7,7 +7,7 @@ import { NFTResponse } from '../../types';
 import ItemFilter from '../ItemFilter';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 20;
 
 const NFTList = () => {
   const { id } = useParams();
