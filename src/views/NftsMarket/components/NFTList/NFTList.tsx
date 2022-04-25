@@ -6,19 +6,38 @@ import useSWRInfinite from 'swr/infinite';
 import { NFTResponse } from '../../types';
 import ItemFilter from '../ItemFilter';
 
+interface FilterSetType {
+  searchKeyword: string;
+  createAt: string;
+  price: string;
+  minPrice: string;
+  maxPrice: string;
+}
+
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 20;
 
 const NFTList = () => {
   const { id } = useParams();
   const [itemCount, setItemCount] = useState(0);
   const [showLarge, setShowLarge] = useState(true);
-  const [filterSet, setFilterSet] = useState({});
+  const [filterSet, setFilterSet] = useState<FilterSetType>({
+    searchKeyword: '',
+    createAt: '',
+    price: '',
+    minPrice: '',
+    maxPrice: '',
+  });
+
   const { data, size, setSize, error, isValidating } = useSWRInfinite<NFTResponse>(
     (index) =>
-      `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexs?type=0&page=${
+      `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsM?type=0&page=${
         index + 1
-      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true`,
+      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true&keyword=${
+        filterSet.searchKeyword
+      }&createdAt=${filterSet.createAt}&price=${filterSet.price}&low=${
+        filterSet.minPrice === '' ? '0' : filterSet.minPrice
+      }&high=${filterSet.maxPrice === '' ? '0' : filterSet.maxPrice}`,
     fetcher,
   );
 
@@ -33,11 +52,6 @@ const NFTList = () => {
     isEmpty || (data && data[data.length - 1]?.data?.headers?.x_pages_count <= size);
   const isRefreshing = isValidating && data && data.length === size;
 
-  const onClickFilter = () => {
-    console.log('filter');
-    console.log(filterSet);
-  };
-
   const onClickViewMode = (flag: boolean) => {
     setShowLarge(flag);
   };
@@ -46,16 +60,11 @@ const NFTList = () => {
     data !== undefined && setItemCount(data[0].data.headers.x_total_count);
   }, [data]);
 
-  useEffect(() => {
-    console.log(filterSet);
-  }, [filterSet]);
-
   return (
     <Grid container>
       <ItemFilter
         filterSet={filterSet}
         setFilterSet={setFilterSet}
-        onClickFilter={onClickFilter}
         showLarge={showLarge}
         onClickViewMode={onClickViewMode}
       />
