@@ -8,10 +8,17 @@ import ViewModeSelector from '../ViewModeSelector';
 
 interface ItemFilterProp {
   filterSet: object;
-  setFilterSet: React.Dispatch<React.SetStateAction<{}>>;
-  onClickFilter: () => void;
+  setFilterSet: React.Dispatch<React.SetStateAction<FilterSetType>>;
   showLarge: boolean;
   onClickViewMode: (flag: boolean) => void;
+}
+
+interface FilterSetType {
+  searchKeyword: string;
+  createAt: string;
+  price: string;
+  minPrice: string;
+  maxPrice: string;
 }
 
 const SORTING_CATEGORY = [
@@ -24,7 +31,6 @@ const SORTING_CATEGORY = [
 const ItemFilter: React.FC<ItemFilterProp> = ({
   filterSet,
   setFilterSet,
-  onClickFilter,
   showLarge,
   onClickViewMode,
 }) => {
@@ -38,28 +44,66 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
 
   const [sorting, setSoting] = useState(SORTING_CATEGORY[0].value);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [createAt, setCreateAt] = useState('-1');
+  const [price, setPrice] = useState('0');
+  const [minPrice, setMinPrice] = useState('0');
+  const [maxPrice, setMaxPrice] = useState('0');
+  const [disableButton, setDisableButton] = useState(true);
 
   const onChangeSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   };
 
   const onChangeMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinPrice(e.target.value);
+    if (e.target.value === '' || parseInt(e.target.value) < 0) {
+      setMinPrice('0');
+      console.log('aaa');
+    } else setMinPrice(e.target.value);
   };
 
   const onChangeMaxPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(e.target.value);
+    if (e.target.value === '' || parseInt(e.target.value) < 0) setMaxPrice('0');
+    else setMaxPrice(e.target.value);
   };
 
   const onSelectSortingCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSoting(e.target.value);
+    const selectedSortingType = e.target.value;
+    if (selectedSortingType === 'recent' || selectedSortingType === 'oldest') {
+      if (selectedSortingType === 'recent') setCreateAt('-1');
+      if (selectedSortingType === 'oldest') setCreateAt('1');
+      setPrice('0');
+    }
+    if (selectedSortingType === 'priceLowToHigh' || selectedSortingType === 'priceHighToLow') {
+      if (selectedSortingType === 'priceLowToHigh') setPrice('1');
+      if (selectedSortingType === 'priceHighToLow') setPrice('-1');
+      setCreateAt('0');
+    }
+    setSoting(selectedSortingType);
+  };
+
+  const clearFilter = () => {
+    setSearchKeyword('');
+    setSoting(SORTING_CATEGORY[0].value);
+    setCreateAt('-1');
+    setPrice('0');
+    setMinPrice('0');
+    setMaxPrice('0');
   };
 
   useEffect(() => {
-    setFilterSet({ ...filterSet, sorting, searchKeyword, minPrice, maxPrice });
-  }, [sorting, searchKeyword, minPrice, maxPrice]);
+    if (
+      searchKeyword !== '' ||
+      createAt !== '-1' ||
+      price !== '0' ||
+      minPrice !== '0' ||
+      maxPrice !== '0'
+    ) {
+      setDisableButton(false);
+    } else {
+      setDisableButton(true);
+    }
+    setFilterSet({ ...filterSet, searchKeyword, createAt, price, minPrice, maxPrice });
+  }, [sorting, searchKeyword, createAt, price, minPrice, maxPrice]);
 
   return (
     <Box
@@ -92,6 +136,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           size={'small'}
           placeholder={'Search'}
           onChange={onChangeSearchKeyword}
+          value={searchKeyword}
           InputProps={{
             startAdornment: (
               <InputAdornment position={'start'}>
@@ -136,6 +181,8 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           <CustomTextField
             size={'small'}
             type={'number'}
+            value={minPrice}
+            InputProps={{ inputProps: { min: 0 } }}
             placeholder={'Min Price'}
             onChange={onChangeMinPrice}
             sx={{ flexGrow: 1, maxWidth: mdDown ? '100%' : '120px' }}
@@ -144,14 +191,16 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           <CustomTextField
             size={'small'}
             type={'number'}
+            value={maxPrice}
+            InputProps={{ inputProps: { min: 0 } }}
             placeholder={'Max Price'}
             onChange={onChangeMaxPrice}
             sx={{ flexGrow: 1, maxWidth: mdDown ? '100%' : '120px' }}
           />
         </Box>
 
-        <Button size={'small'} variant={'contained'} onClick={onClickFilter}>
-          Filter
+        <Button size={'small'} variant={'contained'} disabled={disableButton} onClick={clearFilter}>
+          Clear
         </Button>
         {!smDown && <ViewModeSelector showLarge={showLarge} onClickViewMode={onClickViewMode} />}
       </Box>
