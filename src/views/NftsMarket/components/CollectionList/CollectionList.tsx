@@ -13,7 +13,7 @@ interface SelectedCategoryProp {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 20;
 
 const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
   const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<CollectionResponse>(
