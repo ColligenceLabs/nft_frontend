@@ -181,7 +181,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           <CustomTextField
             size={'small'}
             type={'number'}
-            value={minPrice}
+            value={minPrice === '0' ? 'Min' : minPrice}
             InputProps={{ inputProps: { min: 0 } }}
             placeholder={'Min Price'}
             onChange={onChangeMinPrice}
@@ -191,7 +191,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           <CustomTextField
             size={'small'}
             type={'number'}
-            value={maxPrice}
+            value={maxPrice === '0' ? 'Max' : maxPrice}
             InputProps={{ inputProps: { min: 0 } }}
             placeholder={'Max Price'}
             onChange={onChangeMaxPrice}
