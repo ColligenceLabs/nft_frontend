@@ -60,10 +60,6 @@ const NFTList = () => {
     data !== undefined && setItemCount(data[0].data.headers.x_total_count);
   }, [data]);
 
-  useEffect(() => {
-    console.log(filterSet);
-  }, [filterSet]);
-
   return (
     <Grid container>
       <ItemFilter
