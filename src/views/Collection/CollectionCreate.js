@@ -66,6 +66,7 @@ const COLLECTION_CATEGORY = [
   { value: 'membership', title: 'Membership' },
   { value: 'pieces', title: 'Pieces' },
   { value: 'games', title: 'Games' },
+  { value: 'virtual', title: 'Virtual Worlds' },
 ];
 
 const Container = styled(Paper)(() => ({

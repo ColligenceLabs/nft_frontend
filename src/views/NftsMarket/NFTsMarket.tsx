@@ -11,11 +11,12 @@ const categories = [
   // { id: 2, value: 'game', category: 'Game' },
   // { id: 3, value: 'graffiti', category: 'Graffiti' },
   // { id: 4, value: 'other', category: 'Other' },
-  { id: 5, value: 'art', category: 'Art' },
-  { id: 6, value: 'collectibles', category: 'Collectibles' },
-  { id: 7, value: 'membership', category: 'Membership' },
-  { id: 8, value: 'pieces', category: 'Pieces' },
-  { id: 9, value: 'games', category: 'Games' },
+  { id: 2, value: 'art', category: 'Art' },
+  { id: 3, value: 'collectibles', category: 'Collectibles' },
+  { id: 4, value: 'membership', category: 'Membership' },
+  { id: 5, value: 'pieces', category: 'Pieces' },
+  { id: 6, value: 'games', category: 'Games' },
+  { id: 7, value: 'virtual', category: 'Virtual Worlds' },
 ];
 
 const TaleknArea = () => {
