@@ -46,8 +46,8 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
   const [searchKeyword, setSearchKeyword] = useState('');
   const [createAt, setCreateAt] = useState('-1');
   const [price, setPrice] = useState('0');
-  const [minPrice, setMinPrice] = useState('0');
-  const [maxPrice, setMaxPrice] = useState('0');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
   const [disableButton, setDisableButton] = useState(true);
 
   const onChangeSearchKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,8 +86,8 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
     setSoting(SORTING_CATEGORY[0].value);
     setCreateAt('-1');
     setPrice('0');
-    setMinPrice('0');
-    setMaxPrice('0');
+    setMinPrice('');
+    setMaxPrice('');
   };
 
   useEffect(() => {
@@ -95,8 +95,8 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
       searchKeyword !== '' ||
       createAt !== '-1' ||
       price !== '0' ||
-      minPrice !== '0' ||
-      maxPrice !== '0'
+      minPrice !== '' ||
+      maxPrice !== ''
     ) {
       setDisableButton(false);
     } else {
@@ -181,7 +181,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           <CustomTextField
             size={'small'}
             type={'number'}
-            value={minPrice === '0' ? 'Min' : minPrice}
+            value={minPrice}
             InputProps={{ inputProps: { min: 0 } }}
             placeholder={'Min Price'}
             onChange={onChangeMinPrice}
@@ -191,7 +191,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
           <CustomTextField
             size={'small'}
             type={'number'}
-            value={maxPrice === '0' ? 'Max' : maxPrice}
+            value={maxPrice}
             InputProps={{ inputProps: { min: 0 } }}
             placeholder={'Max Price'}
             onChange={onChangeMaxPrice}

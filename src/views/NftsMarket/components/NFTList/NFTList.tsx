@@ -35,9 +35,9 @@ const NFTList = () => {
         index + 1
       }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true&keyword=${
         filterSet.searchKeyword
-      }&createdAt=${filterSet.createAt}&price=${filterSet.price}&low=${filterSet.minPrice}&high=${
-        filterSet.maxPrice
-      }`,
+      }&createdAt=${filterSet.createAt}&price=${filterSet.price}&low=${
+        filterSet.minPrice === '' ? '0' : filterSet.minPrice
+      }&high=${filterSet.maxPrice === '' ? '0' : filterSet.maxPrice}`,
     fetcher,
   );
 
