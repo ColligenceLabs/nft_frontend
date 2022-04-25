@@ -170,8 +170,8 @@ const useMarket = () => {
 
   const buyNFT = useCallback(
     // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
-    // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
-    async (nftContract, tokenId, seller, quantity, price, quote) => {
+    // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _amount, uint256 _maximumPrice, address _quote) external;
+    async (nftContract, tokenId, seller, quantity, amount, price, quote) => {
       console.log('buy!', tokenId);
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
@@ -236,19 +236,28 @@ const useMarket = () => {
       if (quote !== 'eth' && quote !== 'klay') {
         try {
           if (!isKaikas) {
-            console.log(nftContract.address, tokenId, seller, quantity, parsedPrice, quote);
+            console.log(nftContract.address, tokenId, seller, quantity, amount, parsedPrice, quote);
             gasLimit = await marketContract.estimateGas.buyToken(
               nftContract.address,
               tokenId,
               seller,
               quantity,
+              amount,
               parsedPrice,
               quote,
             );
           } else {
-            console.log(nftContract._address, tokenId, seller, quantity, parsedPrice, quote);
+            console.log(
+              nftContract._address,
+              tokenId,
+              seller,
+              quantity,
+              amount,
+              parsedPrice,
+              quote,
+            );
             gasLimit = await marketContract.methods
-              .buyToken(nftContract._address, tokenId, seller, quantity, parsedPrice, quote)
+              .buyToken(nftContract._address, tokenId, seller, quantity, amount, parsedPrice, quote)
               .estimateGas({ from: account });
           }
 
@@ -266,6 +275,7 @@ const useMarket = () => {
               tokenId,
               seller,
               quantity,
+              amount,
               parsedPrice,
               quote,
               {
@@ -277,7 +287,7 @@ const useMarket = () => {
             receipt = await tx.wait();
           } else {
             receipt = await marketContract.methods
-              .buyToken(nftContract._address, tokenId, seller, quantity, parsedPrice, quote)
+              .buyToken(nftContract._address, tokenId, seller, quantity, amount, parsedPrice, quote)
               .send({
                 from: account,
                 gasPrice,
@@ -292,20 +302,21 @@ const useMarket = () => {
       } else {
         try {
           if (!isKaikas) {
-            console.log(nftContract.address, tokenId, seller, quantity, parsedPrice);
+            console.log(nftContract.address, tokenId, seller, quantity, amount, parsedPrice);
             gasLimit = await marketContract.estimateGas.buyTokenETH(
               nftContract.address,
               tokenId,
               seller,
               quantity,
+              amount,
               {
                 value: parsedPrice,
               },
             );
           } else {
-            console.log(nftContract._address, tokenId, seller, quantity, parsedPrice);
+            console.log(nftContract._address, tokenId, seller, quantity, amount, parsedPrice);
             gasLimit = await marketContract.methods
-              .buyTokenETH(nftContract._address, tokenId, seller, quantity, {
+              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount, {
                 value: parsedPrice,
               })
               .estimateGas({ from: account });
@@ -320,16 +331,23 @@ const useMarket = () => {
         try {
           let receipt;
           if (!isKaikas) {
-            tx = await marketContract.buyTokenETH(nftContract.address, tokenId, seller, quantity, {
-              value: parsedPrice,
-              from: account,
-              gasPrice,
-              gasLimit: calculateGasMargin(gasLimit),
-            });
+            tx = await marketContract.buyTokenETH(
+              nftContract.address,
+              tokenId,
+              seller,
+              quantity,
+              amount,
+              {
+                value: parsedPrice,
+                from: account,
+                gasPrice,
+                gasLimit: calculateGasMargin(gasLimit),
+              },
+            );
             receipt = await tx.wait();
           } else {
             receipt = await marketContract.methods
-              .buyTokenETH(nftContract._address, tokenId, seller, quantity)
+              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount)
               .send({
                 value: parsedPrice,
                 from: account,

@@ -48,6 +48,8 @@ const NFTDetail = () => {
   const [showItemActivity, setShowItemActivity] = useState(true);
   const [myNFT, setMyNFT] = useState(null);
   const [sellPrice, setSellPrice] = useState('0');
+  // TODO : KIP37 경우에 구입 수량 입력 받을 값
+  const [amount, setAmount] = useState(1);
 
   let API_URL;
 
@@ -92,6 +94,10 @@ const NFTDetail = () => {
       parseInt(tokenId.data, 16),
       account,
       quantity,
+      // TODO : KIP17 = 1, KIP37 = GUI에서 입력 받은 구입할 수량 (구입할 수량은 잔여 수량보다 작아야 함.)
+      // quantity_selling이 아마도 팔리면 팔린만큼 증가하는 수이고 촐 판매수량은 quantity 일 듯
+      // GUI에서 입력받은 amount + quantity_selling > quantity 이면 GUI에 우류 표시하면 될 듯...
+      amount,
       price,
       quote,
     );
