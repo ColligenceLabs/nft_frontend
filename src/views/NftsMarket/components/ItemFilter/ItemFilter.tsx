@@ -55,15 +55,17 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
   };
 
   const onChangeMinPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === '' || parseInt(e.target.value) < 0) {
-      setMinPrice('0');
-      console.log('aaa');
-    } else setMinPrice(e.target.value);
+    // if (e.target.value === '' || parseInt(e.target.value) < 0) {
+    //   setMinPrice('0');
+    //   console.log('aaa');
+    // } else setMinPrice(e.target.value);
+    setMinPrice(e.target.value);
   };
 
   const onChangeMaxPrice = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === '' || parseInt(e.target.value) < 0) setMaxPrice('0');
-    else setMaxPrice(e.target.value);
+    // if (e.target.value === '' || parseInt(e.target.value) < 0) setMaxPrice('0');
+    // else setMaxPrice(e.target.value);
+    setMaxPrice(e.target.value);
   };
 
   const onSelectSortingCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
