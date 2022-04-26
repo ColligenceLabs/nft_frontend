@@ -38,7 +38,7 @@ const useMarket = () => {
     // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
     async (nftContract, nftType, tokenId, quantity, price, quote) => {
       // TODO. kas 를 사용하는 경우 api 호출 로직 분리 필요
-      console.log('sell!');
+      console.log('sell!', nftType);
       const gasPrice = await caver.klay.getGasPrice();
       console.log('gasPrice', gasPrice);
       const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
@@ -48,23 +48,46 @@ const useMarket = () => {
       let gasLimit;
       let test;
       if (!isKaikas) {
-        test = await nftContract.getApproved(tokenId);
+        if (nftType === 721) {
+          test = await nftContract.getApproved(tokenId);
+        } else if (nftType === 1155) {
+          test = await nftContract.isApprovedForAll(account, marketContract.address);
+        }
       } else {
-        test = await nftContract.methods.getApproved(tokenId).call();
+        if (nftType === 721) {
+          test = await nftContract.methods.getApproved(tokenId).call();
+        } else if (nftType === 1155) {
+          test = await nftContract.setApprovalForAll(account, marketContract._address);
+        }
       }
       console.log(marketContract.address !== test, test);
-      if (marketContract.address !== test){
+      if (marketContract.address !== test || test !== 'true') {
         console.log('start approve');
         try {
           // nftContract 에서 marketContract 를 approve
-          if (!isKaikas)
-            gasLimit = await nftContract.estimateGas.approve(marketContract.address, tokenId);
-          else {
-            gasLimit = await nftContract.methods
-              .approve(marketContract._address, tokenId)
-              .estimateGas({
-                from: account,
-              });
+          if (!isKaikas) {
+            if (nftType === 721) {
+              gasLimit = await nftContract.estimateGas.approve(marketContract.address, tokenId);
+            } else if (nftType === 1155) {
+              gasLimit = await nftContract.estimateGas.setApprovalForAll(
+                marketContract.address,
+                'true',
+              );
+            }
+          } else {
+            if (nftType === 721) {
+              gasLimit = await nftContract.methods
+                .approve(marketContract._address, tokenId)
+                .estimateGas({
+                  from: account,
+                });
+            } else if (nftType === 1155) {
+              gasLimit = await nftContract.methods
+                .setApprovalForAll(marketContract._address, tokenId)
+                .estimateGas({
+                  from: account,
+                });
+            }
           }
         } catch (e) {
           console.log('approve estimateGas fail.', e);
@@ -76,18 +99,35 @@ const useMarket = () => {
 
         try {
           if (!isKaikas) {
-            tx = await nftContract.approve(marketContract.address, tokenId, {
-              gasPrice,
-              gasLimit: calculateGasMargin(gasLimit),
-            });
+            if (nftType === 721) {
+              tx = await nftContract.approve(marketContract.address, tokenId, {
+                gasPrice,
+                gasLimit: calculateGasMargin(gasLimit),
+              });
+            } else if (nftType === 1155) {
+              tx = await nftContract.setApprovalForAll(marketContract.address, 'true', {
+                gasPrice,
+                gasLimit: calculateGasMargin(gasLimit),
+              });
+            }
             const receipt = await tx.wait();
             console.log(receipt);
           } else {
-            tx = await nftContract.methods.approve(marketContract._address, tokenId).send({
-              from: account,
-              gasPrice,
-              gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
-            });
+            if (nftType === 721) {
+              tx = await nftContract.methods.approve(marketContract._address, tokenId).send({
+                from: account,
+                gasPrice,
+                gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+              });
+            } else if (nftType === 1155) {
+              tx = await nftContract.methods
+                .setApprovalForAll(marketContract._address, 'true')
+                .send({
+                  from: account,
+                  gasPrice,
+                  gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+                });
+            }
             console.log(tx);
           }
         } catch (e) {
@@ -256,7 +296,15 @@ const useMarket = () => {
             );
           } else {
             gasLimit = await marketContract.methods
-              .buyToken(nftContract._address, tokenId, seller, quantity, amount, parsedPrice, quoteToken)
+              .buyToken(
+                nftContract._address,
+                tokenId,
+                seller,
+                quantity,
+                amount,
+                parsedPrice,
+                quoteToken,
+              )
               .estimateGas({ from: account });
           }
 
@@ -286,7 +334,15 @@ const useMarket = () => {
             receipt = await tx.wait();
           } else {
             receipt = await marketContract.methods
-              .buyToken(nftContract._address, tokenId, seller, quantity, amount, parsedPrice, quoteToken)
+              .buyToken(
+                nftContract._address,
+                tokenId,
+                seller,
+                quantity,
+                amount,
+                parsedPrice,
+                quoteToken,
+              )
               .send({
                 from: account,
                 gasPrice,
