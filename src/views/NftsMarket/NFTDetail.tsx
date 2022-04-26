@@ -65,7 +65,6 @@ const NFTDetail = () => {
 
   const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
 
-  console.log(data?.data?.collection_id?.contract_type);
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
@@ -132,7 +131,7 @@ const NFTDetail = () => {
 
   useEffect(() => {
     getUserNftSerialsData(id, account).then((res) => {
-      // console.log(res);
+      console.log(res);
       setMyNFT(res.data);
     });
   }, [getUserNftSerialsData, id, account]);
@@ -141,9 +140,6 @@ const NFTDetail = () => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
   }, [sellPrice, amount]);
 
-  useEffect(() => {
-    console.log(totalPrice);
-  }, [totalPrice]);
   return (
     <MarketLayout>
       {data && !error && (
@@ -352,20 +348,22 @@ const NFTDetail = () => {
                                 Connect Wallet
                               </Button>
                             ) : (
-                              <LoadingButton
-                                onClick={buy}
-                                disabled={sellingQuantity === 0}
-                                loading={buyFlag}
-                                variant="contained"
-                                sx={{ flex: 1 }}
-                              >
-                                {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
-                              </LoadingButton>
+                              <Box>
+                                <LoadingButton
+                                  onClick={buy}
+                                  disabled={sellingQuantity === 0}
+                                  loading={buyFlag}
+                                  variant="contained"
+                                  sx={{ flex: 1, width: smDown ? '50px' : '100px' }}
+                                >
+                                  {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
+                                </LoadingButton>
+                              </Box>
                             )}
                           </Box>
                         </Box>
                       ) : (
-                        <>
+                        <Box>
                           {account === undefined ? (
                             <Button
                               fullWidth
@@ -385,7 +383,7 @@ const NFTDetail = () => {
                               {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                             </LoadingButton>
                           )}
-                        </>
+                        </Box>
                       )}
                     </Box>
                   </Box>
@@ -463,15 +461,17 @@ const NFTDetail = () => {
                           fullWidth
                         />
                       </Box>
-                      <LoadingButton
-                        // onClick={buy}
-                        // disabled={sellingQuantity === 0}
-                        // loading={buyFlag}
-                        sx={{ flex: 1 }}
-                        variant="contained"
-                      >
-                        Sell
-                      </LoadingButton>
+                      <Box sx={{ flex: 1, width: smDown ? '50px' : '100px' }}>
+                        <LoadingButton
+                          // onClick={buy}
+                          // disabled={sellingQuantity === 0}
+                          // loading={buyFlag}
+                          fullWidth
+                          variant="contained"
+                        >
+                          Sell
+                        </LoadingButton>
+                      </Box>
                     </Box>
 
                     {data?.data?.collection_id?.contract_type === 'KIP37' &&
