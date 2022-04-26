@@ -28,7 +28,7 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { deleteNft, getNFTData } from '../../services/nft.service';
+import { deleteNft, getNFTData, setSchedule } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import ScheduleDialog from './ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
@@ -36,6 +36,11 @@ import TransferDialog from '../../components/TransferDialog/TransferDialog';
 import NFTsDetailModal from './NFTsDetailModal';
 import splitAddress from '../../utils/splitAddress';
 import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
+import Caver from 'caver-js';
+import kip17Abi from '../../config/abi/kip17.json';
+import { ethers } from 'ethers';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
+import useMarket from '../../hooks/useMarket';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -58,6 +63,10 @@ const NFTs = () => {
   const [deleteInAction, setDeleteInAction] = useState(false);
   const [finishDelete, setFinishDelete] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(null);
+
+  const { library } = useActiveWeb3React();
+  const { stopSelling } = useMarket();
+  const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
   const {
     user: {
@@ -169,9 +178,50 @@ const NFTs = () => {
     await fetchNFTs();
   };
 
-  const handleStopSelling = (row) => {
+  const getNftContract = (contract) => {
+    const isKaikas =
+      library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+    if (isKaikas) {
+      const caver = new Caver(window.klaytn);
+      return new caver.klay.Contract(kip17Abi, contract);
+    } else {
+      return new ethers.Contract(contract, kip17Abi, library?.getSigner());
+    }
+  };
+
+  const handleStopSelling = async (row) => {
     console.log(row);
     console.log('Stop Selling');
+
+    try {
+      if (useKAS !== 'true') {
+        const nftContract = getNftContract(row.collection_id.contract_address);
+        await stopSelling(
+          nftContract,
+          row.collection_id.contract_type === 'KIP17' ? 721 : 1155,
+          parseInt(row.metadata.tokenId, 10),
+          row.quantity,
+          row.price,
+          row.quote,
+        );
+      }
+
+      let selected = [];
+      selected.push(row._id);
+      const startDate = new Date();
+      const endDate = new Date(new Date().setDate(new Date().getMinutes() + 1));
+
+      const res = await setSchedule(selected, startDate, endDate, useKAS);
+
+      if (res.data.status === 1) {
+        // TODO: 성공 표시
+      } else {
+        // TODO: 실패 표시
+      }
+    } catch (e) {
+      // TODO: 에러 표시
+    }
+
     fetchNFTs(); // stop selling 후 data refetch
   };
 
@@ -344,6 +394,7 @@ const NFTs = () => {
                       <TableCell style={{ minWidth: 130 }}>
                         <Switch
                           checked={row.selling}
+                          // TODO : 판매 중인 것만 클릭할 수 있게...
                           onChange={() => handleStopSelling(row)}
                           inputProps={{ 'aria-label': 'controlled' }}
                         />
