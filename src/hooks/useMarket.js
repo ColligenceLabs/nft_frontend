@@ -57,11 +57,11 @@ const useMarket = () => {
         if (nftType === 721) {
           test = await nftContract.methods.getApproved(tokenId).call();
         } else if (nftType === 1155) {
-          test = await nftContract.setApprovalForAll(account, marketContract._address);
+          test = await nftContract.isApprovedForAll(account, marketContract._address).call();
         }
       }
-      console.log(marketContract.address !== test, test);
-      if (marketContract.address !== test || test !== 'true') {
+      console.log(marketContract.address, marketContract.address !== test, test, typeof test);
+      if (test !== true) {
         console.log('start approve');
         try {
           // nftContract 에서 marketContract 를 approve
