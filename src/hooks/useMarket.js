@@ -422,6 +422,76 @@ const useMarket = () => {
     [library, account],
   );
 
+  const stopSelling = useCallback(
+    // V4 : function cancelSellToken(address _nft, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
+    async (nftContract, tokenId, quantity, price, quote) => {
+      console.log('cancel!', tokenId);
+      const gasPrice = await caver.klay.getGasPrice();
+      const isKaikas =
+        library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+      let tx;
+      let gasLimit;
+      const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
+      const parsedPrice = parseUnits(price.toString(), 'ether').toString();
+
+      // buy
+      try {
+        if (!isKaikas) {
+          gasLimit = await marketContract.estimateGas.cancelSellToken(
+            nftContract.address,
+            tokenId,
+            quantity,
+            parsedPrice,
+            quoteToken,
+          );
+        } else {
+          gasLimit = await marketContract.methods
+            .cancelSellToken(nftContract._address, tokenId, quantity, parsedPrice, quoteToken)
+            .estimateGas({ from: account });
+        }
+
+        console.log('stopSelling cancelSellToken estimateGas', gasLimit);
+      } catch (e) {
+        console.log('stopSelling cancelSellToken estimateGas fail.', e);
+        return FAILURE;
+      }
+
+      try {
+        let receipt;
+        if (!isKaikas) {
+          tx = await marketContract.cancelSellToken(
+            nftContract.address,
+            tokenId,
+            quantity,
+            parsedPrice,
+            quoteToken,
+            {
+              from: account,
+              gasPrice,
+              gasLimit: calculateGasMargin(gasLimit),
+            },
+          );
+          receipt = await tx.wait();
+        } else {
+          receipt = await marketContract.methods
+            .cancelSellToken(nftContract._address, tokenId, quantity, parsedPrice, quoteToken)
+            .send({
+              from: account,
+              gasPrice,
+              gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+            });
+        }
+        console.log('stopSelling cancelSellToken receipt', receipt);
+      } catch (e) {
+        console.log('stopSelling cancelSellToken fail.', e);
+        return FAILURE;
+      }
+
+      return SUCCESS;
+    },
+    [library, account],
+  );
+
   const listNFT = useCallback(
     async (nftContractAddress) => {
       let nfts;
@@ -442,6 +512,7 @@ const useMarket = () => {
   return {
     sellNFT,
     buyNFT,
+    stopSelling,
     listNFT,
   };
 };
