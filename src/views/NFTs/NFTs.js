@@ -28,7 +28,7 @@ import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import { headCells } from './tableConfig';
-import { deleteNft, getNFTData, setSchedule } from '../../services/nft.service';
+import { deleteNft, getNFTData, setStopSelling } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import ScheduleDialog from './ScheduleDialog';
 import DeleteDialog from '../../components/DeleteDialog';
@@ -206,12 +206,7 @@ const NFTs = () => {
         );
       }
 
-      let selected = [];
-      selected.push(row._id);
-      const startDate = new Date();
-      const endDate = new Date(new Date().setDate(new Date().getMinutes() + 1));
-
-      const res = await setSchedule(selected, startDate, endDate, useKAS);
+      const res = await setStopSelling(row._id, useKAS);
 
       if (res.data.status === 1) {
         // TODO: 성공 표시

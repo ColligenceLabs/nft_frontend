@@ -122,6 +122,11 @@ export const setSchedule = (ids, start_date, end_date, use_kas) => {
   //   .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const setStopSelling = (id, use_kas) => {
+  return axios.put(`${API_URL}/stop-selling`, { id, use_kas }, { headers: authHeader() });
+  //   .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const getUserNFTs = (address, size) => {
   const url = `${API_URL}/user-nfts?address=${address}&size=${size}`;
   return axios
