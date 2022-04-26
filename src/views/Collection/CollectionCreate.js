@@ -62,7 +62,7 @@ const COLLECTION_CATEGORY = [
   // { value: 'graffiti', title: 'Graffiti' },
   { value: 'talken', title: 'Talken' },
   { value: 'art', title: 'Art' },
-  { value: 'collectibles', title: 'Collectibles Names' },
+  { value: 'collectibles', title: 'Collectibles' },
   { value: 'membership', title: 'Membership' },
   { value: 'pieces', title: 'Pieces' },
   { value: 'games', title: 'Games' },

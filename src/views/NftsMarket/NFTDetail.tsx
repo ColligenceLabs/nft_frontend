@@ -48,15 +48,14 @@ const NFTDetail = () => {
   const [showItemActivity, setShowItemActivity] = useState(true);
   const [myNFT, setMyNFT] = useState(null);
   const [sellPrice, setSellPrice] = useState('0');
+  const [totalPrice, setTotalPrice] = useState(0);
   // TODO : KIP37 경우에 구입 수량 입력 받을 값
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState('1');
 
   let API_URL;
 
   // dapp route
-  // console.log(params);
   if (params.state === null) {
-    // console.log('from market page');
     API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/nft/detail/${id}`;
   } else {
     console.log('from talken app');
@@ -130,10 +129,18 @@ const NFTDetail = () => {
 
   useEffect(() => {
     getUserNftSerialsData(id, account).then((res) => {
+      console.log(res);
       setMyNFT(res.data);
     });
   }, [getUserNftSerialsData, id, account]);
 
+  useEffect(() => {
+    setTotalPrice(parseInt(amount) * parseFloat(sellPrice));
+  }, [sellPrice, amount]);
+
+  useEffect(() => {
+    console.log(totalPrice);
+  }, [totalPrice]);
   return (
     <MarketLayout>
       {data && !error && (
@@ -311,33 +318,87 @@ const NFTDetail = () => {
                       )}
                     </Box>
                   ) : (
-                    <Box sx={{ py: 1, px: 2 }}>
-                      <Typography variant={'subtitle2'} color={'primary'}>
-                        Price
-                      </Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: '1rem' }}>
-                        <CustomTextField
-                          id="price"
-                          name="price"
-                          variant="outlined"
-                          type="number"
-                          size="small"
-                          value={sellPrice}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setSellPrice(e.target.value)
-                          }
-                        />
-                        <Button
-                          // onClick={buy}
-                          // disabled={sellingQuantity === 0}
-                          // loading={buyFlag}
-                          variant="contained"
+                    <Box sx={{ py: 1, px: 2, display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      {data?.data?.collection_id?.contract_type === 'KIP37' && (
+                        <Box>
+                          <Typography variant={'subtitle2'} color={'primary'}>
+                            Amount
+                          </Typography>
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: '1rem' }}>
+                            <CustomTextField
+                              id="amount"
+                              name="amount"
+                              variant="outlined"
+                              type="number"
+                              size="small"
+                              value={amount}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                setAmount(e.target.value)
+                              }
+                              sx={{ width: '100px' }}
+                            />
+                          </Box>
+                        </Box>
+                      )}
+                      <Box>
+                        <Typography variant={'subtitle2'} color={'primary'}>
+                          {`Unit Price (${data?.data?.quote.toUpperCase()})`}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            gap: '1rem',
+                            alignItems: 'center',
+                          }}
                         >
-                          Sell
-                        </Button>
+                          <CustomTextField
+                            id="price"
+                            name="price"
+                            variant="outlined"
+                            type="number"
+                            size="small"
+                            value={sellPrice}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                              setSellPrice(e.target.value)
+                            }
+                            sx={{ width: '100px' }}
+                          />
+
+                          <Button
+                            // onClick={buy}
+                            // disabled={sellingQuantity === 0}
+                            // loading={buyFlag}
+                            variant="contained"
+                          >
+                            Sell
+                          </Button>
+                        </Box>
                       </Box>
                     </Box>
                   )}
+                  {data?.data?.collection_id?.contract_type === 'KIP37' &&
+                    !isNaN(totalPrice) &&
+                    totalPrice !== 0 && (
+                      <Box
+                        sx={{
+                          px: 2.5,
+                          pb: 2,
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          alignItems: 'bottom',
+                          gap: '0.5rem',
+                        }}
+                      >
+                        <Typography variant={'subtitle2'}>Total : </Typography>
+                        <Typography variant={'subtitle2'} color={'primary'}>
+                          {totalPrice.toFixed(4)}
+                        </Typography>
+                        <Typography variant={'subtitle2'} color={'primary'}>
+                          {data?.data?.quote.toUpperCase()}
+                        </Typography>
+                      </Box>
+                    )}
                 </Box>
               </Box>
             </Grid>
