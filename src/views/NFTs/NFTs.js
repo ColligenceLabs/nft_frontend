@@ -169,6 +169,12 @@ const NFTs = () => {
     await fetchNFTs();
   };
 
+  const handleStopSelling = (row) => {
+    console.log(row);
+    console.log('Stop Selling');
+    fetchNFTs(); // stop selling 후 data refetch
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
   const emptyRows = rowsPerPage - rows.length;
 
@@ -338,7 +344,7 @@ const NFTs = () => {
                       <TableCell style={{ minWidth: 130 }}>
                         <Switch
                           checked={row.selling}
-                          // onChange={handleChange}
+                          onChange={() => handleStopSelling(row)}
                           inputProps={{ 'aria-label': 'controlled' }}
                         />
                       </TableCell>
