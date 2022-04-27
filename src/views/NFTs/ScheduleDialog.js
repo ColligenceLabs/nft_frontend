@@ -108,32 +108,31 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   };
 
   const handleSellNFTs = async () => {
-    for (let i = 0; i < selected.length; i++) {
-      const serials = await getSerialsData(0, 10000, 'active', selected[i]);
-      const nftInfo = await nftDetail(selected[i]);
-      console.log(nftInfo);
+    console.log(selected);
+    const serials = await getSerialsData(0, 10000, 'active', selected);
+    const nftInfo = await nftDetail(selected);
+    console.log(nftInfo);
 
-      const nftContract = getNftContract(
-        nftInfo.data.collection_id.contract_address,
-        nftInfo.data.collection_id.contract_type,
+    const nftContract = getNftContract(
+      nftInfo.data.collection_id.contract_address,
+      nftInfo.data.collection_id.contract_type,
+    );
+    // for (let j = 0; j < serials.data.items.length; j++) {
+    if (serials.data.items[0].owner_id === null || serials.data.items[0].owner_id === account) {
+      // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
+      // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
+      await sellNFT(
+        nftContract,
+        nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
+        parseInt(serials.data.items[0].token_id, 16),
+        nftInfo.data.quantity,
+        // TODO : NFT 개당 가격
+        nftInfo.data.price,
+        nftInfo.data.quote,
       );
-      // for (let j = 0; j < serials.data.items.length; j++) {
-      if (serials.data.items[0].owner_id === null || serials.data.items[0].owner_id === account) {
-        // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
-        // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
-        await sellNFT(
-          nftContract,
-          nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
-          parseInt(serials.data.items[0].token_id, 16),
-          nftInfo.data.quantity,
-          // TODO : NFT 개당 가격
-          nftInfo.data.price,
-          nftInfo.data.quote,
-        );
-        // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
-      }
-      // }
+      // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
     }
+    // }
   };
 
   const handleSchedule = async () => {
