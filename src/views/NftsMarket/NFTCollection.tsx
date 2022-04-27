@@ -74,9 +74,16 @@ const NFTCollection = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 mt: 2,
+                border: '1px solid red',
               }}
             >
-              <Typography variant={'h1'}>{data?.name}</Typography>
+              <Typography
+                variant={smDown ? 'h3' : 'h1'}
+                mb={smDown ? '15px' : '10px'}
+                sx={{ textAlign: 'center' }}
+              >
+                {data?.name}
+              </Typography>
               <Box
                 sx={{
                   display: 'flex',
