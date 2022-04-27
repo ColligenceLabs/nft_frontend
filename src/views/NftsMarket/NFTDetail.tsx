@@ -80,33 +80,36 @@ const NFTDetail = () => {
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
     const serial = await selectSerials(id);
+    console.log(serial);
     if (serial.status === 0) {
       console.log('판매가능한 nft가 존재하지 않습니다.');
       setBuyFlag(false);
       return;
     }
-    const price = data?.data?.price;
-    const quote = data?.data?.quote;
-    const quantity = data?.data?.quantity;
-    const seller = serial.data.seller;
-    // tokenId 를 사용 구입 진행.
-    // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
-    // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
-    const result = await buyNFT(
-      isKaikas ? nftContractWithKaikas : nftContract,
-      parseInt(serial.data.token_id, 16),
-      seller,
-      quantity,
-      // TODO : KIP17 = 1, KIP37 = GUI에서 입력 받은 구입할 수량 (구입할 수량은 잔여 수량보다 작아야 함.)
-      // quantity_selling이 아마도 팔리면 팔린만큼 증가하는 수이고 촐 판매수량은 quantity 일 듯
-      // GUI에서 입력받은 amount + quantity_selling > quantity 이면 GUI에 우류 표시하면 될 듯...
-      amount,
-      price,
-      quote,
-    );
-    // 실패인 경우 원복.
-    console.log('=====>', serial.data, parseInt(serial.data.token_id, 16));
-    if (result === FAILURE) {
+    try {
+      const price = data?.data?.price;
+      const quote = data?.data?.quote;
+      const quantity = data?.data?.sell_amount;
+      const seller = serial.data.seller;
+      // tokenId 를 사용 구입 진행.
+      // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
+      // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
+      const result = await buyNFT(
+        isKaikas ? nftContractWithKaikas : nftContract,
+        parseInt(serial.data.token_id, 16),
+        seller,
+        quantity,
+        // TODO : KIP17 = 1, KIP37 = GUI에서 입력 받은 구입할 수량 (구입할 수량은 잔여 수량보다 작아야 함.)
+        // quantity_selling이 아마도 팔리면 팔린만큼 증가하는 수이고 촐 판매수량은 quantity 일 듯
+        // GUI에서 입력받은 amount + quantity_selling > quantity 이면 GUI에 우류 표시하면 될 듯...
+        amount,
+        price,
+        quote,
+      );
+
+    } catch (e) {
+      // 실패인 경우 원복.
+      console.log('=====>', serial.data, parseInt(serial.data.token_id, 16));
       await cancelBuy(id, serial.data.token_id);
       setSellingQuantity((curr: number) => curr + 1);
     }

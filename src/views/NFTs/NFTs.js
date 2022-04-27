@@ -168,7 +168,7 @@ const NFTs = () => {
           await stopSelling(
             nftContract,
             parseInt(row.metadata.tokenId, 10),
-            row.quantity,
+            row.sell_amount,
             row.price,
             row.quote,
           );

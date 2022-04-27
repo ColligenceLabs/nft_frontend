@@ -246,7 +246,8 @@ const useMarket = () => {
           console.log('buyNFT approve estimateGas', gasLimit);
         } catch (e) {
           console.log('buyNFT approve estimateGas fail.', e);
-          return FAILURE;
+          // return FAILURE;
+          throw e;
         }
 
         try {
@@ -269,7 +270,8 @@ const useMarket = () => {
           console.log('buyNFT approve receipt', receipt);
         } catch (e) {
           console.log('buyNFT approve fail.', e);
-          return FAILURE;
+          // return FAILURE;
+          throw e;
         }
 
         let allowance;
@@ -311,7 +313,8 @@ const useMarket = () => {
           console.log('buyNFT buyToken estimateGas', gasLimit);
         } catch (e) {
           console.log('buyNFT buyToken estimateGas fail.', e);
-          return FAILURE;
+          // return FAILURE;
+          throw e;
         }
 
         try {
@@ -352,7 +355,8 @@ const useMarket = () => {
           console.log('buyNFT buyToken receipt', receipt);
         } catch (e) {
           console.log('buyNFT buyToken fail.', e);
-          return FAILURE;
+          // return FAILURE;
+          throw e;
         }
       } else {
         try {
@@ -371,16 +375,15 @@ const useMarket = () => {
           } else {
             console.log(nftContract._address, tokenId, seller, quantity, amount, parsedPrice);
             gasLimit = await marketContract.methods
-              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount, {
-                value: parsedPrice,
-              })
-              .estimateGas({ from: account });
+              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount)
+              .estimateGas({ value: parsedPrice, from: account });
           }
 
           console.log('buyNFT buyToken estimateGas', gasLimit);
         } catch (e) {
           console.log('buyNFT buyToken estimateGas fail.', e);
-          return FAILURE;
+          // return FAILURE;
+          throw e;
         }
 
         try {
@@ -413,7 +416,8 @@ const useMarket = () => {
           console.log('buyNFT buyToken receipt', receipt);
         } catch (e) {
           console.log('buyNFT buyToken fail.', e);
-          return FAILURE;
+          // return FAILURE;
+          throw e;
         }
       }
 
@@ -456,7 +460,8 @@ const useMarket = () => {
         console.log('stopSelling cancelSellToken estimateGas', gasLimit);
       } catch (e) {
         console.log('stopSelling cancelSellToken estimateGas fail.', e);
-        return FAILURE;
+        // return FAILURE;
+        throw e;
       }
 
       try {
@@ -487,7 +492,8 @@ const useMarket = () => {
         console.log('stopSelling cancelSellToken receipt', receipt);
       } catch (e) {
         console.log('stopSelling cancelSellToken fail.', e);
-        return FAILURE;
+        // return FAILURE;
+        throw e;
       }
 
       return SUCCESS;

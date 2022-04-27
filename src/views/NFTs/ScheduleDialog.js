@@ -24,6 +24,7 @@ import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { nftDetail } from '../../services/market.service';
 import kip17Abi from '../../config/abi/kip17.json';
 import kip37Abi from '../../config/abi/kip37.json';
+import { FAILURE, SUCCESS } from '../../config/constants/consts';
 import { ethers } from 'ethers';
 import Caver from 'caver-js';
 
@@ -118,20 +119,22 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       nftInfo.data.collection_id.contract_type,
     );
     // for (let j = 0; j < serials.data.items.length; j++) {
-    if (serials.data.items[0].owner_id === null || serials.data.items[0].owner_id === account) {
-      // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
-      // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
-      await sellNFT(
-        nftContract,
-        nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
-        parseInt(serials.data.items[0].token_id, 16),
-        nftInfo.data.quantity,
-        // TODO : NFT 개당 가격
-        nftInfo.data.price,
-        nftInfo.data.quote,
-      );
-      // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
-    }
+    const filteredSerials = serials.data.items.filter(item => item.owner_id === null || item.owner_id === account);
+    if (filteredSerials.length === 0)
+      return FAILURE;
+    // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
+    // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
+    await sellNFT(
+      nftContract,
+      nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
+      parseInt(filteredSerials[0].token_id, 16),
+      filteredSerials.length,
+      // TODO : NFT 개당 가격
+      nftInfo.data.price,
+      nftInfo.data.quote,
+    );
+    return SUCCESS;
+    // console.log('readytosell nft',nftContract, parseInt(serials.data.items[j].token_id, 16), nftInfo.data.price);
     // }
   };
 
@@ -145,19 +148,22 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
     setLoading(true);
 
     try {
+      let result = SUCCESS;
       if (useKAS !== 'true') {
         // 선택된 nft들을 market contract readyToSell 호출
-        await handleSellNFTs();
+        result = await handleSellNFTs();
       }
-
-      const res = await setSchedule(selected, startDate, endDate, useKAS, account);
-
-      if (res.data.status === 1) {
-        setErrorMessage(null);
-        setSuccessFlag(true);
-      } else {
+      let res;
+      if (result === SUCCESS) {
+        res = await setSchedule(selected, startDate, endDate, useKAS, account);
+        if (res.data.status === 1) {
+          setErrorMessage(null);
+          setSuccessFlag(true);
+        }
+      }
+      if (result !== SUCCESS || res.data.status !== 1) {
         setSuccessFlag(false);
-        setErrorMessage(res.data.message);
+        setErrorMessage(result === FAILURE ? 'nft not found.' : res.data.message);
       }
     } catch (e) {
       setSuccessFlag(false);
