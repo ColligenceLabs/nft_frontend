@@ -113,10 +113,10 @@ export const deleteNft = (nfts) => {
   }
 };
 
-export const setSchedule = (ids, start_date, end_date, use_kas, seller) => {
+export const setSchedule = (id, start_date, end_date, use_kas, seller) => {
   return axios.put(
     `${API_URL}/update-schedule`,
-    { ids: ids, start_date, end_date, use_kas, seller },
+    { id: id, start_date, end_date, use_kas, seller },
     { headers: authHeader() },
   );
   //   .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
