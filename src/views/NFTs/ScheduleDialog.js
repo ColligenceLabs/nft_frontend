@@ -151,7 +151,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
         await handleSellNFTs();
       }
 
-      const res = await setSchedule(selected, startDate, endDate, useKAS);
+      const res = await setSchedule(selected, startDate, endDate, useKAS, account);
 
       if (res.data.status === 1) {
         setErrorMessage(null);

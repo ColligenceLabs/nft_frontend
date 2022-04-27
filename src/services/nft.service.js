@@ -113,10 +113,10 @@ export const deleteNft = (nfts) => {
   }
 };
 
-export const setSchedule = (ids, start_date, end_date, use_kas) => {
+export const setSchedule = (ids, start_date, end_date, use_kas, seller) => {
   return axios.put(
     `${API_URL}/update-schedule`,
-    { ids: ids, start_date, end_date, use_kas },
+    { ids: ids, start_date, end_date, use_kas, seller },
     { headers: authHeader() },
   );
   //   .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
@@ -168,8 +168,8 @@ export const getUserNftSerialsData = (searchNftId, owner) => {
     );
 };
 
-export const selectTokenId = (nft_id) => {
-  const url = `${API_URL}/select-tokenid?nft_id=${nft_id}`;
+export const selectSerials = (nft_id) => {
+  const url = `${API_URL}/select-serials?nft_id=${nft_id}`;
   return axios
     .get(url, {
       headers: authHeader(),

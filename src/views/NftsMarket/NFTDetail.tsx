@@ -13,7 +13,7 @@ import { useKipContract, useKipContractWithKaikas } from '../../hooks/useContrac
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useSWR from 'swr';
 import { nftDetail } from '../../services/market.service';
-import { selectTokenId, cancelBuy, getUserNftSerialsData } from '../../services/nft.service';
+import { selectSerials, cancelBuy, getUserNftSerialsData } from '../../services/nft.service';
 import { FAILURE } from '../../config/constants/consts';
 import ReactPlayer from 'react-player';
 import ImageViewer from '../../components/ImageViewer';
@@ -78,22 +78,24 @@ const NFTDetail = () => {
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
-    const tokenId = await selectTokenId(id);
-    if (tokenId.status === 0) {
+    const serial = await selectSerials(id);
+    if (serial.status === 0) {
       console.log('판매가능한 nft가 존재하지 않습니다.');
       setBuyFlag(false);
       return;
     }
+    console.log('------>', data);
     const price = data?.data?.price;
     const quote = data?.data?.quote;
     const quantity = data?.data?.quantity;
+    const seller = serial.data.seller;
     // tokenId 를 사용 구입 진행.
     // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
     // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
     const result = await buyNFT(
       isKaikas ? nftContractWithKaikas : nftContract,
-      parseInt(tokenId.data, 16),
-      account,
+      parseInt(serial.data.token_id, 16),
+      seller,
       quantity,
       // TODO : KIP17 = 1, KIP37 = GUI에서 입력 받은 구입할 수량 (구입할 수량은 잔여 수량보다 작아야 함.)
       // quantity_selling이 아마도 팔리면 팔린만큼 증가하는 수이고 촐 판매수량은 quantity 일 듯
@@ -103,9 +105,9 @@ const NFTDetail = () => {
       quote,
     );
     // 실패인 경우 원복.
-    console.log('=====>', tokenId, parseInt(tokenId.data, 16));
+    console.log('=====>', serial.data, parseInt(serial.data.token_id, 16));
     if (result === FAILURE) {
-      await cancelBuy(id, tokenId.data);
+      await cancelBuy(id, serial.data.token_id);
       setSellingQuantity((curr: number) => curr + 1);
     }
     setBuyFlag(false);
