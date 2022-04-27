@@ -110,6 +110,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const handleSellNFTs = async () => {
     for (let i = 0; i < selected.length; i++) {
       const serials = await getSerialsData(0, 10000, 'active', selected[i]);
+      console.log('2---->', serials);
       const nftInfo = await nftDetail(selected[i]);
       console.log(nftInfo);
 

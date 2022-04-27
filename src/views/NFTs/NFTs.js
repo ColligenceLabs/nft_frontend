@@ -64,7 +64,7 @@ const NFTs = () => {
   const [finishDelete, setFinishDelete] = useState(false);
   const [deleteMessage, setDeleteMessage] = useState(null);
 
-  const { library } = useActiveWeb3React();
+  const { library, account } = useActiveWeb3React();
   const { stopSelling } = useMarket();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
@@ -205,7 +205,7 @@ const NFTs = () => {
         );
       }
 
-      const res = await setStopSelling(row._id, useKAS);
+      const res = await setStopSelling(row._id, useKAS, account);
 
       if (res.data.status === 1) {
         // TODO: 성공 표시
