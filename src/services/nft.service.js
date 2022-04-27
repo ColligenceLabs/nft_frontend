@@ -168,8 +168,8 @@ export const getUserNftSerialsData = (searchNftId, owner) => {
     );
 };
 
-export const selectSerials = (nft_id, buyer) => {
-  const url = `${API_URL}/select-serials?nft_id=${nft_id}&buyer=${buyer}`;
+export const selectSerials = (nft_id, buyer, amount) => {
+  const url = `${API_URL}/select-serials?nft_id=${nft_id}&buyer=${buyer}&amount=${amount}`;
   return axios
     .get(url, {
       headers: authHeader(),

@@ -297,6 +297,13 @@ const useMarket = () => {
               quoteToken,
             );
           } else {
+            console.log(nftContract._address,
+              tokenId,
+              seller,
+              quantity,
+              amount,
+              parsedPrice,
+              quoteToken,);
             gasLimit = await marketContract.methods
               .buyToken(
                 nftContract._address,

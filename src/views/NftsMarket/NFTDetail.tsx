@@ -79,9 +79,9 @@ const NFTDetail = () => {
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
-    const serial = await selectSerials(id, account);
-    console.log(serial);
-    if (serial.status === 0) {
+    const serials = await selectSerials(id, account, amount);
+    console.log(serials);
+    if (serials.status === 0) {
       console.log('판매가능한 nft가 존재하지 않습니다.');
       setBuyFlag(false);
       return;
@@ -90,13 +90,13 @@ const NFTDetail = () => {
       const price = data?.data?.price;
       const quote = data?.data?.quote;
       const quantity = data?.data?.sell_amount;
-      const seller = serial.data.seller;
+      const seller = serials.data[0].seller;
       // tokenId 를 사용 구입 진행.
       // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
       // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
       const result = await buyNFT(
         isKaikas ? nftContractWithKaikas : nftContract,
-        parseInt(serial.data.token_id, 16),
+        parseInt(serials.data[0].token_id, 16),
         seller,
         quantity,
         // TODO : KIP17 = 1, KIP37 = GUI에서 입력 받은 구입할 수량 (구입할 수량은 잔여 수량보다 작아야 함.)
@@ -109,9 +109,9 @@ const NFTDetail = () => {
 
     } catch (e) {
       // 실패인 경우 원복.
-      console.log('=====>', serial.data, parseInt(serial.data.token_id, 16));
-      await cancelBuy(id, serial.data.token_id, account);
-      setSellingQuantity((curr: number) => curr + 1);
+      console.log('=====>', serials.data, parseInt(serials.data[0].token_id, 16));
+      await cancelBuy(id, serials.data[0].token_id, account);
+      setSellingQuantity((curr: number) => curr + parseInt(amount));
     }
     mutate();
     getMyNFTInfo();
