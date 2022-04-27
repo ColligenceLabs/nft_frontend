@@ -74,7 +74,6 @@ const NFTCollection = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 mt: 2,
-                border: '1px solid red',
               }}
             >
               <Typography
