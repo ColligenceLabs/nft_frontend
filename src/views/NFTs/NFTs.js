@@ -198,7 +198,6 @@ const NFTs = () => {
         const nftContract = getNftContract(row.collection_id.contract_address);
         await stopSelling(
           nftContract,
-          row.collection_id.contract_type === 'KIP17' ? 721 : 1155,
           parseInt(row.metadata.tokenId, 10),
           row.quantity,
           row.price,

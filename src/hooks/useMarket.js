@@ -41,7 +41,7 @@ const useMarket = () => {
       console.log('sell!', nftType);
       const gasPrice = await caver.klay.getGasPrice();
       console.log('gasPrice', gasPrice);
-      const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
+      const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
       let tx;
@@ -229,7 +229,7 @@ const useMarket = () => {
       let gasLimit;
       // approve
       console.log('===>', price, quote, quoteTokens[quote]);
-      const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
+      const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
       const tokenContract = getTokenContract(quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
 
@@ -431,9 +431,12 @@ const useMarket = () => {
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
       let tx;
       let gasLimit;
-      const quoteToken = quoteTokens[quote][parseInt(targetNetwork)];
+      console.log('----->', quote, parseInt(targetNetwork, 16));
+      const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
+      console.log('----->', quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
 
+      console.log('---', nftContract.address, tokenId, quantity, parsedPrice, quoteToken);
       // buy
       try {
         if (!isKaikas) {
