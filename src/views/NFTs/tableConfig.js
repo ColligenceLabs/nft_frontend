@@ -56,10 +56,10 @@ export const headCells = [
     width: 10,
   },
   {
-    id: 'stopSelling',
+    id: 'selling',
     numeric: false,
     disablePadding: false,
-    label: 'Stop Selling',
+    label: 'Selling',
     width: 10,
   },
   {

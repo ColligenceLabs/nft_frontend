@@ -17,16 +17,19 @@ export default function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <CustomCheckbox
-            color="primary"
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputprops={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
+        {onSelectAllClick !== undefined && (
+          <TableCell padding="checkbox">
+            <CustomCheckbox
+              color="primary"
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputprops={{
+                'aria-label': 'select all desserts',
+              }}
+            />
+          </TableCell>
+        )}
+
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -59,7 +62,7 @@ export default function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,

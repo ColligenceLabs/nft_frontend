@@ -48,7 +48,7 @@ const NFTs = () => {
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -61,8 +61,8 @@ const NFTs = () => {
   const [sendModal, setSendModal] = useState(false);
   const [selectedNft, setSelectedNft] = useState({});
   const [deleteInAction, setDeleteInAction] = useState(false);
-  const [finishDelete, setFinishDelete] = useState(false);
-  const [deleteMessage, setDeleteMessage] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertErrorMessage, setAlertErrorMessage] = useState(null);
 
   const { library, account } = useActiveWeb3React();
   const { stopSelling } = useMarket();
@@ -79,35 +79,6 @@ const NFTs = () => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, _id) => {
-    const selectedIndex = selected.indexOf(_id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, _id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -138,11 +109,11 @@ const NFTs = () => {
     }
     const res = await deleteNft(deleteNfts);
     if (res.data.status === 0) {
-      setDeleteMessage(res.data.message);
+      setAlertErrorMessage(res.data.message);
     }
     setOpenDeleteModal(false);
     setDeleteInAction(false);
-    setFinishDelete(true);
+    setShowAlert(true);
 
     await fetchNFTs();
   };
@@ -189,34 +160,36 @@ const NFTs = () => {
     }
   };
 
-  const handleStopSelling = async (row) => {
-    console.log(row);
-    console.log('Stop Selling');
+  const handleSelling = async (row) => {
+    if (row.selling === true) {
+      try {
+        if (useKAS !== 'true') {
+          const nftContract = getNftContract(row.collection_id.contract_address);
+          await stopSelling(
+            nftContract,
+            parseInt(row.metadata.tokenId, 10),
+            row.quantity,
+            row.price,
+            row.quote,
+          );
+        }
 
-    try {
-      if (useKAS !== 'true') {
-        const nftContract = getNftContract(row.collection_id.contract_address);
-        await stopSelling(
-          nftContract,
-          parseInt(row.metadata.tokenId, 10),
-          row.quantity,
-          row.price,
-          row.quote,
-        );
+        const res = await setStopSelling(row._id, useKAS, account);
+
+        if (res.data.status !== 1) {
+          setAlertErrorMessage('Failed');
+        }
+        setShowAlert(true);
+      } catch (e) {
+        // TODO: 에러 표시
+        console.log(e);
       }
 
-      const res = await setStopSelling(row._id, useKAS, account);
-
-      if (res.data.status === 1) {
-        // TODO: 성공 표시
-      } else {
-        // TODO: 실패 표시
-      }
-    } catch (e) {
-      // TODO: 에러 표시
+      fetchNFTs(); // stop selling 후 data refetch
+    } else {
+      setSelected(row._id);
+      setOpenScheduleModal(true);
     }
-
-    fetchNFTs(); // stop selling 후 data refetch
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
@@ -264,7 +237,7 @@ const NFTs = () => {
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
+                onSelectAllClick={undefined}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
@@ -283,16 +256,16 @@ const NFTs = () => {
                       key={row._id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <CustomCheckbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputprops={{
-                            'aria-labelledby': labelId,
-                          }}
-                          onClick={(event) => handleClick(event, row._id)}
-                        />
-                      </TableCell>
+                      {/*<TableCell padding="checkbox">*/}
+                      {/*  <CustomCheckbox*/}
+                      {/*    color="primary"*/}
+                      {/*    checked={isItemSelected}*/}
+                      {/*    inputprops={{*/}
+                      {/*      'aria-labelledby': labelId,*/}
+                      {/*    }}*/}
+                      {/*    onClick={(event) => handleClick(event, row._id)}*/}
+                      {/*  />*/}
+                      {/*</TableCell>*/}
                       <TableCell
                         sx={{ cursor: 'pointer' }}
                         onClick={() => copyToClipBoard(row.collection_id?.contract_address)}
@@ -389,7 +362,7 @@ const NFTs = () => {
                         <Switch
                           checked={row.selling}
                           // TODO : 판매 중인 것만 클릭할 수 있게...
-                          onChange={() => handleStopSelling(row)}
+                          onChange={() => handleSelling(row)}
                           inputProps={{ 'aria-label': 'controlled' }}
                         />
                       </TableCell>
@@ -496,18 +469,18 @@ const NFTs = () => {
       />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={finishDelete}
+        open={showAlert}
         autoHideDuration={2000}
         onClose={() => {
-          setFinishDelete(false);
+          setShowAlert(false);
         }}
       >
         <Alert
           variant="filled"
-          severity={deleteMessage === null ? 'success' : 'error'}
+          severity={alertErrorMessage === null ? 'success' : 'error'}
           sx={{ width: '100%' }}
         >
-          {deleteMessage === null ? t('Success delete NFTs.') : t(`${deleteMessage}`)}
+          {alertErrorMessage === null ? t('Success.') : t(`${alertErrorMessage}`)}
         </Alert>
       </Snackbar>
       <Snackbar

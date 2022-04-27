@@ -37,10 +37,10 @@ export const headCells = [
     label: 'Status',
   },
   {
-    id: 'stopSelling',
+    id: 'selling',
     numeric: false,
     disablePadding: false,
-    label: 'Stop Selling',
+    label: 'Selling',
   },
   {
     id: 'saleDate',
