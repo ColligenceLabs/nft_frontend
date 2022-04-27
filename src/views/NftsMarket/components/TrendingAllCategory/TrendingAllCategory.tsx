@@ -43,6 +43,9 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const TrendingAllCategory = () => {
   const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
@@ -66,16 +69,22 @@ const TrendingAllCategory = () => {
     prevArrow: <PrevArrow />,
   };
 
-  console.log(data?.data?.items);
   return (
     <Box sx={{ mt: '30px' }}>
       {data && !error && (
         <>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', mb: '50px' }}>
-            <Typography fontSize={'30px'} fontWeight={'700'}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              mb: '50px',
+            }}
+          >
+            <Typography variant={smDown ? 'h3' : 'h1'} fontWeight={'700'}>
               Trending in
             </Typography>
-            <Typography fontSize={'30px'} fontWeight={'700'} color={'primary'}>
+            <Typography variant={smDown ? 'h3' : 'h1'} fontWeight={'700'} color={'primary'}>
               all collections
             </Typography>
           </Box>

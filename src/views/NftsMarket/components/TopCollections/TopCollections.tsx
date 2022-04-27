@@ -96,7 +96,7 @@ const TopCollections = () => {
           mb: '50px',
         }}
       >
-        <Typography fontSize={'30px'} fontWeight={'700'}>
+        <Typography fontSize={smDown ? '21px' : '30px'} fontWeight={'700'}>
           Top Collections over
         </Typography>
         <Button
@@ -105,7 +105,7 @@ const TopCollections = () => {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           onClick={handleClick}
-          sx={{ fontSize: '30px', fontWeight: '700', color: 'primary' }}
+          sx={{ fontSize: smDown ? '21px' : '30px', fontWeight: '700', color: 'primary' }}
         >
           {category.caption}
           <KeyboardArrowDownIcon />
