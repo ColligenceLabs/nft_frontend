@@ -80,7 +80,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { library } = useActiveWeb3React();
+  const { library, account } = useActiveWeb3React();
   const { sellNFT } = useMarket();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
@@ -110,7 +110,6 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   const handleSellNFTs = async () => {
     for (let i = 0; i < selected.length; i++) {
       const serials = await getSerialsData(0, 10000, 'active', selected[i]);
-      console.log('2---->', serials);
       const nftInfo = await nftDetail(selected[i]);
       console.log(nftInfo);
 
@@ -119,7 +118,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
         nftInfo.data.collection_id.contract_type,
       );
       // for (let j = 0; j < serials.data.items.length; j++) {
-      if (serials.data.items[0].owner_id === null) {
+      if (serials.data.items[0].owner_id === null || serials.data.items[0].owner_id === account) {
         // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
         // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
         await sellNFT(
