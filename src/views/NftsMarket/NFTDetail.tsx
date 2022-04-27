@@ -48,6 +48,7 @@ const NFTDetail = () => {
   const [showMoreItem, setShowMoreItem] = useState(true);
   const [showItemActivity, setShowItemActivity] = useState(true);
   const [myNFT, setMyNFT] = useState(null);
+  const [myNFTCount, setMyNFTCount] = useState('0');
   const [sellPrice, setSellPrice] = useState('0');
   const [totalPrice, setTotalPrice] = useState(0);
   // TODO : KIP37 경우에 구입 수량 입력 받을 값
@@ -74,7 +75,7 @@ const NFTDetail = () => {
 
   const buy = async () => {
     setBuyFlag(true);
-    setSellingQuantity((curr: number) => curr - 1);
+    setSellingQuantity((curr: number) => curr - parseInt(amount));
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
@@ -106,14 +107,17 @@ const NFTDetail = () => {
     console.log('=====>', tokenId, parseInt(tokenId.data, 16));
     if (result === FAILURE) {
       await cancelBuy(id, tokenId.data);
-      setSellingQuantity((curr: number) => curr + 1);
+      setSellingQuantity((curr: number) => curr + parseInt(amount));
     }
+    mutate();
+    getMyNFTInfo();
     setBuyFlag(false);
   };
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
+
   // const sellTest = async () => {
   //   const tokenId = 1;
   //   const isKaikas =
@@ -125,16 +129,23 @@ const NFTDetail = () => {
   //   await listNFT(contractAddress);
   // };
 
+  const getMyNFTInfo = () => {
+    getUserNftSerialsData(id, account).then((res) => {
+      console.log(res);
+      if (res.data !== null) {
+        setMyNFT(res.data);
+        setMyNFTCount(res.data.length);
+      }
+    });
+  };
+
   useEffect(() => {
     setSellingQuantity(data?.data?.quantity_selling);
   }, [data?.data?.quantity_selling]);
 
   useEffect(() => {
-    getUserNftSerialsData(id, account).then((res) => {
-      console.log(res);
-      setMyNFT(res.data);
-    });
-  }, [getUserNftSerialsData, id, account]);
+    getMyNFTInfo();
+  }, [id, account]);
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
@@ -408,6 +419,20 @@ const NFTDetail = () => {
                       >
                         <StorefrontOutlinedIcon fontSize={'small'} />
                         <Typography variant={'h4'}>Sell My NFT</Typography>
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ pt: 2, px: 2 }}>
+                      <Typography variant={'subtitle2'} color={'primary'}>
+                        My NFT Count
+                      </Typography>
+                      <Box
+                        display={'flex'}
+                        justifyContent={'flex-start'}
+                        alignItems={'center'}
+                        gap={'0.5rem'}
+                      >
+                        <Typography variant={'h1'}>{myNFTCount}</Typography>
                       </Box>
                     </Box>
 
