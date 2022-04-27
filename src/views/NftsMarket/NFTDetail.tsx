@@ -375,7 +375,7 @@ const NFTDetail = () => {
                           </Box>
                         </Box>
                       ) : (
-                        <Box>
+                        <Box sx={{ flex: 1 }}>
                           {account === undefined ? (
                             <Button
                               fullWidth
