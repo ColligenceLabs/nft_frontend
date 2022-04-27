@@ -79,7 +79,7 @@ const NFTDetail = () => {
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
-    const serial = await selectSerials(id);
+    const serial = await selectSerials(id, account);
     console.log(serial);
     if (serial.status === 0) {
       console.log('판매가능한 nft가 존재하지 않습니다.');
@@ -110,7 +110,7 @@ const NFTDetail = () => {
     } catch (e) {
       // 실패인 경우 원복.
       console.log('=====>', serial.data, parseInt(serial.data.token_id, 16));
-      await cancelBuy(id, serial.data.token_id);
+      await cancelBuy(id, serial.data.token_id, account);
       setSellingQuantity((curr: number) => curr + 1);
     }
     mutate();

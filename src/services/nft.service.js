@@ -168,8 +168,8 @@ export const getUserNftSerialsData = (searchNftId, owner) => {
     );
 };
 
-export const selectSerials = (nft_id) => {
-  const url = `${API_URL}/select-serials?nft_id=${nft_id}`;
+export const selectSerials = (nft_id, buyer) => {
+  const url = `${API_URL}/select-serials?nft_id=${nft_id}&buyer=${buyer}`;
   return axios
     .get(url, {
       headers: authHeader(),
@@ -182,8 +182,8 @@ export const selectSerials = (nft_id) => {
     });
 };
 
-export const cancelBuy = (nft_id, tokenId) => {
-  const url = `${API_URL}/cancel-buy?nft_id=${nft_id}&token_id=${tokenId}`;
+export const cancelBuy = (nft_id, tokenId, buyer) => {
+  const url = `${API_URL}/cancel-buy?nft_id=${nft_id}&token_id=${tokenId}&buyer=${buyer}`;
   return axios
     .get(url, {
       headers: authHeader(),
