@@ -374,22 +374,23 @@ const useMarket = () => {
       } else {
         try {
           if (!isKaikas) {
-            console.log(nftContract.address, tokenId, seller, quantity, amount, parsedPrice);
+            console.log(nftContract.address, tokenId, seller, quantity, amount, approvePrice);
             gasLimit = await marketContract.estimateGas.buyTokenETH(
               nftContract.address,
               tokenId,
               seller,
               quantity,
               amount,
+              parsedPrice,
               {
-                value: parsedPrice,
+                value: approvePrice,
               },
             );
           } else {
-            console.log(nftContract._address, tokenId, seller, quantity, amount, parsedPrice);
+            console.log(nftContract._address, tokenId, seller, quantity, amount, approvePrice);
             gasLimit = await marketContract.methods
-              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount)
-              .estimateGas({ value: parsedPrice, from: account });
+              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount, parsedPrice)
+              .estimateGas({ value: approvePrice, from: account });
           }
 
           console.log('buyNFT buyToken estimateGas', gasLimit);
@@ -408,8 +409,9 @@ const useMarket = () => {
               seller,
               quantity,
               amount,
+              parsedPrice,
               {
-                value: parsedPrice,
+                value: approvePrice,
                 from: account,
                 gasPrice,
                 gasLimit: calculateGasMargin(gasLimit),
@@ -418,9 +420,9 @@ const useMarket = () => {
             receipt = await tx.wait();
           } else {
             receipt = await marketContract.methods
-              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount)
+              .buyTokenETH(nftContract._address, tokenId, seller, quantity, amount, parsedPrice)
               .send({
-                value: parsedPrice,
+                value: approvePrice,
                 from: account,
                 gasPrice,
                 gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
