@@ -160,7 +160,7 @@ const NFTs = () => {
     }
   };
 
-  const handleStopSelling = async (row) => {
+  const handleSelling = async (row) => {
     if (row.selling === true) {
       try {
         if (useKAS !== 'true') {
@@ -362,7 +362,7 @@ const NFTs = () => {
                         <Switch
                           checked={row.selling}
                           // TODO : 판매 중인 것만 클릭할 수 있게...
-                          onChange={() => handleStopSelling(row)}
+                          onChange={() => handleSelling(row)}
                           inputProps={{ 'aria-label': 'controlled' }}
                         />
                       </TableCell>
