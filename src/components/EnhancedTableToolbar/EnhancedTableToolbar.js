@@ -38,41 +38,7 @@ const EnhancedTableToolbar = (props) => {
         alignItems: 'center',
       }}
     >
-      {['nfts'].includes(currentRoute) ? (
-        <PopupState variant="popover" popupId="demo-popup-menu">
-          {(popupState) => (
-            <React.Fragment>
-              <Button disabled={numSelected === 0} variant="outlined" {...bindTrigger(popupState)}>
-                {smDown ? (
-                  <KeyboardArrowDownOutlinedIcon />
-                ) : (
-                  <>
-                    {`${numSelected} item(s) selected`} <ArrowDropDownOutlinedIcon sx={{ ml: 1 }} />
-                  </>
-                )}
-              </Button>
-              <Menu {...bindMenu(popupState)}>
-                <MenuItem
-                  onClick={() => {
-                    popupState.close();
-                    openSchedule();
-                  }}
-                >
-                  Sale Schedule
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    popupState.close();
-                    onDelete();
-                  }}
-                >
-                  Delete
-                </MenuItem>
-              </Menu>
-            </React.Fragment>
-          )}
-        </PopupState>
-      ) : ['admins', 'creator'].includes(currentRoute) ? (
+      {['admins', 'creator'].includes(currentRoute) ? (
         <PopupState variant="popover" popupId="demo-popup-menu">
           {(popupState) => (
             <React.Fragment>

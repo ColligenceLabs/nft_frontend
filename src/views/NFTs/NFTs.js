@@ -48,7 +48,7 @@ const NFTs = () => {
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(true);
   const [totalCount, setTotalCount] = useState(0);
@@ -79,35 +79,6 @@ const NFTs = () => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n._id);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, _id) => {
-    const selectedIndex = selected.indexOf(_id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, _id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -216,7 +187,7 @@ const NFTs = () => {
 
       fetchNFTs(); // stop selling 후 data refetch
     } else {
-      setSelected([row._id]);
+      setSelected(row._id);
       setOpenScheduleModal(true);
     }
   };
@@ -266,7 +237,7 @@ const NFTs = () => {
                 numSelected={selected.length}
                 order={order}
                 orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
+                onSelectAllClick={undefined}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
               />
@@ -285,16 +256,16 @@ const NFTs = () => {
                       key={row._id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <CustomCheckbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputprops={{
-                            'aria-labelledby': labelId,
-                          }}
-                          onClick={(event) => handleClick(event, row._id)}
-                        />
-                      </TableCell>
+                      {/*<TableCell padding="checkbox">*/}
+                      {/*  <CustomCheckbox*/}
+                      {/*    color="primary"*/}
+                      {/*    checked={isItemSelected}*/}
+                      {/*    inputprops={{*/}
+                      {/*      'aria-labelledby': labelId,*/}
+                      {/*    }}*/}
+                      {/*    onClick={(event) => handleClick(event, row._id)}*/}
+                      {/*  />*/}
+                      {/*</TableCell>*/}
                       <TableCell
                         sx={{ cursor: 'pointer' }}
                         onClick={() => copyToClipBoard(row.collection_id?.contract_address)}
