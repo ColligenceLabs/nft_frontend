@@ -55,12 +55,18 @@ const TrendingAllCategory = () => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: mdDown ? 1 : 4,
+    slidesToShow:
+      data?.data?.items !== undefined && data?.data?.items?.length < 4
+        ? data?.data?.items.length
+        : mdDown
+        ? 1
+        : 4,
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
   };
 
+  console.log(data?.data?.items);
   return (
     <Box sx={{ mt: '30px' }}>
       {data && !error && (
