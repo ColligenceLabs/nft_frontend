@@ -145,6 +145,7 @@ const NFTDetail = () => {
 
   useEffect(() => {
     setSellingQuantity(data?.data?.quantity_selling);
+    myNftMutate();
   }, [data?.data?.quantity_selling]);
 
   useEffect(() => {
