@@ -73,7 +73,7 @@ const NFTDetail = () => {
   } = useSWR(`${API_URL}/user-serials?nft_id=${id}&owner_id=${account}`, () =>
     getUserNftSerialsData(id, account),
   );
-  console.log(myNftData);
+
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
@@ -88,7 +88,7 @@ const NFTDetail = () => {
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
     // tokenId 를 구해온다.
     const serials = await selectSerials(id, account, amount);
-    console.log(serials);
+
     if (serials.status === 0) {
       console.log('판매가능한 nft가 존재하지 않습니다.');
       setBuyFlag(false);
@@ -488,8 +488,7 @@ const NFTDetail = () => {
                       </Box>
                       <Box sx={{ flex: 1, width: smDown ? '50px' : '100px' }}>
                         <LoadingButton
-                          // onClick={buy}
-                          // disabled={sellingQuantity === 0}
+                          disabled={totalPrice === 0 || isNaN(totalPrice)}
                           // loading={buyFlag}
                           fullWidth
                           variant="contained"
