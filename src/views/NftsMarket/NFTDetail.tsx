@@ -150,7 +150,7 @@ const NFTDetail = () => {
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
-  }, [sellPrice, amount]);
+  }, [sellAmount, sellPrice]);
 
   return (
     <MarketLayout>
