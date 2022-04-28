@@ -35,6 +35,7 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 
 const NFTDetail = () => {
   const theme = useTheme();
+  const { library, account, activate } = useActiveWeb3React();
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
@@ -65,11 +66,18 @@ const NFTDetail = () => {
   }
 
   const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
-
+  const {
+    data: myNftData,
+    error: myNftError,
+    mutate: myNftMutate,
+  } = useSWR(`${API_URL}/user-serials?nft_id=${id}&owner_id=${account}`, () =>
+    getUserNftSerialsData(id, account),
+  );
+  console.log(myNftData);
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const { buyNFT, sellNFT, listNFT } = useMarket();
-  const { library, account, activate } = useActiveWeb3React();
+
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
 
@@ -106,15 +114,14 @@ const NFTDetail = () => {
         price,
         quote,
       );
-
     } catch (e) {
       // 실패인 경우 원복.
       console.log('=====>', serials.data, parseInt(serials.data[0].token_id, 16));
       await cancelBuy(id, serials.data[0].token_id, account);
       setSellingQuantity((curr: number) => curr + parseInt(amount));
     }
-    mutate();
-    getMyNFTInfo();
+    await mutate();
+    await myNftMutate();
     setBuyFlag(false);
   };
 
@@ -128,28 +135,17 @@ const NFTDetail = () => {
   //     library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
   //   await sellNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
   // };
-  //
-  // const listTest = async () => {
-  //   await listNFT(contractAddress);
-  // };
 
-  const getMyNFTInfo = () => {
-    getUserNftSerialsData(id, account).then((res) => {
-      console.log(res);
-      if (res.data !== null) {
-        setMyNFT(res.data);
-        setMyNFTCount(res.data.length);
-      }
-    });
-  };
+  useEffect(() => {
+    if (myNftData && myNftData?.data !== null) {
+      setMyNFT(myNftData?.data);
+      setMyNFTCount(myNftData?.data.length);
+    }
+  }, [myNftData?.data]);
 
   useEffect(() => {
     setSellingQuantity(data?.data?.quantity_selling);
   }, [data?.data?.quantity_selling]);
-
-  useEffect(() => {
-    getMyNFTInfo();
-  }, [id, account]);
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
