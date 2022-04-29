@@ -37,7 +37,7 @@ const NFTDetail = () => {
     console.log('from talken app');
   }
 
-  const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
+  const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
   return (
     <MarketLayout>
@@ -56,11 +56,7 @@ const NFTDetail = () => {
                   alt_url={data?.data?.metadata?.alt_url}
                   name={data?.data?.metadata?.name}
                 />
-                <DetailInformation
-                  contract_address={data?.data?.collection_id?.contract_address}
-                  createdAt={data?.data?.collection_id?.createdAt}
-                  description={data?.data?.collection_id?.description}
-                />
+                <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy id={id!} />
                 <Listings />
                 <DetailSell id={id!} />
@@ -82,11 +78,7 @@ const NFTDetail = () => {
                     alt_url={data?.data?.metadata?.alt_url}
                     name={data?.data?.metadata?.name}
                   />
-                  <DetailInformation
-                    contract_address={data?.data?.collection_id?.contract_address}
-                    createdAt={data?.data?.collection_id?.createdAt}
-                    description={data?.data?.collection_id?.description}
-                  />
+                  <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
                   <DetailTitle
