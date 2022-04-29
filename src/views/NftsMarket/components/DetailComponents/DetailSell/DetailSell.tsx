@@ -13,6 +13,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import SectionWrapper from '../SectionWrapper';
 import { useKipContract, useKipContractWithKaikas } from '../../../../../hooks/useContract';
 import useMarket from '../../../../../hooks/useMarket';
+import { getNftContract } from '../../../../../utils/contract';
 
 interface DetailSellProps {
   id: string;
@@ -53,6 +54,20 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
     getUserNftSerialsData(id, account),
   );
 
+  const sell = async () => {
+    console.log(myNftData, myNftData.data.length, sellAmount);
+    if (myNftData.data.length < sellAmount) {
+      console.log('클수없다..');
+      return;
+    }
+
+    // 사용자 지갑을 사용 마켓에 readyToSell 실행
+    const nftContract = getNftContract(library, myNftData.data[0].contract_address, data?.data?.collection_id?.contract_type);
+    await sellNFT(nftContract, data?.data?.collection_id?.contract_type, myNftData.data[0].token_id, sellAmount, sellPrice, myNftData.data[0].quote);
+
+    // 사용자 판매 내역을 등록 api 호출 (sale collection 에 등록, serials 의 상태를 판매상태로 변경, nft 컬렉션에 user_selling_quantity 추가)
+
+  }
   // const contractAddress = data?.data?.collection_id?.contract_address;
   // const nftContract = useKipContract(contractAddress, 'KIP17');
   // const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
@@ -148,6 +163,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
               <LoadingButton
                 disabled={totalPrice === 0 || isNaN(totalPrice)}
                 // loading={buyFlag}
+                onClick={sell}
                 fullWidth
                 variant="contained"
               >
