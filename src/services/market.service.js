@@ -38,9 +38,9 @@ export const nftDetail = (id) => {
     });
 };
 
-export const saleList = (nftId) => {
+export const saleList = (nftId, page, size) => {
   return  axios
-    .get(`${API_URL}/saleList/${nftId}`)
+    .get(`${API_URL}/saleList/${nftId}?page=${page}&size=${size}`)
     .then((response) => {
       return response.data;
     })
