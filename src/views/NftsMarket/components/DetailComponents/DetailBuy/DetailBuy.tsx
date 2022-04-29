@@ -18,11 +18,20 @@ import { nftDetail } from '../../../../../services/market.service';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import WalletDialog from '../../../../../components/WalletDialog';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import SellingClock from '../SellingClock';
 
 interface DetailBuyProps {
   id: string;
 }
+
+const TitleBox = ({ title, deadline }: string | any) => {
+  return (
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Typography variant={'h4'}>{title}</Typography>
+      <SellingClock deadline={deadline} />
+    </Box>
+  );
+};
 
 const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
   const theme = useTheme();
@@ -50,6 +59,8 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
   } = useSWR(`${API_URL}/user-serials?nft_id=${id}&owner_id=${account}`, () =>
     getUserNftSerialsData(id, account),
   );
+
+  console.log(data?.data);
 
   const contractAddress = data?.data?.collection_id?.contract_address;
   const nftContract = useKipContract(contractAddress, 'KIP17');
@@ -115,8 +126,14 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
 
   return (
     <SectionWrapper
-      title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
-      icon={<StorefrontOutlinedIcon />}
+      // title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
+      title={
+        <TitleBox
+          title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
+          deadline={data?.data?.end_date}
+        />
+      }
+      // icon={<StorefrontOutlinedIcon />}
     >
       <Box sx={{ pt: 2, px: 2 }}>
         <Typography variant={'subtitle2'} color={'primary'}>

@@ -6,8 +6,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface SectionWrapperProps {
-  title: string;
-  icon: string | React.ReactElement<SvgIconProps>;
+  title: string | JSX.Element | JSX.Element[];
+  icon?: string | React.ReactElement<SvgIconProps>;
   maxHeight?: string | undefined;
   toggled?: boolean | undefined;
   children: JSX.Element | JSX.Element[];
@@ -49,8 +49,7 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
           }}
         >
           {typeof icon === 'string' ? <FeatherIcon icon={icon} width="20" /> : icon}
-
-          <Typography variant={'h4'}>{title}</Typography>
+          {typeof title === 'string' ? <Typography variant={'h4'}>{title}</Typography> : title}
         </Box>
 
         {showChildren ? (
