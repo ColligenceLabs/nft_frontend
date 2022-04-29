@@ -37,7 +37,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
 
   return (
     <>
-      <SectionWrapper title={'Description'} icon={'info'} maxHeight={'200px'}>
+      <SectionWrapper title={'Description'} icon={'align-left'} maxHeight={'200px'}>
         <Box sx={{ p: 2 }}>
           <Typography variant={'body2'} sx={{ paddingX: 1 }}>
             {nft.metadata.description}
@@ -50,7 +50,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
             ? `${collection.name}`
             : `${collection.contract_address}`
         }
-        icon={'info'}
+        icon={'pocket'}
         maxHeight={'200px'}
         toggled={false}
       >
@@ -60,7 +60,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
           </Typography>
         </Box>
       </SectionWrapper>
-      <SectionWrapper title={'Details'} icon={'info'} maxHeight={'200px'} toggled={false}>
+      <SectionWrapper title={'Details'} icon={'align-center'} maxHeight={'200px'} toggled={false}>
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Contract Address</Typography>

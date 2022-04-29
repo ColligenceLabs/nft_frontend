@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, SvgIconProps, Typography } from '@mui/material';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -7,7 +7,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface SectionWrapperProps {
   title: string;
-  icon: string;
+  icon: string | React.ReactElement<SvgIconProps>;
   maxHeight?: string | undefined;
   toggled?: boolean | undefined;
   children: JSX.Element | JSX.Element[];
@@ -45,10 +45,11 @@ const SectionWrapper: React.FC<SectionWrapperProps> = ({
             display: 'flex',
             justifyContent: 'flex-start',
             alignItems: 'center',
-            gap: '0.2rem',
+            gap: '0.5rem',
           }}
         >
-          <FeatherIcon icon={icon} width="20" />
+          {typeof icon === 'string' ? <FeatherIcon icon={icon} width="20" /> : icon}
+
           <Typography variant={'h4'}>{title}</Typography>
         </Box>
 

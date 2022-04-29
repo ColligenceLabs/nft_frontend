@@ -18,6 +18,7 @@ import { nftDetail } from '../../../../../services/market.service';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import WalletDialog from '../../../../../components/WalletDialog';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 
 interface DetailBuyProps {
   id: string;
@@ -115,7 +116,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
   return (
     <SectionWrapper
       title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
-      icon={'info'}
+      icon={<StorefrontOutlinedIcon />}
     >
       <Box sx={{ pt: 2, px: 2 }}>
         <Typography variant={'subtitle2'} color={'primary'}>
