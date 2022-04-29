@@ -105,6 +105,7 @@ export interface NFTResponse {
           thumbnail: string;
           creator_icon: string;
           category: string[];
+          creator_name: string;
         };
         quantity: number;
         quantity_selling: number;

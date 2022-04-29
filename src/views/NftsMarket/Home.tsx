@@ -29,7 +29,6 @@ const Home = (): JSX.Element => {
           <Introduction />
         </Container>
       </Box>
-      <Footer />
     </MarketLayout>
   );
 };

@@ -9,6 +9,7 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import CancelIcon from '@mui/icons-material/Cancel';
 import talk_icon from '../../../../assets/images/logos/talken_icon.png';
 import SectionWrapper from '../DetailComponents/SectionWrapper';
+import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 
 const columns: GridColDef[] = [
   // { field: 'id', headerName: 'ID', width: 70 },
@@ -92,7 +93,7 @@ const rows = [
 
 const Listings = () => {
   return (
-    <SectionWrapper title={'Listing'} icon={'info'}>
+    <SectionWrapper title={'Listing'} icon={<FormatListBulletedOutlinedIcon />}>
       <Box sx={{ backgroundColor: '#f0faf5', p: 1, borderRadius: 2 }}>
         <Box sx={{ height: '368px', backgroundColor: 'white' }}>
           <DataGrid

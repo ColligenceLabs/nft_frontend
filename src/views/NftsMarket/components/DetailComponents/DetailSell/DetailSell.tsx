@@ -102,7 +102,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
   return (
     <>
       {myNFT !== null && (
-        <SectionWrapper title={'Sell My NFT'} icon={'info'}>
+        <SectionWrapper title={'Sell My NFT'} icon={'tag'}>
           <Box sx={{ pt: 2, px: 2 }}>
             <Typography variant={'subtitle2'} color={'primary'}>
               My NFT Count

@@ -48,7 +48,7 @@ const MarketLayout = ({ children, bgcolor = 'transparent' }: Props): JSX.Element
 
       <main>{children}</main>
       {/*<Container paddingY={4}>*/}
-      {/*<Footer />*/}
+      <Footer />
       {/*</Container>*/}
     </Box>
   );

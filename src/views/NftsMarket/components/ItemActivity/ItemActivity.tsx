@@ -8,10 +8,8 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer'; // list
 import PanToolIcon from '@mui/icons-material/PanTool'; // bid
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'; // transfer
 import CancelIcon from '@mui/icons-material/Cancel';
-
 import { useTheme } from '@mui/material/styles';
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import SectionWrapper from '../DetailComponents/SectionWrapper';
 
 const FILTER_ITEM = [
   { value: 'list', caption: 'List' },
@@ -133,110 +131,73 @@ const rows = [
 const ItemActivity = () => {
   const theme = useTheme();
   const [selectedFilter, setSelectedFilter] = useState([] as any);
-  const [showItemActivity, setShowItemActivity] = useState(true);
-
-  const data = [{ id: 1, name: 'test', address: 'test' }];
 
   useEffect(() => {
     console.log(selectedFilter);
   }, [selectedFilter]);
 
   return (
-    <Box
-      sx={{
-        mt: 2,
-        border: '0.5px solid #d6d6d6',
-        borderRadius: 2,
-      }}
-    >
-      <Box
-        sx={{
-          // borderBottom: showMoreItem ? 0.5 : 0,
-          borderColor: '#d6d6d6',
-          p: 2,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            gap: '0.2rem',
-          }}
-        >
-          <HistoryOutlinedIcon />
-          <Typography variant={'h4'}>Item Activity</Typography>
+    <SectionWrapper title={'Item Activity'} icon={'activity'} toggled={true}>
+      <Box sx={{ backgroundColor: '#f0faf5', p: 1, borderRadius: 2 }}>
+        <Box sx={{ pb: 1 }}>
+          <Select
+            multiple
+            fullWidth
+            value={selectedFilter}
+            onChange={(event) => {
+              setSelectedFilter(event.target.value);
+            }}
+            sx={{ p: 0, m: 0, backgroundColor: 'white' }}
+            // input={<OutlinedInput label="Filter" />}
+            renderValue={(selected) => (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                }}
+              >
+                {selected.map((value: any) => (
+                  <Box
+                    key={value}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: 1,
+                      backgroundColor: `${theme.palette.primary.main}`,
+                      px: 2,
+                      borderRadius: '10px',
+                    }}
+                  >
+                    <Typography variant={'subtitle2'} color={'white'}>
+                      {value}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {FILTER_ITEM.map((name) => (
+              <MenuItem key={name.value} value={name.value}>
+                {name.caption}
+              </MenuItem>
+            ))}
+          </Select>
         </Box>
-        <KeyboardArrowUpIcon
-          sx={{ cursor: 'pointer' }}
-          onClick={() => setShowItemActivity((cur) => !cur)}
-        />
+        <Box sx={{ height: '368px', backgroundColor: 'white' }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+            hideFooterSelectedRowCount
+            disableColumnMenu
+          />
+        </Box>
       </Box>
-      {showItemActivity && (
-        <Box sx={{ backgroundColor: '#f0faf5', p: 1, borderRadius: 2 }}>
-          <Box sx={{ pb: 1 }}>
-            <Select
-              multiple
-              fullWidth
-              value={selectedFilter}
-              onChange={(event) => {
-                setSelectedFilter(event.target.value);
-              }}
-              sx={{ p: 0, m: 0, backgroundColor: 'white' }}
-              // input={<OutlinedInput label="Filter" />}
-              renderValue={(selected) => (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 1,
-                  }}
-                >
-                  {selected.map((value: any) => (
-                    <Box
-                      key={value}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: 1,
-                        backgroundColor: `${theme.palette.primary.main}`,
-                        px: 2,
-                        borderRadius: '10px',
-                      }}
-                    >
-                      <Typography variant={'subtitle2'} color={'white'}>
-                        {value}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {FILTER_ITEM.map((name) => (
-                <MenuItem key={name.value} value={name.value}>
-                  {name.caption}
-                </MenuItem>
-              ))}
-            </Select>
-          </Box>
-          <Box sx={{ height: '368px', backgroundColor: 'white' }}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-              hideFooterSelectedRowCount
-              disableColumnMenu
-            />
-          </Box>
-        </Box>
-      )}
-    </Box>
+    </SectionWrapper>
   );
 };
 
