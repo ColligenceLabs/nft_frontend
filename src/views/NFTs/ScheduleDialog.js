@@ -22,6 +22,7 @@ import useMarket from '../../hooks/useMarket';
 import { getSerialsData } from '../../services/serials.service';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { nftDetail } from '../../services/market.service';
+import {getNftContract} from '../../utils/contract';
 import kip17Abi from '../../config/abi/kip17.json';
 import kip37Abi from '../../config/abi/kip37.json';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
@@ -89,20 +90,20 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
     setStartDate(newValue);
   };
 
-  const getNftContract = (contract, type) => {
-    const isKaikas =
-      library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-    if (isKaikas) {
-      const caver = new Caver(window.klaytn);
-      return new caver.klay.Contract(type === 'KIP17' ? kip17Abi : kip37Abi, contract);
-    } else {
-      return new ethers.Contract(
-        contract,
-        type === 'KIP17' ? kip17Abi : kip37Abi,
-        library?.getSigner(),
-      );
-    }
-  };
+  // const getNftContract = (contract, type) => {
+  //   const isKaikas =
+  //     library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+  //   if (isKaikas) {
+  //     const caver = new Caver(window.klaytn);
+  //     return new caver.klay.Contract(type === 'KIP17' ? kip17Abi : kip37Abi, contract);
+  //   } else {
+  //     return new ethers.Contract(
+  //       contract,
+  //       type === 'KIP17' ? kip17Abi : kip37Abi,
+  //       library?.getSigner(),
+  //     );
+  //   }
+  // };
 
   const handleChangeEnd = (newValue) => {
     setEndDate(newValue);
@@ -115,6 +116,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
     console.log(nftInfo);
 
     const nftContract = getNftContract(
+      library,
       nftInfo.data.collection_id.contract_address,
       nftInfo.data.collection_id.contract_type,
     );
@@ -167,8 +169,9 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       }
     } catch (e) {
       setSuccessFlag(false);
+      console.log(e);
       if (e.data) setErrorMessage(e.data.message);
-      else setErrorMessage(e.message);
+      else setErrorMessage(e);
     }
     setLoading(false);
     setOpenSnackbar(true);
