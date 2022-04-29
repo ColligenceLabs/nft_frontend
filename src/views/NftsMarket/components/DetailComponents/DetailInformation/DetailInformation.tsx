@@ -54,8 +54,20 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
         maxHeight={'200px'}
         toggled={false}
       >
-        <Box sx={{ p: 2 }}>
-          <Typography variant={'body2'} sx={{ paddingX: 1 }}>
+        <Box sx={{ p: 2, display: 'flex' }}>
+          <img
+            src={collection.image_link}
+            alt={collection.name}
+            style={{
+              width: '100px',
+              height: '100px',
+              border: '1px solid #d6d6d6',
+              objectFit: 'cover',
+              borderRadius: '20%',
+            }}
+          />
+
+          <Typography variant={'body2'} sx={{ paddingX: 1, display: 'inline' }}>
             {collection.description}
           </Typography>
         </Box>
