@@ -37,7 +37,7 @@ const NFTDetail = () => {
     console.log('from talken app');
   }
 
-  const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
+  const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
   return (
     <MarketLayout>
@@ -46,21 +46,9 @@ const NFTDetail = () => {
           {mdDown ? (
             <Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <DetailTitle
-                  _id={data?.data?.collection_id?._id}
-                  name={data?.data?.collection_id?.name}
-                  full_name={data?.data?.collection_id?.full_name}
-                />
-                <DetailContents
-                  content_Type={data?.data?.metadata?.content_Type}
-                  alt_url={data?.data?.metadata?.alt_url}
-                  name={data?.data?.metadata?.name}
-                />
-                <DetailInformation
-                  contract_address={data?.data?.collection_id?.contract_address}
-                  createdAt={data?.data?.collection_id?.createdAt}
-                  description={data?.data?.collection_id?.description}
-                />
+                <DetailTitle nft={data?.data} />
+                <DetailContents nft={data?.data} />
+                <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy id={id!} />
                 <Listings />
                 <DetailSell id={id!} />
@@ -77,23 +65,11 @@ const NFTDetail = () => {
             <Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <DetailContents
-                    content_Type={data?.data?.metadata?.content_Type}
-                    alt_url={data?.data?.metadata?.alt_url}
-                    name={data?.data?.metadata?.name}
-                  />
-                  <DetailInformation
-                    contract_address={data?.data?.collection_id?.contract_address}
-                    createdAt={data?.data?.collection_id?.createdAt}
-                    description={data?.data?.collection_id?.description}
-                  />
+                  <DetailContents nft={data?.data} />
+                  <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
-                  <DetailTitle
-                    _id={data?.data?.collection_id?._id}
-                    name={data?.data?.collection_id?.name}
-                    full_name={data?.data?.collection_id?.full_name}
-                  />
+                  <DetailTitle nft={data?.data} />
                   <DetailBuy id={id!} />
                   <Listings />
                   <DetailSell id={id!} />

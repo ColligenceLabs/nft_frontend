@@ -1,31 +1,30 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { NFTType } from '../../../types';
 
 interface DetailTitleProp {
-  _id: string;
-  name: string;
-  full_name: string;
+  nft: NFTType;
 }
 
-const DetailTitle: React.FC<DetailTitleProp> = ({ _id, name, full_name }) => {
+const DetailTitle: React.FC<DetailTitleProp> = ({ nft }) => {
   return (
     <Box sx={{ p: 1 }}>
       <Typography
         component={Link}
-        to={`/market/collection/${_id}`}
+        to={`/market/collection/${nft.collection_id._id}`}
         variant={'h4'}
         color={'primary'}
         sx={{ textDecoration: 'none' }}
       >
-        {name}
+        {nft.collection_id?.name}
       </Typography>
 
-      <Typography variant={'h1'}>{name}</Typography>
+      <Typography variant={'h1'}>{nft.metadata.name}</Typography>
       <Box display={'flex'} sx={{ mt: 2 }}>
         <Typography variant={'h4'}>Author by</Typography>
         <Typography variant={'h4'} color={'primary'} sx={{ ml: 1, fontWeight: 800 }}>
-          {full_name}
+          {nft.metadata.creator_name}
         </Typography>
       </Box>
     </Box>

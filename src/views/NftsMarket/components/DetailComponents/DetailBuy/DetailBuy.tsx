@@ -175,7 +175,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
                   <Button
                     variant="contained"
                     onClick={() => setIsOpenConnectModal(true)}
-                    sx={{ flex: 1 }}
+                    sx={{ flex: 1, fontSize: '14px' }}
                   >
                     Connect Wallet
                   </Button>
