@@ -57,7 +57,7 @@ const useMarket = () => {
         if (nftType === 721) {
           test = await nftContract.methods.getApproved(tokenId).call();
         } else if (nftType === 1155) {
-          test = await nftContract.isApprovedForAll(account, marketContract._address).call();
+          test = await nftContract.methods.isApprovedForAll(account, marketContract._address).call();
         }
       }
       console.log(marketContract.address, marketContract.address !== test, test, typeof test);

@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import { getUserNftSerialsData } from '../../../../../services/nft.service';
 import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React';
 import { useLocation, useParams } from 'react-router-dom';
-import { nftDetail } from '../../../../../services/market.service';
+import { nftDetail, sellUserNft } from '../../../../../services/market.service';
 import useCopyToClipBoard from '../../../../../hooks/useCopyToClipBoard';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SectionWrapper from '../SectionWrapper';
@@ -60,24 +60,29 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
       console.log('클수없다..');
       return;
     }
+    try {
+      // 사용자 지갑을 사용 마켓에 readyToSell 실행
+      const nftContract = getNftContract(library, myNftData.data[0].contract_address, data?.data?.collection_id?.contract_type);
+      const nftType = data?.data?.collection_id?.contract_type  === 'KIP17' ? 721 : 1155;
+      console.log(myNftData.data[0].contract_address, nftContract);
+      await sellNFT(nftContract, nftType, parseInt(myNftData.data[0].token_id, 16), sellAmount, parseInt(sellPrice), myNftData.data[0].quote);
 
-    // 사용자 지갑을 사용 마켓에 readyToSell 실행
-    const nftContract = getNftContract(library, myNftData.data[0].contract_address, data?.data?.collection_id?.contract_type);
-    await sellNFT(nftContract, data?.data?.collection_id?.contract_type, myNftData.data[0].token_id, sellAmount, sellPrice, myNftData.data[0].quote);
-
-    // 사용자 판매 내역을 등록 api 호출 (sale collection 에 등록, serials 의 상태를 판매상태로 변경, nft 컬렉션에 user_selling_quantity 추가)
-
+      const sellSerials = myNftData.data.slice(0, sellAmount);
+      console.log(sellSerials);
+      const serialIds = sellSerials.map((serial: { _id: any; }) => serial._id);
+      console.log(serialIds);
+      // 사용자 판매 내역을 등록 api 호출 (sale collection 에 등록, serials 의 상태를 판매상태로 변경, nft 컬렉션에 user_selling_quantity 추가)
+      const result = await sellUserNft(account, sellAmount, sellPrice, data?.data?.collection_id?._id, myNftData.data[0].nft_id, myNftData.data[0].token_id, serialIds);
+      console.log(result);
+      if (result.status === 0) {
+        // error
+        console.log(result.message);
+      }
+      console.log('success');
+    } catch (e) {
+      console.log('sell error', e);
+    }
   }
-  // const contractAddress = data?.data?.collection_id?.contract_address;
-  // const nftContract = useKipContract(contractAddress, 'KIP17');
-  // const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
-
-  // const sellTest = async () => {
-  //   const tokenId = 1;
-  //   const isKaikas =
-  //     library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-  //   await sellNFT(isKaikas ? nftContractWithKaikas : nftContract, tokenId, '100');
-  // };
 
   useEffect(() => {
     if (myNftData && myNftData?.data !== null) {

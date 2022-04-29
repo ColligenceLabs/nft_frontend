@@ -38,6 +38,34 @@ export const nftDetail = (id) => {
     });
 };
 
+export const sellUserNft = (
+  seller,
+  quantity,
+  price,
+  collectionId,
+  nftId,
+  tokenId,
+  serialIds
+) => {
+  const data = {
+    seller,
+    quantity,
+    price,
+    collectionId,
+    nftId,
+    tokenId,
+    serialIds
+  };
+  console.log(data);
+  return axios.post(`${API_URL}/sellNft`, data, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
+
 export const getMarketNFTData = (
   type,
   page,
@@ -62,6 +90,6 @@ export const getMarketNFTData = (
     });
 };
 
-const marketService = { getMarketCollectionData, nftDetail, getMarketNFTData };
+const marketService = { getMarketCollectionData, nftDetail, getMarketNFTData, sellUserNft };
 
 export default marketService;
