@@ -4,18 +4,17 @@ import ReactPlayer from 'react-player';
 // @ts-ignore
 import FsLightbox from 'fslightbox-react';
 import ImageViewer from '../../../../../components/ImageViewer';
+import { NFTType } from '../../../types';
 
 interface DetailContentsProps {
-  content_Type: string;
-  alt_url: string;
-  name: string;
+  nft: NFTType;
 }
 
-const DetailContents: React.FC<DetailContentsProps> = ({ content_Type, alt_url, name }) => {
+const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
   const [toggled, setToggled] = useState(false);
   return (
     <>
-      {content_Type === 'mp4' ? (
+      {nft.metadata.content_Type === 'mp4' ? (
         <Card
           sx={{
             display: 'flex',
@@ -26,7 +25,7 @@ const DetailContents: React.FC<DetailContentsProps> = ({ content_Type, alt_url, 
         >
           <ReactPlayer
             config={{ file: { attributes: { controlsList: 'nodownload' } } }}
-            url={alt_url}
+            url={nft.metadata.alt_url}
             width="100%"
             height="100%"
             controls={true}
@@ -37,10 +36,10 @@ const DetailContents: React.FC<DetailContentsProps> = ({ content_Type, alt_url, 
         </Card>
       ) : (
         <Card sx={{ p: 0, m: 0 }} onClick={() => setToggled(!toggled)}>
-          <ImageViewer src={alt_url} alt={name} />
+          <ImageViewer src={nft.metadata.alt_url} alt={nft.metadata.name} />
         </Card>
       )}
-      <FsLightbox toggler={toggled} sources={[alt_url]} type="image" />
+      <FsLightbox toggler={toggled} sources={[nft.metadata.alt_url]} type="image" />
     </>
   );
 };

@@ -245,6 +245,7 @@ export interface NFTType {
     minted_by: string;
     thumbnail: string;
     creator_icon: string;
+    creator_name: string;
     category: string[];
   };
   quantity: number;

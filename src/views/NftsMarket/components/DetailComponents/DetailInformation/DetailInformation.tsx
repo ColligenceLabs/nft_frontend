@@ -40,11 +40,20 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
       <SectionWrapper title={'Description'} icon={'info'} maxHeight={'200px'}>
         <Box sx={{ p: 2 }}>
           <Typography variant={'body2'} sx={{ paddingX: 1 }}>
-            {nft.description}
+            {nft.metadata.description}
           </Typography>
         </Box>
       </SectionWrapper>
-      <SectionWrapper title={'Collection Info'} icon={'info'} maxHeight={'200px'} toggled={false}>
+      <SectionWrapper
+        title={
+          collection.name !== '' || collection.name !== undefined
+            ? `${collection.name}`
+            : `${collection.contract_address}`
+        }
+        icon={'info'}
+        maxHeight={'200px'}
+        toggled={false}
+      >
         <Box sx={{ p: 2 }}>
           <Typography variant={'body2'} sx={{ paddingX: 1 }}>
             {collection.description}

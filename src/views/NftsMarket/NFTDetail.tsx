@@ -46,16 +46,8 @@ const NFTDetail = () => {
           {mdDown ? (
             <Box>
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <DetailTitle
-                  _id={data?.data?.collection_id?._id}
-                  name={data?.data?.collection_id?.name}
-                  full_name={data?.data?.collection_id?.full_name}
-                />
-                <DetailContents
-                  content_Type={data?.data?.metadata?.content_Type}
-                  alt_url={data?.data?.metadata?.alt_url}
-                  name={data?.data?.metadata?.name}
-                />
+                <DetailTitle nft={data?.data} />
+                <DetailContents nft={data?.data} />
                 <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy id={id!} />
                 <Listings />
@@ -73,19 +65,11 @@ const NFTDetail = () => {
             <Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', gap: 3 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <DetailContents
-                    content_Type={data?.data?.metadata?.content_Type}
-                    alt_url={data?.data?.metadata?.alt_url}
-                    name={data?.data?.metadata?.name}
-                  />
+                  <DetailContents nft={data?.data} />
                   <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
-                  <DetailTitle
-                    _id={data?.data?.collection_id?._id}
-                    name={data?.data?.collection_id?.name}
-                    full_name={data?.data?.collection_id?.full_name}
-                  />
+                  <DetailTitle nft={data?.data} />
                   <DetailBuy id={id!} />
                   <Listings />
                   <DetailSell id={id!} />
