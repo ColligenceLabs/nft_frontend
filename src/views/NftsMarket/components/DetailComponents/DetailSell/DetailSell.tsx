@@ -93,6 +93,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
         account,
         sellAmount,
         sellPrice,
+        myNftData.data[0].quote,
         data?.data?.collection_id?._id,
         myNftData.data[0].nft_id,
         myNftData.data[0].token_id,
