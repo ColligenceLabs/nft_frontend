@@ -1,98 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, MenuItem, Select, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import PanToolIcon from '@mui/icons-material/PanTool';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import CancelIcon from '@mui/icons-material/Cancel';
-import talk_icon from '../../../../assets/images/logos/talken_icon.png';
+import {
+  Box,
+  Button,
+  TablePagination,
+  Typography,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHead,
+} from '@mui/material';
 import SectionWrapper from '../DetailComponents/SectionWrapper';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import useSWR from 'swr';
-import { CollectionResponse, NFTResponse } from '../../types';
-import useSWRInfinite from 'swr/infinite';
 import splitAddress from '../../../../utils/splitAddress';
-
-const columns: GridColDef[] = [
-  // { field: 'id', headerName: 'ID', width: 70 },
-  {
-    field: 'price',
-    headerName: 'Unit Price',
-    sortable: false,
-    width: 90,
-    align: 'left',
-    renderCell: ({ row }) => (
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1 }}>
-        <img alt="talk_icon" style={{ width: '16px', height: '16px' }} src={talk_icon} />
-        <Typography variant={'h6'}>{row.price}</Typography>
-      </Box>
-    ),
-  },
-  {
-    field: 'usdUnitPrice',
-    headerName: 'USD Unit Price',
-    sortable: false,
-    width: 120,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.usdUnitPrice}</Typography>,
-  },
-  {
-    field: 'quantity',
-    headerName: 'Quantity',
-    sortable: false,
-    width: 90,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.quantity}</Typography>,
-  },
-  {
-    field: 'expiration',
-    headerName: 'Expiration',
-    sortable: false,
-    width: 100,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.expiration}</Typography>,
-  },
-  {
-    field: 'seller',
-    headerName: 'From',
-    sortable: false,
-    width: 120,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.seller}</Typography>,
-  },
-  {
-    field: 'buy',
-    headerName: '',
-    sortable: false,
-    width: 150,
-    align: 'left',
-    renderCell: ({ row }) => (
-      <Button size={'small'} variant={'contained'}>
-        Buy
-      </Button>
-    ),
-  },
-];
-
-interface SaleListResponse {
-  status: number;
-  data: [
-    {
-      _id: string;
-      collection_id: string;
-      createdAt: Date;
-      nft_id: string;
-      price: number;
-      quantity: number;
-      seller: string;
-      sold: number;
-      token_id: string;
-    },
-  ];
-  message: string;
-}
+import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
+import talkLogo from '../../../../assets/images/logos/talken_icon.png';
 
 interface SaleItemTypes {
   id: string;
@@ -105,52 +29,162 @@ interface SaleItemTypes {
   seller: string;
   sold: number;
   token_id: string;
+  priceUsd: number;
+  quote: string;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
 interface ListingsProps {
   id: string;
+  sellResult: boolean;
 }
 
-const Listings: React.FC<ListingsProps> = ({ id }) => {
+const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
   const [saleList, setSaleList] = useState<SaleItemTypes[]>([]);
-  const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<SaleListResponse>(
-    (index) =>
-      `${process.env.REACT_APP_API_SERVER}/admin-api/market/saleList/${id}?page=${index}&size=5`,
-    fetcher,
-  );
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [page, setPage] = useState(0);
+  const [rowCount, setRowCount] = useState(0);
 
-  // const { data, error, mutate } = useSWR(
-  //   `${process.env.REACT_APP_API_SERVER}/admin-api/market/saleList/${id}?page=0&size=10`,
-  //   fetcher,
-  // );
+  const url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/saleList/${id}?page=${
+    page + 1
+  }&size=${rowsPerPage}`;
+
+  const { data, mutate, error } = useSWR(url, fetcher);
 
   useEffect(() => {
-    if (data && data[0]?.data !== undefined) {
-      console.log(data);
-      // setSaleList(data[0]?.data);
-      const result = data[0]?.data.map((sale, index) => ({
+    mutate();
+  }, [page]);
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    setPage(page);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleBuy = (row: SaleItemTypes) => {
+    console.log(row);
+  };
+
+  useEffect(() => {
+    if (data && data?.data !== undefined) {
+      const result = data?.data?.items.map((sale: SaleItemTypes) => ({
         ...sale,
         id: sale._id,
         seller: splitAddress(sale.seller),
       }));
+      console.log(result);
       setSaleList(result);
+      // setPageSize(data?.data?.headers.x_pages_count);
+      setRowCount(data?.data?.headers.x_total_count);
     }
   }, [data]);
 
+  useEffect(() => {
+    if (sellResult) {
+      mutate();
+    }
+  }, [sellResult]);
+
   return (
     <SectionWrapper title={'Listing'} icon={<FormatListBulletedOutlinedIcon />}>
-      <Box sx={{ backgroundColor: '#f0faf5', p: 1, borderRadius: 2 }}>
-        <Box sx={{ height: '368px', backgroundColor: 'white' }}>
-          <DataGrid
-            // rows={rows}
-            rows={saleList}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            hideFooterSelectedRowCount
-            disableColumnMenu
+      <Box
+        sx={{
+          backgroundColor: '#f0faf5',
+          p: 1,
+          borderRadius: 2,
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: 'white',
+          }}
+        >
+          <TableContainer>
+            <Table aria-labelledby="tableTitle" size={'small'}>
+              <TableHead>
+                <TableRow>
+                  <TableCell align={'left'} padding={'normal'}>
+                    Unit Price
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    USD Unit Price
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    Quantity
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    Expiration
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    From
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {saleList.map((row, index) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            gap: 1,
+                          }}
+                        >
+                          {row?.quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
+                          {row?.quote === 'talk' && <img src={talkLogo} alt="klay" height="16px" />}
+
+                          <Typography variant={'h6'}>{row.price}</Typography>
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {`$ ${row.priceUsd.toFixed(4)}`}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.quantity}
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          null
+                        </Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography color="textSecondary" variant="h6">
+                          {row.seller}
+                        </Typography>
+                      </TableCell>
+
+                      <TableCell>
+                        <Button variant={'contained'} size={'small'} onClick={() => handleBuy(row)}>
+                          Buy
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rowCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Box>
       </Box>
