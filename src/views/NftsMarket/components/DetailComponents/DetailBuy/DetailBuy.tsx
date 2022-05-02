@@ -60,8 +60,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
     getUserNftSerialsData(id, account),
   );
 
-  console.log(data?.data);
-
   const contractAddress = data?.data?.collection_id?.contract_address;
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
@@ -112,6 +110,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
     }
     await mutate();
     await myNftMutate();
+    setAmount('0');
     setBuyFlag(false);
   };
 

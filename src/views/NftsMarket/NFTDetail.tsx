@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
@@ -20,6 +20,8 @@ import DetailBuy from './components/DetailComponents/DetailBuy';
 import DetailSell from './components/DetailComponents/DetailSell';
 
 const NFTDetail = () => {
+  const [sellEventHandler, setSellEventHandler] = useState(false);
+  const [sellResult, setSellResult] = useState(false);
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
@@ -39,6 +41,10 @@ const NFTDetail = () => {
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
+  const SellResultHandler = (result: boolean) => {
+    setSellResult(result);
+  };
+
   return (
     <MarketLayout>
       {data && !error && (
@@ -50,8 +56,12 @@ const NFTDetail = () => {
                 <DetailContents nft={data?.data} />
                 <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy id={id!} />
-                <Listings id={id!} />
-                <DetailSell id={id!} />
+                <Listings id={id!} sellResult={sellResult} />
+                <DetailSell
+                  id={id!}
+                  sellResult={sellResult}
+                  SellResultHandler={(result) => SellResultHandler(result)}
+                />
               </Box>
 
               <ItemActivity />
@@ -71,8 +81,12 @@ const NFTDetail = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
                   <DetailTitle nft={data?.data} />
                   <DetailBuy id={id!} />
-                  <Listings id={id!} />
-                  <DetailSell id={id!} />
+                  <Listings id={id!} sellResult={sellResult} />
+                  <DetailSell
+                    id={id!}
+                    sellResult={sellResult}
+                    SellResultHandler={(result) => SellResultHandler(result)}
+                  />
                 </Box>
               </Box>
               <ItemActivity />
