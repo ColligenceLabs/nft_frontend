@@ -36,6 +36,7 @@ const NftMarketHome = Loadable(lazy(() => import('../views/NftsMarket/Home')));
 const NftMarket = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarket')));
 const NftCollection = Loadable(lazy(() => import('../views/NftsMarket/NFTCollection')));
 const NftDetail = Loadable(lazy(() => import('../views/NftsMarket/NFTDetail')));
+const NftMarketByCreator = Loadable(lazy(() => import('../views/NftsMarket/NFTsMarketByCreator')));
 const NftMarketRegister = Loadable(lazy(() => import('../views/NftsMarket/MarketRegister')));
 const NftMarketUserProfile = Loadable(lazy(() => import('../views/NftsMarket/UserProfile')));
 const NftMarketUserProfileSetting = Loadable(
@@ -53,6 +54,7 @@ const Router = (isLoggedIn, level) => [
       { path: '/market/collection/:id', element: <NftCollection /> },
       { path: '/market/detail/:id', element: <NftDetail /> },
       { path: '/market/detail', element: <NftDetail /> },
+      { path: '/market/creator/:id', element: <NftMarketByCreator /> },
       { path: '/market/profile', element: <NftMarketUserProfile /> },
       { path: '/market/profile/setting', element: <NftMarketUserProfileSetting /> },
     ],

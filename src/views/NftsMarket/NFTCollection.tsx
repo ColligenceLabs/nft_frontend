@@ -5,7 +5,7 @@ import { Box, Typography, IconButton } from '@mui/material';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import NFTList from './components/NFTList';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { CollectionDetailResponse } from './types';
 import { getNFTsByCollectionId } from '../../services/market.service';
@@ -93,7 +93,13 @@ const NFTCollection = () => {
                 }}
               >
                 <Typography variant={'body1'}>Created by</Typography>
-                <Typography variant={'body1'} color={'primary'}>
+                <Typography
+                  component={Link}
+                  to={`/market/creator/${data?.creator_id?._id}`}
+                  sx={{ textDecoration: 'none' }}
+                  variant={'body1'}
+                  color={'primary'}
+                >
                   {data?.creator_id?.full_name}
                 </Typography>
               </Box>
