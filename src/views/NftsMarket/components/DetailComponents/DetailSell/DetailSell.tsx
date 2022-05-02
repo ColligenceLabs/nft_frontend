@@ -17,9 +17,11 @@ import { getNftContract } from '../../../../../utils/contract';
 
 interface DetailSellProps {
   id: string;
+  sellResult: boolean;
+  SellResultHandler: (b: boolean) => void;
 }
 
-const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
+const DetailSell: React.FC<DetailSellProps> = ({ id, sellResult, SellResultHandler }) => {
   const { account, library } = useActiveWeb3React();
 
   const params = useLocation();
@@ -36,7 +38,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
   const [sellPrice, setSellPrice] = useState('0');
   const [totalPrice, setTotalPrice] = useState(0);
   const [sellStatus, setSellStatus] = useState(false);
-  const [sellResult, setSellResult] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState('');
 
   let API_URL;
@@ -59,7 +61,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
 
   const sell = async () => {
     setSellStatus(true);
-    console.log(myNftData, myNftData.data.length, sellAmount);
+    // console.log(myNftData, myNftData.data.length, sellAmount);
     if (myNftData.data.length < sellAmount) {
       console.log('클수없다..');
       setErrorMessage('클수없다..');
@@ -74,7 +76,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
         data?.data?.collection_id?.contract_type,
       );
       const nftType = data?.data?.collection_id?.contract_type === 'KIP17' ? 721 : 1155;
-      console.log(myNftData.data[0].contract_address, nftContract);
+      // console.log(myNftData.data[0].contract_address, nftContract);
       await sellNFT(
         nftContract,
         nftType,
@@ -85,9 +87,9 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
       );
 
       const sellSerials = myNftData.data.slice(0, sellAmount);
-      console.log(sellSerials);
+      // console.log(sellSerials);
       const serialIds = sellSerials.map((serial: { _id: any }) => serial._id);
-      console.log(serialIds);
+      // console.log(serialIds);
       // 사용자 판매 내역을 등록 api 호출 (sale collection 에 등록, serials 의 상태를 판매상태로 변경, nft 컬렉션에 user_selling_quantity 추가)
       const result = await sellUserNft(
         account,
@@ -98,19 +100,21 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
         myNftData.data[0].token_id,
         serialIds,
       );
-      console.log(result);
+      // console.log(result);
       if (result.status === 0) {
         // error
         console.log(result.message);
       }
-      console.log('success');
-      setSellResult(true);
+      // console.log('success');
+      SellResultHandler(true);
     } catch (e) {
-      console.log('sell error', e);
+      // console.log('sell error', e);
       // @ts-ignore
       setErrorMessage(e.message);
     }
     setSellStatus(false);
+    setSellAmount('1');
+    setSellPrice('0');
   };
 
   useEffect(() => {
@@ -241,12 +245,12 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
         open={sellResult}
         autoHideDuration={2000}
         onClose={() => {
-          setSellResult(false);
+          SellResultHandler(false);
         }}
       >
         <Alert
           onClose={() => {
-            setSellResult(false);
+            SellResultHandler(false);
           }}
           variant="filled"
           severity="success"
