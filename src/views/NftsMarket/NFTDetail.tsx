@@ -50,7 +50,7 @@ const NFTDetail = () => {
                 <DetailContents nft={data?.data} />
                 <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy id={id!} />
-                <Listings />
+                <Listings id={id!} />
                 <DetailSell id={id!} />
               </Box>
 
@@ -71,7 +71,7 @@ const NFTDetail = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
                   <DetailTitle nft={data?.data} />
                   <DetailBuy id={id!} />
-                  <Listings />
+                  <Listings id={id!} />
                   <DetailSell id={id!} />
                 </Box>
               </Box>
