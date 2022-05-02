@@ -177,20 +177,21 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
 
                       <TableCell>
                         <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          <Button
-                            variant={'contained'}
-                            size={'small'}
-                            onClick={() => handleBuy(row)}
-                          >
-                            Buy
-                          </Button>
-                          {row.seller === account && (
+                          {row.seller === account ? (
                             <Button
                               variant={'contained'}
                               size={'small'}
                               onClick={() => handleCancel(row)}
                             >
                               Cancel
+                            </Button>
+                          ) : (
+                            <Button
+                              variant={'contained'}
+                              size={'small'}
+                              onClick={() => handleBuy(row)}
+                            >
+                              Buy
                             </Button>
                           )}
                         </Box>
