@@ -131,6 +131,20 @@ export const cancelBuyUserNft = (nft_id, tokenId, buyer, seller, sale_id) => {
     });
 };
 
+export const cancelSale = (seller, sale_id) => {
+  const url = `${API_URL}/cancel-sale/${sale_id}?seller=${seller}`;
+  return axios
+    .delete(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
+
 const marketService = { getMarketCollectionData, nftDetail, getMarketNFTData, sellUserNft, saleList, selectUserSerials, cancelBuyUserNft };
 
 export default marketService;

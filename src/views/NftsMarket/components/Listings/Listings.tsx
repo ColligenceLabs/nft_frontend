@@ -21,7 +21,7 @@ import { useWeb3React } from '@web3-react/core';
 import { NFTType } from '../../types';
 import { getNftContract } from '../../../../utils/contract';
 import useMarket from '../../../../hooks/useMarket';
-import { cancelBuyUserNft, selectUserSerials } from '../../../../services/market.service';
+import { cancelBuyUserNft, cancelSale, selectUserSerials } from '../../../../services/market.service';
 
 interface SaleItemTypes {
   id: string;
@@ -53,7 +53,7 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = useState(0);
   const [rowCount, setRowCount] = useState(0);
-  const { buyNFT } = useMarket();
+  const { buyNFT, stopSelling } = useMarket();
 
   const url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/saleList/${id}?page=${
     page + 1
@@ -94,9 +94,21 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
     }
   };
 
-  const handleCancel = (row: SaleItemTypes) => {
+  const handleCancel = async (row: SaleItemTypes) => {
     console.log(row.seller);
     console.log(account);
+    try {
+      // nftContract, tokenId, quantity, price, quote
+      const nftContract = getNftContract(library, nft.collection_id.contract_address, nft.collection_id.contract_type);
+      const stopResult = await stopSelling(nftContract, parseInt(row.token_id, 16), row.quantity, row.price, row.quote);
+      console.log(stopResult);
+      // sale collection 에서 삭제.
+      const result = await cancelSale(account, row._id);
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+    }
+
   };
 
   useEffect(() => {
