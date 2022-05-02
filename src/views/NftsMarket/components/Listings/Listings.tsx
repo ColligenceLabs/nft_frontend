@@ -18,6 +18,10 @@ import splitAddress from '../../../../utils/splitAddress';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../assets/images/logos/talken_icon.png';
 import { useWeb3React } from '@web3-react/core';
+import { NFTType } from '../../types';
+import { getNftContract } from '../../../../utils/contract';
+import useMarket from '../../../../hooks/useMarket';
+import { cancelBuyUserNft, selectUserSerials } from '../../../../services/market.service';
 
 interface SaleItemTypes {
   id: string;
@@ -39,15 +43,17 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 interface ListingsProps {
   id: string;
   sellResult: boolean;
+  nft: NFTType;
 }
 
-const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
+const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
   const context = useWeb3React();
-  const { account } = context;
+  const { account, library } = context;
   const [saleList, setSaleList] = useState<SaleItemTypes[]>([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = useState(0);
   const [rowCount, setRowCount] = useState(0);
+  const { buyNFT } = useMarket();
 
   const url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/saleList/${id}?page=${
     page + 1
@@ -70,8 +76,22 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
     setPage(0);
   };
 
-  const handleBuy = (row: SaleItemTypes) => {
-    console.log(row);
+  const handleBuy = async (row: SaleItemTypes) => {
+    // console.log(row, nft);
+    try {
+      // serials 에서 buyer 및 buying 처리 (api 호출) select-user-serials
+      // sale에서 sold 올리기 sold가 0인것이 없으면 에러 처리 후 serials에서 buyer, stautus 변경
+      const userSerial = await selectUserSerials(id, account, row.seller, row.quantity, row._id);
+      console.log(userSerial);
+
+      // 사용자가 판매한 Nft를 지갑을 통해 구매
+      const nftContract = getNftContract(library, nft.collection_id.contract_address, nft.collection_id.contract_type);
+      const result = await buyNFT(nftContract, parseInt(row.token_id, 16), row.seller, row.quantity, row.quantity, row.price, row.quote);
+      // 사용자 구매 내역을 서버에 전송 (sold count 수정)
+    } catch (e) {
+      // cancel buy (api 호출)
+      await cancelBuyUserNft(id, row.token_id, account, row.seller, row._id);
+    }
   };
 
   const handleCancel = (row: SaleItemTypes) => {

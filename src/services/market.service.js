@@ -103,6 +103,34 @@ export const getMarketNFTData = (
     });
 };
 
-const marketService = { getMarketCollectionData, nftDetail, getMarketNFTData, sellUserNft, saleList };
+export const selectUserSerials = (nft_id, buyer, seller, amount, sale_id) => {
+  const url = `${API_URL}/select-user-serials?nft_id=${nft_id}&buyer=${buyer}&seller=${seller}&amount=${amount}&sale_id=${sale_id}`;
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
+
+export const cancelBuyUserNft = (nft_id, tokenId, buyer, seller, sale_id) => {
+  const url = `${API_URL}/cancel-buy-usernft?nft_id=${nft_id}&token_id=${tokenId}&buyer=${buyer}&seller=${seller}&sale_id=${sale_id}`;
+  return axios
+    .get(url, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
+
+const marketService = { getMarketCollectionData, nftDetail, getMarketNFTData, sellUserNft, saleList, selectUserSerials, cancelBuyUserNft };
 
 export default marketService;
