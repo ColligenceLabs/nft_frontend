@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Alert, Box, Snackbar, Typography, useTheme } from '@mui/material';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import CustomTextField from '../../../../../components/forms/custom-elements/CustomTextField';
 import { LoadingButton } from '@mui/lab';
@@ -35,6 +35,9 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
   const [sellAmount, setSellAmount] = useState('1');
   const [sellPrice, setSellPrice] = useState('0');
   const [totalPrice, setTotalPrice] = useState(0);
+  const [sellStatus, setSellStatus] = useState(false);
+  const [sellResult, setSellResult] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   let API_URL;
 
@@ -55,34 +58,60 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
   );
 
   const sell = async () => {
+    setSellStatus(true);
     console.log(myNftData, myNftData.data.length, sellAmount);
     if (myNftData.data.length < sellAmount) {
       console.log('클수없다..');
+      setErrorMessage('클수없다..');
+      setSellStatus(false);
       return;
     }
     try {
       // 사용자 지갑을 사용 마켓에 readyToSell 실행
-      const nftContract = getNftContract(library, myNftData.data[0].contract_address, data?.data?.collection_id?.contract_type);
-      const nftType = data?.data?.collection_id?.contract_type  === 'KIP17' ? 721 : 1155;
+      const nftContract = getNftContract(
+        library,
+        myNftData.data[0].contract_address,
+        data?.data?.collection_id?.contract_type,
+      );
+      const nftType = data?.data?.collection_id?.contract_type === 'KIP17' ? 721 : 1155;
       console.log(myNftData.data[0].contract_address, nftContract);
-      await sellNFT(nftContract, nftType, parseInt(myNftData.data[0].token_id, 16), sellAmount, parseInt(sellPrice), myNftData.data[0].quote);
+      await sellNFT(
+        nftContract,
+        nftType,
+        parseInt(myNftData.data[0].token_id, 16),
+        sellAmount,
+        parseInt(sellPrice),
+        myNftData.data[0].quote,
+      );
 
       const sellSerials = myNftData.data.slice(0, sellAmount);
       console.log(sellSerials);
-      const serialIds = sellSerials.map((serial: { _id: any; }) => serial._id);
+      const serialIds = sellSerials.map((serial: { _id: any }) => serial._id);
       console.log(serialIds);
       // 사용자 판매 내역을 등록 api 호출 (sale collection 에 등록, serials 의 상태를 판매상태로 변경, nft 컬렉션에 user_selling_quantity 추가)
-      const result = await sellUserNft(account, sellAmount, sellPrice, data?.data?.collection_id?._id, myNftData.data[0].nft_id, myNftData.data[0].token_id, serialIds);
+      const result = await sellUserNft(
+        account,
+        sellAmount,
+        sellPrice,
+        data?.data?.collection_id?._id,
+        myNftData.data[0].nft_id,
+        myNftData.data[0].token_id,
+        serialIds,
+      );
       console.log(result);
       if (result.status === 0) {
         // error
         console.log(result.message);
       }
       console.log('success');
+      setSellResult(true);
     } catch (e) {
       console.log('sell error', e);
+      // @ts-ignore
+      setErrorMessage(e.message);
     }
-  }
+    setSellStatus(false);
+  };
 
   useEffect(() => {
     if (myNftData && myNftData?.data !== null) {
@@ -94,6 +123,10 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
   useEffect(() => {
     mutate();
   }, [data.data]);
+
+  useEffect(() => {
+    myNftMutate();
+  }, [sellResult]);
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
@@ -167,7 +200,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
             <Box sx={{ flex: 1, width: smDown ? '50px' : '100px' }}>
               <LoadingButton
                 disabled={totalPrice === 0 || isNaN(totalPrice)}
-                // loading={buyFlag}
+                loading={sellStatus}
                 onClick={sell}
                 fullWidth
                 variant="contained"
@@ -203,6 +236,25 @@ const DetailSell: React.FC<DetailSellProps> = ({ id }) => {
           </Box>
         </SectionWrapper>
       )}
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={sellResult}
+        autoHideDuration={2000}
+        onClose={() => {
+          setSellResult(false);
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setSellResult(false);
+          }}
+          variant="filled"
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {errorMessage === '' ? 'Success' : `Fail (${errorMessage})`}
+        </Alert>
+      </Snackbar>
     </>
   );
 };
