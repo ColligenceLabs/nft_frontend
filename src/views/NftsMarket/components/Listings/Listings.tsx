@@ -17,6 +17,7 @@ import useSWR from 'swr';
 import splitAddress from '../../../../utils/splitAddress';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../assets/images/logos/talken_icon.png';
+import { useWeb3React } from '@web3-react/core';
 
 interface SaleItemTypes {
   id: string;
@@ -31,6 +32,7 @@ interface SaleItemTypes {
   token_id: string;
   priceUsd: number;
   quote: string;
+  seller_caption: string;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -40,6 +42,8 @@ interface ListingsProps {
 }
 
 const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
+  const context = useWeb3React();
+  const { account } = context;
   const [saleList, setSaleList] = useState<SaleItemTypes[]>([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = useState(0);
@@ -70,12 +74,17 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
     console.log(row);
   };
 
+  const handleCancel = (row: SaleItemTypes) => {
+    console.log(row.seller);
+    console.log(account);
+  };
+
   useEffect(() => {
     if (data && data?.data !== undefined) {
       const result = data?.data?.items.map((sale: SaleItemTypes) => ({
         ...sale,
         id: sale._id,
-        seller: splitAddress(sale.seller),
+        seller_caption: splitAddress(sale.seller),
       }));
       console.log(result);
       setSaleList(result);
@@ -162,14 +171,29 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult }) => {
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
-                          {row.seller}
+                          {row.seller_caption}
                         </Typography>
                       </TableCell>
 
                       <TableCell>
-                        <Button variant={'contained'} size={'small'} onClick={() => handleBuy(row)}>
-                          Buy
-                        </Button>
+                        <Box sx={{ display: 'flex', gap: 0.5 }}>
+                          <Button
+                            variant={'contained'}
+                            size={'small'}
+                            onClick={() => handleBuy(row)}
+                          >
+                            Buy
+                          </Button>
+                          {row.seller === account && (
+                            <Button
+                              variant={'contained'}
+                              size={'small'}
+                              onClick={() => handleCancel(row)}
+                            >
+                              Cancel
+                            </Button>
+                          )}
+                        </Box>
                       </TableCell>
                     </TableRow>
                   );
