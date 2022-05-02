@@ -49,6 +49,7 @@ export interface CollectionResponse {
         cover_image: string;
         creator_id: {
           full_name: string;
+          description: string;
           image: string;
           _id: string;
         };
