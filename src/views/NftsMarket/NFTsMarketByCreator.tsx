@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  Typography,
-} from '@mui/material';
+import { Box, Button, CircularProgress, Grid, IconButton, Typography } from '@mui/material';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
-import useSWR from 'swr';
-import { CollectionDetailResponse, CollectionResponse } from './types';
-import { Link, useParams } from 'react-router-dom';
+import { CollectionResponse } from './types';
+import { useParams } from 'react-router-dom';
 import useSWRInfinite from 'swr/infinite';
 import CollectionItem from './components/CollectionItem';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import klayLogo from '../../assets/images/network_icon/klaytn-klay-logo.png';
-import splitAddress from '../../utils/splitAddress';
-import useUserInfo from '../../hooks/useUserInfo';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -65,7 +51,6 @@ const NFTsMarketByCreator = () => {
 
   useEffect(() => {
     if (data && data[0] !== null) {
-      console.log(data[0]?.data?.items[0]?.creator_id);
       setCreatorInfo({
         full_name: data[0]?.data?.items[0]?.creator_id?.full_name,
         image: data[0]?.data?.items[0]?.creator_id.image,
@@ -76,135 +61,146 @@ const NFTsMarketByCreator = () => {
 
   return (
     <MarketLayout>
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Box sx={{ width: 1, height: '250px' }}>
-          <img
-            src={creatorInfo.image}
-            alt={creatorInfo.full_name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        </Box>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '150px',
-            height: '150px',
-            marginTop: '-75px',
-          }}
-        >
-          <img
-            src={creatorInfo.image}
-            alt={creatorInfo.full_name}
-            style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '100%' }}
-          />
-        </Box>
-
-        <Box
-          sx={{
-            maxWidth: '800px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mt: 2,
-          }}
-        >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
-            <Typography variant={'h1'} color={'primary'}>
-              {creatorInfo.full_name}
-            </Typography>
-          </Box>
-
-          <Typography
-            sx={{
-              px: 3,
-              textAlign: 'center',
-              background: showAll
-                ? 'none'
-                : `linear-gradient(to bottom, ${theme.palette.text.secondary}, #fff)`,
-              WebkitBackgroundClip: showAll ? 'none' : 'text',
-              WebkitTextFillColor: showAll ? 'none' : 'transparent',
-            }}
-            variant={'body1'}
-            color="text.secondary"
-          >
-            {showAll
-              ? creatorInfo.description
-              : `${creatorInfo.description.slice(0, smDown ? 150 : 300)}`}
-          </Typography>
-          <IconButton onClick={() => setShowAll((curr) => !curr)}>
-            {showAll ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </IconButton>
-        </Box>
-      </Box>
-      <Box sx={{ borderBottom: '1px solid', borderColor: `#d9d9d9`, width: '100%', pt: '30px' }} />
-      <Container>
-        <Grid container>
-          {!error &&
-            data &&
-            data.map((result: CollectionResponse) => {
-              return result.data?.items.map((item) => (
-                <Grid item xs={6} sm={6} md={4} lg={3} key={item._id}>
-                  <CollectionItem
-                    id={item._id}
-                    name={item.name}
-                    description={item.description}
-                    cover_image={item.image_link}
-                    creator_image={item?.creator_id?.image}
-                    creator_fullName={item?.creator_id?.full_name}
-                  />
-                </Grid>
-              ));
-            })}
-
-          {isEmpty && (
+      {data && !error && creatorInfo.full_name !== undefined && (
+        <>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={{ width: 1, height: '250px' }}>
+              <img
+                src={creatorInfo.image}
+                alt={creatorInfo.full_name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </Box>
             <Box
               sx={{
                 display: 'flex',
-                justifyContent: 'center',
                 alignItems: 'center',
-                width: '100%',
-                border: '1px solid #d6d6d6',
-                borderRadius: '30px',
-                height: '300px',
-                m: '15px',
+                justifyContent: 'center',
+                width: '150px',
+                height: '150px',
+                marginTop: '-75px',
               }}
             >
-              <Typography variant={'h2'}>No items to display</Typography>
+              <img
+                src={creatorInfo.image}
+                alt={creatorInfo.full_name}
+                style={{
+                  width: '150px',
+                  height: '150px',
+                  objectFit: 'cover',
+                  borderRadius: '100%',
+                }}
+              />
             </Box>
-          )}
-          {!error && data?.[size - 1] === undefined && (
+
             <Box
               sx={{
+                maxWidth: '800px',
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
                 flexDirection: 'column',
-                width: '100%',
-                border: '1px solid #d6d6d6',
-                borderRadius: '30px',
-                height: '300px',
-                m: '15px',
+                alignItems: 'center',
+                mt: 2,
               }}
             >
-              <CircularProgress />
-              <Typography sx={{ mt: 2 }} variant={'h4'} color={'primary'}>
-                Loading...
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
+                <Typography variant={'h1'} color={'primary'}>
+                  {creatorInfo.full_name}
+                </Typography>
+              </Box>
+
+              <Typography
+                sx={{
+                  px: 3,
+                  textAlign: 'center',
+                  background: showAll
+                    ? 'none'
+                    : `linear-gradient(to bottom, ${theme.palette.text.secondary}, #fff)`,
+                  WebkitBackgroundClip: showAll ? 'none' : 'text',
+                  WebkitTextFillColor: showAll ? 'none' : 'transparent',
+                }}
+                variant={'body1'}
+                color="text.secondary"
+              >
+                {showAll
+                  ? creatorInfo.description
+                  : `${creatorInfo.description.slice(0, smDown ? 150 : 300)}`}
               </Typography>
+              <IconButton onClick={() => setShowAll((curr) => !curr)}>
+                {showAll ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+              </IconButton>
             </Box>
-          )}
-          {!isEmpty && (
-            <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
-              {!(isLoadingMore || isReachingEnd) && (
-                <Button fullWidth variant={'contained'} onClick={() => setSize(size + 1)}>
-                  {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'MORE'}
-                </Button>
+          </Box>
+          <Box
+            sx={{ borderBottom: '1px solid', borderColor: `#d9d9d9`, width: '100%', pt: '30px' }}
+          />
+          <Container>
+            <Grid container>
+              {!error &&
+                data &&
+                data.map((result: CollectionResponse) => {
+                  return result.data?.items.map((item) => (
+                    <Grid item xs={6} sm={6} md={4} lg={3} key={item._id}>
+                      <CollectionItem
+                        id={item._id}
+                        name={item.name}
+                        description={item.description}
+                        cover_image={item.image_link}
+                        creator_image={item?.creator_id?.image}
+                        creator_fullName={item?.creator_id?.full_name}
+                      />
+                    </Grid>
+                  ));
+                })}
+
+              {isEmpty && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    border: '1px solid #d6d6d6',
+                    borderRadius: '30px',
+                    height: '300px',
+                    m: '15px',
+                  }}
+                >
+                  <Typography variant={'h2'}>No items to display</Typography>
+                </Box>
+              )}
+              {!error && data?.[size - 1] === undefined && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'column',
+                    width: '100%',
+                    border: '1px solid #d6d6d6',
+                    borderRadius: '30px',
+                    height: '300px',
+                    m: '15px',
+                  }}
+                >
+                  <CircularProgress />
+                  <Typography sx={{ mt: 2 }} variant={'h4'} color={'primary'}>
+                    Loading...
+                  </Typography>
+                </Box>
+              )}
+              {!isEmpty && (
+                <Grid item xs={12} sm={12} md={12} lg={12} sx={{ px: 2 }}>
+                  {!(isLoadingMore || isReachingEnd) && (
+                    <Button fullWidth variant={'contained'} onClick={() => setSize(size + 1)}>
+                      {isLoadingMore ? 'Loading...' : isReachingEnd ? 'No more NFTs' : 'MORE'}
+                    </Button>
+                  )}
+                </Grid>
               )}
             </Grid>
-          )}
-        </Grid>
-      </Container>
+          </Container>
+        </>
+      )}
     </MarketLayout>
   );
 };
