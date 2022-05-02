@@ -18,7 +18,14 @@ const Footer = (): JSX.Element => {
   });
   const currentLang = localStorage.getItem('cur_language') || 'en';
   return (
-    <Box sx={{ width: '100%', backgroundColor: '#161C24' }}>
+    <Box
+      sx={{
+        width: '100%',
+        backgroundColor: '#161C24',
+        height: '100%',
+        mt: 'auto',
+      }}
+    >
       <Box
         sx={{
           display: 'flex',

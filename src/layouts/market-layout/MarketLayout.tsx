@@ -31,25 +31,28 @@ const MarketLayout = ({ children, bgcolor = 'transparent' }: Props): JSX.Element
 
   return (
     <Box>
-      <AppBar
-        position={'sticky'}
-        sx={{
-          top: 0,
-          backgroundColor: trigger ? theme.palette.background.paper : bgcolor,
-          boxShadow: 8,
-        }}
-        elevation={trigger ? 1 : 0}
-      >
-        <MarketSidebar isSidebarOpen={isSidebarOpen} onSidebarClose={() => setSidebarOpen(false)} />
-        <Container paddingY={1}>
-          <Topbar toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
-        </Container>
-      </AppBar>
+      <Box sx={{ minHeight: `calc(100vh - 123.5px)` }}>
+        <AppBar
+          position={'sticky'}
+          sx={{
+            top: 0,
+            backgroundColor: trigger ? theme.palette.background.paper : bgcolor,
+            boxShadow: 8,
+          }}
+          elevation={trigger ? 1 : 0}
+        >
+          <MarketSidebar
+            isSidebarOpen={isSidebarOpen}
+            onSidebarClose={() => setSidebarOpen(false)}
+          />
+          <Container paddingY={1}>
+            <Topbar toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
+          </Container>
+        </AppBar>
 
-      <main>{children}</main>
-      {/*<Container paddingY={4}>*/}
+        <main>{children}</main>
+      </Box>
       <Footer />
-      {/*</Container>*/}
     </Box>
   );
 };
