@@ -28,7 +28,6 @@ import {
 import { LoadingButton } from '@mui/lab';
 
 interface SaleItemTypes {
-  id: string;
   _id: string;
   collection_id: string;
   createdAt: Date;
@@ -40,7 +39,6 @@ interface SaleItemTypes {
   token_id: string;
   priceUsd: number;
   quote: string;
-  seller_caption: string;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -165,8 +163,6 @@ const Listings: React.FC<ListingsProps> = ({
     if (data && data?.data !== undefined) {
       const result = data?.data?.items.map((sale: SaleItemTypes) => ({
         ...sale,
-        id: sale._id,
-        seller_caption: splitAddress(sale.seller),
       }));
 
       setSaleList(result);
@@ -225,7 +221,7 @@ const Listings: React.FC<ListingsProps> = ({
                       role="checkbox"
                       tabIndex={-1}
                       key={row._id}
-                      onClick={() => setSelectedID(row.id)}
+                      onClick={() => setSelectedID(row._id)}
                     >
                       <TableCell>
                         <Box
@@ -259,7 +255,7 @@ const Listings: React.FC<ListingsProps> = ({
                       {/*</TableCell>*/}
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
-                          {row.seller_caption}
+                          {splitAddress(row.seller)}
                         </Typography>
                       </TableCell>
 
@@ -270,10 +266,10 @@ const Listings: React.FC<ListingsProps> = ({
                               variant={'contained'}
                               size={'small'}
                               loading={
-                                (isBuyingLoading || isCancelLoading) && row.id === selectedID
+                                (isBuyingLoading || isCancelLoading) && row._id === selectedID
                               }
                               disabled={
-                                (isBuyingLoading || isCancelLoading) && row.id !== selectedID
+                                (isBuyingLoading || isCancelLoading) && row._id !== selectedID
                               }
                               onClick={() => handleCancel(row)}
                               sx={{ width: '70px' }}
@@ -285,10 +281,10 @@ const Listings: React.FC<ListingsProps> = ({
                               variant={'contained'}
                               size={'small'}
                               loading={
-                                (isCancelLoading || isBuyingLoading) && row.id === selectedID
+                                (isCancelLoading || isBuyingLoading) && row._id === selectedID
                               }
                               disabled={
-                                (isCancelLoading || isBuyingLoading) && row.id !== selectedID
+                                (isCancelLoading || isBuyingLoading) && row._id !== selectedID
                               }
                               onClick={() => handleBuy(row)}
                               sx={{ width: '70px' }}
