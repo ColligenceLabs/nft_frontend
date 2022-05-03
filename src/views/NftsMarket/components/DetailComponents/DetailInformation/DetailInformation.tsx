@@ -99,7 +99,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Creator Fees</Typography>
-            <Typography variant={'body2'}>0%</Typography>
+            <Typography variant={'body2'}>{`${process.env.REACT_APP_CREATOR_FEE}%`}</Typography>
           </Box>
         </Box>
       </SectionWrapper>
