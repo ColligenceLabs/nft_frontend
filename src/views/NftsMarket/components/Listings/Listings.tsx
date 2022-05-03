@@ -142,6 +142,11 @@ const Listings: React.FC<ListingsProps> = ({
       // sale collection 에서 삭제.
       const result = await cancelSale(account, row._id);
       console.log(result);
+      if (result.status === 1) {
+        console.log('here');
+        await mutate();
+        MyNftMutateHandler(true);
+      }
     } catch (e) {
       console.log(e);
     }
