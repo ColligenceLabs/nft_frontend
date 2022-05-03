@@ -62,6 +62,7 @@ const Listings: React.FC<ListingsProps> = ({
 }) => {
   const context = useWeb3React();
   const { account, library } = context;
+  const [selectedID, setSelectedID] = useState<string | null>(null);
   const [saleList, setSaleList] = useState<SaleItemTypes[]>([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [isCancelLoading, setIsCancelLoading] = useState(false);
@@ -98,7 +99,7 @@ const Listings: React.FC<ListingsProps> = ({
       // serials 에서 buyer 및 buying 처리 (api 호출) select-user-serials
       // sale에서 sold 올리기 sold가 0인것이 없으면 에러 처리 후 serials에서 buyer, stautus 변경
       const userSerial = await selectUserSerials(id, account, row.seller, row.quantity, row._id);
-      console.log(userSerial);
+      // console.log(userSerial);
 
       // 사용자가 판매한 Nft를 지갑을 통해 구매
       const nftContract = getNftContract(
@@ -115,7 +116,7 @@ const Listings: React.FC<ListingsProps> = ({
         row.price,
         row.quote,
       );
-      console.log(result);
+      // console.log(result);
       if (result === 1) {
         await mutate();
         MyNftMutateHandler(true);
@@ -146,7 +147,7 @@ const Listings: React.FC<ListingsProps> = ({
         row.price,
         row.quote,
       );
-      console.log(stopResult);
+      // console.log(stopResult);
       // sale collection 에서 삭제.
       const result = await cancelSale(account, row._id);
 
@@ -167,7 +168,7 @@ const Listings: React.FC<ListingsProps> = ({
         id: sale._id,
         seller_caption: splitAddress(sale.seller),
       }));
-      console.log(result);
+
       setSaleList(result);
       // setPageSize(data?.data?.headers.x_pages_count);
       setRowCount(data?.data?.headers.x_total_count);
@@ -219,7 +220,13 @@ const Listings: React.FC<ListingsProps> = ({
               <TableBody>
                 {saleList.map((row, index) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={row._id}
+                      onClick={() => setSelectedID(row.id)}
+                    >
                       <TableCell>
                         <Box
                           sx={{
@@ -262,8 +269,14 @@ const Listings: React.FC<ListingsProps> = ({
                             <LoadingButton
                               variant={'contained'}
                               size={'small'}
-                              loading={isCancelLoading}
+                              loading={
+                                (isBuyingLoading || isCancelLoading) && row.id === selectedID
+                              }
+                              disabled={
+                                (isBuyingLoading || isCancelLoading) && row.id !== selectedID
+                              }
                               onClick={() => handleCancel(row)}
+                              sx={{ width: '70px' }}
                             >
                               Cancel
                             </LoadingButton>
@@ -271,8 +284,14 @@ const Listings: React.FC<ListingsProps> = ({
                             <LoadingButton
                               variant={'contained'}
                               size={'small'}
-                              loading={isBuyingLoading}
+                              loading={
+                                (isCancelLoading || isBuyingLoading) && row.id === selectedID
+                              }
+                              disabled={
+                                (isCancelLoading || isBuyingLoading) && row.id !== selectedID
+                              }
                               onClick={() => handleBuy(row)}
+                              sx={{ width: '70px' }}
                             >
                               Buy
                             </LoadingButton>
