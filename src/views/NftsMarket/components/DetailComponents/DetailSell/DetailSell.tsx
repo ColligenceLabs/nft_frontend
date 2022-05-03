@@ -111,11 +111,11 @@ const DetailSell: React.FC<DetailSellProps> = ({
       if (result.status === 0) {
         // error
         console.log(result.message);
+        setErrorMessage(result.message);
+      } else {
+        ListingMutateHandler(true);
       }
-      // console.log('success');
-      ListingMutateHandler(true);
     } catch (e) {
-      // console.log('sell error', e);
       // @ts-ignore
       setErrorMessage(e.message);
     }
