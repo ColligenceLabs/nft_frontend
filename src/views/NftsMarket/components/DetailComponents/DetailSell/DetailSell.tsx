@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Box, Snackbar, Typography, useTheme } from '@mui/material';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import CustomTextField from '../../../../../components/forms/custom-elements/CustomTextField';
 import { LoadingButton } from '@mui/lab';
 import useSWR from 'swr';
 import { getUserNftSerialsData } from '../../../../../services/nft.service';
 import useActiveWeb3React from '../../../../../hooks/useActiveWeb3React';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { nftDetail, sellUserNft } from '../../../../../services/market.service';
-import useCopyToClipBoard from '../../../../../hooks/useCopyToClipBoard';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SectionWrapper from '../SectionWrapper';
-import { useKipContract, useKipContractWithKaikas } from '../../../../../hooks/useContract';
 import useMarket from '../../../../../hooks/useMarket';
 import { getNftContract } from '../../../../../utils/contract';
 
@@ -69,7 +66,6 @@ const DetailSell: React.FC<DetailSellProps> = ({
     setSellStatus(true);
     // console.log(myNftData, myNftData.data.length, sellAmount);
     if (myNftData.data.length < sellAmount) {
-      console.log('클수없다..');
       setErrorMessage('클수없다..');
       setSellStatus(false);
       return;
@@ -82,7 +78,6 @@ const DetailSell: React.FC<DetailSellProps> = ({
         data?.data?.collection_id?.contract_type,
       );
       const nftType = data?.data?.collection_id?.contract_type === 'KIP17' ? 721 : 1155;
-      // console.log(myNftData.data[0].contract_address, nftContract);
       await sellNFT(
         nftContract,
         nftType,
@@ -113,10 +108,12 @@ const DetailSell: React.FC<DetailSellProps> = ({
         console.log(result.message);
         setErrorMessage(result.message);
       }
+      await myNftMutate();
       ListingMutateHandler(true);
     } catch (e) {
       // @ts-ignore
       setErrorMessage(e.message);
+      console.log(e);
     }
     setSellStatus(false);
     setSellAmount('1');
@@ -124,19 +121,16 @@ const DetailSell: React.FC<DetailSellProps> = ({
   };
 
   useEffect(() => {
+    myNftMutate();
+    mutate();
     if (myNftData && myNftData?.data !== null) {
       setMyNFT(myNftData?.data);
       setMyNFTCount(myNftData?.data.length);
+    } else {
+      setMyNFT(null);
+      setMyNFTCount('0');
     }
-  }, [myNftData?.data]);
-
-  useEffect(() => {
-    mutate();
-  }, [data.data]);
-
-  useEffect(() => {
-    myNftMutate();
-  }, [listingMutateHandler, myNftMutateHandler]);
+  }, [listingMutateHandler, myNftMutateHandler, data.data, myNftData?.data]);
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));

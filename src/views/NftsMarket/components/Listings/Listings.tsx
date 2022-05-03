@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
   TablePagination,
   Typography,
   TableContainer,
@@ -66,6 +65,7 @@ const Listings: React.FC<ListingsProps> = ({
   const [saleList, setSaleList] = useState<SaleItemTypes[]>([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [isCancelLoading, setIsCancelLoading] = useState(false);
+  const [isBuyingLoading, setIsBuyingLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowCount, setRowCount] = useState(0);
   const { buyNFT, stopSelling } = useMarket();
@@ -93,6 +93,7 @@ const Listings: React.FC<ListingsProps> = ({
 
   const handleBuy = async (row: SaleItemTypes) => {
     // console.log(row, nft);
+    setIsBuyingLoading(true);
     try {
       // serials 에서 buyer 및 buying 처리 (api 호출) select-user-serials
       // sale에서 sold 올리기 sold가 0인것이 없으면 에러 처리 후 serials에서 buyer, stautus 변경
@@ -114,12 +115,19 @@ const Listings: React.FC<ListingsProps> = ({
         row.price,
         row.quote,
       );
-      MyNftMutateHandler(true);
+      console.log(result);
+      if (result === 1) {
+        await mutate();
+        MyNftMutateHandler(true);
+      }
       // 사용자 구매 내역을 서버에 전송 (sold count 수정)
     } catch (e) {
       // cancel buy (api 호출)
       await cancelBuyUserNft(id, row.token_id, account, row.seller, row._id);
+      await mutate();
+      MyNftMutateHandler(true);
     }
+    setIsBuyingLoading(false);
   };
 
   const handleCancel = async (row: SaleItemTypes) => {
@@ -141,9 +149,8 @@ const Listings: React.FC<ListingsProps> = ({
       console.log(stopResult);
       // sale collection 에서 삭제.
       const result = await cancelSale(account, row._id);
-      console.log(result);
+
       if (result.status === 1) {
-        console.log('here');
         await mutate();
         MyNftMutateHandler(true);
       }
@@ -261,13 +268,14 @@ const Listings: React.FC<ListingsProps> = ({
                               Cancel
                             </LoadingButton>
                           ) : (
-                            <Button
+                            <LoadingButton
                               variant={'contained'}
                               size={'small'}
+                              loading={isBuyingLoading}
                               onClick={() => handleBuy(row)}
                             >
                               Buy
-                            </Button>
+                            </LoadingButton>
                           )}
                         </Box>
                       </TableCell>
