@@ -200,9 +200,9 @@ const Listings: React.FC<ListingsProps> = ({
                   <TableCell align={'left'} padding={'normal'}>
                     Quantity
                   </TableCell>
-                  <TableCell align={'left'} padding={'normal'}>
-                    Expiration
-                  </TableCell>
+                  {/*<TableCell align={'left'} padding={'normal'}>*/}
+                  {/*  Expiration*/}
+                  {/*</TableCell>*/}
                   <TableCell align={'left'} padding={'normal'}>
                     From
                   </TableCell>
@@ -238,11 +238,11 @@ const Listings: React.FC<ListingsProps> = ({
                           {row.quantity}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        <Typography color="textSecondary" variant="h6">
-                          null
-                        </Typography>
-                      </TableCell>
+                      {/*<TableCell>*/}
+                      {/*  <Typography color="textSecondary" variant="h6">*/}
+                      {/*    null*/}
+                      {/*  </Typography>*/}
+                      {/*</TableCell>*/}
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
                           {row.seller_caption}
