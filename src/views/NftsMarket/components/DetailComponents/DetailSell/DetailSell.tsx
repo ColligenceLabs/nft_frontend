@@ -17,11 +17,17 @@ import { getNftContract } from '../../../../../utils/contract';
 
 interface DetailSellProps {
   id: string;
-  sellResult: boolean;
-  SellResultHandler: (b: boolean) => void;
+  listingMutateHandler: boolean;
+  ListingMutateHandler: (b: boolean) => void;
+  myNftMutateHandler: boolean;
 }
 
-const DetailSell: React.FC<DetailSellProps> = ({ id, sellResult, SellResultHandler }) => {
+const DetailSell: React.FC<DetailSellProps> = ({
+  id,
+  listingMutateHandler,
+  ListingMutateHandler,
+  myNftMutateHandler,
+}) => {
   const { account, library } = useActiveWeb3React();
 
   const params = useLocation();
@@ -82,7 +88,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id, sellResult, SellResultHandl
         nftType,
         parseInt(myNftData.data[0].token_id, 16),
         sellAmount,
-        parseInt(sellPrice),
+        parseFloat(sellPrice),
         myNftData.data[0].quote,
       );
 
@@ -107,7 +113,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id, sellResult, SellResultHandl
         console.log(result.message);
       }
       // console.log('success');
-      SellResultHandler(true);
+      ListingMutateHandler(true);
     } catch (e) {
       // console.log('sell error', e);
       // @ts-ignore
@@ -131,7 +137,7 @@ const DetailSell: React.FC<DetailSellProps> = ({ id, sellResult, SellResultHandl
 
   useEffect(() => {
     myNftMutate();
-  }, [sellResult]);
+  }, [listingMutateHandler, myNftMutateHandler]);
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
@@ -243,15 +249,15 @@ const DetailSell: React.FC<DetailSellProps> = ({ id, sellResult, SellResultHandl
       )}
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={sellResult}
+        open={listingMutateHandler}
         autoHideDuration={2000}
         onClose={() => {
-          SellResultHandler(false);
+          ListingMutateHandler(false);
         }}
       >
         <Alert
           onClose={() => {
-            SellResultHandler(false);
+            ListingMutateHandler(false);
           }}
           variant="filled"
           severity="success"

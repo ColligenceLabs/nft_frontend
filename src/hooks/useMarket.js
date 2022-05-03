@@ -57,7 +57,9 @@ const useMarket = () => {
         if (nftType === 721) {
           test = await nftContract.methods.getApproved(tokenId).call();
         } else if (nftType === 1155) {
-          test = await nftContract.methods.isApprovedForAll(account, marketContract._address).call();
+          test = await nftContract.methods
+            .isApprovedForAll(account, marketContract._address)
+            .call();
         }
       }
       console.log(marketContract.address, marketContract.address !== test, test, typeof test);
@@ -141,7 +143,9 @@ const useMarket = () => {
       }
 
       console.log(price, typeof price);
+
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
+      console.log(parsedPrice);
       // sell
       try {
         if (!isKaikas)

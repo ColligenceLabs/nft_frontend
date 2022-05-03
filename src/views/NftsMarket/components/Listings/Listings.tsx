@@ -21,7 +21,12 @@ import { useWeb3React } from '@web3-react/core';
 import { NFTType } from '../../types';
 import { getNftContract } from '../../../../utils/contract';
 import useMarket from '../../../../hooks/useMarket';
-import { cancelBuyUserNft, cancelSale, selectUserSerials } from '../../../../services/market.service';
+import {
+  cancelBuyUserNft,
+  cancelSale,
+  selectUserSerials,
+} from '../../../../services/market.service';
+import { LoadingButton } from '@mui/lab';
 
 interface SaleItemTypes {
   id: string;
@@ -40,17 +45,27 @@ interface SaleItemTypes {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 interface ListingsProps {
   id: string;
-  sellResult: boolean;
+  listingMutateHandler: boolean;
   nft: NFTType;
+  myNftMutateHandler: boolean;
+  MyNftMutateHandler: (b: boolean) => void;
 }
 
-const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
+const Listings: React.FC<ListingsProps> = ({
+  id,
+  listingMutateHandler,
+  nft,
+  myNftMutateHandler,
+  MyNftMutateHandler,
+}) => {
   const context = useWeb3React();
   const { account, library } = context;
   const [saleList, setSaleList] = useState<SaleItemTypes[]>([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [isCancelLoading, setIsCancelLoading] = useState(false);
   const [page, setPage] = useState(0);
   const [rowCount, setRowCount] = useState(0);
   const { buyNFT, stopSelling } = useMarket();
@@ -85,8 +100,21 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
       console.log(userSerial);
 
       // 사용자가 판매한 Nft를 지갑을 통해 구매
-      const nftContract = getNftContract(library, nft.collection_id.contract_address, nft.collection_id.contract_type);
-      const result = await buyNFT(nftContract, parseInt(row.token_id, 16), row.seller, row.quantity, row.quantity, row.price, row.quote);
+      const nftContract = getNftContract(
+        library,
+        nft.collection_id.contract_address,
+        nft.collection_id.contract_type,
+      );
+      const result = await buyNFT(
+        nftContract,
+        parseInt(row.token_id, 16),
+        row.seller,
+        row.quantity,
+        row.quantity,
+        row.price,
+        row.quote,
+      );
+      MyNftMutateHandler(true);
       // 사용자 구매 내역을 서버에 전송 (sold count 수정)
     } catch (e) {
       // cancel buy (api 호출)
@@ -95,12 +123,21 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
   };
 
   const handleCancel = async (row: SaleItemTypes) => {
-    console.log(row.seller);
-    console.log(account);
+    setIsCancelLoading(true);
     try {
       // nftContract, tokenId, quantity, price, quote
-      const nftContract = getNftContract(library, nft.collection_id.contract_address, nft.collection_id.contract_type);
-      const stopResult = await stopSelling(nftContract, parseInt(row.token_id, 16), row.quantity, row.price, row.quote);
+      const nftContract = getNftContract(
+        library,
+        nft.collection_id.contract_address,
+        nft.collection_id.contract_type,
+      );
+      const stopResult = await stopSelling(
+        nftContract,
+        parseInt(row.token_id, 16),
+        row.quantity,
+        row.price,
+        row.quote,
+      );
       console.log(stopResult);
       // sale collection 에서 삭제.
       const result = await cancelSale(account, row._id);
@@ -108,7 +145,7 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
     } catch (e) {
       console.log(e);
     }
-
+    setIsCancelLoading(false);
   };
 
   useEffect(() => {
@@ -126,10 +163,10 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
   }, [data]);
 
   useEffect(() => {
-    if (sellResult) {
+    if (listingMutateHandler) {
       mutate();
     }
-  }, [sellResult]);
+  }, [listingMutateHandler]);
 
   return (
     <SectionWrapper title={'Listing'} icon={<FormatListBulletedOutlinedIcon />}>
@@ -210,13 +247,14 @@ const Listings: React.FC<ListingsProps> = ({ id, sellResult, nft }) => {
                       <TableCell>
                         <Box sx={{ display: 'flex', gap: 0.5 }}>
                           {row.seller === account ? (
-                            <Button
+                            <LoadingButton
                               variant={'contained'}
                               size={'small'}
+                              loading={isCancelLoading}
                               onClick={() => handleCancel(row)}
                             >
                               Cancel
-                            </Button>
+                            </LoadingButton>
                           ) : (
                             <Button
                               variant={'contained'}

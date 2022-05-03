@@ -21,7 +21,9 @@ import DetailSell from './components/DetailComponents/DetailSell';
 
 const NFTDetail = () => {
   const [sellEventHandler, setSellEventHandler] = useState(false);
-  const [sellResult, setSellResult] = useState(false);
+  const [listingMutateHandler, setListingMutateHandler] = useState(false);
+  const [myNftMutateHandler, setMyNftMutateHandler] = useState(false);
+
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
@@ -41,8 +43,12 @@ const NFTDetail = () => {
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
-  const SellResultHandler = (result: boolean) => {
-    setSellResult(result);
+  const ListingMutateHandler = (result: boolean) => {
+    setListingMutateHandler(result);
+  };
+
+  const MyNftMutateHandler = (result: boolean) => {
+    setMyNftMutateHandler(result);
   };
 
   return (
@@ -56,11 +62,18 @@ const NFTDetail = () => {
                 <DetailContents nft={data?.data} />
                 <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy id={id!} />
-                <Listings id={id!} sellResult={sellResult} nft={data?.data} />
+                <Listings
+                  id={id!}
+                  listingMutateHandler={listingMutateHandler}
+                  nft={data?.data}
+                  myNftMutateHandler={myNftMutateHandler}
+                  MyNftMutateHandler={MyNftMutateHandler}
+                />
                 <DetailSell
                   id={id!}
-                  sellResult={sellResult}
-                  SellResultHandler={(result) => SellResultHandler(result)}
+                  listingMutateHandler={listingMutateHandler}
+                  ListingMutateHandler={(result) => ListingMutateHandler(result)}
+                  myNftMutateHandler={myNftMutateHandler}
                 />
               </Box>
 
@@ -81,11 +94,18 @@ const NFTDetail = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
                   <DetailTitle nft={data?.data} />
                   <DetailBuy id={id!} />
-                  <Listings id={id!} sellResult={sellResult} nft={data?.data} />
+                  <Listings
+                    id={id!}
+                    listingMutateHandler={listingMutateHandler}
+                    nft={data?.data}
+                    myNftMutateHandler={myNftMutateHandler}
+                    MyNftMutateHandler={MyNftMutateHandler}
+                  />
                   <DetailSell
                     id={id!}
-                    sellResult={sellResult}
-                    SellResultHandler={(result) => SellResultHandler(result)}
+                    listingMutateHandler={listingMutateHandler}
+                    ListingMutateHandler={(result) => ListingMutateHandler(result)}
+                    myNftMutateHandler={myNftMutateHandler}
                   />
                 </Box>
               </Box>
