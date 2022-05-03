@@ -112,9 +112,8 @@ const DetailSell: React.FC<DetailSellProps> = ({
         // error
         console.log(result.message);
         setErrorMessage(result.message);
-      } else {
-        ListingMutateHandler(true);
       }
+      ListingMutateHandler(true);
     } catch (e) {
       // @ts-ignore
       setErrorMessage(e.message);
@@ -260,7 +259,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
             ListingMutateHandler(false);
           }}
           variant="filled"
-          severity="success"
+          severity={errorMessage === '' ? 'success' : 'error'}
           sx={{ width: '100%' }}
         >
           {errorMessage === '' ? 'Success' : `Fail (${errorMessage})`}
