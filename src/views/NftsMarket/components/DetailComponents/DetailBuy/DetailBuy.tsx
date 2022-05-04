@@ -19,6 +19,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import WalletDialog from '../../../../../components/WalletDialog';
 import SellingClock from '../SellingClock';
+import getNftPrice from '../../../../../utils/getNftPrice';
 
 interface DetailBuyProps {
   id: string;
@@ -52,6 +53,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
   }
 
   const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
+
   const {
     data: myNftData,
     error: myNftError,
@@ -78,7 +80,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
     const serials = await selectSerials(id, account, amount);
 
     if (serials.status === 0) {
-      console.log('판매가능한 nft가 존재하지 않습니다.');
       setBuyFlag(false);
       return;
     }
@@ -134,104 +135,137 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
       }
       // icon={<StorefrontOutlinedIcon />}
     >
-      <Box sx={{ pt: 2, px: 2 }}>
-        <Typography variant={'subtitle2'} color={'primary'}>
-          Selling Quantity
-        </Typography>
-        <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={'0.5rem'}>
-          <Typography variant={'h1'}>{sellingQuantity}</Typography>
-        </Box>
-      </Box>
-      <Box sx={{ py: 1, px: 2 }}>
-        <Typography variant={'subtitle2'} color={'primary'}>
-          Price
-        </Typography>
-        <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={'0.5rem'}>
-          {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
-          {data?.data?.quote === 'talk' && <img src={talkLogo} alt="klay" height="24px" />}
-          <Typography variant={'h1'}>
-            {data?.data?.price} {data?.data?.quote}
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: 'flex', flex: 1 }}>
-          {data?.data?.collection_id?.contract_type === 'KIP37' ? (
-            // <Box sx={{ display: 'flex' }}>
+      {sellingQuantity !== 0 ? (
+        <>
+          <Box sx={{ pt: 2, px: 2 }}>
+            <Typography variant={'subtitle2'} color={'primary'}>
+              Selling Quantity
+            </Typography>
             <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                flex: 1,
-              }}
+              display={'flex'}
+              justifyContent={'flex-start'}
+              alignItems={'center'}
+              gap={'0.5rem'}
             >
-              <Typography variant={'subtitle2'} color={'primary'} sx={{ flex: 1 }}>
-                Amount
+              <Typography variant={'h1'}>{sellingQuantity}</Typography>
+            </Box>
+          </Box>
+          <Box sx={{ py: 1, px: 2 }}>
+            <Typography variant={'subtitle2'} color={'primary'}>
+              Price
+            </Typography>
+            <Box
+              display={'flex'}
+              justifyContent={'flex-start'}
+              alignItems={'center'}
+              gap={'0.5rem'}
+            >
+              {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
+              {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
+              <Typography variant={'h1'}>
+                {data?.data?.price} {data?.data?.quote}
               </Typography>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  gap: '1rem',
+            </Box>
 
-                  flex: 1,
-                }}
-              >
-                <CustomTextField
-                  id="amount"
-                  name="amount"
-                  variant="outlined"
-                  type="number"
-                  size="small"
-                  value={amount}
-                  inputProps={{ min: 0 }}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAmount(e.target.value)}
-                  sx={{ flex: 5 }}
-                />
+            <Box sx={{ display: 'flex', flex: 1 }}>
+              {data?.data?.collection_id?.contract_type === 'KIP37' ? (
+                // <Box sx={{ display: 'flex' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                  }}
+                >
+                  <Typography variant={'subtitle2'} color={'primary'} sx={{ flex: 1 }}>
+                    Amount
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: '1rem',
 
-                {account === undefined ? (
-                  <Button
-                    variant="contained"
-                    onClick={() => setIsOpenConnectModal(true)}
-                    sx={{ flex: 1, fontSize: '14px' }}
+                      flex: 1,
+                    }}
                   >
-                    Connect Wallet
-                  </Button>
-                ) : (
-                  <Box>
+                    <CustomTextField
+                      id="amount"
+                      name="amount"
+                      variant="outlined"
+                      type="number"
+                      size="small"
+                      value={amount}
+                      inputProps={{ min: 0 }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setAmount(e.target.value)
+                      }
+                      sx={{ flex: 5 }}
+                    />
+
+                    {account === undefined ? (
+                      <Button
+                        variant="contained"
+                        onClick={() => setIsOpenConnectModal(true)}
+                        sx={{ flex: 1, fontSize: '14px' }}
+                      >
+                        Connect Wallet
+                      </Button>
+                    ) : (
+                      <Box>
+                        <LoadingButton
+                          onClick={buy}
+                          disabled={sellingQuantity === 0}
+                          loading={buyFlag}
+                          variant="contained"
+                          sx={{ flex: 1, width: smDown ? '50px' : '100px' }}
+                        >
+                          {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
+                        </LoadingButton>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              ) : (
+                <Box sx={{ flex: 1 }}>
+                  {account === undefined ? (
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={() => setIsOpenConnectModal(true)}
+                    >
+                      Connect Wallet
+                    </Button>
+                  ) : (
                     <LoadingButton
+                      fullWidth
                       onClick={buy}
                       disabled={sellingQuantity === 0}
                       loading={buyFlag}
                       variant="contained"
-                      sx={{ flex: 1, width: smDown ? '50px' : '100px' }}
                     >
                       {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                     </LoadingButton>
-                  </Box>
-                )}
-              </Box>
-            </Box>
-          ) : (
-            <Box sx={{ flex: 1 }}>
-              {account === undefined ? (
-                <Button fullWidth variant="contained" onClick={() => setIsOpenConnectModal(true)}>
-                  Connect Wallet
-                </Button>
-              ) : (
-                <LoadingButton
-                  fullWidth
-                  onClick={buy}
-                  disabled={sellingQuantity === 0}
-                  loading={buyFlag}
-                  variant="contained"
-                >
-                  {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
-                </LoadingButton>
+                  )}
+                </Box>
               )}
             </Box>
-          )}
+          </Box>
+        </>
+      ) : (
+        <Box sx={{ p: 2 }}>
+          <Typography variant={'subtitle2'} color={'primary'}>
+            Current Price
+          </Typography>
+          <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={'0.5rem'}>
+            {data?.data?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
+            {data?.data?.floor_quote === 'talk' && <img src={talkLogo} alt="klay" height="24px" />}
+            <Typography variant={'h1'}>
+              {getNftPrice(data?.data?.price, data?.data?.floor_price)}
+            </Typography>
+          </Box>
         </Box>
-      </Box>
+      )}
       <WalletDialog
         isOpenConnectModal={isOpenConnectModal}
         handleCloseModal={handleCloseModal}
