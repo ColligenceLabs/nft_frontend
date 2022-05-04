@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
+import { Cache } from 'three';
+import clear = Cache.clear;
 
 interface SellingClockProps {
   deadline: string | any;
@@ -16,7 +18,8 @@ const SellingClock: React.FC<SellingClockProps> = ({ deadline }) => {
 
   const getTimeUntil = (deadline: string) => {
     const time = Date.parse(deadline) - Date.parse(new Date().toString());
-    if (time < 0) {
+    if (isNaN(time) || time < 0) {
+      console.log('aa');
       setDays(0);
       setHours(0);
       setMinutes(0);
@@ -30,9 +33,10 @@ const SellingClock: React.FC<SellingClockProps> = ({ deadline }) => {
   };
 
   useEffect(() => {
-    setInterval(() => getTimeUntil(deadline), 1000);
-
-    return () => getTimeUntil(deadline);
+    clearInterval();
+    const interval = setInterval(() => getTimeUntil(deadline), 1000);
+    getTimeUntil(deadline);
+    return () => clearInterval(interval);
   }, [deadline]);
 
   return (
