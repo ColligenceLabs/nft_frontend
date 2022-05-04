@@ -10,6 +10,7 @@ import talk_icon from '../../../../assets/images/logos/talken_icon.png';
 import klay_icon from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 
 import { Link } from 'react-router-dom';
+import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
 
 interface CategoryTypes {
   id: number;
@@ -221,7 +222,8 @@ const TopCollections = () => {
                   </Box>
                   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Typography fontSize={'12px'} color={'text.secondary'} fontWeight={500}>
-                      $ {item.total_volume_usd.toFixed(4)}
+                      $ {sliceFloatNumber(item.total_volume_usd.toString())}
+                      {/*$ {item.total_volume_usd.toFixed(4)}*/}
                     </Typography>
                   </Box>
                 </Box>

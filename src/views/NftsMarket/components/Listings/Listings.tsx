@@ -26,6 +26,7 @@ import {
   selectUserSerials,
 } from '../../../../services/market.service';
 import { LoadingButton } from '@mui/lab';
+import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
 
 interface SaleItemTypes {
   _id: string;
@@ -240,7 +241,7 @@ const Listings: React.FC<ListingsProps> = ({
                       </TableCell>
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
-                          {`$ ${row.priceUsd.toFixed(4)}`}
+                          {`$ ${sliceFloatNumber(row.priceUsd.toString())}`}
                         </Typography>
                       </TableCell>
                       <TableCell>
