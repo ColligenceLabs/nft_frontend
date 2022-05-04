@@ -9,6 +9,7 @@ import talkLogo from '../../../../assets/images/logos/talken_icon.png';
 import FeatherIcon from 'feather-icons-react';
 import ImageViewer from '../../../../components/ImageViewer';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import getNftPrice from '../../../../utils/getNftPrice';
 
 interface NFTItemProp {
   item: NFTType;
@@ -109,10 +110,12 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
                     gap: '0.5rem',
                   }}
                 >
-                  {item?.quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
-                  {item?.quote === 'talk' && <img src={talkLogo} alt="klay" height="16px" />}
+                  {item?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
+                  {item?.floor_quote === 'talk' && <img src={talkLogo} alt="talk" height="16px" />}
                   {/*<img src={klayLogo} alt="klay" height="16px" />*/}
-                  <Typography variant="h6">{item?.price}</Typography>
+                  <Typography variant="h6">
+                    {getNftPrice(item?.price, item?.floor_price)}
+                  </Typography>
                 </Box>
               </Box>
             </Box>

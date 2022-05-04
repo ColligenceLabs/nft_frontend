@@ -112,6 +112,8 @@ export interface NFTResponse {
         quantity_selling: number;
         price: number;
         quote: string;
+        floor_price: number;
+        floor_quote: string;
         category: string[];
         onchain: string;
         start_date: Date;
@@ -254,6 +256,8 @@ export interface NFTType {
   quantity_selling: number;
   quote: string;
   price: number;
+  floor_quote: string;
+  floor_price: number;
   category: string[];
   onchain: string;
   start_date: Date;
