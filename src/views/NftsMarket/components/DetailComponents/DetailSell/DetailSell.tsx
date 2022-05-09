@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Box, Snackbar, Typography, useTheme } from '@mui/material';
+import { Alert, Box, CircularProgress, Snackbar, Typography, useTheme } from '@mui/material';
 import CustomTextField from '../../../../../components/forms/custom-elements/CustomTextField';
 import { LoadingButton } from '@mui/lab';
 import useSWR from 'swr';
@@ -41,7 +41,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
   const [sellPrice, setSellPrice] = useState('0');
   const [totalPrice, setTotalPrice] = useState(0);
   const [sellStatus, setSellStatus] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   let API_URL;
@@ -121,16 +121,22 @@ const DetailSell: React.FC<DetailSellProps> = ({
   };
 
   useEffect(() => {
-    myNftMutate();
     mutate();
-    if (myNftData && myNftData?.data !== null) {
-      setMyNFT(myNftData?.data);
-      setMyNFTCount(myNftData?.data.length);
-    } else {
-      setMyNFT(null);
-      setMyNFTCount('0');
-    }
-  }, [listingMutateHandler, myNftMutateHandler, data.data, myNftData?.data]);
+  }, [data.data]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      myNftMutate().then((res) => {
+        if (myNftData && myNftData?.data !== null) {
+          setMyNFT(myNftData?.data);
+          setMyNFTCount(myNftData?.data.length);
+        } else {
+          setMyNFT(null);
+          setMyNFTCount('0');
+        }
+      });
+    }, 2000);
+  }, [myNftMutateHandler, myNftData?.data]);
 
   useEffect(() => {
     setTotalPrice(parseInt(sellAmount) * parseFloat(sellPrice));
@@ -144,14 +150,18 @@ const DetailSell: React.FC<DetailSellProps> = ({
             <Typography variant={'subtitle2'} color={'primary'}>
               My NFT Count
             </Typography>
-            <Box
-              display={'flex'}
-              justifyContent={'flex-start'}
-              alignItems={'center'}
-              gap={'0.5rem'}
-            >
-              <Typography variant={'h1'}>{myNFTCount}</Typography>
-            </Box>
+            {loading ? (
+              <CircularProgress size={'small'} />
+            ) : (
+              <Box
+                display={'flex'}
+                justifyContent={'flex-start'}
+                alignItems={'center'}
+                gap={'0.5rem'}
+              >
+                <Typography variant={'h1'}>{myNFTCount}</Typography>
+              </Box>
+            )}
           </Box>
           <Box
             sx={{
