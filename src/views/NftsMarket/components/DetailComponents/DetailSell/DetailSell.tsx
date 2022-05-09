@@ -44,6 +44,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
   const [sellStatus, setSellStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [minPriceCheck, setMinPriceCheck] = useState(false);
 
   let API_URL;
 
@@ -66,6 +67,11 @@ const DetailSell: React.FC<DetailSellProps> = ({
   const sell = async () => {
     setSellStatus(true);
     // console.log(myNftData, myNftData.data.length, sellAmount);
+    if (parseFloat(sellPrice) < 0.0001) {
+      setMinPriceCheck(true);
+      setSellStatus(false);
+      return;
+    }
     if (myNftData.data.length < sellAmount) {
       setErrorMessage('클수없다..');
       setSellStatus(false);
@@ -235,7 +241,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
                 <Box
                   sx={{
                     px: 2.5,
-                    pb: 2,
+                    pb: 1,
                     display: 'flex',
                     justifyContent: 'flex-start',
                     alignItems: 'bottom',
@@ -251,6 +257,25 @@ const DetailSell: React.FC<DetailSellProps> = ({
                   </Typography>
                 </Box>
               )}
+          </Box>
+
+          <Box>
+            {minPriceCheck && (
+              <Box
+                sx={{
+                  px: 2.5,
+                  pb: 2,
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  alignItems: 'bottom',
+                  gap: '0.5rem',
+                }}
+              >
+                <Typography variant={'subtitle2'} color={'error'}>
+                  The minimum price that can be sold is 0.0001 or more.
+                </Typography>
+              </Box>
+            )}
           </Box>
         </SectionWrapper>
       )}
