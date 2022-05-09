@@ -200,6 +200,9 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setAmount(e.target.value)
                       }
+                      onBlur={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setAmount(parseInt(e.target.value).toString())
+                      }
                       sx={{ flex: 5 }}
                     />
 
@@ -215,7 +218,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
                       <Box>
                         <LoadingButton
                           onClick={buy}
-                          disabled={sellingQuantity === 0}
+                          disabled={sellingQuantity === 0 || sellingQuantity < parseInt(amount)}
                           loading={buyFlag}
                           variant="contained"
                           sx={{ flex: 1, width: smDown ? '50px' : '100px' }}

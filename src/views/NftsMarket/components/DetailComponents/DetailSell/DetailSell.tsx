@@ -11,6 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import SectionWrapper from '../SectionWrapper';
 import useMarket from '../../../../../hooks/useMarket';
 import { getNftContract } from '../../../../../utils/contract';
+import sliceFloatNumber from '../../../../../utils/sliceFloatNumber';
 
 interface DetailSellProps {
   id: string;
@@ -186,9 +187,12 @@ const DetailSell: React.FC<DetailSellProps> = ({
                   type="number"
                   size="small"
                   value={sellAmount}
-                  inputProps={{ min: 0 }}
+                  inputProps={{ min: 0, step: 1 }}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setSellAmount(e.target.value)
+                  }
+                  onBlur={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setSellAmount(parseInt(e.target.value).toString())
                   }
                   fullWidth
                 />
@@ -213,7 +217,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
             </Box>
             <Box sx={{ flex: 1, width: smDown ? '50px' : '100px' }}>
               <LoadingButton
-                disabled={totalPrice === 0 || isNaN(totalPrice)}
+                disabled={totalPrice === 0 || isNaN(totalPrice) || myNFTCount < sellAmount}
                 loading={sellStatus}
                 onClick={sell}
                 fullWidth
@@ -240,7 +244,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
                 >
                   <Typography variant={'subtitle2'}>Total : </Typography>
                   <Typography variant={'subtitle2'} color={'primary'}>
-                    {totalPrice.toFixed(4)}
+                    {totalPrice}
                   </Typography>
                   <Typography variant={'subtitle2'} color={'primary'}>
                     {data?.data?.quote.toUpperCase()}
