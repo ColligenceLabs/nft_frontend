@@ -53,9 +53,11 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
 
                 borderRadius: '5px',
                 gap: '0.5rem',
-                cursor: 'pointer',
+                cursor: network.id === 1 ? 'pointer' : 'default',
               }}
-              onClick={() => changeNetwork(network.id)}
+              onClick={() => {
+                if (network.id === 1) changeNetwork(network.id);
+              }}
             >
               <img src={network.icon} alt={network.name} width="16px" />
               <Typography variant="subtitle2"> {network.network_name}</Typography>

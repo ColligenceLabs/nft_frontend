@@ -16,7 +16,7 @@ const WalletIconWrapper = experimentalStyled('div')(() => ({
   padding: '0px 10px',
 }));
 
-const StyledWalletIcon = experimentalStyled('div')(({ address, theme }) => ({
+const StyledWalletIcon = experimentalStyled('div')(({ cursor_pointer, address, theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -24,7 +24,7 @@ const StyledWalletIcon = experimentalStyled('div')(({ address, theme }) => ({
   margin: '5px',
   padding: '5px',
   borderRadius: '100px',
-  cursor: 'pointer',
+  cursor: cursor_pointer ? 'pointer' : 'default',
   opacity: `${address !== undefined ? 100 : 0.5}`,
   border: `${address !== undefined ? `1px solid ${theme.palette.primary.main}` : ''}`,
 }));
@@ -64,19 +64,22 @@ const WalletConnector = ({ activate }) => {
       <WalletIconWrapper>
         <StyledWalletIcon
           address={ethereum.address}
-          onClick={() => onClickWalletIcon(0, 'ethereum', ethereum)}
+          // onClick={() => onClickWalletIcon(0, 'ethereum', ethereum)}
+          cursor_pointer={false}
         >
           <img src={eth_icon} alt={'eth_icon'} width="20px" />
         </StyledWalletIcon>
         <StyledWalletIcon
           address={klaytn.address}
           onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
+          cursor_pointer={true}
         >
           <img src={klay_icon} alt={'klay_icon'} width="20px" />
         </StyledWalletIcon>
         <StyledWalletIcon
           address={solana.address}
-          onClick={() => onClickWalletIcon(2, 'solana', solana)}
+          cursor_pointer={false}
+          // onClick={() => onClickWalletIcon(2, 'solana', solana)}
         >
           <img src={sol_icon} alt={'sol_icon'} width="20px" />
         </StyledWalletIcon>
