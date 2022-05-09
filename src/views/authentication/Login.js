@@ -53,7 +53,7 @@ const Login = () => {
   return (
     <PageContainer title="Login" description="this is Login page">
       <Grid container spacing={0} sx={{ height: '100vh', justifyContent: 'center' }}>
-        <Grid item xs={12} sm={8} lg={6} display="flex" alignItems="center">
+        <Grid item xs={12} sm={8} lg={8} display="flex" alignItems="center">
           <Grid container spacing={0} display="flex" justifyContent="center">
             <Grid item xs={12} lg={9} xl={6}>
               <Box
@@ -64,7 +64,7 @@ const Login = () => {
                 <Typography fontWeight="700" variant="h2">
                   NFT Management System
                 </Typography>
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" sx={{ pt: 2 }}>
                   <Typography
                     color="textSecondary"
                     variant="h6"
