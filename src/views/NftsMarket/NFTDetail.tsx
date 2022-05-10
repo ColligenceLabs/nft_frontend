@@ -77,7 +77,7 @@ const NFTDetail = () => {
                 />
               </Box>
 
-              <ItemActivity />
+              <ItemActivity id={id!} />
               <MoreNFTs
                 nft_id={id!}
                 collection_id={data?.data?.collection_id._id}
@@ -109,7 +109,7 @@ const NFTDetail = () => {
                   />
                 </Box>
               </Box>
-              <ItemActivity />
+              <ItemActivity id={id!} />
               <MoreNFTs
                 nft_id={id!}
                 collection_id={data?.data?.collection_id._id}
