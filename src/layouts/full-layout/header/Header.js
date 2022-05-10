@@ -74,7 +74,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
         </IconButton>
         <Box flexGrow={1} />
 
-        <NetworkSelector />
+        {/*<NetworkSelector />*/}
 
         <Box
           sx={{
