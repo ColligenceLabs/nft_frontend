@@ -10,7 +10,6 @@ import { StoreTypes } from '../../../../views/NftsMarket/types';
 import { useTheme } from '@mui/material/styles';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
-import WalletButton from '../../../../components/WalletButton';
 import WalletConnector from '../../../../components/WalletConnector';
 import { useWeb3React } from '@web3-react/core';
 
@@ -22,8 +21,6 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
   const { pathname } = useLocation();
   const context = useWeb3React();
   const { connector, activate, deactivate, account } = context;
-
-  console.log(connector);
 
   return (
     <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} width={1}>
