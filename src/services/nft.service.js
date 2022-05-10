@@ -91,6 +91,14 @@ export const setNftTransferData = (nft_id, to_address, amount, transactionHash) 
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const cancelCreateNft = (nftId) => {
+    return axios
+      .delete(`${API_URL}/cancel-create/${nftId}`, { headers: authHeader() })
+      .catch((error) =>
+        error.response.status === 401 ? authService.logout() : console.log(error),
+      );
+};
+
 export const deleteNft = (nfts) => {
   if (nfts.length === 1) {
     return axios
