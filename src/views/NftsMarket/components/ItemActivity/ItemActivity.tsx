@@ -81,10 +81,8 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   const url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/nft-events/${id}?page=${
     page + 1
   }&size=${rowsPerPage}&types=${selectedFilter.toString()}`;
-
   const { data } = useSWR(url, fetcher);
 
-  console.log(data);
   const getEventCaptionByValue = (value: number) => {
     const result = EVENT_TYPE.filter((item) => item.value === value);
     return result ? result[0].name : '-';
