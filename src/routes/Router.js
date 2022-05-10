@@ -17,6 +17,7 @@ const User = Loadable(lazy(() => import('../views/User')));
 const Admins = Loadable(lazy(() => import('../views/Admins')));
 const Creator = Loadable(lazy(() => import('../views/Creator/Creator')));
 const CreatorRegister = Loadable(lazy(() => import('../views/Creator/CreatorRegister')));
+const CreatorUpdate = Loadable(lazy(() => import('../views/Creator/CreatorUpdate')));
 const NFTs = Loadable(lazy(() => import('../views/NFTs')));
 const NFTMint = Loadable(lazy(() => import('../views/NFTs/NFTMint')));
 const AirDrop = Loadable(lazy(() => import('../views/AirDrop')));
@@ -66,6 +67,7 @@ const Router = (isLoggedIn, level) => [
       { path: '/admins', exact: true, element: <Admins /> },
       { path: '/creator', exact: true, element: <Creator /> },
       { path: '/creator/register', exact: true, element: <CreatorRegister /> },
+      { path: '/creator/update', exact: true, element: <CreatorUpdate /> },
       { path: '/trace', exact: true, element: <Serials /> },
       { path: '/trace/create', exact: true, element: <SerialsCreate /> },
       { path: '/solana', exact: true, element: <Solana /> },

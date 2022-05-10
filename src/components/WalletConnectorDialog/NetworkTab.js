@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Grid, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Grid, Popover, Typography } from '@mui/material';
 import eth_icon from '../../assets/images/network_icon/ethereum-eth-logo.png';
 import klay_icon from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import sol_icon from '../../assets/images/network_icon/solana-sol-logo.png';
@@ -29,12 +29,25 @@ const NetworkList = [
 const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
   const theme = useTheme();
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   return (
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
         {NetworkList.map((network) => (
           <Grid item key={network.id} lg={4} md={4} sm={12} xs={12}>
             <Box
+              aria-owns={open ? 'mouse-over-popover' : undefined}
               style={{
                 display: 'flex',
                 justifyContent: 'flex-start',
@@ -58,6 +71,12 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
               onClick={() => {
                 if (network.id === 1) changeNetwork(network.id);
               }}
+              onMouseOver={(event) => {
+                if (network.id === 0 || network.id === 2) handlePopoverOpen(event);
+              }}
+              onMouseLeave={() => {
+                if (network.id === 0 || network.id === 2) handlePopoverClose();
+              }}
             >
               <img src={network.icon} alt={network.name} width="16px" />
               <Typography variant="subtitle2"> {network.network_name}</Typography>
@@ -65,6 +84,30 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
           </Grid>
         ))}
       </Grid>
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Box sx={{ backgroundColor: 'primary.main', color: 'white' }}>
+          <Typography variant={'subtitle2'} sx={{ p: 1 }}>
+            Comming soon
+          </Typography>
+        </Box>
+      </Popover>
     </Box>
   );
 };

@@ -19,6 +19,7 @@ import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import StatusDialog from '../../components/StatusDialog';
@@ -32,10 +33,12 @@ import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useConnection } from '@colligence/metaplex-common';
+import { useNavigate } from 'react-router-dom';
 
 const Creator = () => {
   const { t } = useTranslation();
   const { id } = useUserInfo();
+  const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
@@ -99,6 +102,14 @@ const Creator = () => {
 
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
+  };
+
+  const handleUserUpdate = (row) => {
+    navigate(`/creator/update`, {
+      state: {
+        ...row,
+      },
+    });
   };
 
   const handleUserDetailModal = (row) => {
@@ -273,6 +284,9 @@ const Creator = () => {
                         <Box>
                           <IconButton onClick={() => handleUserDetailModal(row)}>
                             <AlbumOutlinedIcon />
+                          </IconButton>
+                          <IconButton onClick={() => handleUserUpdate(row)}>
+                            <ModeEditOutlineOutlinedIcon />
                           </IconButton>
                         </Box>
                       </TableCell>
