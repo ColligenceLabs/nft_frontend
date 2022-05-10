@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { experimentalStyled } from '@mui/material';
+import { Box, experimentalStyled, Popover, Typography } from '@mui/material';
 import WalletConnectorDialog from '../WalletConnectorDialog';
 import { useSelector } from 'react-redux';
 import WalletDetail from '../WalletDetail/WalletDetail';
 import eth_icon from '../../assets/images/network_icon/ethereum-eth-logo.png';
 import klay_icon from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import sol_icon from '../../assets/images/network_icon/solana-sol-logo.png';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const WalletIconWrapper = experimentalStyled('div')(() => ({
   display: 'flex',
@@ -21,21 +23,41 @@ const StyledWalletIcon = experimentalStyled('div')(({ cursor_pointer, address, t
   justifyContent: 'center',
   alignItems: 'center',
   backgroundColor: 'white',
-  margin: '5px',
-  padding: '5px',
+  margin: '5px 5px',
+  padding: '5px 5px',
   borderRadius: '100px',
   cursor: cursor_pointer === 'true' ? 'pointer' : 'default',
   opacity: `${address !== undefined ? 100 : 0.5}`,
   border: `${address !== undefined ? `1px solid ${theme.palette.primary.main}` : ''}`,
+  [theme.breakpoints.down('sm')]: {
+    margin: '5px 2px',
+    padding: '5px 5px',
+  },
 }));
 
 const WalletConnector = ({ activate }) => {
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
+
   const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
 
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
   const [selectedNetworkId, setSelectedNetworkId] = useState(0);
   const [connectedWallet, setConnectedWallet] = useState();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   const handleCloseConnectModal = () => {
     setIsOpenConnectModal(false);
@@ -63,25 +85,31 @@ const WalletConnector = ({ activate }) => {
     <>
       <WalletIconWrapper>
         <StyledWalletIcon
+          aria-owns={open ? 'mouse-over-popover' : undefined}
           address={ethereum.address}
           // onClick={() => onClickWalletIcon(0, 'ethereum', ethereum)}
+          onMouseOver={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
           cursor_pointer={'false'}
         >
-          <img src={eth_icon} alt={'eth_icon'} width="20px" />
+          <img src={eth_icon} alt={'eth_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>
         <StyledWalletIcon
           address={klaytn.address}
           onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
           cursor_pointer={'true'}
         >
-          <img src={klay_icon} alt={'klay_icon'} width="20px" />
+          <img src={klay_icon} alt={'klay_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>
         <StyledWalletIcon
+          aria-owns={open ? 'mouse-over-popover' : undefined}
           address={solana.address}
           cursor_pointer={'false'}
           // onClick={() => onClickWalletIcon(2, 'solana', solana)}
+          onMouseOver={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
         >
-          <img src={sol_icon} alt={'sol_icon'} width="20px" />
+          <img src={sol_icon} alt={'sol_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>
       </WalletIconWrapper>
       <WalletConnectorDialog
@@ -99,6 +127,30 @@ const WalletConnector = ({ activate }) => {
         handleSwitchWallet={handleSwitchWallet}
         connectedWallet={connectedWallet}
       />
+      <Popover
+        id="mouse-over-popover"
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Box sx={{ backgroundColor: 'primary.main', color: 'white' }}>
+          <Typography variant={'subtitle2'} sx={{ p: 1 }}>
+            Comming soon
+          </Typography>
+        </Box>
+      </Popover>
     </>
   );
 };
