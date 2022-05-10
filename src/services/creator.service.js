@@ -34,9 +34,21 @@ export const getAllCreatorData = (url) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const getCreatorDataById = (id) => {
+  return axios
+    .get(`${process.env.REACT_APP_API_SERVER}/admin-api/admin/detail/${id}`, {
+      headers: authHeader(),
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 const creatorService = {
   getCreatorData,
   getAllCreatorData,
+  getCreatorDataById,
 };
 
 export default creatorService;
