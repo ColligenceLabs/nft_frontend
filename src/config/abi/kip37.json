@@ -1,92 +1,86 @@
-[
+[{
+  "constant": true,
+  "inputs": [{
+    "name": "_id",
+    "type": "uint256"
+  }],
+  "name": "paused",
+  "outputs": [{
+    "name": "",
+    "type": "bool"
+  }],
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function"
+},
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "paused",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    },
       {
         "name": "id",
         "type": "uint256"
       }
     ],
     "name": "balanceOf",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "uint256"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "interfaceId",
-        "type": "bytes4"
-      }
-    ],
+    "inputs": [{
+      "name": "interfaceId",
+      "type": "bytes4"
+    }],
     "name": "supportsInterface",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
+    "name": "name",
+    "outputs": [{
+      "name": "",
+      "type": "string"
+    }],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{
+      "name": "tokenId",
+      "type": "uint256"
+    }],
     "name": "uri",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "string"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "name": "_id",
+      "type": "uint256"
+    }],
     "name": "pause",
     "outputs": [],
     "payable": false,
@@ -95,11 +89,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "from",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "from",
+      "type": "address"
+    },
       {
         "name": "to",
         "type": "address"
@@ -134,30 +127,25 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    }],
     "name": "isPauser",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
+    "inputs": [{
+      "name": "_id",
+      "type": "uint256"
+    },
       {
         "name": "_initialSupply",
         "type": "uint256"
@@ -168,35 +156,30 @@
       }
     ],
     "name": "create",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "accounts",
-        "type": "address[]"
-      },
+    "inputs": [{
+      "name": "accounts",
+      "type": "address[]"
+    },
       {
         "name": "ids",
         "type": "uint256[]"
       }
     ],
     "name": "balanceOfBatch",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256[]"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "uint256[]"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
@@ -205,23 +188,20 @@
     "constant": true,
     "inputs": [],
     "name": "paused",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    },
       {
         "name": "ids",
         "type": "uint256[]"
@@ -248,12 +228,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    }],
     "name": "addPauser",
     "outputs": [],
     "payable": false,
@@ -262,11 +240,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
+    "inputs": [{
+      "name": "_id",
+      "type": "uint256"
+    },
       {
         "name": "_to",
         "type": "address"
@@ -293,12 +270,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    }],
     "name": "addMinter",
     "outputs": [],
     "payable": false,
@@ -316,11 +291,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "operator",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "operator",
+      "type": "address"
+    },
       {
         "name": "approved",
         "type": "bool"
@@ -334,68 +308,55 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    }],
     "name": "isMinter",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "name": "_tokenId",
+      "type": "uint256"
+    }],
     "name": "totalSupply",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "uint256"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "name": "",
+      "type": "uint256"
+    }],
     "name": "creators",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "address"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_to",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "_to",
+      "type": "address"
+    },
       {
         "name": "_ids",
         "type": "uint256[]"
@@ -413,34 +374,30 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    },
       {
         "name": "operator",
         "type": "address"
       }
     ],
     "name": "isApprovedForAll",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{
+      "name": "",
+      "type": "bool"
+    }],
     "payable": false,
     "stateMutability": "view",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "from",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "from",
+      "type": "address"
+    },
       {
         "name": "to",
         "type": "address"
@@ -466,11 +423,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "account",
-        "type": "address"
-      },
+    "inputs": [{
+      "name": "account",
+      "type": "address"
+    },
       {
         "name": "id",
         "type": "uint256"
@@ -488,12 +444,10 @@
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [{
+      "name": "_id",
+      "type": "uint256"
+    }],
     "name": "unpause",
     "outputs": [],
     "payable": false,
@@ -501,9 +455,12 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [{
+      "name": "uri",
+      "type": "string"
+    },
       {
-        "name": "uri",
+        "name": "_name",
         "type": "string"
       }
     ],
@@ -513,65 +470,31 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "indexed": true,
+      "name": "account",
+      "type": "address"
+    }],
     "name": "MinterAdded",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "indexed": true,
+      "name": "account",
+      "type": "address"
+    }],
     "name": "MinterRemoved",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Paused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Unpaused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+    "inputs": [{
+      "indexed": false,
+      "name": "tokenId",
+      "type": "uint256"
+    },
       {
         "indexed": false,
         "name": "account",
@@ -583,7 +506,11 @@
   },
   {
     "anonymous": false,
-    "inputs": [
+    "inputs": [{
+      "indexed": false,
+      "name": "tokenId",
+      "type": "uint256"
+    },
       {
         "indexed": false,
         "name": "account",
@@ -595,36 +522,51 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "indexed": false,
+      "name": "account",
+      "type": "address"
+    }],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{
+      "indexed": false,
+      "name": "account",
+      "type": "address"
+    }],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [{
+      "indexed": true,
+      "name": "account",
+      "type": "address"
+    }],
     "name": "PauserAdded",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "account",
-        "type": "address"
-      }
-    ],
+    "inputs": [{
+      "indexed": true,
+      "name": "account",
+      "type": "address"
+    }],
     "name": "PauserRemoved",
     "type": "event"
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "operator",
-        "type": "address"
-      },
+    "inputs": [{
+      "indexed": true,
+      "name": "operator",
+      "type": "address"
+    },
       {
         "indexed": true,
         "name": "from",
@@ -651,12 +593,11 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "operator",
-        "type": "address"
-      },
+    "inputs": [{
+      "indexed": true,
+      "name": "operator",
+      "type": "address"
+    },
       {
         "indexed": true,
         "name": "from",
@@ -683,12 +624,11 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "account",
-        "type": "address"
-      },
+    "inputs": [{
+      "indexed": true,
+      "name": "account",
+      "type": "address"
+    },
       {
         "indexed": true,
         "name": "operator",
@@ -705,12 +645,11 @@
   },
   {
     "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "value",
-        "type": "string"
-      },
+    "inputs": [{
+      "indexed": false,
+      "name": "value",
+      "type": "string"
+    },
       {
         "indexed": true,
         "name": "id",

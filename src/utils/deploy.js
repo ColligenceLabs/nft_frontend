@@ -76,7 +76,7 @@ export async function deployKIP37(name, account, library) {
   const ret = {};
   const gasPrice = parseUnits('750', 'gwei').toNumber();
   const contract = await factory
-    .deploy(tokenUri, {
+    .deploy(tokenUri, name, {
       gasPrice,
       gasLimit: 7000000,
     })
