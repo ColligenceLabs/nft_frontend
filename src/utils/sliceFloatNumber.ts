@@ -1,4 +1,6 @@
 const sliceFloatNumber = (flotNumber: string) => {
+  if (parseFloat(flotNumber) === 0) return '0';
+
   const array = flotNumber.split('.');
   let withoutZeroLength = 2;
   let spliceFloatArray: (string | undefined)[] = [];

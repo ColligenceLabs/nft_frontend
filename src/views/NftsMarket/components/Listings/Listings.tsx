@@ -236,7 +236,9 @@ const Listings: React.FC<ListingsProps> = ({
                           {row?.quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
                           {row?.quote === 'talk' && <img src={talkLogo} alt="klay" height="16px" />}
 
-                          <Typography variant={'h6'}>{row.price}</Typography>
+                          <Typography color="textSecondary" variant={'h6'}>
+                            {row.price}
+                          </Typography>
                         </Box>
                       </TableCell>
                       <TableCell>

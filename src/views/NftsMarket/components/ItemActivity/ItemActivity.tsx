@@ -1,21 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { Box, MenuItem, Select, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import talk_icon from '../../../../assets/images/logos/talken_icon.png';
+import {
+  Box,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  Typography,
+} from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'; // mint
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; // sale
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'; // list
-import PanToolIcon from '@mui/icons-material/PanTool'; // bid
+import FireplaceIcon from '@mui/icons-material/Fireplace'; // burn
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'; // transfer
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useTheme } from '@mui/material/styles';
 import SectionWrapper from '../DetailComponents/SectionWrapper';
+import useSWR from 'swr';
+import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
+import talkLogo from '../../../../assets/images/logos/talken_icon.png';
+import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
+import splitAddress from '../../../../utils/splitAddress';
 
-const FILTER_ITEM = [
-  { value: 'list', caption: 'List' },
-  { value: 'sale', caption: 'Sale' },
-  { value: 'transfer', caption: 'Transfer' },
-  { value: 'minted', caption: 'Minted' },
+interface ItemActivityProps {
+  id: string;
+}
+
+interface ActivityTypes {
+  block_date: Date;
+  block_number: number;
+  contract_address: string;
+  createdAt: Date;
+  from: string;
+  nft_id: string;
+  price: number;
+  quantity: number;
+  quote: string;
+  to: string;
+  token_id: string;
+  tx_id: string;
+  type: number;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+const EVENT_TYPE = [
+  { value: 0, name: 'BURN' },
+  { value: 1, name: 'MINT' },
+  { value: 2, name: 'SELL' },
+  { value: 3, name: 'BUY' },
+  { value: 4, name: 'CANCEL' },
+  { value: 5, name: 'TRANSFER' },
 ];
 
 const ITEM_HEIGHT = 48;
@@ -29,112 +68,47 @@ const MenuProps = {
   },
 };
 
-const columns: GridColDef[] = [
-  // { field: 'id', headerName: 'ID', width: 70 },
-  {
-    field: 'event',
-    headerName: 'Event',
-    sortable: false,
-    width: 200,
-    renderCell: ({ row }) => (
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1 }}>
-        {row.event.toLowerCase() === 'minted' && <AddShoppingCartIcon fontSize={'small'} />}
-        {row.event.toLowerCase() === 'sale' && <ShoppingCartIcon fontSize={'small'} />}
-        {row.event.toLowerCase() === 'bid' && <PanToolIcon fontSize={'small'} />}
-        {row.event.toLowerCase() === 'list' && <LocalOfferIcon fontSize={'small'} />}
-        {row.event.toLowerCase() === 'transfer' && <CompareArrowsIcon fontSize={'small'} />}
-        {row.event.toLowerCase() === 'cancel' && <CancelIcon fontSize={'small'} />}
-        <Typography variant={'h6'}>{row.event}</Typography>
-      </Box>
-    ),
-  },
-  {
-    field: 'price',
-    headerName: 'Price',
-    sortable: false,
-    width: 150,
-    align: 'left',
-    renderCell: ({ row }) => (
-      <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1 }}>
-        {row.price !== null && row.price !== '' && (
-          <img alt="talk_icon" style={{ width: '16px', height: '16px' }} src={talk_icon} />
-        )}
-        <Typography variant={'h6'}>{row.price}</Typography>
-      </Box>
-    ),
-  },
-  {
-    field: 'from',
-    headerName: 'From',
-    sortable: false,
-    width: 300,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.from}</Typography>,
-  },
-  {
-    field: 'to',
-    headerName: 'To',
-    sortable: false,
-    width: 300,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.to}</Typography>,
-  },
-  {
-    field: 'date',
-    headerName: 'Date',
-    sortable: false,
-    width: 150,
-    align: 'left',
-    renderCell: ({ row }) => <Typography variant={'h6'}>{row.date}</Typography>,
-  },
-];
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const rows = [
-  { id: 1, event: 'Cancel', price: '1', from: 'sueth', to: '', date: '22 Apr 2022 15:56:6' },
-  { id: 2, event: 'List', price: '1', from: 'sueth', to: '', date: '22 Apr 2022 15:50:59' },
-  { id: 3, event: 'List', price: '1', from: 'sueth', to: '', date: '22 Apr 2022 15:46:6' },
-  {
-    id: 4,
-    event: 'Sale',
-    price: '0.02',
-    from: 'Nightmonster2021',
-    to: 'sueth',
-    date: '22 Apr 2022 7:49:22',
-  },
-  {
-    id: 5,
-    event: 'Transfer',
-    price: '',
-    from: 'Nightmonster2021',
-    to: 'sueth',
-    date: '22 Apr 2022 7:37:40',
-  },
-  { id: 6, event: 'Bid', price: '0.002', from: 'sueth', to: '', date: '22 Apr 2022 5:57:32' },
-  {
-    id: 7,
-    event: 'List',
-    price: '0.002',
-    from: 'Nightmonster2021',
-    to: '',
-    date: '21 Apr 2022 18:38:8',
-  },
-  {
-    id: 8,
-    event: 'Minted',
-    price: '',
-    from: 'Null Address',
-    to: 'Nightmonster2021',
-    date: '21 Apr 2022 16:49:10',
-  },
-];
-
-const ItemActivity = () => {
+const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   const theme = useTheme();
   const [selectedFilter, setSelectedFilter] = useState([] as any);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowCount, setRowCount] = useState(0);
+  const [activityList, setActivityList] = useState([]);
+
+  const url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/nft-events/${id}?page=${
+    page + 1
+  }&size=${rowsPerPage}&types=${selectedFilter.toString()}`;
+  const { data } = useSWR(url, fetcher);
+
+  const getEventCaptionByValue = (value: number) => {
+    const result = EVENT_TYPE.filter((item) => item.value === value);
+    return result ? result[0].name : '-';
+  };
+
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
+    setPage(page);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect(() => {
-    console.log(selectedFilter);
-  }, [selectedFilter]);
+    if (data && data?.data !== undefined) {
+      const result = data?.data?.items.map((activity: ActivityTypes) => ({
+        ...activity,
+      }));
+
+      setActivityList(result);
+      setRowCount(data?.data?.headers.x_total_count);
+    }
+  }, [data]);
 
   return (
     <SectionWrapper title={'Item Activity'} icon={'activity'} toggled={true}>
@@ -144,11 +118,8 @@ const ItemActivity = () => {
             multiple
             fullWidth
             value={selectedFilter}
-            onChange={(event) => {
-              setSelectedFilter(event.target.value);
-            }}
+            onChange={(event) => setSelectedFilter(event.target.value)}
             sx={{ p: 0, m: 0, backgroundColor: 'white' }}
-            // input={<OutlinedInput label="Filter" />}
             renderValue={(selected) => (
               <Box
                 sx={{
@@ -157,9 +128,9 @@ const ItemActivity = () => {
                   gap: 1,
                 }}
               >
-                {selected.map((value: any) => (
+                {selected.map((item: any, index: number) => (
                   <Box
-                    key={value}
+                    key={index}
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
@@ -171,7 +142,7 @@ const ItemActivity = () => {
                     }}
                   >
                     <Typography variant={'subtitle2'} color={'white'}>
-                      {value}
+                      {getEventCaptionByValue(item)}
                     </Typography>
                   </Box>
                 ))}
@@ -179,21 +150,115 @@ const ItemActivity = () => {
             )}
             MenuProps={MenuProps}
           >
-            {FILTER_ITEM.map((name) => (
-              <MenuItem key={name.value} value={name.value}>
-                {name.caption}
+            {EVENT_TYPE.map((item) => (
+              <MenuItem key={item.value} value={item.value}>
+                {item.name}
               </MenuItem>
             ))}
           </Select>
         </Box>
         <Box sx={{ height: '368px', backgroundColor: 'white' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            hideFooterSelectedRowCount
-            disableColumnMenu
+          <TableContainer>
+            <Table aria-labelledby="tableTitle" size={'small'}>
+              <TableHead>
+                <TableRow sx={{ height: '50px' }}>
+                  <TableCell align={'left'} padding={'normal'}>
+                    Event
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    Price
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    From
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    To
+                  </TableCell>
+                  <TableCell align={'left'} padding={'normal'}>
+                    Date
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {activityList &&
+                  activityList.map((row: ActivityTypes) => {
+                    return (
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={row._id}
+                        sx={{ height: '50px' }}
+                      >
+                        <TableCell>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'flex-start',
+                              alignItems: 'center',
+                              gap: 1,
+                            }}
+                          >
+                            {row.type === 0 && <FireplaceIcon fontSize={'small'} />}
+                            {row.type === 1 && <AddShoppingCartIcon fontSize={'small'} />}
+                            {(row.type === 2 || row.type === 3) && (
+                              <ShoppingCartIcon fontSize={'small'} />
+                            )}
+                            {row.type === 4 && <CancelIcon fontSize={'small'} />}
+                            {row.type === 5 && <CompareArrowsIcon fontSize={'small'} />}
+                            <Typography color="textSecondary" variant={'h6'}>
+                              {getEventCaptionByValue(row.type)}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          {row.type !== 1 ? (
+                            <Box sx={{ display: 'flex', gap: 0.7, alignItems: 'center' }}>
+                              {row.quote === 'klay' && (
+                                <img src={klayLogo} alt="klay" height="16px" />
+                              )}
+                              {row.quote === 'talk' && (
+                                <img src={talkLogo} alt="talk" height="16px" />
+                              )}
+                              <Typography color="textSecondary" variant="h6">
+                                {`${sliceFloatNumber(row.price.toString())}`}
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <Typography color="textSecondary" variant="h6">
+                              -
+                            </Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {splitAddress(row.from)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {splitAddress(row.to)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Typography color="textSecondary" variant="h6">
+                            {new Date(row.createdAt).toLocaleString()}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rowCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </Box>
       </Box>
