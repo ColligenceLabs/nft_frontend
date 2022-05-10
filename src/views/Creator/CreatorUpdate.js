@@ -164,40 +164,29 @@ const CreatorUpdate = () => {
                     </FormHelperText>
                   )}
                 </Grid>
+
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
-                  <CustomSelect
-                    labelId="demo-simple-select-label"
-                    id="level"
-                    name="level"
-                    // onChange={handleChange}
-                    // value={values.level}
-                    defaultValue="creator"
-                    fullWidth
-                    size="small"
-                    disabled
-                  >
-                    <MenuItem value="creator">Creator</MenuItem>
-                  </CustomSelect>
-                  {touched.level && errors.level && (
+                  <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
+                  <CustomTextarea
+                    maxRows={5}
+                    minRows={5}
+                    id="description"
+                    name="description"
+                    value={values.description}
+                    onChange={handleChange}
+                    // error={touched.description && Boolean(errors.description)}
+                    // helperText={touched.description && errors.description}
+                  />
+                  {touched.description && errors.description && (
                     <FormHelperText htmlFor="render-select" error>
-                      {errors.level}
+                      {errors.description}
                     </FormHelperText>
                   )}
                 </Grid>
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
-                  <img
-                    src={userInfo.imageSrc}
-                    alt="logo"
-                    style={{
-                      objectFit: 'cover',
-                      width: '100px',
-                      height: '100px',
-                      borderRadius: '50px',
-                    }}
-                  />
+
                   <CustomTextField
                     id="imageFiled"
                     name="imageFiled"
@@ -228,6 +217,17 @@ const CreatorUpdate = () => {
                       ),
                     }}
                   />
+                  <img
+                    src={userInfo.imageSrc}
+                    alt="logo"
+                    style={{
+                      objectFit: 'cover',
+                      width: '100px',
+                      height: '100px',
+                      borderRadius: '50px',
+                      marginTop: '10px',
+                    }}
+                  />
                   {touched.image && errors.image && (
                     <FormHelperText htmlFor="render-select" error>
                       {errors.image}
@@ -236,20 +236,23 @@ const CreatorUpdate = () => {
                 </Grid>
 
                 <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                  <CustomTextarea
-                    maxRows={5}
-                    minRows={5}
-                    id="description"
-                    name="description"
-                    value={values.description}
-                    onChange={handleChange}
-                    // error={touched.description && Boolean(errors.description)}
-                    // helperText={touched.description && errors.description}
-                  />
-                  {touched.description && errors.description && (
+                  <CustomFormLabel htmlFor="level">Level</CustomFormLabel>
+                  <CustomSelect
+                    labelId="demo-simple-select-label"
+                    id="level"
+                    name="level"
+                    // onChange={handleChange}
+                    // value={values.level}
+                    defaultValue="creator"
+                    fullWidth
+                    size="small"
+                    disabled
+                  >
+                    <MenuItem value="creator">Creator</MenuItem>
+                  </CustomSelect>
+                  {touched.level && errors.level && (
                     <FormHelperText htmlFor="render-select" error>
-                      {errors.description}
+                      {errors.level}
                     </FormHelperText>
                   )}
                 </Grid>
