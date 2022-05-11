@@ -236,7 +236,8 @@ const useMarket = () => {
       const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
       const tokenContract = getTokenContract(quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
-      const approvePrice = parseUnits((price * amount).toString(), 'ether').toString();
+      const ethPrice = ethers.utils.parseEther(price.toString());
+      const approvePrice = ethPrice.mul(BigNumber.from(amount.toString())).toString();
 
       if (quote !== 'eth' && quote !== 'klay') {
         try {
