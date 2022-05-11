@@ -6,11 +6,17 @@ const nftRegisterSchema = yup.object({
   collection: yup.string('Select collection').required('Collection is required'),
   category: yup.string('Select category').required('Category is required'),
   content: yup.mixed().required('You need to provide a file'),
-  amount: yup.number('Enter amount').required('Amount is required'),
+  amount: yup
+    .number('Enter amount')
+    .required('Amount is required')
+    .integer('Only positive numbers can be entered.'),
   thumbnail: yup.mixed().required('You need to provide a file'),
   externalURL: yup.string('Enter externalURL'),
   description: yup.string('Enter description').required('Description is required'),
-  price: yup.number('Enter price').required('Price is required'),
+  price: yup
+    .number('Enter price')
+    .required('Price is required')
+    .min(0.000001, 'Must be more than 0.000001'),
   quote: yup.string().required('Quote is required'),
 });
 

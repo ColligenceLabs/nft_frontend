@@ -33,7 +33,8 @@ import {
   registerNFT,
   batchRegisterNFT,
   registerSolanaNFT,
-  setNftOnchain, cancelCreateNft,
+  setNftOnchain,
+  cancelCreateNft,
 } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
@@ -104,7 +105,10 @@ const NFTMint = () => {
 
   const connection = useConnection();
   const wallet = useWallet();
-  const { userAccounts, accountByMint } = useUserAccounts();
+
+  const { userAccounts, accountByMint } =
+    process.env.REACT_APP_USE_SOLANA === 'true' ? useUserAccounts() : null;
+
   const { isLoading, update, pullUserMetadata } = useMeta();
   // console.log('1=====>', accountByMint, contractAddr);
   const art = useArt(contractAddr);
