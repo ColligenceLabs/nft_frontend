@@ -67,7 +67,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
   const sell = async () => {
     setSellStatus(true);
     // console.log(myNftData, myNftData.data.length, sellAmount);
-    if (parseFloat(sellPrice) < 0.0001) {
+    if (parseFloat(sellPrice) < 0.000001) {
       setMinPriceCheck(true);
       setSellStatus(false);
       return;
@@ -272,7 +272,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
                 }}
               >
                 <Typography variant={'subtitle2'} color={'error'}>
-                  The minimum price that can be sold is 0.0001 or more.
+                  The minimum price that can be sold is 0.000001 or more.
                 </Typography>
               </Box>
             )}
