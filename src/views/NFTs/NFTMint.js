@@ -627,24 +627,6 @@ const NFTMint = () => {
                   </Grid>
                 )}
 
-                {/*<Grid item lg={6} md={12} sm={12} xs={12}>*/}
-                {/*  <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>*/}
-                {/*  <CustomTextField*/}
-                {/*    id="externalURL"*/}
-                {/*    name="externalURL"*/}
-                {/*    variant="outlined"*/}
-                {/*    fullWidth*/}
-                {/*    disabled={isSubmitting || isMinting}*/}
-                {/*    size="small"*/}
-                {/*    value={values.externalURL}*/}
-                {/*    onChange={handleChange}*/}
-                {/*  />*/}
-                {/*  {touched.externalURL && errors.externalURL && (*/}
-                {/*    <FormHelperText htmlFor="render-select" error>*/}
-                {/*      {errors.externalURL}*/}
-                {/*    </FormHelperText>*/}
-                {/*  )}*/}
-                {/*</Grid>*/}
                 <Grid item lg={6} md={12} sm={12} xs={12}>
                   <CustomFormLabel htmlFor="price">{t('Unit Price')}</CustomFormLabel>
                   <Box
@@ -724,6 +706,25 @@ const NFTMint = () => {
                     )}
                   </Grid>
                 )}
+
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="externalURL">{t('External URL')}</CustomFormLabel>
+                  <CustomTextField
+                    id="externalURL"
+                    name="externalURL"
+                    variant="outlined"
+                    fullWidth
+                    disabled={isSubmitting || isMinting}
+                    size="small"
+                    value={values.externalURL}
+                    onChange={handleChange}
+                  />
+                  {touched.externalURL && errors.externalURL && (
+                    <FormHelperText htmlFor="render-select" error>
+                      {errors.externalURL}
+                    </FormHelperText>
+                  )}
+                </Grid>
 
                 <Snackbar
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
