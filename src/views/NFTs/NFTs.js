@@ -161,6 +161,7 @@ const NFTs = () => {
   };
 
   const handleSelling = async (row) => {
+    if (row.status === 'inactive') return;
     if (row.selling === true) {
       try {
         if (useKAS !== 'true') {
