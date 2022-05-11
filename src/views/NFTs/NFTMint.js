@@ -167,13 +167,13 @@ const NFTMint = () => {
     }
   }, [level]);
 
-  useEffect(async () => {
-    // Refresh meta include the collection just created
-    update();
-    await pullUserMetadata({ userTokenAccount: userAccounts });
-  }, [collectionList]);
-
   if (process.env.REACT_APP_USE_SOLANA === 'true') {
+    useEffect(async () => {
+      // Refresh meta include the collection just created
+      update();
+      await pullUserMetadata({ userTokenAccount: userAccounts });
+    }, [collectionList]);
+
     useEffect(async () => {
       // console.log('-- userItems ->', userItems);
       setCurCount(userItems.length);
