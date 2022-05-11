@@ -33,7 +33,7 @@ import {
   registerNFT,
   batchRegisterNFT,
   registerSolanaNFT,
-  setNftOnchain,
+  setNftOnchain, cancelCreateNft,
 } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
@@ -293,6 +293,8 @@ const NFTMint = () => {
                       setBeforeCount(curCount);
                       result = await mintEdition(contractAddr, quantity);
                       if (result === FAILURE) {
+                        // delete nft and serials
+                        await cancelCreateNft(nftId);
                         setErrorMessage('Transaction failed or cancelled.');
                         setSuccessRegister(false);
                       } else {
@@ -326,13 +328,6 @@ const NFTMint = () => {
                         } else {
                           result = await mintNFT17(tokenId, tokenUri, nftId);
                         }
-                        if (result === FAILURE) {
-                          setErrorMessage('Transaction failed or cancelled.');
-                          setSuccessRegister(false);
-                        } else {
-                          setErrorMessage(null);
-                          setSuccessRegister(true);
-                        }
                       } else {
                         if (
                           library.connection.url !== 'metamask' &&
@@ -342,13 +337,15 @@ const NFTMint = () => {
                         } else {
                           result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
                         }
-                        if (result === FAILURE) {
-                          setErrorMessage('Transaction failed or cancelled.');
-                          setSuccessRegister(false);
-                        } else {
-                          setErrorMessage(null);
-                          setSuccessRegister(true);
-                        }
+                      }
+                      if (result === FAILURE) {
+                        // delete nft and serials
+                        await cancelCreateNft(nftId);
+                        setErrorMessage('Transaction failed or cancelled.');
+                        setSuccessRegister(false);
+                      } else {
+                        setErrorMessage(null);
+                        setSuccessRegister(true);
                       }
                     } else {
                       setErrorMessage(res.data.message);
