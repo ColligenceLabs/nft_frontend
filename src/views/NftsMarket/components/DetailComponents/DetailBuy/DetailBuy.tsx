@@ -163,7 +163,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
               {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
               {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
               <Typography variant={'h1'}>
-                {data?.data?.price} {data?.data?.quote}
+                {data?.data?.price} {data?.data?.quote.toUpperCase()}
               </Typography>
             </Box>
 
