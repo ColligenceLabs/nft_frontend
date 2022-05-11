@@ -19,15 +19,11 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import { LoadingButton } from '@mui/lab';
 import useMarket from '../../hooks/useMarket';
-import { getSerialsData } from '../../services/serials.service';
+import { getNumberOfSales } from '../../services/serials.service';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { nftDetail } from '../../services/market.service';
 import {getNftContract} from '../../utils/contract';
-import kip17Abi from '../../config/abi/kip17.json';
-import kip37Abi from '../../config/abi/kip37.json';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
-import { ethers } from 'ethers';
-import Caver from 'caver-js';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -110,8 +106,12 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
   };
 
   const handleSellNFTs = async () => {
-    console.log(selected);
-    const serials = await getSerialsData(0, 10000, 'active', selected);
+    // const serials = await getSerialsData(0, 10000, 'active', selected);
+
+    const ret = await getNumberOfSales(selected, account);
+    const quantity = parseInt(ret.data.count);
+    const tokenId = ret.data.tokenId;
+    console.log(ret);
     const nftInfo = await nftDetail(selected);
     console.log(nftInfo);
     try {
@@ -121,8 +121,8 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
         nftInfo.data.collection_id.contract_type,
       );
       // for (let j = 0; j < serials.data.items.length; j++) {
-      const filteredSerials = serials.data.items.filter(item => item.owner_id === null || item.owner_id === account);
-      if (filteredSerials.length === 0)
+      // const filteredSerials = serials.data.items.filter(item => item.owner_id === null || item.owner_id === account);
+      if (quantity === 0)
         return FAILURE;
       // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
       // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
@@ -130,8 +130,8 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       await sellNFT(
         nftContract,
         nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
-        parseInt(filteredSerials[0].token_id, 16),
-        filteredSerials.length,
+        parseInt(tokenId, 16),
+        quantity,
         // TODO : NFT 개당 가격
         nftInfo.data.price,
         nftInfo.data.quote,

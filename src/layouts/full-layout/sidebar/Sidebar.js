@@ -43,7 +43,12 @@ const Sidebar = ({ isMobileSidebarOpen, onSidebarClose, isSidebarOpen }) => {
         <LogoIcon />
         <Box>
           <List>
-            {(level === 'administrator' ? Menuitems : CreatorMenu).map((item, index) => {
+            {(level === 'administrator'
+              ? process.env.REACT_APP_USE_SOLANA === 'true'
+                ? Menuitems
+                : Menuitems.filter((item) => item.title !== 'Solana')
+              : CreatorMenu
+            ).map((item, index) => {
               // {/********SubHeader**********/}
               if (process.env.REACT_APP_UID_MAPPING === 'false' && item.href === '/user') return;
               if (item.subheader) {

@@ -92,7 +92,6 @@ const ProfileButton = ({ useMarket }) => {
           library.provider.chainId !== undefined
         ) {
           // chainId가 targetNetwork가 아니고 알파월렛이 아니면
-
           // setIsOpenSnackbar({ open: true, vertical: 'top', horizontal: 'center' });
         } else {
           dispatch(getWalletBalance(account, library));
@@ -212,7 +211,7 @@ const ProfileButton = ({ useMarket }) => {
           level={level}
           image={image}
         />
-        {level.toLowerCase() === 'administrator' && (
+        {level.toLowerCase() === 'administrator' && process.env.REACT_APP_USE_SOLANA === 'true' && (
           <Button
             sx={{
               mt: 2,
