@@ -420,7 +420,10 @@ const CollectionCreate = () => {
                     fullWidth
                     size="small"
                   >
-                    {NETWORKS.map((network) => (
+                    {(process.env.REACT_APP_USE_SOLANA === 'true'
+                      ? NETWORKS
+                      : NETWORKS.filter((item) => item.label !== 'Solana')
+                    ).map((network) => (
                       <MenuItem key={network.id} value={network.value}>
                         {network.label}
                       </MenuItem>
