@@ -91,6 +91,12 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
       // tokenId 를 사용 구입 진행.
       // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
       // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
+      console.log(`seller : ${seller}`);
+      console.log(`quantity : ${quantity}`);
+      console.log(`amount : ${amount}`);
+      console.log(`price : ${price}`);
+      console.log(`quote : ${quote}`);
+
       const result = await buyNFT(
         isKaikas ? nftContractWithKaikas : nftContract,
         parseInt(serials.data[0].token_id, 16),
@@ -163,7 +169,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
               {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
               {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
               <Typography variant={'h1'}>
-                {data?.data?.price} {data?.data?.quote}
+                {data?.data?.price} {data?.data?.quote.toUpperCase()}
               </Typography>
             </Box>
 
