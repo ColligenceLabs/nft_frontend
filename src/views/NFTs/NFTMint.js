@@ -268,7 +268,12 @@ const NFTMint = () => {
             setMintAmount(values['amount']);
             formData.append('collection_id', values['collection']);
             formData.append('file', values['content']);
-            formData.append('thumbnail', values['thumbnail']);
+            if (values['thumbnail'] === null) {
+              formData.append('thumbnail', values['content']);
+            } else {
+              formData.append('thumbnail', values['thumbnail']);
+            }
+
             formData.append('category', values['category']);
             formData.append('external_url', values['externalURL']);
 
