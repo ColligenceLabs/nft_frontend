@@ -313,16 +313,16 @@ const useNFT = (contract, kasContract, account) => {
       const gasPrice = parseUnits('750', 'gwei').toString();
 
       // check token_id
-      const creator = await kasContract.creators(tokenId).send();
+      const creator = await kasContract.methods.creators(tokenId).call();
 
       if (creator === '0x0000000000000000000000000000000000000000') {
         // gasLimit 계산
-        const gasLimit = await kasContract
+        const gasLimit = await kasContract.methods
           .create(tokenId, amount, tokenUri)
           .estimateGas({ from: account });
 
         // mint 요청
-        const tx = await kasContract
+        const tx = await kasContract.methods
           .create(tokenId, amount, tokenUri)
           .send({
             from: account,
@@ -346,12 +346,12 @@ const useNFT = (contract, kasContract, account) => {
         await setIsMinting(false);
       } else if (creator === account) {
         // gasLimit 계산
-        const gasLimit = await kasContract
+        const gasLimit = await kasContract.methods
           .mint(tokenId, account, amount)
           .estimateGas({ from: account });
 
         // mint 요청
-        const tx = await kasContract
+        const tx = await kasContract.methods
           .mint(tokenId, account, amount)
           .send({
             from: account,
@@ -534,7 +534,7 @@ const useNFT = (contract, kasContract, account) => {
         if (tx.status === 1) {
           // TODO : create serial 및 transaction 엔트리...
           // await setNftTransfered(nftId, amount);  --> setNftTransferData 여기서 처리
-          await setNftTransferData(nftId, to, amount, receipt.transactionHash);
+          await setNftTransferData(nftId, to, amount, tx.transactionHash);
         }
       } catch (e) {
         console.log(e);

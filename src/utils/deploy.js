@@ -163,7 +163,7 @@ export async function deployKIP37WithKaikas(name, account, library) {
   const contract = await factory
     .deploy({
       data: kip37Data.bytecode,
-      arguments: [tokenUri],
+      arguments: [tokenUri, name],
     })
     .send({
       from: window.klaytn.selectedAddress,
