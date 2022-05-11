@@ -33,7 +33,8 @@ import {
   registerNFT,
   batchRegisterNFT,
   registerSolanaNFT,
-  setNftOnchain, cancelCreateNft,
+  setNftOnchain,
+  cancelCreateNft,
 } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
@@ -102,21 +103,33 @@ const NFTMint = () => {
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
 
-  const connection = useConnection();
-  const wallet = useWallet();
-  const { userAccounts, accountByMint } = useUserAccounts();
-  const { isLoading, update, pullUserMetadata } = useMeta();
-  // console.log('1=====>', accountByMint, contractAddr);
-  const art = useArt(contractAddr);
-  // console.log('2=====>', art);
-  const artMintTokenAccount = accountByMint.get(art.mint);
-  // console.log('3=====>', artMintTokenAccount);
-  let userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
+  /*
+   Source Codes for Solana
+   */
+  let connection, wallet, userAccounts, accountByMint, art;
+  let isLoading, update, pullUserMetadata, artMintTokenAccount;
+  let userItems, walletPubKey;
   const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
-
-  const walletPubKey = wallet?.publicKey?.toString() || '';
-  // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
-  // const artMintTokenAccount = accountByMint.get(art.mint);
+  if (process.env.REACT_APP_USE_SOLANA === 'true') {
+    connection = useConnection();
+    wallet = useWallet();
+    let accounts = useUserAccounts();
+    userAccounts = accounts.userAccounts;
+    accountByMint = accounts.accountByMint;
+    let metaData = useMeta();
+    isLoading = metaData.isLoading;
+    update = metaData.update;
+    pullUserMetadata = metaData.pullUserMetadata;
+    // console.log('1=====>', accountByMint, contractAddr);
+    art = useArt(contractAddr);
+    // console.log('2=====>', art);
+    artMintTokenAccount = accountByMint.get(art.mint);
+    // console.log('3=====>', artMintTokenAccount);
+    userItems = useItems({ activeKey: ArtworkViewState.Owned, pubKey: contractAddr });
+    walletPubKey = wallet?.publicKey?.toString() || '';
+    // const art = useArt('2mhU4vYxrtjP8bnUnjUcpWWyUnCqd5VzGg6w6ZqX7c9A');
+    // const artMintTokenAccount = accountByMint.get(art.mint);
+  }
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -131,20 +144,22 @@ const NFTMint = () => {
       .catch((error) => console.log(error));
   };
 
-  useEffect(() => {
-    if (targetNetwork === 'solana') {
-      if (isLoading) {
-        setOpenBackdrop(true);
-        // console.log('show loader.');
+  if (process.env.REACT_APP_USE_SOLANA === 'true') {
+    useEffect(() => {
+      if (targetNetwork === 'solana') {
+        if (isLoading) {
+          setOpenBackdrop(true);
+          // console.log('show loader.');
+        } else {
+          setOpenBackdrop(false);
+          // console.log('hide loader.');
+        }
       } else {
         setOpenBackdrop(false);
         // console.log('hide loader.');
       }
-    } else {
-      setOpenBackdrop(false);
-      // console.log('hide loader.');
-    }
-  }, [isLoading, targetNetwork]);
+    }, [isLoading, targetNetwork]);
+  }
 
   useEffect(() => {
     if (level.toLowerCase() === 'creator') {
@@ -158,25 +173,28 @@ const NFTMint = () => {
     await pullUserMetadata({ userTokenAccount: userAccounts });
   }, [collectionList]);
 
-  useEffect(async () => {
-    // console.log('-- userItems ->', userItems);
-    setCurCount(userItems.length);
-    // TODO: Let serials status status from inactive to active & set contract_address
-    if (mintAmount > 0 && curCount === beforeCount + mintAmount) {
-      const newItems = userItems.filter(
-        (item) => parseInt(item.edition.info.edition.words[0], 10) > userItems.length - mintAmount,
-      );
-      await setSerialsActive(
-        nftId,
-        tokenId,
-        mintAmount,
-        newItems.map((item) => item.metadata.pubkey),
-      );
-      setBeforeCount(curCount);
-      setErrorMessage(null);
-      setSuccessRegister(true);
-    }
-  }, [userItems, isLoading]);
+  if (process.env.REACT_APP_USE_SOLANA === 'true') {
+    useEffect(async () => {
+      // console.log('-- userItems ->', userItems);
+      setCurCount(userItems.length);
+      // TODO: Let serials status status from inactive to active & set contract_address
+      if (mintAmount > 0 && curCount === beforeCount + mintAmount) {
+        const newItems = userItems.filter(
+          (item) =>
+            parseInt(item.edition.info.edition.words[0], 10) > userItems.length - mintAmount,
+        );
+        await setSerialsActive(
+          nftId,
+          tokenId,
+          mintAmount,
+          newItems.map((item) => item.metadata.pubkey),
+        );
+        setBeforeCount(curCount);
+        setErrorMessage(null);
+        setSuccessRegister(true);
+      }
+    }, [userItems, isLoading]);
+  }
 
   useEffect(() => {
     console.log(`targetNetwork : ${targetNetwork}`);
