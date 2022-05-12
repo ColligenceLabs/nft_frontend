@@ -35,6 +35,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
     window.open(url, '_blank');
   };
 
+  console.log(nft);
   return (
     <>
       <SectionWrapper title={'Description'} icon={'align-left'} maxHeight={'200px'}>
@@ -88,6 +89,12 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Token ID</Typography>
             <Typography variant={'body2'}>{nft.metadata.tokenId}</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant={'body2'}>External Url</Typography>
+            <Typography variant={'body2'}>
+              {nft.metadata.external_url ? nft.metadata.external_url : '-'}
+            </Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Token Standard</Typography>
