@@ -16,6 +16,7 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart'; // mint
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; // sale
 import FireplaceIcon from '@mui/icons-material/Fireplace'; // burn
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows'; // transfer
+import LinkIcon from '@mui/icons-material/Link';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useTheme } from '@mui/material/styles';
 import SectionWrapper from '../DetailComponents/SectionWrapper';
@@ -34,6 +35,7 @@ interface ActivityTypes {
   block_number: number;
   contract_address: string;
   createdAt: Date;
+  chain_id: string;
   from: string;
   nft_id: string;
   price: number;
@@ -52,7 +54,7 @@ const EVENT_TYPE = [
   { value: 0, name: 'BURN' },
   { value: 1, name: 'MINT' },
   { value: 2, name: 'SELL' },
-  { value: 3, name: 'BUY' },
+  { value: 3, name: 'SALE' },
   { value: 4, name: 'CANCEL' },
   { value: 5, name: 'TRANSFER' },
 ];
@@ -83,6 +85,7 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   }&size=${rowsPerPage}&types=${selectedFilter.toString()}`;
   const { data } = useSWR(url, fetcher);
 
+  console.log(data);
   const getEventCaptionByValue = (value: number) => {
     const result = EVENT_TYPE.filter((item) => item.value === value);
     return result ? result[0].name : '-';
@@ -97,6 +100,35 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  //todo eth, solana tx url 주소 수정 필요
+  const handleViewExplorerByTx = (chain: string, tx: string) => {
+    let url = '';
+    switch (chain) {
+      case '1':
+      case '3':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://etherscan.io/address/${tx}`
+            : `https://ropsten.etherscan.io/address/${tx}`;
+        break;
+      case '8217':
+      case '1001':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://scope.klaytn.com/tx/${tx}?tabId=txList`
+            : `https://baobab.scope.klaytn.com/tx/${tx}?tabId=txList`;
+        break;
+      // case 'solana':
+      //   url =
+      //     process.env.REACT_APP_MAINNET === 'true'
+      //       ? `https://solscan.io/account/${tx}?cluster=mainnet-beta`
+      //       : `https://solscan.io/account/${tx}?cluster=devnet`;
+      //   break;
+    }
+
+    window.open(url, '_blank');
   };
 
   useEffect(() => {
@@ -232,18 +264,29 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {splitAddress(row.from)}
+                            {row.type === 1 ? '-' : splitAddress(row.from)}
                           </Typography>
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {splitAddress(row.to)}
+                            {row.type === 1 ? splitAddress(row.from) : splitAddress(row.to)}
                           </Typography>
                         </TableCell>
                         <TableCell>
-                          <Typography color="textSecondary" variant="h6">
-                            {new Date(row.createdAt).toLocaleString()}
-                          </Typography>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.75,
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => handleViewExplorerByTx(row.chain_id, row.tx_id)}
+                          >
+                            <Typography color="primary" variant="h6">
+                              {new Date(row.createdAt).toLocaleString()}
+                            </Typography>
+                            <LinkIcon color={'primary'} />
+                          </Box>
                         </TableCell>
                       </TableRow>
                     );
