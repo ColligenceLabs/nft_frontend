@@ -20,8 +20,8 @@ const CollectionItem: React.FC<CollectionItemType> = ({
     defaultMatches: true,
   });
   const avatarImage = creator_image?.replace(
-    'https://nftbedev.talken.io/talkenNft/uploads',
-    'http://localhost:4000/talkenNft',
+    'https://nftbedev.talken.io/taalNft/uploads',
+    'http://localhost:4000/taalNft',
   );
 
   return (

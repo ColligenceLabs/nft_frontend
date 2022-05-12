@@ -55,8 +55,8 @@ const NFTCollection = () => {
             >
               <img
                 src={data?.creator_id?.image?.replace(
-                  'https://nftbedev.talken.io/talkenNft/uploads',
-                  'http://localhost:4000/talkenNft',
+                  'https://nftbedev.talken.io/taalNft/uploads',
+                  'http://localhost:4000/taalNft',
                 )}
                 alt={data?.creator_id?.full_name}
                 style={{

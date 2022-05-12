@@ -107,7 +107,7 @@ const useNFT = (contract, kasContract, account) => {
   //     let metadata_ipfs_link = await addToIPFS(JSON.stringify(metadata));
   //     console.log('33333', metadata_ipfs_link);
   //     // gasLimit 계산?
-  //     const gasPrice = parseUnits('750', 'gwei').toString();
+  //     const gasPrice = parseUnits('250', 'gwei').toString();
   //     console.log('=====>', contract);
   //     // mint 요청
   //     const gasLimit = await contract.estimateGas.mintWithTokenURI(
@@ -142,7 +142,7 @@ const useNFT = (contract, kasContract, account) => {
   const mintNFT17WithKaikas = useCallback(
     async (tokenId, tokenUri, nftId) => {
       setIsMinting(true);
-      const gasPrice = parseUnits('750', 'gwei').toString();
+      const gasPrice = parseUnits('250', 'gwei').toString();
 
       let tx;
       // gasLimit 계산
@@ -183,7 +183,7 @@ const useNFT = (contract, kasContract, account) => {
   const mintNFT17 = useCallback(
     async (tokenId, tokenUri, nftId) => {
       setIsMinting(true);
-      const gasPrice = parseUnits('750', 'gwei').toString();
+      const gasPrice = parseUnits('250', 'gwei').toString();
 
       let tx;
 
@@ -222,7 +222,7 @@ const useNFT = (contract, kasContract, account) => {
   const mintNFT37 = useCallback(
     async (tokenId, amount, tokenUri, nftId, contractType) => {
       setIsMinting(true);
-      const gasPrice = parseUnits('750', 'gwei').toString();
+      const gasPrice = parseUnits('250', 'gwei').toString();
 
       let tx;
 
@@ -310,19 +310,19 @@ const useNFT = (contract, kasContract, account) => {
   const mintNFT37WithKaikas = useCallback(
     async (tokenId, amount, tokenUri, nftId, contractType) => {
       setIsMinting(true);
-      const gasPrice = parseUnits('750', 'gwei').toString();
+      const gasPrice = parseUnits('250', 'gwei').toString();
 
       // check token_id
-      const creator = await kasContract.creators(tokenId).send();
+      const creator = await kasContract.methods.creators(tokenId).call();
 
       if (creator === '0x0000000000000000000000000000000000000000') {
         // gasLimit 계산
-        const gasLimit = await kasContract
+        const gasLimit = await kasContract.methods
           .create(tokenId, amount, tokenUri)
           .estimateGas({ from: account });
 
         // mint 요청
-        const tx = await kasContract
+        const tx = await kasContract.methods
           .create(tokenId, amount, tokenUri)
           .send({
             from: account,
@@ -346,12 +346,12 @@ const useNFT = (contract, kasContract, account) => {
         await setIsMinting(false);
       } else if (creator === account) {
         // gasLimit 계산
-        const gasLimit = await kasContract
+        const gasLimit = await kasContract.methods
           .mint(tokenId, account, amount)
           .estimateGas({ from: account });
 
         // mint 요청
-        const tx = await kasContract
+        const tx = await kasContract.methods
           .mint(tokenId, account, amount)
           .send({
             from: account,
@@ -383,7 +383,7 @@ const useNFT = (contract, kasContract, account) => {
     // NIP37 amount should be between 1 to total supply.
     async (tokenId, to, amount, nftId, contractType) => {
       setIsTransfering(true);
-      const gasPrice = parseUnits('750', 'gwei').toString();
+      const gasPrice = parseUnits('250', 'gwei').toString();
 
       let tx;
       let gasLimit;
@@ -470,7 +470,7 @@ const useNFT = (contract, kasContract, account) => {
     // NIP37 amount should be between 1 to total supply.
     async (tokenId, to, amount, nftId, contractType) => {
       setIsTransfering(true);
-      const gasPrice = parseUnits('750', 'gwei').toString();
+      const gasPrice = parseUnits('250', 'gwei').toString();
 
       let tx;
       let gasLimit;
@@ -534,7 +534,7 @@ const useNFT = (contract, kasContract, account) => {
         if (tx.status === 1) {
           // TODO : create serial 및 transaction 엔트리...
           // await setNftTransfered(nftId, amount);  --> setNftTransferData 여기서 처리
-          await setNftTransferData(nftId, to, amount, receipt.transactionHash);
+          await setNftTransferData(nftId, to, amount, tx.transactionHash);
         }
       } catch (e) {
         console.log(e);
