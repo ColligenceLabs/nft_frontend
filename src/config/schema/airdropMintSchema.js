@@ -8,7 +8,10 @@ const airdropMintSchema = yup.object({
   amount: yup.number('Enter amount').required('Amount is required'),
   thumbnail: yup.mixed().required('You need to provide a file'),
   externalURL: yup.string('Enter externalURL').required('External URL is required'),
-  description: yup.string('Enter description').required('Description is required'),
+  description: yup
+    .string('Enter your Description')
+    .required('Description is required')
+    .max(1024, 'Description has a maximum limit of 1024 characters.'),
 });
 
 export default airdropMintSchema;
