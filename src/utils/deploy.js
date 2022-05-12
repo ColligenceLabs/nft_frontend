@@ -17,7 +17,7 @@ export async function deployKIP17(name, symbol, account, library) {
   );
 
   const ret = {};
-  const gasPrice = parseUnits('750', 'gwei').toNumber();
+  const gasPrice = parseUnits('250', 'gwei').toNumber();
   const contract = await factory
     .deploy(name, symbol, {
       gasPrice,
@@ -74,7 +74,7 @@ export async function deployKIP37(name, account, library) {
   // TODO : 백엔드에 디렉토리 생성 API 호출 필요함.
 
   const ret = {};
-  const gasPrice = parseUnits('750', 'gwei').toNumber();
+  const gasPrice = parseUnits('250', 'gwei').toNumber();
   const contract = await factory
     .deploy(tokenUri, name, {
       gasPrice,
