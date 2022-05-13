@@ -10,7 +10,10 @@ const adminRegisterSchema = yup.object({
   repeatPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
   level: yup.string('Select level').required('Level is required'),
   image: yup.mixed().required('Image is required'),
-  description: yup.string('Enter your name').required('Description is required'),
+  description: yup
+    .string('Enter your Description')
+    .required('Description is required')
+    .max(1024, 'Description has a maximum limit of 1024 characters.'),
 });
 
 export default adminRegisterSchema;

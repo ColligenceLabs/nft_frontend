@@ -11,6 +11,10 @@ const collectionCreateSchema = yup.object({
     .of(yup.string())
     .required('Category is required'),
   image: yup.mixed().required('You need to provide a file'),
+  description: yup
+    .string('Enter your Description')
+    .required('Description is required')
+    .max(1024, 'Description has a maximum limit of 1024 characters.'),
 });
 
 export default collectionCreateSchema;

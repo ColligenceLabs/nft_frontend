@@ -105,9 +105,9 @@ const WalletConnector = ({ activate }) => {
           aria-owns={open ? 'mouse-over-popover' : undefined}
           address={solana.address}
           cursor_pointer={'false'}
-          onClick={() => onClickWalletIcon(2, 'solana', solana)}
-          // onMouseOver={handlePopoverOpen}
-          // onMouseLeave={handlePopoverClose}
+          // onClick={() => onClickWalletIcon(2, 'solana', solana)}
+          onMouseOver={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
         >
           <img src={sol_icon} alt={'sol_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>

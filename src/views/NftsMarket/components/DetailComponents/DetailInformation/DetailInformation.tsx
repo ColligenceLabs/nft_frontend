@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import SectionWrapper from '../SectionWrapper';
 import { CollectionDetailResponse, NFTType } from '../../../types';
 import splitAddress from '../../../../../utils/splitAddress';
+import { Link } from 'react-router-dom';
 
 interface DetailInformationProps {
   collection: CollectionDetailResponse;
@@ -35,6 +36,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
     window.open(url, '_blank');
   };
 
+  console.log(nft);
   return (
     <>
       <SectionWrapper title={'Description'} icon={'align-left'} maxHeight={'200px'}>
@@ -89,6 +91,21 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
             <Typography variant={'body2'}>Token ID</Typography>
             <Typography variant={'body2'}>{nft.metadata.tokenId}</Typography>
           </Box>
+          {nft.metadata.external_url && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant={'body2'}>External Url</Typography>
+              <Typography
+                variant={'body2'}
+                color={'primary'}
+                onClick={() => {
+                  window.open(nft.metadata.external_url, '_blank');
+                }}
+                sx={{ cursor: 'pointer' }}
+              >
+                {nft.metadata.external_url ? nft.metadata.external_url : '-'}
+              </Typography>
+            </Box>
+          )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Token Standard</Typography>
             <Typography variant={'body2'}>{collection.contract_type}</Typography>

@@ -12,7 +12,10 @@ const nftRegisterSchema = yup.object({
     .integer('Only positive numbers can be entered.'),
   thumbnail: yup.mixed(),
   externalURL: yup.string('Enter externalURL'),
-  description: yup.string('Enter description').required('Description is required'),
+  description: yup
+    .string('Enter description')
+    .required('Description is required')
+    .max(1024, 'Description has a maximum limit of 1024 characters.'),
   price: yup
     .number('Enter price')
     .required('Price is required')

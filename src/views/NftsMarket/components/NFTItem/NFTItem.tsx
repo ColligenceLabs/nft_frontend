@@ -10,6 +10,7 @@ import FeatherIcon from 'feather-icons-react';
 import ImageViewer from '../../../../components/ImageViewer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import getNftPrice from '../../../../utils/getNftPrice';
+import ReactPlayer from 'react-player';
 
 interface NFTItemProp {
   item: NFTType;
@@ -41,46 +42,65 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
             m: smDown ? '5px' : '10px',
           }}
         >
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {item?.metadata?.content_Type === 'mp4' && (
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  width: '100%',
-                  zIndex: 1000,
-                  pt: 1.5,
-                  pr: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    border: '1px solid white',
-                    borderRadius: '50%',
-                    backgroundColor: 'gray',
-                    opacity: 0.6,
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  boxShadow={3}
-                >
-                  <FeatherIcon icon="video" height="24" color={'white'} />
-                </Box>
-              </Box>
-            )}
-
-            <ImageViewer
-              src={item?.metadata?.thumbnail}
-              alt={item?.metadata?.name}
-              style={{
-                marginTop: item?.metadata?.content_Type === 'mp4' ? '-52px' : '0px',
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              width: '100%',
+              zIndex: 1000,
+              pt: 1.5,
+              pr: 2,
+            }}
+          >
+            <Box
+              sx={{
+                border: '1px solid white',
+                borderRadius: '50%',
+                backgroundColor: 'gray',
+                opacity: item?.metadata?.content_Type === 'mp4' ? 0.6 : 0,
+                width: '40px',
+                height: '40px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
-              height={mdDown ? (showLarge ? '270px' : '170px') : showLarge ? '270px' : '170px'}
-            />
+              boxShadow={3}
+            >
+              <FeatherIcon icon="video" height="24" color={'white'} />
+            </Box>
           </Box>
+
+          {item?.metadata?.content_Type === 'mp4' &&
+          item?.metadata?.thumbnail.indexOf('.mp4') > 0 ? (
+            <Box
+              className={'player-wrapper'}
+              sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
+            >
+              <ReactPlayer
+                className="react-player"
+                config={{ file: { attributes: { controlsList: 'nodownload' } } }}
+                url={item?.metadata?.thumbnail}
+                width="100%"
+                // height="100%"
+                height={mdDown ? (showLarge ? '218px' : '170px') : showLarge ? '218px' : '118px'}
+                controls={true}
+                light={false}
+                pip={true}
+                playIcon={<button>Play</button>}
+              />
+            </Box>
+          ) : (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <ImageViewer
+                src={item?.metadata?.thumbnail}
+                alt={item?.metadata?.name}
+                style={{
+                  marginTop: '-52px',
+                }}
+                height={mdDown ? (showLarge ? '270px' : '170px') : showLarge ? '270px' : '170px'}
+              />
+            </Box>
+          )}
 
           <CardContent sx={{ minHeight: smDown ? '70px' : '109px' }}>
             <Box
