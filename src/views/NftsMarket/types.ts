@@ -29,6 +29,7 @@ export interface CollectionDetailResponse {
   image_link: string;
   createdAt: Date;
   updatedAt: Date;
+  fee_percentage: number;
 }
 
 export interface CollectionResponse {

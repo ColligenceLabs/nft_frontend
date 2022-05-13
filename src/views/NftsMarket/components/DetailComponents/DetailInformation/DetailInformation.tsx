@@ -36,7 +36,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
     window.open(url, '_blank');
   };
 
-  console.log(nft);
+  console.log(collection);
   return (
     <>
       <SectionWrapper title={'Description'} icon={'align-left'} maxHeight={'200px'}>
@@ -74,7 +74,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
           </Typography>
         </Box>
       </SectionWrapper>
-      <SectionWrapper title={'Details'} icon={'align-center'} maxHeight={'200px'} toggled={false}>
+      <SectionWrapper title={'Details'} icon={'align-center'} maxHeight={'220px'} toggled={false}>
         <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Contract Address</Typography>
@@ -113,6 +113,10 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Blockchain</Typography>
             <Typography variant={'body2'}>{collection.network.toUpperCase()}</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant={'body2'}>Creator Earnings</Typography>
+            <Typography variant={'body2'}>{`${collection.fee_percentage / 10}%`}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Creator Fees</Typography>
