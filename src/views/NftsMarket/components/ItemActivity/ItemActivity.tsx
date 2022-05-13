@@ -264,7 +264,7 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
                         </TableCell>
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
-                            {row.type === 1 ? '-' : splitAddress(row.from)}
+                            {row.type === 1 ? splitAddress(row.to) : splitAddress(row.from)}
                           </Typography>
                         </TableCell>
                         <TableCell>
