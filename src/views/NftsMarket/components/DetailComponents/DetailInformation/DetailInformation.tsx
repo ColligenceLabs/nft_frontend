@@ -119,7 +119,7 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
             <Typography variant={'body2'}>{`${collection.fee_percentage / 10}%`}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant={'body2'}>Creator Fees</Typography>
+            <Typography variant={'body2'}>Brokerage fee</Typography>
             <Typography variant={'body2'}>{`${process.env.REACT_APP_CREATOR_FEE}%`}</Typography>
           </Box>
         </Box>
