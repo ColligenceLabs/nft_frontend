@@ -39,7 +39,7 @@ export default {
     3: '',
     4: '',
     8217: '',
-    1001: '0xC675f1D8118C8bc91bC8139ad5F5773EE508c61C',
+    1001: '0xd5ed88ccC09a43d884618C5E3ee1935ad8a8ca93',
   },
   quoteToken: {
     1: '',
