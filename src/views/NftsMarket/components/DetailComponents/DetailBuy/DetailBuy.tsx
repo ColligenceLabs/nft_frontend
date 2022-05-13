@@ -68,7 +68,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
 
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const [buyFlag, setBuyFlag] = useState(false);
-  const [amount, setAmount] = useState('1');
+  const [amount, setAmount] = useState('0');
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
 
   const buy = async () => {
@@ -117,7 +117,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
     }
     await mutate();
     await myNftMutate();
-    setAmount('1');
+    setAmount('0');
     setBuyFlag(false);
   };
 
@@ -206,7 +206,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         const validated = e.target.value.match(/^(\s*|\d+)$/);
                         if (validated && parseInt(e.target.value) <= 0) {
-                          setAmount('1');
+                          setAmount('0');
                         } else {
                           setAmount(parseInt(e.target.value).toString());
                         }
@@ -231,7 +231,12 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
                       <Box>
                         <LoadingButton
                           onClick={buy}
-                          disabled={sellingQuantity === 0 || sellingQuantity < parseInt(amount)}
+                          disabled={
+                            sellingQuantity === 0 ||
+                            sellingQuantity < parseInt(amount) ||
+                            parseInt(amount) === 0 ||
+                            isNaN(parseInt(amount))
+                          }
                           loading={buyFlag}
                           variant="contained"
                           sx={{ flex: 1, width: smDown ? '50px' : '100px' }}
