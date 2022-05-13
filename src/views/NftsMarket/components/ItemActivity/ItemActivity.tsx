@@ -53,7 +53,7 @@ interface ActivityTypes {
 const EVENT_TYPE = [
   { value: 0, name: 'BURN' },
   { value: 1, name: 'MINT' },
-  { value: 2, name: 'SELL' },
+  { value: 2, name: 'LIST' },
   { value: 3, name: 'SALE' },
   { value: 4, name: 'CANCEL' },
   { value: 5, name: 'TRANSFER' },
