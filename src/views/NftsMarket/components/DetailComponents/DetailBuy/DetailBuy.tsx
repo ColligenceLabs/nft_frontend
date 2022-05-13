@@ -117,7 +117,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
     }
     await mutate();
     await myNftMutate();
-    setAmount('0');
+    setAmount('1');
     setBuyFlag(false);
   };
 
@@ -202,12 +202,19 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
                       type="number"
                       size="small"
                       value={amount}
-                      inputProps={{ min: 0 }}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setAmount(e.target.value)
-                      }
+                      inputProps={{ min: 1, step: 1 }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const validated = e.target.value.match(/^(\s*|\d+)$/);
+                        if (validated && parseInt(e.target.value) <= 0) {
+                          setAmount('1');
+                        } else {
+                          setAmount(parseInt(e.target.value).toString());
+                        }
+                      }}
                       onBlur={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setAmount(parseInt(e.target.value).toString())
+                        parseInt(e.target.value) <= 0
+                          ? '1'
+                          : setAmount(parseInt(e.target.value).toString())
                       }
                       sx={{ flex: 5 }}
                     />
