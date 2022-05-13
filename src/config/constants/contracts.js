@@ -34,6 +34,13 @@ export default {
     8217: '',
     1001: '0xD1D0e4Dd270Db208546A1dF220480e8DE54C4f57',
   },
+  marketV5: {
+    1: '',
+    3: '',
+    4: '',
+    8217: '',
+    1001: '0xC675f1D8118C8bc91bC8139ad5F5773EE508c61C',
+  },
   quoteToken: {
     1: '',
     3: '',
