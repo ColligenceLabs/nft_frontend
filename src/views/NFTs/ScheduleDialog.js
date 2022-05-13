@@ -22,7 +22,7 @@ import useMarket from '../../hooks/useMarket';
 import { getNumberOfSales } from '../../services/serials.service';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { nftDetail } from '../../services/market.service';
-import {getNftContract} from '../../utils/contract';
+import { getNftContract } from '../../utils/contract';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
 
 const useStyles = makeStyles((theme) => ({
@@ -122,8 +122,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       );
       // for (let j = 0; j < serials.data.items.length; j++) {
       // const filteredSerials = serials.data.items.filter(item => item.owner_id === null || item.owner_id === account);
-      if (quantity === 0)
-        return FAILURE;
+      if (quantity === 0) return FAILURE;
       // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
       // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
 
@@ -135,6 +134,8 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
         // TODO : NFT 개당 가격
         nftInfo.data.price,
         nftInfo.data.quote,
+        nftInfo.data.collection_id.fee_payout,
+        nftInfo.data.collection_id.fee_percentage,
       );
       return SUCCESS;
     } catch (e) {

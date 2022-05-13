@@ -36,7 +36,7 @@ const useMarket = () => {
   const sellNFT = useCallback(
     // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
     // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
-    async (nftContract, nftType, tokenId, quantity, price, quote) => {
+    async (nftContract, nftType, tokenId, quantity, price, quote, payout, rate) => {
       // TODO. kas 를 사용하는 경우 api 호출 로직 분리 필요
       console.log('sell!', nftType);
       const gasPrice = await caver.klay.getGasPrice();
@@ -156,6 +156,8 @@ const useMarket = () => {
             quantity,
             parsedPrice,
             quoteToken,
+            payout,
+            rate,
           );
         else
           gasLimit = await marketContract.methods
@@ -166,6 +168,8 @@ const useMarket = () => {
               quantity,
               parsedPrice,
               quoteToken,
+              payout,
+              rate,
             )
             .estimateGas({
               from: account,
@@ -186,6 +190,8 @@ const useMarket = () => {
             quantity,
             parsedPrice,
             quoteToken,
+            payout,
+            rate,
             {
               from: account,
               gasPrice,
@@ -203,6 +209,8 @@ const useMarket = () => {
               quantity,
               parsedPrice,
               quoteToken,
+              payout,
+              rate,
             )
             .send({
               from: account,
