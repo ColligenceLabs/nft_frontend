@@ -676,10 +676,17 @@ const NFTMint = () => {
                         variant="outlined"
                         type="number"
                         fullWidth
+                        inputProps={{ pattern: '[0-9]([.]([0-9]){6})?' }}
                         size="small"
                         disabled={isSubmitting || isMinting}
                         value={values.price}
-                        onChange={handleChange}
+                        // onChange={handleChange}
+                        onChange={(event) => {
+                          const validated = event.target.value.match(/^(\d*\.{0,1}\d{0,6}$)/);
+                          if (validated) {
+                            setFieldValue('price', event.target.value);
+                          }
+                        }}
                       />
                       {touched.price && errors.price && (
                         <FormHelperText htmlFor="render-select" error>

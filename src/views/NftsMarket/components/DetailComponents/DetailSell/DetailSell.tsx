@@ -64,6 +64,9 @@ const DetailSell: React.FC<DetailSellProps> = ({
     getUserNftSerialsData(id, account),
   );
 
+  console.log(myNftData);
+  console.log(account);
+
   const sell = async () => {
     setSellStatus(true);
     // console.log(myNftData, myNftData.data.length, sellAmount);
@@ -221,8 +224,13 @@ const DetailSell: React.FC<DetailSellProps> = ({
                 type="number"
                 size="small"
                 value={sellPrice}
-                inputProps={{ min: 0 }}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSellPrice(e.target.value)}
+                inputProps={{ min: 0, maxLength: 8 }}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  const validated = event.target.value.match(/^(\d*\.{0,1}\d{0,6}$)/);
+                  if (validated) {
+                    setSellPrice(event.target.value);
+                  }
+                }}
                 fullWidth
               />
             </Box>
