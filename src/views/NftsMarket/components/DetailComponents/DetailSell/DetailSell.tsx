@@ -64,9 +64,6 @@ const DetailSell: React.FC<DetailSellProps> = ({
     getUserNftSerialsData(id, account),
   );
 
-  console.log(myNftData);
-  console.log(account);
-
   const sell = async () => {
     setSellStatus(true);
     // console.log(myNftData, myNftData.data.length, sellAmount);
