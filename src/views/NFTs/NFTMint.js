@@ -333,6 +333,19 @@ const NFTMint = () => {
                   })
                   .catch((error) => console.log(error));
               } else {
+                // check minter
+                const isKaikas = library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+                let test;
+                if (!isKaikas)
+                  test = await kipContract.isMinter(account);
+                else
+                  test = await kasContract.methods.isMinter(account).call();
+                if (!test) {
+                  setErrorMessage(account + ' is not a Minter');
+                  setSuccessRegister(false);
+                  return;
+                }
+
                 await registerNFT(formData)
                   .then(async (res) => {
                     if (res.data.status === 1) {
@@ -343,19 +356,13 @@ const NFTMint = () => {
 
                       // TODO : Actual NFT Minting here
                       if (contractType === 'KIP17') {
-                        if (
-                          library.connection.url !== 'metamask' &&
-                          library.connection.url !== 'eip-1193:'
-                        ) {
+                        if (isKaikas) {
                           result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
                         } else {
                           result = await mintNFT17(tokenId, tokenUri, nftId);
                         }
                       } else {
-                        if (
-                          library.connection.url !== 'metamask' &&
-                          library.connection.url !== 'eip-1193:'
-                        ) {
+                        if (isKaikas) {
                           result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
                         } else {
                           result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
