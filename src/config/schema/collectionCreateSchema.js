@@ -15,6 +15,11 @@ const collectionCreateSchema = yup.object({
     .string('Enter your Description')
     .required('Description is required')
     .max(1024, 'Description has a maximum limit of 1024 characters.'),
+  fee_percentage: yup
+    .number()
+    .min(0.1, 'Must be greater than 0.1 percent.')
+    .required('Percentage fee is required'),
+  fee_payout: yup.string().required('Payout wallet address is required'),
 });
 
 export default collectionCreateSchema;

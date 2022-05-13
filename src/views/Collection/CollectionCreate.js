@@ -272,6 +272,8 @@ const CollectionCreate = () => {
             maximum_supply: '',
             description: '',
             contractAddress: undefined,
+            fee_percentage: '',
+            fee_payout: '',
           }}
           onSubmit={async (values, { setSubmitting }) => {
             setSubmitting(true);
@@ -289,10 +291,12 @@ const CollectionCreate = () => {
             // console.log(values.network);
 
             for (let value in values) {
-              if (['name', 'creator_id', 'image'].includes(value)) {
+              if (['name', 'creator_id', 'image', 'fee_payout'].includes(value)) {
                 formData.append(value, values[value]);
               } else if (['category'].includes(value)) {
                 values[value].forEach((category) => formData.append(value, category));
+              } else if (['fee_percentage'].includes(value)) {
+                formData.append(value, (parseFloat(values[value]) * 10).toString());
               }
             }
             formData.append('description', values.description);
@@ -585,6 +589,50 @@ const CollectionCreate = () => {
                     </FormHelperText>
                   )}
                 </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12}>
+                  <Divider
+                    sx={{
+                      mt: 5,
+                      mb: 3,
+                    }}
+                  />
+                  <Typography color="primary" variant="subtitle2">
+                    {t('Creator Earnings')}
+                  </Typography>
+                </Grid>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="symbol">{t('Percentage fee')}</CustomFormLabel>
+                  <CustomTextField
+                    id="fee_percentage"
+                    name="fee_percentage"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    placeholder="Must be greater than 0.1 percent. e.g. 2.5"
+                    disabled={isSubmitting}
+                    value={values.fee_percentage}
+                    onChange={handleChange}
+                    error={touched.fee_percentage && Boolean(errors.fee_percentage)}
+                    helperText={touched.fee_percentage && errors.fee_percentage}
+                  />
+                </Grid>
+                <Grid item lg={6} md={12} sm={12} xs={12}>
+                  <CustomFormLabel htmlFor="symbol">{t('Payout wallet address')}</CustomFormLabel>
+                  <CustomTextField
+                    id="fee_payout"
+                    name="fee_payout"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    placeholder="Please enter on address. e.g. 0x623C7....."
+                    disabled={isSubmitting}
+                    value={values.fee_payout}
+                    onChange={handleChange}
+                    error={touched.fee_payout && Boolean(errors.fee_payout)}
+                    helperText={touched.fee_payout && errors.fee_payout}
+                  />
+                </Grid>
+
                 <Grid item lg={12} md={12} sm={12} xs={12}>
                   <Divider
                     sx={{
