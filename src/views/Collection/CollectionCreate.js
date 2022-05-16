@@ -291,7 +291,7 @@ const CollectionCreate = () => {
             // console.log(values.network);
 
             for (let value in values) {
-              if (['name', 'creator_id', 'image', 'fee_payout'].includes(value)) {
+              if (['name', 'creator_id', 'image', 'fee_payout', 'symbol'].includes(value)) {
                 formData.append(value, values[value]);
               } else if (['category'].includes(value)) {
                 values[value].forEach((category) => formData.append(value, category));
