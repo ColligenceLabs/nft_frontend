@@ -4,7 +4,13 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/admin`;
 
-export const getAdminsData = (page, rowsPerPage, searchName, searchEmail, searchLevel) => {
+export const getAdminsData = (
+  page,
+  rowsPerPage,
+  searchName,
+  searchEmail,
+  searchLevel = 'administrator',
+) => {
   let url = `${API_URL}/indexs?page=${page + 1}&perPage=${rowsPerPage}`;
   url = searchName !== undefined ? `${url}&full_name=${searchName}` : url;
   url = searchEmail !== undefined ? `${url}&email=${searchEmail}` : url;

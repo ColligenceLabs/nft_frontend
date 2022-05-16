@@ -18,8 +18,6 @@ import CustomCheckbox from '../../components/forms/custom-elements/CustomCheckbo
 import CustomSwitch from '../../components/forms/custom-elements/CustomSwitch';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import PageContainer from '../../components/container/PageContainer';
-import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import StatusDialog from '../../components/StatusDialog';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
@@ -148,21 +146,18 @@ const Admins = () => {
   };
 
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
-  const emptyRows = rowsPerPage - rows.length;
 
   const fetchAdmins = async () => {
-    await getAdminsData(page, rowsPerPage, searchName, searchEmail, searchLevel).then(
-      ({ data }) => {
-        const rowWithoutSuspendUser = data.items.filter((row) => row.status !== 'suspend');
-        setRows(rowWithoutSuspendUser);
-        setTotalCount(rowWithoutSuspendUser.length);
-      },
-    );
+    await getAdminsData(page, rowsPerPage, searchName, searchEmail).then(({ data }) => {
+      const rowWithoutSuspendUser = data.items.filter((row) => row.status !== 'suspend');
+      setRows(rowWithoutSuspendUser);
+      setTotalCount(rowWithoutSuspendUser.length);
+    });
   };
 
   useEffect(() => {
     fetchAdmins();
-  }, [getAdminsData, page, rowsPerPage, searchName, searchEmail, searchLevel]);
+  }, [getAdminsData, page, rowsPerPage, searchName, searchEmail]);
 
   return (
     <PageContainer title="Admins" description="this is admins page">
