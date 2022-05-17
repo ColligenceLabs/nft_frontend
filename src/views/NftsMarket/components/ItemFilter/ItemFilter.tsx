@@ -17,6 +17,7 @@ interface FilterSetType {
   searchKeyword: string;
   createAt: string;
   price: string;
+  tokenId: string;
   minPrice: string;
   maxPrice: string;
 }
@@ -48,6 +49,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
   const [searchKeyword, setSearchKeyword] = useState('');
   const [createAt, setCreateAt] = useState('-1');
   const [price, setPrice] = useState('0');
+  const [tokenId, setTokenId] = useState('0');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [disableButton, setDisableButton] = useState(true);
@@ -70,11 +72,21 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
       if (selectedSortingType === 'recent') setCreateAt('-1');
       if (selectedSortingType === 'oldest') setCreateAt('1');
       setPrice('0');
+      setTokenId('0');
     }
     if (selectedSortingType === 'priceLowToHigh' || selectedSortingType === 'priceHighToLow') {
       if (selectedSortingType === 'priceLowToHigh') setPrice('1');
       if (selectedSortingType === 'priceHighToLow') setPrice('-1');
       setCreateAt('0');
+      setTokenId('0');
+    }
+    setSoting(selectedSortingType);
+
+    if (selectedSortingType === 'tokenIdLowToHigh' || selectedSortingType === 'tokenIdHighToLow') {
+      if (selectedSortingType === 'tokenIdLowToHigh') setTokenId('1');
+      if (selectedSortingType === 'tokenIdHighToLow') setTokenId('-1');
+      setCreateAt('0');
+      setPrice('0');
     }
     setSoting(selectedSortingType);
   };
@@ -83,6 +95,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
     setSearchKeyword('');
     setSoting(SORTING_CATEGORY[0].value);
     setCreateAt('-1');
+    setTokenId('-1');
     setPrice('0');
     setMinPrice('');
     setMaxPrice('');
@@ -100,8 +113,8 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
     } else {
       setDisableButton(true);
     }
-    setFilterSet({ ...filterSet, searchKeyword, createAt, price, minPrice, maxPrice });
-  }, [sorting, searchKeyword, createAt, price, minPrice, maxPrice]);
+    setFilterSet({ ...filterSet, searchKeyword, createAt, price, tokenId, minPrice, maxPrice });
+  }, [sorting, searchKeyword, createAt, price, tokenId, minPrice, maxPrice]);
 
   return (
     <Box

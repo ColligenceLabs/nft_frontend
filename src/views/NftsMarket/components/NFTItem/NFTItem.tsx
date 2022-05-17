@@ -25,6 +25,7 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
+
   return (
     <>
       <Link to={`/market/detail/${item._id}`} style={{ textDecoration: 'none' }}>
@@ -117,7 +118,9 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
                     ? `${item?.collection_id?.name.slice(0, 27)}...`
                     : item?.collection_id?.name}
                 </Typography>
-                <Typography variant="h6">{item?.metadata?.name}</Typography>
+                <Typography variant="h6">
+                  {item?.metadata?.name} {item?.metadata?.tokenId}
+                </Typography>
               </Box>
               <Box>
                 <Typography variant="h6" color="text.secondary">

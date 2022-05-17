@@ -10,6 +10,7 @@ interface FilterSetType {
   searchKeyword: string;
   createAt: string;
   price: string;
+  tokenId: string;
   minPrice: string;
   maxPrice: string;
 }
@@ -25,6 +26,7 @@ const NFTList = () => {
     searchKeyword: '',
     createAt: '',
     price: '',
+    tokenId: '',
     minPrice: '',
     maxPrice: '',
   });
@@ -35,7 +37,7 @@ const NFTList = () => {
         index + 1
       }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true&keyword=${
         filterSet.searchKeyword
-      }&createdAt=${filterSet.createAt}&price=${filterSet.price}&low=${
+      }&createdAt=${filterSet.createAt}&price=${filterSet.price}&tokenId=${filterSet.tokenId}&low=${
         filterSet.minPrice === '' ? '0' : filterSet.minPrice
       }&high=${filterSet.maxPrice === '' ? '0' : filterSet.maxPrice}`,
     fetcher,
@@ -59,6 +61,10 @@ const NFTList = () => {
   useEffect(() => {
     data !== undefined && setItemCount(data[0].data.headers.x_total_count);
   }, [data]);
+
+  useEffect(() => {
+    console.log(filterSet);
+  }, [filterSet]);
 
   return (
     <Grid container>

@@ -113,6 +113,8 @@ export interface NFTResponse {
         quantity_selling: number;
         price: number;
         quote: string;
+        user_quantity_selling: number;
+        last_price: number;
         floor_price: number;
         floor_quote: string;
         category: string[];
