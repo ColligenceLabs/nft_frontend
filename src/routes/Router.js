@@ -13,7 +13,7 @@ const Register = Loadable(lazy(() => import('../views/authentication/Register'))
 const ResetPassword = Loadable(lazy(() => import('../views/authentication/ResetPassword')));
 
 const Dashboard = Loadable(lazy(() => import('../views/Dashboard')));
-const User = Loadable(lazy(() => import('../views/User')));
+const Users = Loadable(lazy(() => import('../views/Users')));
 const Admins = Loadable(lazy(() => import('../views/Admins')));
 const Creator = Loadable(lazy(() => import('../views/Creator/Creator')));
 const CreatorRegister = Loadable(lazy(() => import('../views/Creator/CreatorRegister')));
@@ -65,6 +65,7 @@ const Router = (isLoggedIn, level) => [
     element: isLoggedIn && level === 'administrator' ? <FullLayout /> : <Navigate to="/" />,
     children: [
       { path: '/admins', exact: true, element: <Admins /> },
+      { path: '/users', exact: true, element: <Users /> },
       { path: '/creator', exact: true, element: <Creator /> },
       { path: '/creator/register', exact: true, element: <CreatorRegister /> },
       { path: '/creator/update', exact: true, element: <CreatorUpdate /> },
@@ -87,7 +88,6 @@ const Router = (isLoggedIn, level) => [
     children: [
       // { path: '/', element: <NftMarket /> },
       { path: '/dashboard', exact: true, element: <Dashboard /> },
-      { path: '/user', exact: true, element: <User /> },
       { path: '/nfts', exact: true, element: <NFTs /> },
       { path: '/nfts/mint', exact: true, element: <NFTMint /> },
       { path: '/airdrop', exact: true, element: <AirDrop /> },

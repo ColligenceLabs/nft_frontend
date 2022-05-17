@@ -38,7 +38,7 @@ const EnhancedTableToolbar = (props) => {
         alignItems: 'center',
       }}
     >
-      {['admins', 'creator'].includes(currentRoute) ? (
+      {['admins', 'creator', 'user'].includes(currentRoute) ? (
         <PopupState variant="popover" popupId="demo-popup-menu">
           {(popupState) => (
             <React.Fragment>

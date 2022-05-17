@@ -22,14 +22,14 @@ import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import StatusDialog from '../../components/StatusDialog';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
-import { headCells } from './tableConfig';
+import { headCells } from '../Admins/tableConfig';
 import { stableSort, getComparator } from '../../utils/tableUtils';
 import {
   getAdminsData,
   updateAdminsStatus,
   updateMultiAdminsStatus,
 } from '../../services/admins.service';
-import AdminsDetailModal from './AdminsDetailModal';
+import AdminsDetailModal from '../Admins/AdminsDetailModal';
 import useUserInfo from '../../hooks/useUserInfo';
 
 const Admins = () => {
@@ -119,7 +119,7 @@ const Admins = () => {
   const setFilters = async (props) => {
     setSearchName(props.full_name);
     setSearchEmail(props.email);
-    // setSearchLevel(props.level);
+    setSearchLevel(props.level);
   };
 
   const changeAdminStatus = async (toStatus) => {
@@ -148,7 +148,7 @@ const Admins = () => {
   const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
   const fetchAdmins = async () => {
-    await getAdminsData(page, rowsPerPage, searchName, searchEmail).then(({ data }) => {
+    await getAdminsData(page, rowsPerPage, searchName, searchEmail, 'user').then(({ data }) => {
       const rowWithoutSuspendUser = data.items.filter((row) => row.status !== 'suspend');
       setRows(rowWithoutSuspendUser);
       setTotalCount(rowWithoutSuspendUser.length);
@@ -160,8 +160,8 @@ const Admins = () => {
   }, [getAdminsData, page, rowsPerPage, searchName, searchEmail]);
 
   return (
-    <PageContainer title="Admins" description="this is admins page">
-      <Breadcrumb title="Admins" subtitle={t('Admins Information')} />
+    <PageContainer title="Users" description="this is users page">
+      <Breadcrumb title="Users" subtitle={t('Users Information')} />
       <Box>
         <Paper sx={{ width: '100%', mb: 2 }}>
           <EnhancedTableToolbar

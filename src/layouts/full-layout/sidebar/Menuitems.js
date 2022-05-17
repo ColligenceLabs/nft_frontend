@@ -20,13 +20,18 @@ export const Menuitems = [
     icon: <SupervisorAccountOutlinedIcon width="20" height="20" />,
     href: '/admins',
   },
-
   {
     title: 'Creator',
     // icon: 'hard-drive',
     icon: <GestureOutlinedIcon width="20" height="20" />,
     href: '/creator',
   },
+  {
+    title: 'Users',
+    icon: <SupervisorAccountOutlinedIcon width="20" height="20" />,
+    href: '/users',
+  },
+
   {
     title: 'Collections',
     // icon: 'hard-drive',

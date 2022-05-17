@@ -168,54 +168,25 @@ const FiltersDrawer = ({ showDrawer, setShowDrawer, setFilters, currentRoute }) 
             <Box pt={3} />
           </>
         )}
-        {/* ------------ creator ------------- */}
-        {currentRoute === 'creator' && (
+
+        {/* ------------ admins, creator, users ------------- */}
+        {(currentRoute === 'admins' || currentRoute === 'creator' || currentRoute === 'users') && (
           <>
-            <CustomFormLabel htmlFor="fullName">{t('Name')}</CustomFormLabel>
-            <CustomTextField
-              id="fullName"
-              name="fullName"
-              variant="outlined"
-              fullWidth
-              size="small"
-              value={fullName}
-              onChange={handleFullName}
-            />
-            {/*<Box pt={3} />*/}
-            {/*<CustomFormLabel htmlFor="status">{t('Status')}</CustomFormLabel>*/}
+            {/*<CustomFormLabel htmlFor="level">{t('Level')}</CustomFormLabel>*/}
             {/*<CustomSelect*/}
             {/*  labelId="demo-simple-select-label"*/}
-            {/*  id="status"*/}
-            {/*  name="status"*/}
-            {/*  onChange={handleUserStatus}*/}
-            {/*  value={status}*/}
+            {/*  id="level"*/}
+            {/*  name="level"*/}
+            {/*  onChange={handleLevel}*/}
+            {/*  value={level}*/}
             {/*  fullWidth*/}
             {/*  size="small"*/}
             {/*>*/}
-            {/*  <MenuItem value="active">Active</MenuItem>*/}
-            {/*  <MenuItem value="inactive">Inactive</MenuItem>*/}
-            {/*  <MenuItem value="suspend">Suspend</MenuItem>*/}
+            {/*  <MenuItem value="administrator">Administrator</MenuItem>*/}
+            {/*  <MenuItem value="creator">Creator</MenuItem>*/}
+            {/*  <MenuItem value="operator">Operator</MenuItem>*/}
             {/*</CustomSelect>*/}
-          </>
-        )}
-        {/* ------------ admins ------------- */}
-        {currentRoute === 'admins' && (
-          <>
-            <CustomFormLabel htmlFor="level">{t('Level')}</CustomFormLabel>
-            <CustomSelect
-              labelId="demo-simple-select-label"
-              id="level"
-              name="level"
-              onChange={handleLevel}
-              value={level}
-              fullWidth
-              size="small"
-            >
-              <MenuItem value="administrator">Administrator</MenuItem>
-              <MenuItem value="creator">Creator</MenuItem>
-              <MenuItem value="operator">Operator</MenuItem>
-            </CustomSelect>
-            <Box pt={3} />
+            {/*<Box pt={3} />*/}
             <CustomFormLabel htmlFor="fullName">{t('Name')}</CustomFormLabel>
             <CustomTextField
               id="fullName"
