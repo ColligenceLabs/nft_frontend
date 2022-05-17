@@ -156,10 +156,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
     console.log(listingData);
   }, [listingData]);
 
-  useEffect(() => {
-    console.log(data?.data);
-  }, [data?.data]);
-
   return (
     <SectionWrapper
       // title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
