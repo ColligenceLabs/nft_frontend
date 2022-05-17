@@ -26,6 +26,8 @@ const SORTING_CATEGORY = [
   { id: 1, value: 'oldest', caption: 'Oldest' },
   { id: 2, value: 'priceLowToHigh', caption: 'Price Low to High' },
   { id: 3, value: 'priceHighToLow', caption: 'Price High to Low' },
+  { id: 4, value: 'tokenIdHighToLow', caption: 'Token ID High to Low' },
+  { id: 5, value: 'tokenIdLowToHigh', caption: 'Token ID Low to High' },
 ];
 
 const ItemFilter: React.FC<ItemFilterProp> = ({
