@@ -296,7 +296,11 @@ const CollectionCreate = () => {
               } else if (['category'].includes(value)) {
                 values[value].forEach((category) => formData.append(value, category));
               } else if (['fee_percentage'].includes(value)) {
-                formData.append(value, (parseFloat(values[value]) * 10).toString());
+                if (values[value] === '') {
+                  formData.append(value, '0');
+                } else {
+                  formData.append(value, (parseFloat(values[value]) * 10).toString());
+                }
               }
             }
             formData.append('description', values.description);
@@ -606,6 +610,7 @@ const CollectionCreate = () => {
                     id="fee_percentage"
                     name="fee_percentage"
                     variant="outlined"
+                    type="number"
                     fullWidth
                     size="small"
                     placeholder="Must be greater than 0.1 percent. e.g. 2.5"
@@ -625,7 +630,7 @@ const CollectionCreate = () => {
                     fullWidth
                     size="small"
                     placeholder="Please enter on address. e.g. 0x623C7....."
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || values.fee_percentage === 0}
                     value={values.fee_payout}
                     onChange={handleChange}
                     error={touched.fee_payout && Boolean(errors.fee_payout)}
