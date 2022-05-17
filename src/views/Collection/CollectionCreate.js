@@ -291,7 +291,7 @@ const CollectionCreate = () => {
             // console.log(values.network);
 
             for (let value in values) {
-              if (['name', 'creator_id', 'image', 'fee_payout', 'symbol'].includes(value)) {
+              if (['name', 'creator_id', 'image', 'symbol'].includes(value)) {
                 formData.append(value, values[value]);
               } else if (['category'].includes(value)) {
                 values[value].forEach((category) => formData.append(value, category));
@@ -300,6 +300,12 @@ const CollectionCreate = () => {
                   formData.append(value, '0');
                 } else {
                   formData.append(value, (parseFloat(values[value]) * 10).toString());
+                }
+              } else if (['fee_payout'].includes(value)) {
+                if (values[value] === '') {
+                  formData.append(value, '0x0000000000000000000000000000000000000000');
+                } else {
+                  formData.append(value, values[value]);
                 }
               }
             }
