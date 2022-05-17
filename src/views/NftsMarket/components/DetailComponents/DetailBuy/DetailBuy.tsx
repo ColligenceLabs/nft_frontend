@@ -19,7 +19,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import WalletDialog from '../../../../../components/WalletDialog';
 import SellingClock from '../SellingClock';
-import getNftPrice from '../../../../../utils/getNftPrice';
 
 interface DetailBuyProps {
   id: string;
@@ -80,6 +79,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
     getUserNftSerialsData(id, account),
   );
 
+  console.log(data);
   const contractAddress = data?.data?.collection_id?.contract_address;
   const nftContract = useKipContract(contractAddress, 'KIP17');
   const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
@@ -152,6 +152,13 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
     }, 2000);
   }, [itemActivityMutateHandler]);
 
+  useEffect(() => {
+    console.log(data?.data?.price + ' | ' + data?.data?.floor_price);
+
+    console.log(`price : ${data?.data?.price}`);
+    console.log(`floor_price : ${data?.data?.floor_price}`);
+  }, [data?.data]);
+
   return (
     <SectionWrapper
       // title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
@@ -197,9 +204,9 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
               {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
               {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
               <Typography variant={'h1'}>
-                {listingData && listingData?.data?.items.length !== 0
-                  ? getNftPrice(data?.data?.price, data?.data?.floor_price)
-                  : data?.data?.last_price}{' '}
+                {data?.data?.price < data?.data?.floor_price
+                  ? data?.data?.price
+                  : data?.data?.floor_price}{' '}
                 {data?.data?.quote.toUpperCase()}
               </Typography>
             </Box>
@@ -313,9 +320,11 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
             {data?.data?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
             {data?.data?.floor_quote === 'talk' && <img src={talkLogo} alt="klay" height="24px" />}
             <Typography variant={'h1'}>
-              {listingData && listingData?.data?.items.length !== 0
-                ? getNftPrice(data?.data?.price, data?.data?.floor_price)
-                : data?.data?.last_price}
+              {data?.data?.user_quantity_selling == 0
+                ? data?.data?.last_price
+                : data?.data?.price < data?.data?.floor_price
+                ? data?.data?.price
+                : data?.data?.floor_price}
             </Typography>
           </Box>
         </Box>
