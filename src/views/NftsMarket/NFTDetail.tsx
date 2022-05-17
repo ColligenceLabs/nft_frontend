@@ -44,9 +44,9 @@ const NFTDetail = () => {
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
-  const ListingMutateHandler = (result: boolean) => {
-    setListingMutateHandler(result);
-  };
+  // const setListingMutateHandler = (result: boolean) => {
+  //   setListingMutateHandler(result);
+  // };
 
   const MyNftMutateHandler = (result: boolean) => {
     setMyNftMutateHandler(result);
@@ -76,8 +76,9 @@ const NFTDetail = () => {
                 <DetailSell
                   id={id!}
                   listingMutateHandler={listingMutateHandler}
-                  ListingMutateHandler={(result) => ListingMutateHandler(result)}
+                  setListingMutateHandler={(result) => setListingMutateHandler(result)}
                   myNftMutateHandler={myNftMutateHandler}
+                  setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
                 />
               </Box>
 
@@ -115,8 +116,9 @@ const NFTDetail = () => {
                   <DetailSell
                     id={id!}
                     listingMutateHandler={listingMutateHandler}
-                    ListingMutateHandler={(result) => ListingMutateHandler(result)}
+                    setListingMutateHandler={(result) => setListingMutateHandler(result)}
                     myNftMutateHandler={myNftMutateHandler}
+                    setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
                   />
                 </Box>
               </Box>

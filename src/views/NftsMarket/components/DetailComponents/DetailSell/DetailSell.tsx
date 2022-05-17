@@ -11,20 +11,21 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import SectionWrapper from '../SectionWrapper';
 import useMarket from '../../../../../hooks/useMarket';
 import { getNftContract } from '../../../../../utils/contract';
-import sliceFloatNumber from '../../../../../utils/sliceFloatNumber';
 
 interface DetailSellProps {
   id: string;
   listingMutateHandler: boolean;
-  ListingMutateHandler: (b: boolean) => void;
+  setListingMutateHandler: (b: boolean) => void;
+  setItemActivityMutateHandler: (b: boolean) => void;
   myNftMutateHandler: boolean;
 }
 
 const DetailSell: React.FC<DetailSellProps> = ({
   id,
   listingMutateHandler,
-  ListingMutateHandler,
+  setListingMutateHandler,
   myNftMutateHandler,
+  setItemActivityMutateHandler,
 }) => {
   const { account, library } = useActiveWeb3React();
 
@@ -121,7 +122,8 @@ const DetailSell: React.FC<DetailSellProps> = ({
         setErrorMessage(result.message);
       }
       await myNftMutate();
-      ListingMutateHandler(true);
+      setListingMutateHandler(true);
+      setItemActivityMutateHandler(true);
     } catch (e) {
       // @ts-ignore
       setErrorMessage(e.message);
@@ -294,12 +296,14 @@ const DetailSell: React.FC<DetailSellProps> = ({
         open={listingMutateHandler}
         autoHideDuration={2000}
         onClose={() => {
-          ListingMutateHandler(false);
+          setListingMutateHandler(false);
+          setItemActivityMutateHandler(false);
         }}
       >
         <Alert
           onClose={() => {
-            ListingMutateHandler(false);
+            setListingMutateHandler(false);
+            setItemActivityMutateHandler(false);
           }}
           variant="filled"
           severity={errorMessage === '' ? 'success' : 'error'}
