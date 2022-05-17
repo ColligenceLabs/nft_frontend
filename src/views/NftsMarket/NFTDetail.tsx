@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
@@ -23,6 +23,7 @@ const NFTDetail = () => {
   const [sellEventHandler, setSellEventHandler] = useState(false);
   const [listingMutateHandler, setListingMutateHandler] = useState(false);
   const [myNftMutateHandler, setMyNftMutateHandler] = useState(false);
+  const [itemActivityMutateHandler, setItemActivityMutateHandler] = useState(false);
 
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
@@ -61,7 +62,10 @@ const NFTDetail = () => {
                 <DetailTitle nft={data?.data} />
                 <DetailContents nft={data?.data} />
                 <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
-                <DetailBuy id={id!} />
+                <DetailBuy
+                  id={id!}
+                  setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
+                />
                 <Listings
                   id={id!}
                   listingMutateHandler={listingMutateHandler}
@@ -77,7 +81,11 @@ const NFTDetail = () => {
                 />
               </Box>
 
-              <ItemActivity id={id!} />
+              <ItemActivity
+                id={id!}
+                itemActivityMutateHandler={itemActivityMutateHandler}
+                setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
+              />
               <MoreNFTs
                 nft_id={id!}
                 collection_id={data?.data?.collection_id._id}
@@ -93,7 +101,10 @@ const NFTDetail = () => {
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1.2 }}>
                   <DetailTitle nft={data?.data} />
-                  <DetailBuy id={id!} />
+                  <DetailBuy
+                    id={id!}
+                    setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
+                  />
                   <Listings
                     id={id!}
                     listingMutateHandler={listingMutateHandler}
@@ -109,7 +120,11 @@ const NFTDetail = () => {
                   />
                 </Box>
               </Box>
-              <ItemActivity id={id!} />
+              <ItemActivity
+                id={id!}
+                itemActivityMutateHandler={itemActivityMutateHandler}
+                setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
+              />
               <MoreNFTs
                 nft_id={id!}
                 collection_id={data?.data?.collection_id._id}

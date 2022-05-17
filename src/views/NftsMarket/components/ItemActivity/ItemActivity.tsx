@@ -29,6 +29,8 @@ import splitAddress from '../../../../utils/splitAddress';
 
 interface ItemActivityProps {
   id: string;
+  itemActivityMutateHandler: boolean;
+  setItemActivityMutateHandler: (b: boolean) => void;
 }
 
 interface ActivityTypes {
@@ -73,7 +75,11 @@ const MenuProps = {
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
+const ItemActivity: React.FC<ItemActivityProps> = ({
+  id,
+  itemActivityMutateHandler,
+  setItemActivityMutateHandler,
+}) => {
   const theme = useTheme();
   const [selectedFilter, setSelectedFilter] = useState([] as any);
   const [page, setPage] = useState(0);
@@ -84,7 +90,7 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   const url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/nft-events/${id}?page=${
     page + 1
   }&size=${rowsPerPage}&types=${selectedFilter.toString()}`;
-  const { data } = useSWR(url, fetcher);
+  const { data, mutate } = useSWR(url, fetcher);
 
   const getEventCaptionByValue = (value: number) => {
     const result = EVENT_TYPE.filter((item) => item.value === value);
@@ -141,6 +147,20 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
       setRowCount(data?.data?.headers.x_total_count);
     }
   }, [data]);
+
+  useEffect(() => {
+    mutate().then((res) => {
+      if (res.data && res.data?.data !== undefined) {
+        const result = res?.data?.items.map((activity: ActivityTypes) => ({
+          ...activity,
+        }));
+
+        setActivityList(result);
+        setRowCount(res?.data?.headers.x_total_count);
+      }
+      setItemActivityMutateHandler(false);
+    });
+  }, [itemActivityMutateHandler]);
 
   return (
     <SectionWrapper title={'Item Activity'} icon={'activity'} toggled={true}>

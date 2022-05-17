@@ -23,6 +23,7 @@ import getNftPrice from '../../../../../utils/getNftPrice';
 
 interface DetailBuyProps {
   id: string;
+  setItemActivityMutateHandler: (b: boolean) => void;
 }
 
 const TitleBox = ({ title, deadline }: string | any) => {
@@ -34,7 +35,7 @@ const TitleBox = ({ title, deadline }: string | any) => {
   );
 };
 
-const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
+const DetailBuy: React.FC<DetailBuyProps> = ({ id, setItemActivityMutateHandler }) => {
   const theme = useTheme();
   const { library, account, activate } = useActiveWeb3React();
   const { buyNFT, sellNFT, listNFT } = useMarket();
@@ -91,11 +92,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
       // tokenId 를 사용 구입 진행.
       // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
       // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
-      console.log(`seller : ${seller}`);
-      console.log(`quantity : ${quantity}`);
-      console.log(`amount : ${amount}`);
-      console.log(`price : ${price}`);
-      console.log(`quote : ${quote}`);
 
       const result = await buyNFT(
         isKaikas ? nftContractWithKaikas : nftContract,
@@ -117,6 +113,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id }) => {
     }
     await mutate();
     await myNftMutate();
+    setItemActivityMutateHandler(true);
     setAmount('0');
     setBuyFlag(false);
   };
