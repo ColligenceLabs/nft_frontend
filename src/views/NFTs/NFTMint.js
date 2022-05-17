@@ -334,12 +334,11 @@ const NFTMint = () => {
                   .catch((error) => console.log(error));
               } else {
                 // check minter
-                const isKaikas = library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+                const isKaikas =
+                  library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
                 let test;
-                if (!isKaikas)
-                  test = await kipContract.isMinter(account);
-                else
-                  test = await kasContract.methods.isMinter(account).call();
+                if (!isKaikas) test = await kipContract.isMinter(account);
+                else test = await kasContract.methods.isMinter(account).call();
                 if (!test) {
                   setErrorMessage(account + ' is not a Minter');
                   setSuccessRegister(false);
@@ -583,7 +582,7 @@ const NFTMint = () => {
                     variant="outlined"
                     fullWidth
                     size="small"
-                    disabled={isSubmitting || isMinting}
+                    disabled={isSubmitting || isMinting || contractType === 'KIP17'}
                     value={values.amount}
                     onChange={
                       process.env.REACT_APP_USE_KAS === 'false' && contractType === 'KIP17'
