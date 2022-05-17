@@ -131,7 +131,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
     await mutate();
     await myNftMutate();
     setItemActivityMutateHandler(true);
-    setAmount('0');
+    setAmount('1');
     setBuyFlag(false);
   };
 
