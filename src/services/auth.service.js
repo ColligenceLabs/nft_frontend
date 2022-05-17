@@ -10,6 +10,12 @@ export const register = (formData) => {
     .catch((error) => (error.response.status === 401 ? logout() : console.log(error)));
 };
 
+export const updater = (formData, id) => {
+  return axios
+    .put(API_URL + 'update/' + id, formData, { headers: authHeader() })
+    .catch((error) => (error.response.status === 401 ? logout() : console.log(error)));
+};
+
 const login = (email, password) => {
   return axios
     .post(API_URL + 'login', {

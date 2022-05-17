@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import { Formik } from 'formik';
-import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
 import { Alert, Button, FormHelperText, Grid, MenuItem, Paper, Snackbar } from '@mui/material';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -13,6 +12,10 @@ import { LoadingButton } from '@mui/lab';
 import PageContainer from '../../components/container/PageContainer';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import adminUpdateSchema from '../../config/schema/adminUpdateSchema';
+import { updater } from '../../services/auth.service';
+import useUserInfo from '../../hooks/useUserInfo';
+import { useNavigate } from 'react-router-dom';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -23,13 +26,13 @@ const CreatorUpdate = () => {
   const location = useLocation();
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useState({ ...location.state, imageSrc: location.state.image });
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
-  // const [imageSrc, setImageSrc] = useState(location.state.image);
 
-  console.log(location);
+  console.log(userInfo);
 
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
@@ -47,12 +50,12 @@ const CreatorUpdate = () => {
       <Breadcrumb title="Creator Register" subtitle="Creator Register Information" />
       <Container>
         <Formik
-          validationSchema={adminRegisterSchema}
+          validationSchema={adminUpdateSchema}
           initialValues={{
             full_name: userInfo.full_name,
             email: userInfo.email,
-            password: '',
-            repeatPassword: '',
+            // password: '',
+            // repeatPassword: '',
             level: userInfo.level,
             image: '',
             imageSrc: userInfo.image,
@@ -63,19 +66,20 @@ const CreatorUpdate = () => {
             setSubmitting(true);
 
             let formData = new FormData();
-            for (let value in data) {
-              formData.append(value, data[value]);
-            }
 
-            // const res = await register(formData);
-            //
-            // if (res.data.status === 1) {
-            //   setErrorMessage(null);
-            //   setSuccessRegister(true);
-            // } else {
-            //   setErrorMessage(res.data.message);
-            //   setSuccessRegister(false);
-            // }
+            formData.append('full_name', data.full_name);
+            formData.append('image', data.image);
+            formData.append('description', data.description);
+
+            const res = await updater(formData, userInfo._id);
+
+            if (res.data.status === 1) {
+              setErrorMessage(null);
+              setSuccessRegister(true);
+            } else {
+              setErrorMessage(res.data.message);
+              setSuccessRegister(false);
+            }
             setSubmitting(false);
           }}
         >
@@ -124,43 +128,6 @@ const CreatorUpdate = () => {
                   {touched.email && errors.email && (
                     <FormHelperText htmlFor="render-select" error>
                       {errors.email}
-                    </FormHelperText>
-                  )}
-                </Grid>
-
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
-                  <CustomTextField
-                    id="password"
-                    name="password"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.password}
-                    onChange={handleChange}
-                  />
-                  {touched.password && errors.password && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.password}
-                    </FormHelperText>
-                  )}
-                </Grid>
-                <Grid item lg={6} md={12} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>
-                  <CustomTextField
-                    id="repeatPassword"
-                    name="repeatPassword"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.repeatPassword}
-                    onChange={handleChange}
-                  />
-                  {touched.repeatPassword && errors.repeatPassword && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.repeatPassword}
                     </FormHelperText>
                   )}
                 </Grid>
@@ -257,31 +224,12 @@ const CreatorUpdate = () => {
                   )}
                 </Grid>
 
-                <Grid item xl={6} lg={6} md={6} sm={12} xs={12}>
-                  <CustomFormLabel htmlFor="solana_address">
-                    {t('Phantom Wallet Address')}
-                  </CustomFormLabel>
-                  <CustomTextField
-                    id="solana_address"
-                    name="solana_address"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={values.solana_address}
-                    onChange={handleChange}
-                  />
-                  {touched.solana_address && errors.solana_address && (
-                    <FormHelperText htmlFor="render-select" error>
-                      {errors.solana_address}
-                    </FormHelperText>
-                  )}
-                </Grid>
-
                 <Snackbar
                   anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                   open={successRegister}
                   autoHideDuration={2000}
                   onClose={() => {
+                    navigate('/creator');
                     setSuccessRegister(false);
                     resetForm();
                   }}
