@@ -152,10 +152,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
     }, 2000);
   }, [itemActivityMutateHandler]);
 
-  useEffect(() => {
-    console.log(listingData);
-  }, [listingData]);
-
   return (
     <SectionWrapper
       // title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
@@ -201,7 +197,10 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
               {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
               {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
               <Typography variant={'h1'}>
-                {data?.data?.price} {data?.data?.quote.toUpperCase()}
+                {listingData && listingData?.data?.items.length !== 0
+                  ? getNftPrice(data?.data?.price, data?.data?.floor_price)
+                  : data?.data?.last_price}{' '}
+                {data?.data?.quote.toUpperCase()}
               </Typography>
             </Box>
 
@@ -316,7 +315,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
             <Typography variant={'h1'}>
               {listingData && listingData?.data?.items.length !== 0
                 ? getNftPrice(data?.data?.price, data?.data?.floor_price)
-                : '-'}
+                : data?.data?.last_price}
             </Typography>
           </Box>
         </Box>
