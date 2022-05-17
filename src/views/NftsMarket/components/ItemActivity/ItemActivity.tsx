@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  Button,
   MenuItem,
   Select,
   Table,
@@ -85,7 +86,6 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   }&size=${rowsPerPage}&types=${selectedFilter.toString()}`;
   const { data } = useSWR(url, fetcher);
 
-  console.log(data);
   const getEventCaptionByValue = (value: number) => {
     const result = EVENT_TYPE.filter((item) => item.value === value);
     return result ? result[0].name : '-';
@@ -145,7 +145,7 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
   return (
     <SectionWrapper title={'Item Activity'} icon={'activity'} toggled={true}>
       <Box sx={{ backgroundColor: '#f0faf5', p: 1, borderRadius: 2 }}>
-        <Box sx={{ pb: 1 }}>
+        <Box sx={{ display: 'flex', gap: 1, pb: 1 }}>
           <Select
             multiple
             fullWidth
@@ -188,6 +188,11 @@ const ItemActivity: React.FC<ItemActivityProps> = ({ id }) => {
               </MenuItem>
             ))}
           </Select>
+          {selectedFilter.length > 0 && (
+            <Button variant={'contained'} onClick={() => setSelectedFilter([])}>
+              Clear
+            </Button>
+          )}
         </Box>
         <Box sx={{ height: '368px', backgroundColor: 'white' }}>
           <TableContainer>
