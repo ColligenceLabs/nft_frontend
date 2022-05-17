@@ -257,6 +257,8 @@ export interface NFTType {
   quantity_selling: number;
   quote: string;
   price: number;
+  user_quantity_selling: number;
+  last_price: number;
   floor_quote: string;
   floor_price: number;
   category: string[];

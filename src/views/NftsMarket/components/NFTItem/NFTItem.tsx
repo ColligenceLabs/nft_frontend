@@ -133,7 +133,13 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
                   {item?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
                   {item?.floor_quote === 'talk' && <img src={talkLogo} alt="talk" height="16px" />}
                   <Typography variant="h6">
-                    {getNftPrice(item?.price, item?.floor_price)}
+                    {getNftPrice(
+                      item?.price,
+                      item?.floor_price,
+                      item?.user_quantity_selling,
+                      item?.quantity_selling,
+                      item?.last_price,
+                    )}
                   </Typography>
                 </Box>
               </Box>
