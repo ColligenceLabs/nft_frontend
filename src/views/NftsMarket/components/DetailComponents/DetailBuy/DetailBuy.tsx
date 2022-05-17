@@ -86,7 +86,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
 
   const [sellingQuantity, setSellingQuantity] = useState(0);
   const [buyFlag, setBuyFlag] = useState(false);
-  const [amount, setAmount] = useState('0');
+  const [amount, setAmount] = useState('1');
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
 
   const buy = async () => {
