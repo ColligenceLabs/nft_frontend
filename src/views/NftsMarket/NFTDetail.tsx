@@ -55,6 +55,7 @@ const NFTDetail = () => {
                 <DetailInformation nft={data?.data} collection={data?.data?.collection_id} />
                 <DetailBuy
                   id={id!}
+                  itemActivityMutateHandler={itemActivityMutateHandler}
                   setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
                 />
                 <Listings
@@ -96,6 +97,7 @@ const NFTDetail = () => {
                   <DetailTitle nft={data?.data} />
                   <DetailBuy
                     id={id!}
+                    itemActivityMutateHandler={itemActivityMutateHandler}
                     setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
                   />
                   <Listings

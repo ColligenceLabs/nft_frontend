@@ -24,18 +24,34 @@ import getNftPrice from '../../../../../utils/getNftPrice';
 interface DetailBuyProps {
   id: string;
   setItemActivityMutateHandler: (b: boolean) => void;
+  itemActivityMutateHandler: boolean;
 }
 
-const TitleBox = ({ title, deadline }: string | any) => {
+const TitleBox = ({
+  title,
+  deadline,
+  checkSellingQuantity,
+  checkListingQuantity,
+}: string | any) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Typography variant={'h4'}>{title}</Typography>
-      <SellingClock deadline={deadline} />
+      <SellingClock
+        deadline={deadline}
+        checkSellingQuantity={checkSellingQuantity}
+        checkListingQuantity={checkListingQuantity}
+      />
     </Box>
   );
 };
 
-const DetailBuy: React.FC<DetailBuyProps> = ({ id, setItemActivityMutateHandler }) => {
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const DetailBuy: React.FC<DetailBuyProps> = ({
+  id,
+  setItemActivityMutateHandler,
+  itemActivityMutateHandler,
+}) => {
   const theme = useTheme();
   const { library, account, activate } = useActiveWeb3React();
   const { buyNFT, sellNFT, listNFT } = useMarket();
@@ -52,9 +68,10 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id, setItemActivityMutateHandler 
   } else {
     console.log('from talken app');
   }
+  const list_url = `${process.env.REACT_APP_API_SERVER}/admin-api/market/saleList/${id}?page=1&size=5`;
 
   const { data, error, mutate } = useSWR(API_URL, () => nftDetail(id));
-
+  const { data: listingData, mutate: listingMutate } = useSWR(list_url, fetcher);
   const {
     data: myNftData,
     error: myNftError,
@@ -127,13 +144,35 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id, setItemActivityMutateHandler 
     myNftMutate();
   }, [data?.data?.quantity_selling]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      mutate();
+      listingMutate();
+      myNftMutate();
+    }, 2000);
+  }, [itemActivityMutateHandler]);
+
+  useEffect(() => {
+    console.log(listingData);
+  }, [listingData]);
+
+  useEffect(() => {
+    console.log(data?.data);
+  }, [data?.data]);
+
   return (
     <SectionWrapper
       // title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
       title={
         <TitleBox
-          title={`Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`}
+          title={
+            listingData && listingData?.data?.items.length !== 0
+              ? `Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`
+              : 'Sold out'
+          }
           deadline={data?.data?.end_date}
+          checkSellingQuantity={sellingQuantity > 0}
+          checkListingQuantity={listingData && listingData?.data?.items.length > 0}
         />
       }
       // icon={<StorefrontOutlinedIcon />}
@@ -279,7 +318,9 @@ const DetailBuy: React.FC<DetailBuyProps> = ({ id, setItemActivityMutateHandler 
             {data?.data?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
             {data?.data?.floor_quote === 'talk' && <img src={talkLogo} alt="klay" height="24px" />}
             <Typography variant={'h1'}>
-              {getNftPrice(data?.data?.price, data?.data?.floor_price)}
+              {listingData && listingData?.data?.items.length !== 0
+                ? getNftPrice(data?.data?.price, data?.data?.floor_price)
+                : '-'}
             </Typography>
           </Box>
         </Box>

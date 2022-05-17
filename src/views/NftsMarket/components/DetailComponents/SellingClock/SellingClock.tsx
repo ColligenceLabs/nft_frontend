@@ -5,8 +5,14 @@ import clear = Cache.clear;
 
 interface SellingClockProps {
   deadline: string | any;
+  checkSellingQuantity: boolean;
+  checkListingQuantity: boolean;
 }
-const SellingClock: React.FC<SellingClockProps> = ({ deadline }) => {
+const SellingClock: React.FC<SellingClockProps> = ({
+  deadline,
+  checkSellingQuantity,
+  checkListingQuantity,
+}) => {
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
   const [minutes, setMinutes] = useState(0);
@@ -19,7 +25,6 @@ const SellingClock: React.FC<SellingClockProps> = ({ deadline }) => {
   const getTimeUntil = (deadline: string) => {
     const time = Date.parse(deadline) - Date.parse(new Date().toString());
     if (isNaN(time) || time < 0) {
-      console.log('aa');
       setDays(0);
       setHours(0);
       setMinutes(0);
@@ -40,40 +45,46 @@ const SellingClock: React.FC<SellingClockProps> = ({ deadline }) => {
   }, [deadline]);
 
   return (
-    <Box sx={{ display: 'flex', gap: 3 }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant={'h4'} color={'text.primary'}>
-          {leading0(days)}
-        </Typography>
-        <Typography variant={'h6'} color={'text.secondary'}>
-          Days
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant={'h4'} color={'text.primary'}>
-          {leading0(hours)}
-        </Typography>
-        <Typography variant={'h6'} color={'text.secondary'}>
-          Hours
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant={'h4'} color={'text.primary'}>
-          {leading0(minutes)}
-        </Typography>
-        <Typography variant={'h6'} color={'text.secondary'}>
-          Minutes
-        </Typography>
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Typography variant={'h4'} color={'text.primary'}>
-          {leading0(seconds)}
-        </Typography>
-        <Typography variant={'h6'} color={'text.secondary'}>
-          Seconds
-        </Typography>
-      </Box>
-    </Box>
+    <>
+      {!checkSellingQuantity && !checkListingQuantity ? (
+        <></>
+      ) : (
+        <Box sx={{ display: 'flex', gap: 3 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant={'h4'} color={'text.primary'}>
+              {leading0(days)}
+            </Typography>
+            <Typography variant={'h6'} color={'text.secondary'}>
+              Days
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant={'h4'} color={'text.primary'}>
+              {leading0(hours)}
+            </Typography>
+            <Typography variant={'h6'} color={'text.secondary'}>
+              Hours
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant={'h4'} color={'text.primary'}>
+              {leading0(minutes)}
+            </Typography>
+            <Typography variant={'h6'} color={'text.secondary'}>
+              Minutes
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Typography variant={'h4'} color={'text.primary'}>
+              {leading0(seconds)}
+            </Typography>
+            <Typography variant={'h6'} color={'text.secondary'}>
+              Seconds
+            </Typography>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
