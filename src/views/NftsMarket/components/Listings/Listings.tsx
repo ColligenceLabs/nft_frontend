@@ -49,7 +49,8 @@ interface ListingsProps {
   listingMutateHandler: boolean;
   nft: NFTType;
   myNftMutateHandler: boolean;
-  MyNftMutateHandler: (b: boolean) => void;
+  setMyNftMutateHandler: (b: boolean) => void;
+  setItemActivityMutateHandler: (b: boolean) => void;
 }
 
 const Listings: React.FC<ListingsProps> = ({
@@ -57,7 +58,8 @@ const Listings: React.FC<ListingsProps> = ({
   listingMutateHandler,
   nft,
   myNftMutateHandler,
-  MyNftMutateHandler,
+  setMyNftMutateHandler,
+  setItemActivityMutateHandler,
 }) => {
   const context = useWeb3React();
   const { account, library } = context;
@@ -118,14 +120,16 @@ const Listings: React.FC<ListingsProps> = ({
       // console.log(result);
       if (result === 1) {
         await mutate();
-        MyNftMutateHandler(true);
+        setMyNftMutateHandler(true);
+        setItemActivityMutateHandler(true);
       }
       // 사용자 구매 내역을 서버에 전송 (sold count 수정)
     } catch (e) {
       // cancel buy (api 호출)
       await cancelBuyUserNft(id, row.token_id, account, row.seller, row._id);
       await mutate();
-      MyNftMutateHandler(true);
+      setMyNftMutateHandler(true);
+      setItemActivityMutateHandler(true);
     }
     setIsBuyingLoading(false);
   };
@@ -152,7 +156,8 @@ const Listings: React.FC<ListingsProps> = ({
 
       if (result.status === 1) {
         await mutate();
-        MyNftMutateHandler(true);
+        setMyNftMutateHandler(true);
+        setItemActivityMutateHandler(true);
       }
     } catch (e) {
       console.log(e);

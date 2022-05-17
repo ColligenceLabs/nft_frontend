@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
@@ -20,7 +20,6 @@ import DetailBuy from './components/DetailComponents/DetailBuy';
 import DetailSell from './components/DetailComponents/DetailSell';
 
 const NFTDetail = () => {
-  const [sellEventHandler, setSellEventHandler] = useState(false);
   const [listingMutateHandler, setListingMutateHandler] = useState(false);
   const [myNftMutateHandler, setMyNftMutateHandler] = useState(false);
   const [itemActivityMutateHandler, setItemActivityMutateHandler] = useState(false);
@@ -44,14 +43,6 @@ const NFTDetail = () => {
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
-  // const setListingMutateHandler = (result: boolean) => {
-  //   setListingMutateHandler(result);
-  // };
-
-  const MyNftMutateHandler = (result: boolean) => {
-    setMyNftMutateHandler(result);
-  };
-
   return (
     <MarketLayout>
       {data && !error && (
@@ -69,9 +60,10 @@ const NFTDetail = () => {
                 <Listings
                   id={id!}
                   listingMutateHandler={listingMutateHandler}
+                  setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
                   nft={data?.data}
                   myNftMutateHandler={myNftMutateHandler}
-                  MyNftMutateHandler={MyNftMutateHandler}
+                  setMyNftMutateHandler={(result) => setMyNftMutateHandler(result)}
                 />
                 <DetailSell
                   id={id!}
@@ -109,9 +101,10 @@ const NFTDetail = () => {
                   <Listings
                     id={id!}
                     listingMutateHandler={listingMutateHandler}
+                    setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
                     nft={data?.data}
                     myNftMutateHandler={myNftMutateHandler}
-                    MyNftMutateHandler={MyNftMutateHandler}
+                    setMyNftMutateHandler={(result) => setMyNftMutateHandler(result)}
                   />
                   <DetailSell
                     id={id!}
