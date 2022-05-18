@@ -8,6 +8,7 @@ import ProfileButton from '../../../../components/ProfileButton/ProfileButton';
 import { useSelector } from 'react-redux';
 import { StoreTypes } from '../../../../views/NftsMarket/types';
 import { useTheme } from '@mui/material/styles';
+import LoginIcon from '@mui/icons-material/Login';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
 import WalletConnector from '../../../../components/WalletConnector';
@@ -116,27 +117,53 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
         </Box>
         <Box>
           {user === null ? (
-            <>
-              <Button
-                variant="contained"
-                color="primary"
-                component="a"
-                href="/auth/login"
-                size={'small'}
-                sx={{ mr: 1 }}
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                component="a"
-                href="/auth/market-register"
-                size={'small'}
-              >
-                Register
-              </Button>
-            </>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 2,
+                ml: !smDown ? 2 : 1,
+              }}
+            >
+              {!smDown ? (
+                <>
+                  <Link to="/auth/login" style={{ textDecoration: 'none' }}>
+                    <Typography
+                      variant="subtitle1"
+                      color={'text.secondary'}
+                      fontWeight={700}
+                      sx={[(theme) => ({ '&:hover': { color: theme.palette.primary.main } })]}
+                    >
+                      Login
+                    </Typography>
+                  </Link>
+                  <Link to="/auth/market-register" style={{ textDecoration: 'none' }}>
+                    <Typography
+                      variant="subtitle1"
+                      color={'text.secondary'}
+                      fontWeight={700}
+                      sx={[(theme) => ({ '&:hover': { color: theme.palette.primary.main } })]}
+                    >
+                      Register
+                    </Typography>
+                  </Link>
+                </>
+              ) : (
+                <Box>
+                  <Link to="/auth/login" style={{ textDecoration: 'none' }}>
+                    <LoginIcon
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                      color={'primary'}
+                    />
+                  </Link>
+                </Box>
+              )}
+            </Box>
           ) : (
             <ProfileButton useMarket={true} />
           )}
