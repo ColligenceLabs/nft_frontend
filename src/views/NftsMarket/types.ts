@@ -331,7 +331,8 @@ export interface RegisterForm {
   password: string;
   repeatPassword: string;
   level: string;
-  image?: File | null;
+  image?: File | string | null | undefined;
+  imageSrc?: string | ArrayBuffer | null;
   description: string;
 }
 

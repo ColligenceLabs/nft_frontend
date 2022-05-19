@@ -19,6 +19,8 @@ const UserProfile = () => {
   const context = useWeb3React();
   const { activate, account } = context;
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
@@ -26,15 +28,19 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchMyNfts = async () => {
+      setIsLoading(true);
       if (!account) return;
       const nfts = await getUserNFTs(account, 100);
-      console.log(nfts.data.nfts);
       setMyNfts(nfts.data.nfts);
-      console.log(nfts);
+      setIsLoading(false);
     };
 
     fetchMyNfts();
   }, [getUserNFTs, account]);
+
+  useEffect(() => {
+    console.log(myNfts);
+  }, [myNfts]);
 
   return (
     <MarketLayout>
@@ -135,7 +141,7 @@ const UserProfile = () => {
             My NFTs
           </Typography>
         </Box>
-        <Grid container>
+        <Grid container sx={{ py: 3 }}>
           {myNfts !== null && myNfts.length > 0 ? (
             myNfts.map((item, index) => (
               <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
@@ -155,7 +161,9 @@ const UserProfile = () => {
                   minHeight: '300px',
                 }}
               >
-                <Typography variant={'h2'}>No items to display</Typography>
+                <Typography variant={'h2'}>
+                  {isLoading ? 'Loading.....' : 'No items to display'}
+                </Typography>
               </Box>
             </Grid>
           )}

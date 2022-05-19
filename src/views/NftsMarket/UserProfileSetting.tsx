@@ -1,61 +1,85 @@
 import React, { useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from '../../layouts/market-layout/components/Container';
-import { Alert, Box, Button, CardMedia, Typography, useTheme } from '@mui/material';
+import { Alert, Box, Button, Grid, Snackbar, Typography, useTheme } from '@mui/material';
 import { Formik } from 'formik';
-import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
 import { RegisterForm } from './types';
-import { register } from '../../services/auth.service';
+import { updater } from '../../services/auth.service';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import useUserInfo from '../../hooks/useUserInfo';
+import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
+import { LoadingButton } from '@mui/lab';
+import adminUpdateSchema from '../../config/schema/adminUpdateSchema';
+import { useNavigate } from 'react-router';
 
 const UserProfileSetting = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
   const [errorMessage, setErrorMessage] = useState<any>();
   const [successRegister, setSuccessRegister] = useState(false);
   const { t } = useTranslation();
-  const { full_name, email, description, image } = useUserInfo();
-  const [avatar, setAvatar] = useState(image);
-  const initialValue: RegisterForm = {
-    full_name: full_name,
-    email: email,
+  const { full_name, email, description, image: userImage, id } = useUserInfo();
+  const [userInfo, setUserInfo] = useState<RegisterForm>({
+    full_name,
+    image: userImage,
+    imageSrc: userImage,
+    description,
+    email,
     password: '',
     repeatPassword: '',
     level: 'user',
-    // image: null,
-    description: description,
+  });
+
+  const encodeFileToBase64 = (fileBlob: Blob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise<void>((resolve) => {
+      reader.onload = () => {
+        setUserInfo({ ...userInfo, imageSrc: reader.result });
+        resolve();
+      };
+    });
   };
+  // @ts-ignore
   return (
     <MarketLayout>
       <Container>
         <Formik
-          validationSchema={adminRegisterSchema}
-          initialValues={initialValue}
+          validationSchema={adminUpdateSchema}
+          initialValues={{
+            full_name: full_name,
+            image: '',
+            imageSrc: userImage,
+            description: description,
+            email: email,
+            password: '',
+            repeatPassword: '',
+            level: '',
+          }}
           onSubmit={async (data: RegisterForm, { setSubmitting }) => {
             setSubmitting(true);
 
             const formData = new FormData();
-            for (const value in data) {
-              // @ts-ignore
-              formData.append(value, data[value]);
-            }
-            formData.append('image', avatar);
 
-            const res = await register(formData);
-            console.log(res);
-            if (res?.data.status === 1) {
+            formData.append('full_name', data.full_name!);
+            formData.append('image', data.image!);
+            formData.append('description', data.description);
+
+            const res = await updater(formData, id);
+
+            if (res.data.status === 1) {
               setErrorMessage(null);
-              // navigate('/auth/login');
               setSuccessRegister(true);
             } else {
-              setErrorMessage(res?.data.message);
+              setErrorMessage(res.data.message);
+              setSuccessRegister(false);
             }
             setSubmitting(false);
           }}
@@ -84,18 +108,17 @@ const UserProfileSetting = () => {
                 <Box>
                   <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
                   <CustomTextField
-                    id="image"
-                    name="image"
+                    id="imageFiled"
+                    name="imageFiled"
                     variant="outlined"
                     fullWidth
                     size="small"
-                    value={values.image == null ? '' : values.image.name}
-                    // onChange={handleChange}
+                    value={values.image!.name || ''}
                     InputProps={{
                       startAdornment: (
                         <Button
-                          variant="contained"
                           component="label"
+                          variant="contained"
                           size="small"
                           style={{ marginRight: '1rem' }}
                         >
@@ -104,33 +127,33 @@ const UserProfileSetting = () => {
                             id="image"
                             style={{ display: 'none' }}
                             type="file"
-                            accept="image/jpg, image/png, image/jpeg"
                             name="image"
-                            onChange={(event) => {
-                              console.log(typeof values.image);
-                              // @ts-ignore
-                              // setFieldValue('image', event.currentTarget.files[0]);
-                              // @ts-ignore
-                              setAvatar(event.currentTarget.files[0]);
+                            onChange={(event: React.ChangeEvent<HTMLInputElement | null>) => {
+                              setFieldValue('image', event!.currentTarget!.files[0]);
+                              encodeFileToBase64(event.currentTarget.files[0]);
                             }}
                           />
                         </Button>
                       ),
                     }}
                   />
+                  <Box sx={{ width: '100%', textAlign: 'center' }}>
+                    <img
+                      src={userInfo.imageSrc}
+                      alt="logo"
+                      style={{
+                        objectFit: 'cover',
+                        width: '200px',
+                        height: '200px',
+                        borderRadius: '50%',
+                        marginTop: '20px',
+                      }}
+                    />
+                  </Box>
                   {touched.image && errors.image && (
                     <Typography variant={'caption'} color={'red'}>
                       {errors.image}
                     </Typography>
-                  )}
-                  {values.image !== null && (
-                    <CardMedia
-                      component="img"
-                      sx={{ width: '300px', mt: 3 }}
-                      // image={URL.createObjectURL(values.image)}
-                      image={typeof avatar === 'string' ? avatar : URL.createObjectURL(avatar)}
-                      alt="Live from space album cover"
-                    />
                   )}
                 </Box>
                 <Box sx={{ flex: 0.6 }}>
@@ -160,66 +183,64 @@ const UserProfileSetting = () => {
                       fullWidth
                       size="small"
                       value={values.email}
-                      onChange={handleChange}
+                      disabled
                     />
-                    {touched.email && errors.email && (
-                      <Typography variant={'caption'} color={'red'}>
-                        {errors.email}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box>
-                    <CustomFormLabel htmlFor="password">Password</CustomFormLabel>
-                    <CustomTextField
-                      id="password"
-                      name="password"
-                      type="password"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      value={values.password}
-                      onChange={handleChange}
-                    />
-                    {touched.password && errors.password && (
-                      <Typography variant={'caption'} color={'red'}>
-                        {errors.password}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box>
-                    <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>
-                    <CustomTextField
-                      id="repeatPassword"
-                      name="repeatPassword"
-                      type="password"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      value={values.repeatPassword}
-                      onChange={handleChange}
-                    />
-                    {touched.repeatPassword && errors.repeatPassword && (
-                      <Typography variant={'caption'} color={'red'}>
-                        {errors.repeatPassword}
-                      </Typography>
-                    )}
                   </Box>
                   <Box>
                     <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
-                    <CustomTextField
+                    <CustomTextarea
+                      maxRows={5}
+                      minRows={5}
                       id="description"
                       name="description"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
                       value={values.description}
                       onChange={handleChange}
-                      error={touched.description && Boolean(errors.description)}
-                      helperText={touched.description && errors.description}
                     />
+                    {touched.description && errors.description && (
+                      <Typography variant={'caption'} color={'red'}>
+                        {errors.description}
+                      </Typography>
+                    )}
                   </Box>
+                  <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={successRegister}
+                    autoHideDuration={1000}
+                    onClose={() => {
+                      navigate('/market/profile');
+                      setSuccessRegister(false);
+                    }}
+                  >
+                    <Alert
+                      onClose={() => {
+                        setSuccessRegister(false);
+                      }}
+                      variant="filled"
+                      severity="success"
+                      sx={{ width: '100%' }}
+                    >
+                      Success Update!
+                    </Alert>
+                  </Snackbar>
+
+                  {errorMessage && (
+                    <Grid item lg={12} md={12} sm={12} xs={12}>
+                      <Alert
+                        sx={{
+                          mt: 2,
+                          mb: 2,
+                        }}
+                        variant="filled"
+                        severity="error"
+                      >
+                        {errorMessage}
+                      </Alert>
+                    </Grid>
+                  )}
                   <Box sx={{ mt: '10px', textAlign: 'right' }}>
-                    <Button variant={'contained'}>Save</Button>
+                    <LoadingButton type="submit" loading={isSubmitting} variant="contained">
+                      {t('Confirm')}
+                    </LoadingButton>
                   </Box>
                 </Box>
               </Box>

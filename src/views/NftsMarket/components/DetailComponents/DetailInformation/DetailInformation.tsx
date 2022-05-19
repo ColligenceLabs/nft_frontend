@@ -36,7 +36,6 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
     window.open(url, '_blank');
   };
 
-  console.log(collection);
   return (
     <>
       <SectionWrapper title={'Description'} icon={'align-left'} maxHeight={'200px'}>

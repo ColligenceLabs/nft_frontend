@@ -20,6 +20,7 @@ import { getWalletBalance, setActivatingConnector, setBalance } from '../../redu
 import { targetNetwork } from '../../config';
 import { setupNetwork } from '../../utils/wallet';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useWallet';
+import useUserInfo from '../../hooks/useUserInfo';
 
 const ProfileButton = ({ useMarket }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
@@ -37,13 +38,16 @@ const ProfileButton = ({ useMarket }) => {
   const context = useWeb3React();
   const { connector, library, account } = context;
   const { activatingConnector } = useSelector((state) => state.wallet);
-  const {
-    user: {
-      infor: { full_name, email, level, image, id },
-    },
-  } = useSelector((state) => state.auth);
+  // const {
+  //   user: {
+  //     infor: { full_name, email, level, image, id },
+  //   },
+  // } = useSelector((state) => state.auth);
+
+  const { full_name, email, level, image, id } = useUserInfo();
 
   const [showInitStore, setShowInitStore] = useState(false);
+  const [userimg, setUserimg] = useState('');
   const wallet = useWallet();
   const { store, isFetching, isLoading } = useMeta();
   const connection = useConnection();
@@ -60,20 +64,39 @@ const ProfileButton = ({ useMarket }) => {
     }
   }, [store, isLoading]);
 
-  let userimg;
-  if (image === undefined || image === '') {
-    userimg =
-      level.toLowerCase() === 'creator'
-        ? creatorImage
-        : level.toLowerCase() === 'admin'
-        ? adminImage
-        : userImage;
-  } else {
-    userimg = image.replace(
-      'https://nftbedev.talken.io/taalNft/uploads',
-      'http://localhost:4000/taalNft',
-    );
-  }
+  // let userimg;
+  // if (image === undefined || image === '') {
+  //   userimg =
+  //     level.toLowerCase() === 'creator'
+  //       ? creatorImage
+  //       : level.toLowerCase() === 'admin'
+  //       ? adminImage
+  //       : userImage;
+  // } else {
+  //   userimg = image.replace(
+  //     'https://nftbedev.talken.io/taalNft/uploads',
+  //     'http://localhost:4000/taalNft',
+  //   );
+  // }
+
+  useEffect(() => {
+    if (image === undefined || image === '') {
+      setUserimg(
+        level.toLowerCase() === 'creator'
+          ? creatorImage
+          : level.toLowerCase() === 'admin'
+          ? adminImage
+          : userImage,
+      );
+    } else {
+      setUserimg(
+        image?.replace(
+          'https://nftbedev.talken.io/taalNft/uploads',
+          'http://localhost:4000/taalNft',
+        ),
+      );
+    }
+  }, [image]);
 
   useEffect(async () => {
     // TODO : Admin 테이블의 admin_address 변경할 지점 - 너무 자주 실행 되는 듯...
@@ -211,7 +234,7 @@ const ProfileButton = ({ useMarket }) => {
           level={level}
           image={image}
         />
-        {level.toLowerCase() === 'administrator' && process.env.REACT_APP_USE_SOLANA === 'true' && (
+        {level?.toLowerCase() === 'administrator' && process.env.REACT_APP_USE_SOLANA === 'true' && (
           <Button
             sx={{
               mt: 2,

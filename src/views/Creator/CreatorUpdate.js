@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Breadcrumb from '../../layouts/full-layout/breadcrumb/Breadcrumb';
 import { Formik } from 'formik';
 import { Alert, Button, FormHelperText, Grid, MenuItem, Paper, Snackbar } from '@mui/material';
@@ -14,8 +14,6 @@ import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import adminUpdateSchema from '../../config/schema/adminUpdateSchema';
 import { updater } from '../../services/auth.service';
-import useUserInfo from '../../hooks/useUserInfo';
-import { useNavigate } from 'react-router-dom';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -32,8 +30,6 @@ const CreatorUpdate = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
 
-  console.log(userInfo);
-
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
@@ -46,16 +42,14 @@ const CreatorUpdate = () => {
   };
 
   return (
-    <PageContainer title="Creator Register" description="this is Creator Register Form page">
-      <Breadcrumb title="Creator Register" subtitle="Creator Register Information" />
+    <PageContainer title="Creator Update" description="this is Creator Update Form page">
+      <Breadcrumb title="Creator Update" subtitle="Creator Update Information" />
       <Container>
         <Formik
           validationSchema={adminUpdateSchema}
           initialValues={{
             full_name: userInfo.full_name,
             email: userInfo.email,
-            // password: '',
-            // repeatPassword: '',
             level: userInfo.level,
             image: '',
             imageSrc: userInfo.image,
@@ -141,8 +135,6 @@ const CreatorUpdate = () => {
                     name="description"
                     value={values.description}
                     onChange={handleChange}
-                    // error={touched.description && Boolean(errors.description)}
-                    // helperText={touched.description && errors.description}
                   />
                   {touched.description && errors.description && (
                     <FormHelperText htmlFor="render-select" error>
@@ -208,8 +200,6 @@ const CreatorUpdate = () => {
                     labelId="demo-simple-select-label"
                     id="level"
                     name="level"
-                    // onChange={handleChange}
-                    // value={values.level}
                     defaultValue="creator"
                     fullWidth
                     size="small"
@@ -243,7 +233,7 @@ const CreatorUpdate = () => {
                     severity="success"
                     sx={{ width: '100%' }}
                   >
-                    Success in Collection create!
+                    Success Update!
                   </Alert>
                 </Snackbar>
 
