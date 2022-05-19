@@ -32,8 +32,6 @@ const CreatorUpdate = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
 
-  console.log(userInfo);
-
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
