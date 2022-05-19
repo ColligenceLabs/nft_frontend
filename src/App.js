@@ -9,9 +9,8 @@ import useUserInfo from './hooks/useUserInfo';
 
 const App = () => {
   const theme = ThemeSettings();
-  const { isLoggedIn } = useSelector((state) => state.auth);
-  const { level } = useUserInfo();
-  const routing = useRoutes(Router(isLoggedIn, level));
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+  const routing = useRoutes(Router(isLoggedIn, user?.infor?.level));
 
   return (
     <ThemeProvider theme={theme}>

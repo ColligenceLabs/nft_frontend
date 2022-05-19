@@ -7,8 +7,8 @@ import creatorImage from '../../../assets/images/users/creator.png';
 
 const ProfileDropdown = ({ useMarket, fullName, email, level, image }) => {
   let userimg;
-  if (image === undefined || image === '') {
-    userimg = level.toLowerCase() === 'creator' ? creatorImage : adminImage;
+  if (image === undefined || image === '' || image === null) {
+    userimg = level?.toLowerCase() === 'creator' ? creatorImage : adminImage;
   } else {
     userimg = image.replace(
       'https://nftbedev.talken.io/taalNft/uploads',
