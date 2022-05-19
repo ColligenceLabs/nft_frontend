@@ -197,13 +197,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
               {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
               {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
               <Typography variant={'h1'}>
-                {getNftPrice(
-                  data?.data?.price,
-                  data?.data?.floor_price,
-                  data?.data?.user_quantity_selling,
-                  data?.data?.quantity_selling,
-                  data?.data?.last_price,
-                )}
+                {data?.data?.price}
                 {/*{data?.data?.price < data?.data?.floor_price*/}
                 {/*  ? data?.data?.price*/}
                 {/*  : data?.data?.floor_price}{' '}*/}
