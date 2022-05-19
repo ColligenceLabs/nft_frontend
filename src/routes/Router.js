@@ -27,6 +27,7 @@ const SerialsCreate = Loadable(lazy(() => import('../views/Serials/SerialsCreate
 const Transaction = Loadable(lazy(() => import('../views/Transaction')));
 const Collection = Loadable(lazy(() => import('../views/Collection')));
 const CollectionCreate = Loadable(lazy(() => import('../views/Collection/CollectionCreate')));
+const CollectionUpdate = Loadable(lazy(() => import('../views/Collection/CollectionUpdate')));
 const Reward = Loadable(lazy(() => import('../views/Reward')));
 const RewardCreate = Loadable(lazy(() => import('../views/Reward/RewardCreate')));
 const UserProfile = Loadable(lazy(() => import('../views/UserProfile/UserProfile')));
@@ -94,6 +95,7 @@ const Router = (isLoggedIn, level) => [
       { path: '/airdrop/mint', exact: true, element: <AirDropMint /> },
       { path: '/transaction', exact: true, element: <Transaction /> },
       { path: '/collection', exact: true, element: <Collection /> },
+      { path: '/collection/update', exact: true, element: <CollectionUpdate /> },
       { path: '/collection/create', exact: true, element: <CollectionCreate /> },
       { path: '/reward', exact: true, element: <Reward /> },
       { path: '/reward/create', exact: true, element: <RewardCreate /> },

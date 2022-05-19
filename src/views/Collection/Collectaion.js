@@ -28,9 +28,12 @@ import { deleteCollections, getCollectionData } from '../../services/collections
 import { getCreatorData } from '../../services/creator.service';
 import { useSelector } from 'react-redux';
 import DeleteDialog from '../../components/DeleteDialog';
+import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import { useNavigate } from 'react-router-dom';
 
 const Collections = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [rows, setRows] = useState([]);
   const [order, setOrder] = React.useState('asc');
@@ -148,8 +151,15 @@ const Collections = () => {
     setOpenDeleteModal(false);
   };
 
+  const handleCollectionUpdate = (row) => {
+    navigate(`/collection/update`, {
+      state: {
+        ...row,
+      },
+    });
+  };
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = rowsPerPage - rows.length;
 
   const fetchCollections = async () => {
     const {
@@ -295,6 +305,9 @@ const Collections = () => {
                               }}
                             >
                               <DeleteOutlinedIcon />
+                            </IconButton>
+                            <IconButton onClick={() => handleCollectionUpdate(row)}>
+                              <ModeEditOutlineOutlinedIcon />
                             </IconButton>
                           </Box>
                         </TableCell>

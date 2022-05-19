@@ -51,6 +51,15 @@ export const createCollection = (formData) => {
   return axios.post(`${API_URL}/create`, formData, { headers: authHeader() });
 };
 
+export const updateCollection = (id, formData) => {
+  return axios
+    .put(`${API_URL}/update/${id}`, formData, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const getCollectionsByCreatorId = (id) => {
   return axios
     .get(`${API_URL}/creator/${id}`, { headers: authHeader() })
@@ -76,6 +85,7 @@ const collectionsService = {
   getCollectionsByCreatorId,
   deleteCollections,
   getCollectionById,
+  updateCollection,
 };
 
 export default collectionsService;

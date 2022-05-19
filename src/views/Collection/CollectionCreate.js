@@ -54,20 +54,7 @@ import { mintNFT } from '../../solana/actions/nft';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { MintLayout } from '@solana/spl-token';
 import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
-
-const COLLECTION_CATEGORY = [
-  // { value: 'other', title: 'Other' },
-  // { value: 'top', title: 'Top' },
-  // { value: 'game', title: 'Game' },
-  // { value: 'graffiti', title: 'Graffiti' },
-  { value: 'talken', title: 'Talken' },
-  { value: 'art', title: 'Art' },
-  { value: 'collectibles', title: 'Collectibles' },
-  { value: 'membership', title: 'Membership' },
-  { value: 'pieces', title: 'Pieces' },
-  { value: 'games', title: 'Games' },
-  { value: 'virtual', title: 'Virtual Worlds' },
-];
+import { COLLECTION_CATEGORY } from './catetories';
 
 const Container = styled(Paper)(() => ({
   padding: '20px',
