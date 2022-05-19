@@ -1,21 +1,10 @@
 import React, { useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
 import Container from '../../layouts/market-layout/components/Container';
-import {
-  Alert,
-  Box,
-  Button,
-  CardMedia,
-  FormHelperText,
-  Grid,
-  Snackbar,
-  Typography,
-  useTheme,
-} from '@mui/material';
+import { Alert, Box, Button, Grid, Snackbar, Typography, useTheme } from '@mui/material';
 import { Formik } from 'formik';
-import adminRegisterSchema from '../../config/schema/adminRegisterSchema';
 import { RegisterForm } from './types';
-import { register, updater } from '../../services/auth.service';
+import { updater } from '../../services/auth.service';
 import CustomFormLabel from '../../components/forms/custom-elements/CustomFormLabel';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
 import DriveFileMoveOutlinedIcon from '@mui/icons-material/DriveFileMoveOutlined';
@@ -37,7 +26,6 @@ const UserProfileSetting = () => {
   const [successRegister, setSuccessRegister] = useState(false);
   const { t } = useTranslation();
   const { full_name, email, description, image: userImage, id } = useUserInfo();
-  const [avatar, setAvatar] = useState(userImage);
   const [userInfo, setUserInfo] = useState<RegisterForm>({
     full_name,
     image: userImage,
@@ -84,24 +72,8 @@ const UserProfileSetting = () => {
             formData.append('image', data.image!);
             formData.append('description', data.description);
 
-            // const formData = new FormData();
-            // for (const value in data) {
-            //   // @ts-ignore
-            //   formData.append(value, data[value]);
-            // }
-            // formData.append('image', avatar);
-            //
-            // const res = await register(formData);
-            // console.log(res);
-            // if (res?.data.status === 1) {
-            //   setErrorMessage(null);
-            //   // navigate('/auth/login');
-            //   setSuccessRegister(true);
-            // } else {
-            //   setErrorMessage(res?.data.message);
-            // }
             const res = await updater(formData, id);
-            console.log(res.data);
+
             if (res.data.status === 1) {
               setErrorMessage(null);
               setSuccessRegister(true);
@@ -214,42 +186,6 @@ const UserProfileSetting = () => {
                       disabled
                     />
                   </Box>
-                  {/*<Box>*/}
-                  {/*  <CustomFormLabel htmlFor="password">Password</CustomFormLabel>*/}
-                  {/*  <CustomTextField*/}
-                  {/*    id="password"*/}
-                  {/*    name="password"*/}
-                  {/*    type="password"*/}
-                  {/*    variant="outlined"*/}
-                  {/*    fullWidth*/}
-                  {/*    size="small"*/}
-                  {/*    value={values.password}*/}
-                  {/*    onChange={handleChange}*/}
-                  {/*  />*/}
-                  {/*  {touched.password && errors.password && (*/}
-                  {/*    <Typography variant={'caption'} color={'red'}>*/}
-                  {/*      {errors.password}*/}
-                  {/*    </Typography>*/}
-                  {/*  )}*/}
-                  {/*</Box>*/}
-                  {/*<Box>*/}
-                  {/*  <CustomFormLabel htmlFor="password">Password Confirm</CustomFormLabel>*/}
-                  {/*  <CustomTextField*/}
-                  {/*    id="repeatPassword"*/}
-                  {/*    name="repeatPassword"*/}
-                  {/*    type="password"*/}
-                  {/*    variant="outlined"*/}
-                  {/*    fullWidth*/}
-                  {/*    size="small"*/}
-                  {/*    value={values.repeatPassword}*/}
-                  {/*    onChange={handleChange}*/}
-                  {/*  />*/}
-                  {/*  {touched.repeatPassword && errors.repeatPassword && (*/}
-                  {/*    <Typography variant={'caption'} color={'red'}>*/}
-                  {/*      {errors.repeatPassword}*/}
-                  {/*    </Typography>*/}
-                  {/*  )}*/}
-                  {/*</Box>*/}
                   <Box>
                     <CustomFormLabel htmlFor="description">{t('Description')}</CustomFormLabel>
                     <CustomTextarea
