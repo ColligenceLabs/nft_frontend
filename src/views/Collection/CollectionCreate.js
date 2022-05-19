@@ -103,10 +103,6 @@ const CollectionCreate = () => {
   const [cost, setCost] = useState(0);
   const [collection, setCollection] = useState(undefined);
 
-  useEffect(() => {
-    console.log('= TX Progress Step => ', nftCreateProgress);
-  }, [nftCreateProgress]);
-
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
   };
@@ -619,7 +615,7 @@ const CollectionCreate = () => {
                     type="number"
                     fullWidth
                     size="small"
-                    placeholder="Must be greater than 0.1 percent. e.g. 2.5"
+                    placeholder="Must be greater than 0 percent. Default value '0'. e.g. 2.5"
                     disabled={isSubmitting}
                     value={values.fee_percentage}
                     onChange={handleChange}
@@ -636,8 +632,16 @@ const CollectionCreate = () => {
                     fullWidth
                     size="small"
                     placeholder="Please enter on address. e.g. 0x623C7....."
-                    disabled={isSubmitting || values.fee_percentage === 0}
-                    value={values.fee_payout}
+                    disabled={
+                      isSubmitting ||
+                      values.fee_percentage === 0 ||
+                      values.fee_percentage.toString() === ''
+                    }
+                    value={
+                      values.fee_percentage === 0 || values.fee_percentage.toString() === ''
+                        ? ''
+                        : values.fee_payout
+                    }
                     onChange={handleChange}
                     error={touched.fee_payout && Boolean(errors.fee_payout)}
                     helperText={touched.fee_payout && errors.fee_payout}
