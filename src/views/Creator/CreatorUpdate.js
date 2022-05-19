@@ -233,7 +233,7 @@ const CreatorUpdate = () => {
                     severity="success"
                     sx={{ width: '100%' }}
                   >
-                    Success in Collection create!
+                    Success Update!
                   </Alert>
                 </Snackbar>
 
