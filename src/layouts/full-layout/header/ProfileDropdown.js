@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, MenuItem, Typography, Avatar, Button, Divider } from '@mui/material';
 import { Link } from 'react-router-dom';
 import FeatherIcon from 'feather-icons-react';
 import adminImage from '../../../assets/images/users/admin.png';
 import creatorImage from '../../../assets/images/users/creator.png';
+import userImage from '../../../assets/images/users/user.png';
 
 const ProfileDropdown = ({ useMarket, fullName, email, level, image }) => {
-  let userimg;
-  if (image === undefined || image === '' || image === null) {
-    userimg = level?.toLowerCase() === 'creator' ? creatorImage : adminImage;
-  } else {
-    userimg = image.replace(
-      'https://nftbedev.talken.io/taalNft/uploads',
-      'http://localhost:4000/taalNft',
-    );
-  }
+  const [userimg, setUserimg] = useState('');
+
+  useEffect(() => {
+    if (image === undefined || image === null || image === '') {
+      setUserimg(userImage);
+    } else {
+      setUserimg(
+        image?.replace(
+          'https://nftbedev.talken.io/taalNft/uploads',
+          'http://localhost:4000/taalNft',
+        ),
+      );
+    }
+  }, [image]);
 
   return (
     <Box>

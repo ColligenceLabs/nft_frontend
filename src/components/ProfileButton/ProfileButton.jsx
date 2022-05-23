@@ -64,30 +64,9 @@ const ProfileButton = ({ useMarket }) => {
     }
   }, [store, isLoading]);
 
-  // let userimg;
-  // if (image === undefined || image === '') {
-  //   userimg =
-  //     level.toLowerCase() === 'creator'
-  //       ? creatorImage
-  //       : level.toLowerCase() === 'admin'
-  //       ? adminImage
-  //       : userImage;
-  // } else {
-  //   userimg = image.replace(
-  //     'https://nftbedev.talken.io/taalNft/uploads',
-  //     'http://localhost:4000/taalNft',
-  //   );
-  // }
-
   useEffect(() => {
-    if (image === undefined || image === '') {
-      setUserimg(
-        level.toLowerCase() === 'creator'
-          ? creatorImage
-          : level.toLowerCase() === 'admin'
-          ? adminImage
-          : userImage,
-      );
+    if (image === undefined || image === null || image === '') {
+      setUserimg(userImage);
     } else {
       setUserimg(
         image?.replace(
@@ -100,7 +79,7 @@ const ProfileButton = ({ useMarket }) => {
 
   useEffect(async () => {
     // TODO : Admin 테이블의 admin_address 변경할 지점 - 너무 자주 실행 되는 듯...
-    await updateWallet(id, account);
+    if (level && level.toLowerCase() === 'administrator') await updateWallet(id, account);
   }, [account]);
 
   useEffect(() => {

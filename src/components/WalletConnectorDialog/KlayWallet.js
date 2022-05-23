@@ -11,6 +11,7 @@ import { injected, kaikas, walletconnect } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
 import { setKlaytn } from '../../redux/slices/wallets';
 import { signMessage } from '../../utils/signMessage';
+import { login, loginWithAddress } from '../../redux/slices/auth';
 
 const KlayWalletList = [
   {
@@ -43,6 +44,7 @@ const KlayWallet = ({ klaytn }) => {
   const dispatch = useDispatch();
   const context = useWeb3React();
   const { activate, account, library } = context;
+
   const [walletName, setWalletName] = useState('');
 
   useEffect(() => {
@@ -53,24 +55,47 @@ const KlayWallet = ({ klaytn }) => {
 
   const handleWalletCardClick = async (wallet) => {
     setWalletName(wallet.name);
+
     try {
       if (wallet.name === 'metamask') {
         await activate(injected, null, true);
-        dispatch(setActivatingConnector(injected));
+        await dispatch(setActivatingConnector(injected));
       } else if (wallet.name === 'walletConnector') {
         const wc = walletconnect(true);
         await activate(wc, undefined, true);
       } else if (wallet.name === 'kaikas') {
         await activate(kaikas, null, true);
-        dispatch(setActivatingConnector(kaikas));
+        await dispatch(setActivatingConnector(kaikas));
       }
-
-      const sign = await signMessage(library, account, wallet.name);
-      console.log('== Signed Message ==>', sign);
     } catch (e) {
       console.log('connect wallet error', e);
     }
+
+    // setWalletName(wallet.name);
+    // try {
+    //   if (wallet.name === 'metamask') {
+    //     await activate(injected, null, true);
+    //     dispatch(setActivatingConnector(injected));
+    //   } else if (wallet.name === 'walletConnector') {
+    //     const wc = walletconnect(true);
+    //     await activate(wc, undefined, true);
+    //   } else if (wallet.name === 'kaikas') {
+    //     await activate(kaikas, null, true);
+    //     dispatch(setActivatingConnector(kaikas));
+    //   }
+    //
+    //   const sign = await signMessage(library, account, wallet.name);
+    //   console.log('== Signed Message ==>', sign);
+    // } catch (e) {
+    //   console.log('connect wallet error', e);
+    // }
   };
+
+  useEffect(() => {
+    if (account !== undefined) {
+      dispatch(loginWithAddress({ address: account, chainId: '1001' }));
+    }
+  }, [account]);
   return (
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>

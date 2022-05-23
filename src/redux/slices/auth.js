@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setMessage } from './message';
 
 import AuthService from '../../services/auth.service';
+import MarketService from '../../services/market.service';
 
 const user = JSON.parse(localStorage.getItem('user'));
 
@@ -36,6 +37,23 @@ export const login = createAsyncThunk('auth/login', async ({ email, password }, 
     return thunkAPI.rejectWithValue();
   }
 });
+
+export const loginWithAddress = createAsyncThunk(
+  'auth/login',
+  async ({ address, chainId }, thunkAPI) => {
+    try {
+      const data = await MarketService.loginWidthAddress(address, chainId);
+      return { user: data.data, message: data.message, status: data.status };
+    } catch (error) {
+      const message =
+        (error.response && error.response.data && error.response.data.message) ||
+        error.message ||
+        error.toString();
+      thunkAPI.dispatch(setMessage(message));
+      return thunkAPI.rejectWithValue();
+    }
+  },
+);
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   await AuthService.logout();

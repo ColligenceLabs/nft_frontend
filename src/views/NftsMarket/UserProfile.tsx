@@ -12,14 +12,18 @@ import splitAddress from '../../utils/splitAddress';
 import WalletDialog from '../../components/WalletDialog';
 import { getUserNFTs } from '../../services/nft.service';
 import NFTItem from './components/NFTItem';
+import userImage from '../../assets/images/users/user.png';
+import bannerImage from '../../assets/images/users/banner.png';
 
 const UserProfile = () => {
-  const { image, full_name, description } = useUserInfo();
+  const { image, full_name, description, level, banner } = useUserInfo();
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const context = useWeb3React();
   const { activate, account } = context;
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userimg, setUserimg] = useState('');
+  const [bannerimg, setBannerimg] = useState('');
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -31,7 +35,8 @@ const UserProfile = () => {
       setIsLoading(true);
       if (!account) return;
       const nfts = await getUserNFTs(account, 100);
-      setMyNfts(nfts.data.nfts);
+      console.log(nfts);
+      if (nfts !== undefined) setMyNfts(nfts.data.nfts);
       setIsLoading(false);
     };
 
@@ -39,15 +44,37 @@ const UserProfile = () => {
   }, [getUserNFTs, account]);
 
   useEffect(() => {
-    console.log(myNfts);
-  }, [myNfts]);
+    if (image === undefined || image === null || image === '') {
+      setUserimg(userImage);
+    } else {
+      setUserimg(
+        image?.replace(
+          'https://nftbedev.talken.io/taalNft/uploads',
+          'http://localhost:4000/taalNft',
+        ),
+      );
+    }
+  }, [image]);
+
+  useEffect(() => {
+    if (banner === undefined || banner === null || banner === '') {
+      setBannerimg(bannerImage);
+    } else {
+      setBannerimg(
+        banner?.replace(
+          'https://nftbedev.talken.io/taalNft/uploads',
+          'http://localhost:4000/taalNft',
+        ),
+      );
+    }
+  }, [banner]);
 
   return (
     <MarketLayout>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box sx={{ width: 1, height: '250px' }}>
           <img
-            src={image}
+            src={bannerimg}
             alt={full_name}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
@@ -63,7 +90,7 @@ const UserProfile = () => {
           }}
         >
           <img
-            src={image}
+            src={userimg}
             alt={full_name}
             style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '100%' }}
           />

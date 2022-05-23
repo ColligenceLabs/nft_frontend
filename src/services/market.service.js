@@ -4,6 +4,31 @@ import authService from './auth.service';
 
 const API_URL = `${process.env.REACT_APP_API_SERVER}/admin-api/market`;
 
+const loginWidthAddress = (address, chainId) => {
+  return axios
+    .get(`${process.env.REACT_APP_API_SERVER}/market/profile/login/${address}?chainId=${chainId}`)
+    .then((response) => {
+      if (response.data.status === 1) {
+        localStorage.setItem('user', JSON.stringify(response.data.data || null));
+      }
+      return response.data;
+    })
+
+    .catch((error) => console.log(error));
+};
+
+export const updater = (formData) => {
+  console.log('aa');
+  return (
+    axios
+      .post(`${process.env.REACT_APP_API_SERVER}/market/profile/update`, formData, {
+        headers: authHeader(),
+      })
+      // .catch((error) => (error.response.status === 401 ? logout() : console.log(error)));
+      .catch((error) => console.log(error))
+  );
+};
+
 export const getMarketCollectionData = (categoryKeyword) => {
   const category = categoryKeyword === 'all' ? '' : categoryKeyword;
   return axios
@@ -39,7 +64,7 @@ export const nftDetail = (id) => {
 };
 
 export const saleList = (nftId, page, size) => {
-  return  axios
+  return axios
     .get(`${API_URL}/saleList/${nftId}?page=${page}&size=${size}`)
     .then((response) => {
       return response.data;
@@ -47,7 +72,7 @@ export const saleList = (nftId, page, size) => {
     .catch((error) => {
       error.response?.status === 401 ? authService.logout() : console.log(error);
     });
-}
+};
 
 export const sellUserNft = (
   seller,
@@ -57,7 +82,7 @@ export const sellUserNft = (
   collectionId,
   nftId,
   tokenId,
-  serialIds
+  serialIds,
 ) => {
   const data = {
     seller,
@@ -67,10 +92,11 @@ export const sellUserNft = (
     collectionId,
     nftId,
     tokenId,
-    serialIds
+    serialIds,
   };
   console.log(data);
-  return axios.post(`${API_URL}/sellNft`, data, { headers: authHeader() })
+  return axios
+    .post(`${API_URL}/sellNft`, data, { headers: authHeader() })
     .then((response) => {
       return response.data;
     })
@@ -145,6 +171,15 @@ export const cancelSale = (seller, sale_id) => {
     });
 };
 
-const marketService = { getMarketCollectionData, nftDetail, getMarketNFTData, sellUserNft, saleList, selectUserSerials, cancelBuyUserNft };
+const marketService = {
+  loginWidthAddress,
+  getMarketCollectionData,
+  nftDetail,
+  getMarketNFTData,
+  sellUserNft,
+  saleList,
+  selectUserSerials,
+  cancelBuyUserNft,
+};
 
 export default marketService;

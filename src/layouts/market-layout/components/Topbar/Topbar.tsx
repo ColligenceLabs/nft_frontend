@@ -9,10 +9,13 @@ import { useSelector } from 'react-redux';
 import { StoreTypes } from '../../../../views/NftsMarket/types';
 import { useTheme } from '@mui/material/styles';
 import LoginIcon from '@mui/icons-material/Login';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
 import WalletConnector from '../../../../components/WalletConnector';
 import { useWeb3React } from '@web3-react/core';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
 const Topbar = ({ toggleSidebar }: any): JSX.Element => {
   // @ts-ignore
@@ -109,64 +112,67 @@ const Topbar = ({ toggleSidebar }: any): JSX.Element => {
             </IconButton>
           </Box>
         )}
-        {/*<Box>*/}
-        {/*  <WalletButton />*/}
-        {/*</Box>*/}
+
         <Box>
           <WalletConnector activate={activate} />
         </Box>
         <Box>
-          {user === null ? (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 2,
-                ml: !smDown ? 2 : 1,
-              }}
-            >
-              {!smDown ? (
-                <>
-                  <Link to="/auth/login" style={{ textDecoration: 'none' }}>
-                    <Typography
-                      variant="subtitle1"
-                      color={'text.secondary'}
-                      fontWeight={700}
-                      sx={[(theme) => ({ '&:hover': { color: theme.palette.primary.main } })]}
-                    >
-                      Login
-                    </Typography>
-                  </Link>
-                  <Link to="/auth/market-register" style={{ textDecoration: 'none' }}>
-                    <Typography
-                      variant="subtitle1"
-                      color={'text.secondary'}
-                      fontWeight={700}
-                      sx={[(theme) => ({ '&:hover': { color: theme.palette.primary.main } })]}
-                    >
-                      Register
-                    </Typography>
-                  </Link>
-                </>
-              ) : (
-                <Box>
-                  <Link to="/auth/login" style={{ textDecoration: 'none' }}>
-                    <LoginIcon
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        justifyContent: 'center',
-                      }}
-                      color={'primary'}
-                    />
-                  </Link>
-                </Box>
-              )}
-            </Box>
-          ) : (
-            <ProfileButton useMarket={true} />
-          )}
+          {user !== null && <ProfileButton useMarket={true} />}
+          {/*{user !== null ? (*/}
+          {/*  <ProfileButton useMarket={true} />*/}
+          {/*) : (*/}
+          {/*  <Box*/}
+          {/*    sx={{*/}
+          {/*      display: 'flex',*/}
+          {/*      justifyContent: 'space-between',*/}
+          {/*      alignItems: 'center',*/}
+          {/*      gap: 2,*/}
+          {/*      ml: !smDown ? 2 : 1,*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    <IconButton onClick={() => console.log('aa')}>*/}
+          {/*      <AccountCircleOutlinedIcon fontSize={'large'} />*/}
+          {/*    </IconButton>*/}
+
+          {/*    {!smDown ? (*/}
+          {/*      <>*/}
+          {/*        <Link to="/auth/login" style={{ textDecoration: 'none' }}>*/}
+          {/*          <Typography*/}
+          {/*            variant="subtitle1"*/}
+          {/*            color={'text.secondary'}*/}
+          {/*            fontWeight={700}*/}
+          {/*            sx={[(theme) => ({ '&:hover': { color: theme.palette.primary.main } })]}*/}
+          {/*          >*/}
+          {/*            Login*/}
+          {/*          </Typography>*/}
+          {/*        </Link>*/}
+          {/*        <Link to="/auth/market-register" style={{ textDecoration: 'none' }}>*/}
+          {/*          <Typography*/}
+          {/*            variant="subtitle1"*/}
+          {/*            color={'text.secondary'}*/}
+          {/*            fontWeight={700}*/}
+          {/*            sx={[(theme) => ({ '&:hover': { color: theme.palette.primary.main } })]}*/}
+          {/*          >*/}
+          {/*            Register*/}
+          {/*          </Typography>*/}
+          {/*        </Link>*/}
+          {/*      </>*/}
+          {/*    ) : (*/}
+          {/*      <Box>*/}
+          {/*        <Link to="/auth/login" style={{ textDecoration: 'none' }}>*/}
+          {/*          <LoginIcon*/}
+          {/*            sx={{*/}
+          {/*              alignItems: 'center',*/}
+          {/*              display: 'flex',*/}
+          {/*              justifyContent: 'center',*/}
+          {/*            }}*/}
+          {/*            color={'primary'}*/}
+          {/*          />*/}
+          {/*        </Link>*/}
+          {/*      </Box>*/}
+          {/*    )}*/}
+          {/*  </Box>*/}
+          {/*)}*/}
         </Box>
       </Box>
     </Box>

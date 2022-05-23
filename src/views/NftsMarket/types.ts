@@ -326,7 +326,8 @@ export interface UserAuthProps {
 }
 
 export interface RegisterForm {
-  full_name?: string | '';
+  id: string;
+  name?: string | '';
   email: string;
   password: string;
   repeatPassword: string;
