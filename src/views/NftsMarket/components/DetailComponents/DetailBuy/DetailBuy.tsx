@@ -20,11 +20,35 @@ import { useLocation } from 'react-router-dom';
 import WalletDialog from '../../../../../components/WalletDialog';
 import SellingClock from '../SellingClock';
 import getNftPrice from '../../../../../utils/getNftPrice';
+import { useSelector } from 'react-redux';
+import WalletConnectorDialog from '../../../../../components/WalletConnectorDialog';
 
 interface DetailBuyProps {
   id: string;
   setItemActivityMutateHandler: (b: boolean) => void;
   itemActivityMutateHandler: boolean;
+}
+
+interface WalletTypes {
+  wallet: string;
+  address: string;
+}
+
+interface WalletsTypes {
+  wallets: {
+    ethereum: {
+      wallet: string;
+      address: string;
+    };
+    klyatn: {
+      wallet: string;
+      address: string;
+    };
+    solana: {
+      wallet: string;
+      address: string;
+    };
+  };
 }
 
 const TitleBox = ({
@@ -54,6 +78,12 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
 }) => {
   const theme = useTheme();
   const { library, account, activate } = useActiveWeb3React();
+  // @ts-ignore
+  const { ethereum, klaytn, solana } = useSelector<WalletsTypes>(
+    (state: WalletsTypes) => state.wallets,
+  );
+
+  const [selectedNetworkId, setSelectedNetworkId] = useState(1);
   const { buyNFT, sellNFT, listNFT } = useMarket();
   const params = useLocation();
 
@@ -294,12 +324,21 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
           </Box>
         </Box>
       </>
-
-      <WalletDialog
+      <WalletConnectorDialog
+        selectedNetworkId={selectedNetworkId}
         isOpenConnectModal={isOpenConnectModal}
         handleCloseModal={handleCloseModal}
         activate={activate}
+        ethereum={ethereum}
+        klaytn={klaytn}
+        solana={solana}
       />
+
+      {/*<WalletDialog*/}
+      {/*  isOpenConnectModal={isOpenConnectModal}*/}
+      {/*  handleCloseModal={handleCloseModal}*/}
+      {/*  activate={activate}*/}
+      {/*/>*/}
     </SectionWrapper>
   );
 };

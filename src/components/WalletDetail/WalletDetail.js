@@ -21,6 +21,7 @@ import useCopyToClipBoard from '../../hooks/useCopyToClipBoard';
 import { styled } from '@mui/material/styles';
 import { setEthereum, setKlaytn, setSolana } from '../../redux/slices/wallets';
 import { useDispatch } from 'react-redux';
+import { useWeb3React } from '@web3-react/core';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   padding: '10px',
@@ -35,19 +36,19 @@ const WalletDetail = ({
   handleSwitchWallet,
   connectedWallet,
 }) => {
+  const context = useWeb3React();
+  const { deactivate } = context;
   const theme = useTheme();
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
-  const onClickDisconnect = () => {
-    if (connectedWallet.chain === 'solana')
-      dispatch(setSolana({}));
-    else if (connectedWallet.chain === 'ethereum')
-      dispatch(setEthereum({}));
-    else if (connectedWallet.chain === 'klaytn')
-      dispatch(setKlaytn({}));
+  const onClickDisconnect = async () => {
+    if (connectedWallet.chain === 'solana') dispatch(setSolana({}));
+    else if (connectedWallet.chain === 'ethereum') dispatch(setEthereum({}));
+    else if (connectedWallet.chain === 'klaytn') dispatch(setKlaytn({}));
+    await deactivate();
     handleCloseDetailModal();
   };
 

@@ -256,11 +256,6 @@ const Listings: React.FC<ListingsProps> = ({
                           {row.quantity}
                         </Typography>
                       </TableCell>
-                      {/*<TableCell>*/}
-                      {/*  <Typography color="textSecondary" variant="h6">*/}
-                      {/*    null*/}
-                      {/*  </Typography>*/}
-                      {/*</TableCell>*/}
                       <TableCell>
                         <Typography color="textSecondary" variant="h6">
                           {splitAddress(row.seller)}
@@ -268,39 +263,41 @@ const Listings: React.FC<ListingsProps> = ({
                       </TableCell>
 
                       <TableCell>
-                        <Box sx={{ display: 'flex', gap: 0.5 }}>
-                          {row.seller === account ? (
-                            <LoadingButton
-                              variant={'contained'}
-                              size={'small'}
-                              loading={
-                                (isBuyingLoading || isCancelLoading) && row._id === selectedID
-                              }
-                              disabled={
-                                (isBuyingLoading || isCancelLoading) && row._id !== selectedID
-                              }
-                              onClick={() => handleCancel(row)}
-                              sx={{ width: '70px' }}
-                            >
-                              Cancel
-                            </LoadingButton>
-                          ) : (
-                            <LoadingButton
-                              variant={'contained'}
-                              size={'small'}
-                              loading={
-                                (isCancelLoading || isBuyingLoading) && row._id === selectedID
-                              }
-                              disabled={
-                                (isCancelLoading || isBuyingLoading) && row._id !== selectedID
-                              }
-                              onClick={() => handleBuy(row)}
-                              sx={{ width: '70px' }}
-                            >
-                              Buy
-                            </LoadingButton>
-                          )}
-                        </Box>
+                        {account && (
+                          <Box sx={{ display: 'flex', gap: 0.5 }}>
+                            {row.seller === account ? (
+                              <LoadingButton
+                                variant={'contained'}
+                                size={'small'}
+                                loading={
+                                  (isBuyingLoading || isCancelLoading) && row._id === selectedID
+                                }
+                                disabled={
+                                  (isBuyingLoading || isCancelLoading) && row._id !== selectedID
+                                }
+                                onClick={() => handleCancel(row)}
+                                sx={{ width: '70px' }}
+                              >
+                                Cancel
+                              </LoadingButton>
+                            ) : (
+                              <LoadingButton
+                                variant={'contained'}
+                                size={'small'}
+                                loading={
+                                  (isCancelLoading || isBuyingLoading) && row._id === selectedID
+                                }
+                                disabled={
+                                  (isCancelLoading || isBuyingLoading) && row._id !== selectedID
+                                }
+                                onClick={() => handleBuy(row)}
+                                sx={{ width: '70px' }}
+                              >
+                                Buy
+                              </LoadingButton>
+                            )}
+                          </Box>
+                        )}
                       </TableCell>
                     </TableRow>
                   );
