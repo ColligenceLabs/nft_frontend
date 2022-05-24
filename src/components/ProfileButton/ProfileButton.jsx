@@ -38,13 +38,13 @@ const ProfileButton = ({ useMarket }) => {
   const context = useWeb3React();
   const { connector, library, account } = context;
   const { activatingConnector } = useSelector((state) => state.wallet);
-  // const {
-  //   user: {
-  //     infor: { full_name, email, level, image, id },
-  //   },
-  // } = useSelector((state) => state.auth);
+  const {
+    user: {
+      infor: { full_name, email, level, image, id },
+    },
+  } = useSelector((state) => state.auth);
 
-  const { full_name, email, level, image, id } = useUserInfo();
+  // const { full_name, email, level, image, id } = useUserInfo();
 
   const [showInitStore, setShowInitStore] = useState(false);
   const [userimg, setUserimg] = useState('');
