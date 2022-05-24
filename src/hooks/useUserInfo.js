@@ -16,6 +16,7 @@ const useUserInfo = () => {
   useEffect(() => {
     if (account) {
       dispatch(loginWithAddress({ address: account, chainId }));
+      console.log(account);
     }
   }, [account]);
 
