@@ -15,6 +15,10 @@ import { getUserNFTs } from '../../services/nft.service';
 import NFTItem from './components/NFTItem';
 import userImage from '../../assets/images/users/user.png';
 import bannerImage from '../../assets/images/users/banner.png';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state?.auth);
@@ -33,6 +37,12 @@ const UserProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [userimg, setUserimg] = useState('');
   const [bannerimg, setBannerimg] = useState('');
+  const [showAll, setShowAll] = useState(false);
+
+  const theme = useTheme();
+  const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
+    defaultMatches: true,
+  });
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
@@ -54,11 +64,11 @@ const UserProfile = () => {
   useEffect(() => {
     if (user) {
       setUserInfor({
-        image: user.infor?.image,
-        full_name: user.infor?.full_name,
-        description: user.infor?.description,
-        level: user.infor?.level,
-        banner: user.infor?.banner,
+        image: user.infor?.image || '',
+        full_name: user.infor?.full_name || '',
+        description: user.infor?.description || '',
+        level: user.infor?.level || '',
+        banner: user.infor?.banner || '',
       });
       if (
         user.infor?.image === undefined ||
@@ -114,7 +124,14 @@ const UserProfile = () => {
           <img
             src={userimg}
             alt={userInfor.full_name}
-            style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '100%' }}
+            style={{
+              width: '150px',
+              height: '150px',
+              objectFit: 'cover',
+              borderRadius: '100%',
+              border: '5px solid white',
+              boxSizing: 'border-box',
+            }}
           />
         </Box>
 
@@ -172,7 +189,27 @@ const UserProfile = () => {
             </Box>
           )}
 
-          <Typography variant={'body1'}>{userInfor.description}</Typography>
+          <Typography
+            sx={{
+              px: 3,
+              textAlign: 'center',
+              background: showAll
+                ? 'none'
+                : `linear-gradient(to bottom, ${theme.palette.text.secondary}, #fff)`,
+              WebkitBackgroundClip: showAll ? 'none' : 'text',
+              WebkitTextFillColor: showAll ? 'none' : 'transparent',
+            }}
+            variant={'body1'}
+            color="text.secondary"
+          >
+            {showAll && userInfor?.description !== null
+              ? userInfor?.description
+              : `${userInfor?.description.slice(0, smDown ? 150 : 300)}`}
+          </Typography>
+          <IconButton onClick={() => setShowAll((curr) => !curr)}>
+            {showAll ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          </IconButton>
+          {/*<Typography variant={'body1'}>{userInfor.description}</Typography>*/}
         </Box>
       </Box>
       <Container>
