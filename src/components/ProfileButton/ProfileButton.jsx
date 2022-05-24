@@ -106,7 +106,7 @@ const ProfileButton = ({ useMarket }) => {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));
       }
-      if (level && ['creator', 'user'].includes(level.toLowerCase())) {
+      if (level && level !== 'administrator') {
         dispatch(loginWithAddress({ address: account, chainId }));
       }
     }
