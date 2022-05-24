@@ -8,7 +8,7 @@ import FeatherIcon from 'feather-icons-react';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex';
 import { Link } from 'react-router-dom';
-import { logout } from '../../redux/slices/auth';
+import { loginWithAddress, logout } from '../../redux/slices/auth';
 import creatorImage from '../../assets/images/users/creator.png';
 import adminImage from '../../assets/images/users/admin.png';
 import userImage from '../../assets/images/users/user.png';
@@ -20,15 +20,9 @@ import { getWalletBalance, setActivatingConnector, setBalance } from '../../redu
 import { targetNetwork } from '../../config';
 import { setupNetwork } from '../../utils/wallet';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useWallet';
-import useUserInfo from '../../hooks/useUserInfo';
 
 const ProfileButton = ({ useMarket }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
-  // const [isOpenSnackbar, setIsOpenSnackbar] = useState({
-  //   open: false,
-  //   vertical: 'top',
-  //   horizontal: 'center',
-  // });
 
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const { t } = useTranslation();
@@ -36,15 +30,15 @@ const ProfileButton = ({ useMarket }) => {
   const { from } = useSelector((state) => state.nft);
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { connector, library, account } = context;
+  const { connector, library, account, chainId } = context;
   const { activatingConnector } = useSelector((state) => state.wallet);
-  // const {
-  //   user: {
-  //     infor: { full_name, email, level, image, id },
-  //   },
-  // } = useSelector((state) => state.auth);
+  const {
+    user: {
+      infor: { full_name, email, level, image, id },
+    },
+  } = useSelector((state) => state.auth);
 
-  const { full_name, email, level, image, id } = useUserInfo();
+  // const { full_name, email, level, image, id } = useUserInfo();
 
   const [showInitStore, setShowInitStore] = useState(false);
   const [userimg, setUserimg] = useState('');
@@ -111,6 +105,9 @@ const ProfileButton = ({ useMarket }) => {
       } else {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));
+      }
+      if (level && level !== 'administrator') {
+        dispatch(loginWithAddress({ address: account, chainId }));
       }
     }
     login();

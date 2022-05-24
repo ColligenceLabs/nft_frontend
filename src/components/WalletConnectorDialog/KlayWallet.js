@@ -5,7 +5,7 @@ import walletConnect_icon from '../../assets/images/wallet_icons/wallet_icon_wal
 import talken_icon from '../../assets/images/wallet_icons/wallet_icon_talk.png';
 import kaikas_icon from '../../assets/images/wallet_icons/wallet_icon_kaikas.png';
 import WalletCard from './WalletCard';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
 import { injected, kaikas, walletconnect } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
@@ -43,7 +43,9 @@ const KlayWalletList = [
 const KlayWallet = ({ klaytn }) => {
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { activate, account, library } = context;
+  const { activate, account, chainId } = context;
+
+  const { user } = useSelector((state) => state.auth);
 
   const [walletName, setWalletName] = useState('');
 
@@ -93,7 +95,10 @@ const KlayWallet = ({ klaytn }) => {
 
   useEffect(() => {
     if (account !== undefined) {
-      dispatch(loginWithAddress({ address: account, chainId: '1001' }));
+      if (user?.infor?.level !== 'administrator') {
+        dispatch(loginWithAddress({ address: account, chainId }));
+      }
+      // dispatch(loginWithAddress({ address: account, chainId }));
     }
   }, [account]);
   return (

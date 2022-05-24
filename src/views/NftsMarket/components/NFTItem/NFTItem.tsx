@@ -55,7 +55,7 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
           >
             <Box
               sx={{
-                border: '1px solid white',
+                border: '3px solid white',
                 borderRadius: '50%',
                 backgroundColor: 'gray',
                 opacity: item?.metadata?.content_Type === 'mp4' ? 0.6 : 0,
