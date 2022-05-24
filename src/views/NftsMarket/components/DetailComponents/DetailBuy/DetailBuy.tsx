@@ -79,7 +79,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
   const theme = useTheme();
   const { library, account, activate } = useActiveWeb3React();
   // @ts-ignore
-  const { ethereum, klaytn, solana } = useSelector<WalletsTypes>(
+  const { ethereum, klaytn, solana, binance } = useSelector<WalletsTypes>(
     (state: WalletsTypes) => state.wallets,
   );
 
@@ -332,6 +332,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
         ethereum={ethereum}
         klaytn={klaytn}
         solana={solana}
+        binance={binance}
       />
 
       {/*<WalletDialog*/}

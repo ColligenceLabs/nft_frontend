@@ -21,6 +21,12 @@ const NETWORKS = [
     label: 'Solana',
     icon: solLogo,
   },
+  {
+    id: 3,
+    value: 'binance',
+    label: 'Binance',
+    icon: solLogo,
+  },
 ];
 
 export default NETWORKS;

@@ -6,6 +6,7 @@ const initialState = {
   ethereum: {},
   klaytn: {},
   solana: {},
+  binance: {},
 };
 
 const slice = createSlice({

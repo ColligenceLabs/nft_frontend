@@ -6,6 +6,8 @@ import WalletDetail from '../WalletDetail/WalletDetail';
 import eth_icon from '../../assets/images/network_icon/ethereum-eth-logo.png';
 import klay_icon from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import sol_icon from '../../assets/images/network_icon/solana-sol-logo.png';
+import bnb_icon from '../../assets/images/network_icon/binance-bnb-logo.png';
+
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
@@ -41,7 +43,7 @@ const WalletConnector = ({ activate }) => {
     defaultMatches: true,
   });
 
-  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
+  const { ethereum, klaytn, solana, binance } = useSelector((state) => state.wallets);
 
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
@@ -87,7 +89,6 @@ const WalletConnector = ({ activate }) => {
         <StyledWalletIcon
           aria-owns={open ? 'mouse-over-popover' : undefined}
           address={ethereum.address}
-          // onClick={() => onClickWalletIcon(0, 'ethereum', ethereum)}
           onMouseOver={handlePopoverOpen}
           onMouseLeave={handlePopoverClose}
           cursor_pointer={'false'}
@@ -105,11 +106,17 @@ const WalletConnector = ({ activate }) => {
           aria-owns={open ? 'mouse-over-popover' : undefined}
           address={solana.address}
           cursor_pointer={'false'}
-          // onClick={() => onClickWalletIcon(2, 'solana', solana)}
           onMouseOver={handlePopoverOpen}
           onMouseLeave={handlePopoverClose}
         >
           <img src={sol_icon} alt={'sol_icon'} width={smDown ? '14px' : '20px'} />
+        </StyledWalletIcon>
+        <StyledWalletIcon
+          address={binance.address}
+          cursor_pointer={'true'}
+          onClick={() => onClickWalletIcon(3, 'binance', binance)}
+        >
+          <img src={bnb_icon} alt={'bnb_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>
       </WalletIconWrapper>
       <WalletConnectorDialog
@@ -120,6 +127,7 @@ const WalletConnector = ({ activate }) => {
         ethereum={ethereum}
         klaytn={klaytn}
         solana={solana}
+        binance={binance}
       />
       <WalletDetail
         isOpenDetailModal={isOpenDetailModal}

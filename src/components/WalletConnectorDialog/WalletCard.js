@@ -5,7 +5,6 @@ import splitAddress from '../../utils/splitAddress';
 
 const WalletCard = ({ wallet, network, handleWalletCardClick, children }) => {
   const theme = useTheme();
-
   return (
     <>
       {wallet.name !== null ? (
@@ -18,7 +17,7 @@ const WalletCard = ({ wallet, network, handleWalletCardClick, children }) => {
             padding: '16px',
 
             backgroundColor: `${
-              network.wallet?.toLowerCase() === wallet.name
+              network?.wallet?.toLowerCase() === wallet?.name
                 ? `${theme.palette.thirdary.main}`
                 : `${theme.palette.background.paper}`
             }`,
@@ -27,7 +26,7 @@ const WalletCard = ({ wallet, network, handleWalletCardClick, children }) => {
             cursor: 'pointer',
             height: '55px',
             border: `${
-              network.wallet?.toLowerCase() === wallet.name
+              network?.wallet?.toLowerCase() === wallet?.name
                 ? `1px solid ${theme.palette.primary.main}`
                 : ''
             }`,
@@ -36,9 +35,9 @@ const WalletCard = ({ wallet, network, handleWalletCardClick, children }) => {
         >
           <img src={wallet.icon} alt="metamask" width="16px" />
           <Typography variant="subtitle2">
-            {network.wallet?.toLowerCase() === wallet.name
+            {network?.wallet?.toLowerCase() === wallet?.name
               ? splitAddress(network.address)
-              : wallet.value}
+              : wallet?.value}
           </Typography>
         </Box>
       ) : (

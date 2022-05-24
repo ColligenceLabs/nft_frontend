@@ -5,6 +5,7 @@ import NetworkTab from './NetworkTab';
 import KlayWallet from './KlayWallet';
 import EthWallet from './EthWallet';
 import SolWallet from './SolWallet';
+import BinanceWallet from './BinanceWallet';
 
 const WalletConnectorDialog = ({
   isOpenConnectModal,
@@ -14,6 +15,7 @@ const WalletConnectorDialog = ({
   ethereum,
   klaytn,
   solana,
+  binance,
 }) => {
   const { t } = useTranslation();
   const [selectedNetwork, setSelectedNetwork] = useState(selectedNetworkId);
@@ -21,10 +23,9 @@ const WalletConnectorDialog = ({
   const changeNetwork = (id) => {
     setSelectedNetwork(id);
   };
-
   useEffect(() => {
     setSelectedNetwork(selectedNetworkId);
-    return () => setSelectedNetwork(0);
+    // return () => setSelectedNetwork(0);
   }, [selectedNetworkId]);
 
   useEffect(() => {
@@ -32,10 +33,11 @@ const WalletConnectorDialog = ({
       ethereum.address !== undefined ? 'ethereum' : null,
       klaytn.address !== undefined ? 'klaytn' : null,
       solana.address !== undefined ? 'solana' : null,
+      binance.address !== undefined ? 'binance' : null,
     ];
 
     setConnectedNetwork(array);
-  }, [ethereum, klaytn, solana]);
+  }, [ethereum, klaytn, solana, binance]);
 
   return (
     <React.Fragment>
@@ -60,6 +62,7 @@ const WalletConnectorDialog = ({
           {selectedNetwork === 0 && <EthWallet ethereum={ethereum} />}
           {selectedNetwork === 1 && <KlayWallet klaytn={klaytn} />}
           {selectedNetwork === 2 && <SolWallet solana={solana} />}
+          {selectedNetwork === 3 && <BinanceWallet binance={binance} />}
         </DialogContent>
       </Dialog>
     </React.Fragment>

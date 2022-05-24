@@ -3,6 +3,7 @@ import { Box, Grid, Popover, Typography } from '@mui/material';
 import eth_icon from '../../assets/images/network_icon/ethereum-eth-logo.png';
 import klay_icon from '../../assets/images/network_icon/klaytn-klay-logo.png';
 import sol_icon from '../../assets/images/network_icon/solana-sol-logo.png';
+import bnb_icon from '../../assets/images/network_icon/binance-bnb-logo.png';
 import { useTheme } from '@mui/styles';
 
 const NetworkList = [
@@ -23,6 +24,12 @@ const NetworkList = [
     network: 'solana',
     network_name: 'Solana',
     icon: sol_icon,
+  },
+  {
+    id: 3,
+    network: 'binance',
+    network_name: 'Binance',
+    icon: bnb_icon,
   },
 ];
 
@@ -66,10 +73,10 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
 
                 borderRadius: '5px',
                 gap: '0.5rem',
-                cursor: network.id === 1 ? 'pointer' : 'default',
+                cursor: network.id === 1 || network.id === 3 ? 'pointer' : 'default',
               }}
               onClick={() => {
-                if (network.id === 1) changeNetwork(network.id);
+                if (network.id === 1 || network.id === 3) changeNetwork(network.id);
               }}
               onMouseOver={(event) => {
                 if (network.id === 0 || network.id === 2) handlePopoverOpen(event);
