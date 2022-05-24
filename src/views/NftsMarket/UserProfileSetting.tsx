@@ -20,13 +20,15 @@ import defaultBannerImage from '../../assets/images/users/banner.png';
 import { loginWithAddress } from '../../redux/slices/auth';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
+import { signMessage } from '../../utils/signMessage';
+import { verifyMessage } from '../../utils/verifyMessage';
 
 const UserProfileSetting = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { account, chainId } = context;
+  const { library, account, chainId } = context;
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
@@ -51,6 +53,31 @@ const UserProfileSetting = () => {
       level: 'user',
     });
   }, [full_name, email, description, userImage, id]);
+
+  const checkAccount = async () => {
+    try {
+      const signedMessage = await signMessage(library, account);
+      console.log(typeof signedMessage);
+      if (typeof signedMessage === 'object') {
+        // Todo 에러 메세지 처리 필요
+        console.log(signedMessage.message);
+        alert(signedMessage.message);
+        return;
+      }
+      // 사인값이 정상인지 확인 후 메모리 저장?
+      // -- profile 수정 메뉴 접근시에 메모리 값 확인 필요! 값이 없을 경우 다시 서명 요청.
+      const verifyResult = await verifyMessage(library, account, signedMessage);
+      console.log(signedMessage, verifyResult);
+      if (account === verifyResult) {
+        // redux에 인증 정보 저장한다.
+
+      }
+      // navigate('/market/profile/setting');
+    } catch (e) {
+      console.log(e);
+      // Todo 에러 메세지 처리 필요
+    }
+  }
 
   const encodeFileToBase64 = (fileBlob: Blob, type: string) => {
     try {
@@ -91,6 +118,26 @@ const UserProfileSetting = () => {
             onSubmit={async (data: RegisterForm, { setSubmitting }) => {
               setSubmitting(true);
 
+              let signedMessage;
+              try {
+                signedMessage = await signMessage(library, account);
+                console.log(typeof signedMessage);
+                if (typeof signedMessage === 'object') {
+                  // Todo 에러 메세지 처리 필요
+                  throw new Error(signedMessage.message);
+                  return;
+                }
+                const verifyResult = await verifyMessage(library, account, signedMessage);
+                if (verifyResult !== account) {
+                  console.log(account, verifyResult);
+                  throw new Error('verify fail.');
+                  return;
+                }
+              } catch(e) {
+                console.log(e);
+                alert(e);
+                return;
+              }
               const formData = new FormData();
 
               formData.append('id', data.id!);
@@ -99,6 +146,7 @@ const UserProfileSetting = () => {
               formData.append('banner', data.banner!);
               formData.append('email', data.email!);
               formData.append('description', data.description);
+              formData.append('signedMessage', signedMessage);
 
               const res = await updater(formData);
 
