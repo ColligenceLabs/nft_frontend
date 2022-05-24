@@ -1,24 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-
-import { useWeb3React } from '@web3-react/core';
-import { loginWithAddress } from '../redux/slices/auth';
 
 const useUserInfo = () => {
-  const { account, chainId } = useWeb3React();
-  const dispatch = useDispatch();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
   useEffect(() => {
     if (user.user) setUser(user.user);
   }, [user]);
-
-  useEffect(() => {
-    if (account) {
-      dispatch(loginWithAddress({ address: account, chainId }));
-      console.log(account);
-    }
-  }, [account]);
 
   if (user.infor) {
     return {

@@ -20,15 +20,9 @@ import { getWalletBalance, setActivatingConnector, setBalance } from '../../redu
 import { targetNetwork } from '../../config';
 import { setupNetwork } from '../../utils/wallet';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useWallet';
-import useUserInfo from '../../hooks/useUserInfo';
 
 const ProfileButton = ({ useMarket }) => {
   const [anchorEl4, setAnchorEl4] = React.useState(null);
-  // const [isOpenSnackbar, setIsOpenSnackbar] = useState({
-  //   open: false,
-  //   vertical: 'top',
-  //   horizontal: 'center',
-  // });
 
   const mdDown = useMediaQuery((theme) => theme.breakpoints.down('md'));
   const { t } = useTranslation();
@@ -112,7 +106,9 @@ const ProfileButton = ({ useMarket }) => {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));
       }
-      dispatch(loginWithAddress({ address: account, chainId }));
+      if (level && ['creator', 'user'].includes(level.toLowerCase())) {
+        dispatch(loginWithAddress({ address: account, chainId }));
+      }
     }
     login();
   }, [activatingConnector, connector, account, library]);
