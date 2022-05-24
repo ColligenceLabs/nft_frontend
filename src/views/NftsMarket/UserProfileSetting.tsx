@@ -54,31 +54,6 @@ const UserProfileSetting = () => {
     });
   }, [full_name, email, description, userImage, id]);
 
-  const checkAccount = async () => {
-    try {
-      const signedMessage = await signMessage(library, account);
-      console.log(typeof signedMessage);
-      if (typeof signedMessage === 'object') {
-        // Todo 에러 메세지 처리 필요
-        console.log(signedMessage.message);
-        alert(signedMessage.message);
-        return;
-      }
-      // 사인값이 정상인지 확인 후 메모리 저장?
-      // -- profile 수정 메뉴 접근시에 메모리 값 확인 필요! 값이 없을 경우 다시 서명 요청.
-      const verifyResult = await verifyMessage(library, account, signedMessage);
-      console.log(signedMessage, verifyResult);
-      if (account === verifyResult) {
-        // redux에 인증 정보 저장한다.
-
-      }
-      // navigate('/market/profile/setting');
-    } catch (e) {
-      console.log(e);
-      // Todo 에러 메세지 처리 필요
-    }
-  }
-
   const encodeFileToBase64 = (fileBlob: Blob, type: string) => {
     try {
       const reader = new FileReader();
