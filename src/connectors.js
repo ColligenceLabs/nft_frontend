@@ -23,6 +23,8 @@ export const RPC_URLS = {
   1: RPC_URL_1,
   3: RPC_URL_3,
   4: RPC_URL_4,
+  56: 'https://bsc-dataseed1.ninicoin.io',
+  97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
   1001: 'https://api.baobab.klaytn.net:8651',
   8217: 'https://klaytn.taalswap.info:8651',
 };
@@ -40,6 +42,8 @@ export const network = new NetworkConnector({
     1: RPC_URLS[1],
     3: RPC_URLS[3],
     4: RPC_URLS[4],
+    56: RPC_URLS[56],
+    97: RPC_URLS[97],
     1001: RPC_URLS[1001],
     8217: RPC_URLS[8217],
   },

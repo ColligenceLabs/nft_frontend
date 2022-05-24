@@ -34,6 +34,10 @@ const slice = createSlice({
     setEthereum(state, action) {
       state.ethereum = action.payload;
     },
+
+    setBinance(state, action) {
+      state.binance = action.payload;
+    },
   },
 });
 
@@ -41,7 +45,7 @@ const slice = createSlice({
 export default slice.reducer;
 
 // Actions
-export const { hasError, setActivatingConnector, setKlaytn, setSolana, setEthereum } =
+export const { hasError, setActivatingConnector, setKlaytn, setSolana, setEthereum, setBinance } =
   slice.actions;
 
 // ----------------------------------------------------------------------

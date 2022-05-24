@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import metamask_icon from '../../assets/images/wallet_icons/wallet_icon_metamask.png';
 import WalletCard from './WalletCard';
+import { injected } from '../../connectors';
+import { setActivatingConnector } from '../../redux/slices/wallet';
+import { setBinance } from '../../redux/slices/wallets';
+import { useDispatch } from 'react-redux';
+import { useWeb3React } from '@web3-react/core';
+import { setupNetwork } from '../../utils/wallet';
 
 const BinanceWalletList = [
   {
@@ -12,9 +18,28 @@ const BinanceWalletList = [
   },
 ];
 
-const BinanceWallet = ({ klaytn }) => {
+const BinanceWallet = ({ binance }) => {
+  const dispatch = useDispatch();
+  const context = useWeb3React();
+  const { activate, account, chainId } = context;
+  const [walletName, setWalletName] = useState('');
+
+  useEffect(() => {
+    if (walletName !== '' && account !== '') {
+      dispatch(setBinance({ wallet: walletName, address: account }));
+    }
+  }, [walletName, account]);
   const handleWalletCardClick = async (wallet) => {
-    console.log(wallet);
+    setWalletName(wallet.name);
+    try {
+      // Todo change bsc target network chain id to config
+      await setupNetwork(97);
+      await activate(injected, null, true);
+      await dispatch(setActivatingConnector(injected));
+      console.log(wallet);
+    } catch (e) {
+      console.log('connect wallet error', e);
+    }
   };
 
   return (
@@ -24,7 +49,7 @@ const BinanceWallet = ({ klaytn }) => {
           <Grid key={wallet.id} item lg={6} md={6} sm={12} xs={12}>
             <WalletCard
               wallet={wallet}
-              network={klaytn}
+              network={binance}
               handleWalletCardClick={handleWalletCardClick}
             />
           </Grid>

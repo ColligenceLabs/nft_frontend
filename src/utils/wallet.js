@@ -1,9 +1,12 @@
 import detectEthereumProvider from '@metamask/detect-provider';
+import { RPC_URLS } from '../connectors';
 
 const ChainId = {
   MAINNET: 1,
   ROPSTEN: 3,
   RINKEBY: 4,
+  BSCMAINNET: 56,
+  BSCTESTNET: 97,
   KLAYTN: 8217,
   BAOBAB: 1001,
 };
@@ -14,6 +17,8 @@ const NETWORK_NAME = {
   [ChainId.RINKEBY]: 'Ethereum Rinkeby',
   [ChainId.KLAYTN]: 'Klaytn Cypress',
   [ChainId.BAOBAB]: 'Klaytn Baobab',
+  [ChainId.BSCMAINNET]: 'Binance Smart Chain Mainnet',
+  [ChainId.BSCTESTNET]: 'BSC Testnet',
 };
 
 const SCAN_URL = {
@@ -22,6 +27,8 @@ const SCAN_URL = {
   [ChainId.RINKEBY]: 'https://rinkeby.etherscan.io',
   [ChainId.KLAYTN]: 'https://scope.klaytn.com',
   [ChainId.BAOBAB]: 'https://baobab.scope.klaytn.com',
+  [ChainId.BSCMAINNET]: 'https://bscscan.com',
+  [ChainId.BSCTESTNET]: 'https://testnet.bscscan.com',
 };
 
 let provider;
@@ -81,6 +88,23 @@ const addNetwork = async (chainId: number) => {
               },
               rpcUrls: ['https://klaytn.taalswap.info:8651'],
               blockExplorerUrls: ['https://scope.klaytn.com/'],
+            },
+          ],
+        });
+      } else if (chainId === ChainId.BSCTESTNET || chainId === ChainId.BSCMAINNET) {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: `0x${chainId.toString(16)}`,
+              chainName: NETWORK_NAME[chainId],
+              nativeCurrency: {
+                name: 'BNB',
+                symbol: 'BNB',
+                decimals: 18,
+              },
+              rpcUrls: [`${RPC_URLS[chainId]}`],
+              blockExplorerUrls: [`${SCAN_URL[chainId]}/`],
             },
           ],
         });
