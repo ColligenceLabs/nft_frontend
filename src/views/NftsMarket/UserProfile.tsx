@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
+import { useDispatch, useSelector } from 'react-redux';
 import Container from '../../layouts/market-layout/components/Container';
 import { Alert, Box, Grid, IconButton, Snackbar, Typography } from '@mui/material';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -16,7 +17,15 @@ import userImage from '../../assets/images/users/user.png';
 import bannerImage from '../../assets/images/users/banner.png';
 
 const UserProfile = () => {
-  const { image, full_name, description, level, banner } = useUserInfo();
+  const { user } = useSelector((state) => state?.auth);
+  const [userInfor, setUserInfor] = useState({
+    image: '',
+    full_name: '',
+    description: '',
+    level: '',
+    banner: '',
+  });
+
   const { copyToClipBoard, copyResult, copyMessage, copyDone, setCopyDone } = useCopyToClipBoard();
   const context = useWeb3React();
   const { activate, account } = context;
@@ -43,31 +52,44 @@ const UserProfile = () => {
   }, [getUserNFTs, account]);
 
   useEffect(() => {
-    if (image === undefined || image === null || image === '') {
-      setUserimg(userImage);
-    } else {
-      setUserimg(
-        image?.replace(
-          'https://nftbedev.talken.io/taalNft/uploads',
-          'http://localhost:4000/taalNft',
-        ),
-      );
+    if (user) {
+      setUserInfor({
+        image: user.infor?.image,
+        full_name: user.infor?.full_name,
+        description: user.infor?.description,
+        level: user.infor?.level,
+        banner: user.infor?.banner,
+      });
+      if (
+        user.infor?.image === undefined ||
+        user.infor?.image === null ||
+        user.infor?.image === ''
+      ) {
+        setUserimg(userImage);
+      } else {
+        setUserimg(
+          user.infor.image?.replace(
+            'https://nftbedev.talken.io/taalNft/uploads',
+            'http://localhost:4000/taalNft',
+          ),
+        );
+      }
+      if (
+        user.infor?.banner === undefined ||
+        user.infor?.banner === null ||
+        user.infor?.banner === ''
+      ) {
+        setBannerimg(bannerImage);
+      } else {
+        setBannerimg(
+          user.infor?.banner?.replace(
+            'https://nftbedev.talken.io/taalNft/uploads',
+            'http://localhost:4000/taalNft',
+          ),
+        );
+      }
     }
-  }, [image]);
-
-  useEffect(() => {
-    console.log('aa');
-    if (banner === undefined || banner === null || banner === '') {
-      setBannerimg(bannerImage);
-    } else {
-      setBannerimg(
-        banner?.replace(
-          'https://nftbedev.talken.io/taalNft/uploads',
-          'http://localhost:4000/taalNft',
-        ),
-      );
-    }
-  }, [banner]);
+  }, [user]);
 
   return (
     <MarketLayout>
@@ -75,7 +97,7 @@ const UserProfile = () => {
         <Box sx={{ width: 1, height: '250px' }}>
           <img
             src={bannerimg}
-            alt={full_name}
+            alt={userInfor.full_name}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         </Box>
@@ -91,7 +113,7 @@ const UserProfile = () => {
         >
           <img
             src={userimg}
-            alt={full_name}
+            alt={userInfor.full_name}
             style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '100%' }}
           />
         </Box>
@@ -108,7 +130,7 @@ const UserProfile = () => {
           <Box
             sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem' }}
           >
-            <Typography variant={'h1'}>{full_name}</Typography>
+            <Typography variant={'h1'}>{userInfor.full_name}</Typography>
             <IconButton component={Link} to="/market/profile/setting">
               <SettingsOutlinedIcon fontSize={'medium'} />
             </IconButton>
@@ -150,7 +172,7 @@ const UserProfile = () => {
             </Box>
           )}
 
-          <Typography variant={'body1'}>{description}</Typography>
+          <Typography variant={'body1'}>{userInfor.description}</Typography>
         </Box>
       </Box>
       <Container>
