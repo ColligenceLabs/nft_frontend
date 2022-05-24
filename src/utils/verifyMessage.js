@@ -1,13 +1,13 @@
-export async function verifyMessage(library, sign, address, wallet) {
+import {ethers} from 'ethers';
+
+export async function verifyMessage(library, sign, signedMessage) {
   const message = 'Welcome to Taal NFT Marketplace!';
-  let signer;
-
-  if (wallet === 'netamask') {
-    signer = library.provider.eth.accounts.recover(message, sign);
-  } else if (wallet === 'kaikas') {
-    signer = await caver.klay.ecRecover(message, sign);
+  try {
+    const signer = ethers.utils.verifyMessage(message, signedMessage);
+    console.log(signer);
+    return signer;
+  } catch (e) {
+    console.log(e);
+    return e;
   }
-
-  console.log(signer);
-  return signer;
 }

@@ -1,16 +1,17 @@
 import Caver from 'caver-js';
 
-export async function signMessage(library, account, flag) {
+export async function signMessage(library, account) {
   try {
     const message = 'Welcome to Taal NFT Marketplace!';
     let sign;
 
-    if (flag === 'metamask') {
+    const isKaikas = library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+    if (!isKaikas) {
       sign = await library.provider.request({
         method: 'personal_sign',
         params: [message, account, 'Random text'],
       });
-    } else if (flag === 'kaikas') {
+    } else {
       const caver = new Caver(window.klaytn);
       const address = window.klaytn.selectedAddress;
       sign = await caver.klay.sign(message, address);
@@ -18,6 +19,7 @@ export async function signMessage(library, account, flag) {
 
     return sign;
   } catch (e) {
-    return new Error(e.message);
+    console.log(e);
+    return e;
   }
 }
