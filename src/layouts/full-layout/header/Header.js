@@ -30,8 +30,7 @@ const Header = ({ sx, customClass, toggleSidebar, toggleMobileSidebar }) => {
   const { activatingConnector } = useSelector((state) => state.wallet);
 
   const triedEager = useEagerConnect();
-  // useInactiveListener(!triedEager || !!activatingConnector);
-  useInactiveListener();
+  useInactiveListener(!triedEager || !!activatingConnector);
 
   const handleCloseModal = async () => {
     setIsOpenConnectModal(false);
