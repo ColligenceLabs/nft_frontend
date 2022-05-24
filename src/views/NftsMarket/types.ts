@@ -327,6 +327,7 @@ export interface UserAuthProps {
 
 export interface RegisterForm {
   id: string;
+  full_name?: string | '';
   name?: string | '';
   email: string;
   password: string;
@@ -334,6 +335,8 @@ export interface RegisterForm {
   level: string;
   image?: File | string | null | undefined;
   imageSrc?: string | ArrayBuffer | null;
+  banner?: File | string | null | undefined;
+  bannerSrc?: string | ArrayBuffer | null;
   description: string;
 }
 
