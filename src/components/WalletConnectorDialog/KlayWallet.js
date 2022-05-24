@@ -43,7 +43,7 @@ const KlayWalletList = [
 const KlayWallet = ({ klaytn }) => {
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { activate, account, library } = context;
+  const { activate, account, chainId } = context;
 
   const [walletName, setWalletName] = useState('');
 
@@ -93,7 +93,7 @@ const KlayWallet = ({ klaytn }) => {
 
   useEffect(() => {
     if (account !== undefined) {
-      dispatch(loginWithAddress({ address: account, chainId: '1001' }));
+      dispatch(loginWithAddress({ address: account, chainId }));
     }
   }, [account]);
   return (

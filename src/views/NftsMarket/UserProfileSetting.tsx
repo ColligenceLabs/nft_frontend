@@ -26,7 +26,7 @@ const UserProfileSetting = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { activate, account, library } = context;
+  const { account, chainId } = context;
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
     defaultMatches: true,
   });
@@ -53,15 +53,20 @@ const UserProfileSetting = () => {
   }, [full_name, email, description, userImage, id]);
 
   const encodeFileToBase64 = (fileBlob: Blob, type: string) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(fileBlob);
-    return new Promise<void>((resolve) => {
-      reader.onload = () => {
-        if (type === 'image') setUserInfo({ ...userInfo, imageSrc: reader.result });
-        else setUserInfo({ ...userInfo, bannerSrc: reader.result });
-        resolve();
-      };
-    });
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileBlob);
+      return new Promise<void>((resolve) => {
+        reader.onload = () => {
+          if (type === 'image') setUserInfo({ ...userInfo, imageSrc: reader.result });
+          else setUserInfo({ ...userInfo, bannerSrc: reader.result });
+          resolve();
+        };
+      });
+    } catch (error) {
+      console.log(error);
+      return '';
+    }
   };
   // @ts-ignore
   return (
@@ -139,7 +144,7 @@ const UserProfileSetting = () => {
                         variant="outlined"
                         fullWidth
                         size="small"
-                        value={values.image!.name || ''}
+                        // value={values.image!.name !== undefined ? values.image.name : ''}
                         InputProps={{
                           startAdornment: (
                             <Button
@@ -190,7 +195,7 @@ const UserProfileSetting = () => {
                         variant="outlined"
                         fullWidth
                         size="small"
-                        value={values.banner!.name || ''}
+                        // value={values.banner!.name || ''}
                         InputProps={{
                           startAdornment: (
                             <Button
@@ -276,7 +281,7 @@ const UserProfileSetting = () => {
                         minRows={5}
                         id="description"
                         name="description"
-                        value={values.description}
+                        value={values.description || ''}
                         onChange={handleChange}
                       />
                       {touched.description && errors.description && (

@@ -35,7 +35,6 @@ const UserProfile = () => {
       setIsLoading(true);
       if (!account) return;
       const nfts = await getUserNFTs(account, 100);
-      console.log(nfts);
       if (nfts !== undefined) setMyNfts(nfts.data.nfts);
       setIsLoading(false);
     };
@@ -57,7 +56,7 @@ const UserProfile = () => {
   }, [image]);
 
   useEffect(() => {
-    console.log(banner);
+    console.log('aa');
     if (banner === undefined || banner === null || banner === '') {
       setBannerimg(bannerImage);
     } else {
