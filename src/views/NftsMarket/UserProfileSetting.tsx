@@ -104,7 +104,7 @@ const UserProfileSetting = () => {
 
               if (res.data.status === 1) {
                 // localStorage.setItem('user', JSON.stringify(res.data || null));
-                dispatch(loginWithAddress({ address: account, chainId: '1001' }));
+                dispatch(loginWithAddress({ address: account, chainId }));
                 setErrorMessage(null);
                 setSuccessRegister(true);
               } else {

@@ -8,7 +8,7 @@ import FeatherIcon from 'feather-icons-react';
 import { saveAdmin } from '../../solana/actions/saveAdmin';
 import { WhitelistedCreator } from '@colligence/metaplex-common/dist/lib/models/metaplex';
 import { Link } from 'react-router-dom';
-import { logout } from '../../redux/slices/auth';
+import { loginWithAddress, logout } from '../../redux/slices/auth';
 import creatorImage from '../../assets/images/users/creator.png';
 import adminImage from '../../assets/images/users/admin.png';
 import userImage from '../../assets/images/users/user.png';
@@ -36,7 +36,7 @@ const ProfileButton = ({ useMarket }) => {
   const { from } = useSelector((state) => state.nft);
   const dispatch = useDispatch();
   const context = useWeb3React();
-  const { connector, library, account } = context;
+  const { connector, library, account, chainId } = context;
   const { activatingConnector } = useSelector((state) => state.wallet);
   const {
     user: {
@@ -112,6 +112,7 @@ const ProfileButton = ({ useMarket }) => {
         // 네트워크 전환
         const changeNet = setupNetwork(parseInt(targetNetwork));
       }
+      dispatch(loginWithAddress({ address: account, chainId }));
     }
     login();
   }, [activatingConnector, connector, account, library]);
