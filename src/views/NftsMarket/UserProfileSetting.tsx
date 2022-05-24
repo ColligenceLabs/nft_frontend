@@ -16,7 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import adminUpdateSchema from '../../config/schema/adminUpdateSchema';
 import { useNavigate } from 'react-router';
 import defaultUserImage from '../../assets/images/users/user.png';
-import defaultBannerImage from '../../assets/images/users/banner.png.png';
+import defaultBannerImage from '../../assets/images/users/banner.png';
 import { loginWithAddress } from '../../redux/slices/auth';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
@@ -34,9 +34,7 @@ const UserProfileSetting = () => {
   const [successRegister, setSuccessRegister] = useState(false);
   const { t } = useTranslation();
   const { full_name, email, description, image: userImage, id, banner } = useUserInfo();
-  console.log(full_name, email, description, userImage, id);
   const [userInfo, setUserInfo] = useState<RegisterForm>({});
-  console.log(userInfo);
 
   useEffect(() => {
     setUserInfo({
@@ -44,6 +42,8 @@ const UserProfileSetting = () => {
       full_name,
       image: userImage === null ? '' : userImage,
       imageSrc: userImage === null ? defaultUserImage : userImage,
+      banner: banner === null ? '' : banner,
+      bannerSrc: banner === null ? defaultBannerImage : banner,
       description,
       email,
       password: '',
@@ -52,12 +52,13 @@ const UserProfileSetting = () => {
     });
   }, [full_name, email, description, userImage, id]);
 
-  const encodeFileToBase64 = (fileBlob: Blob) => {
+  const encodeFileToBase64 = (fileBlob: Blob, type: string) => {
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
     return new Promise<void>((resolve) => {
       reader.onload = () => {
-        setUserInfo({ ...userInfo, imageSrc: reader.result });
+        if (type === 'image') setUserInfo({ ...userInfo, imageSrc: reader.result });
+        else setUserInfo({ ...userInfo, bannerSrc: reader.result });
         resolve();
       };
     });
@@ -74,6 +75,8 @@ const UserProfileSetting = () => {
               full_name: full_name,
               image: '',
               imageSrc: userImage,
+              banner: '',
+              bannerImageSrc: banner,
               description: description,
               email: email,
               password: '',
@@ -88,6 +91,7 @@ const UserProfileSetting = () => {
               formData.append('id', data.id!);
               formData.append('name', data.full_name!);
               formData.append('image', data.image!);
+              formData.append('banner', data.banner!);
               formData.append('email', data.email!);
               formData.append('description', data.description);
 
@@ -127,55 +131,108 @@ const UserProfileSetting = () => {
                   }}
                 >
                   <Box>
-                    <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
-                    <CustomTextField
-                      id="imageFiled"
-                      name="imageFiled"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      value={values.image!.name || ''}
-                      InputProps={{
-                        startAdornment: (
-                          <Button
-                            component="label"
-                            variant="contained"
-                            size="small"
-                            style={{ marginRight: '1rem' }}
-                          >
-                            <DriveFileMoveOutlinedIcon fontSize="small" />
-                            <input
-                              id="image"
-                              style={{ display: 'none' }}
-                              type="file"
-                              name="image"
-                              onChange={(event: React.ChangeEvent<HTMLInputElement | null>) => {
-                                setFieldValue('image', event!.currentTarget!.files[0]);
-                                encodeFileToBase64(event.currentTarget.files[0]);
-                              }}
-                            />
-                          </Button>
-                        ),
-                      }}
-                    />
-                    <Box sx={{ width: '100%', textAlign: 'center' }}>
-                      <img
-                        src={userInfo.imageSrc}
-                        alt="logo"
-                        style={{
-                          objectFit: 'cover',
-                          width: '200px',
-                          height: '200px',
-                          borderRadius: '50%',
-                          marginTop: '20px',
+                    <Box>
+                      <CustomFormLabel htmlFor="image">{t('Image')}</CustomFormLabel>
+                      <CustomTextField
+                        id="imageFiled"
+                        name="imageFiled"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={values.image!.name || ''}
+                        InputProps={{
+                          startAdornment: (
+                            <Button
+                              component="label"
+                              variant="contained"
+                              size="small"
+                              style={{ marginRight: '1rem' }}
+                            >
+                              <DriveFileMoveOutlinedIcon fontSize="small" />
+                              <input
+                                id="image"
+                                style={{ display: 'none' }}
+                                type="file"
+                                name="image"
+                                onChange={(event: React.ChangeEvent<HTMLInputElement | null>) => {
+                                  setFieldValue('image', event!.currentTarget!.files[0]);
+                                  encodeFileToBase64(event.currentTarget.files[0], 'image');
+                                }}
+                              />
+                            </Button>
+                          ),
                         }}
                       />
+                      <Box sx={{ width: '100%', textAlign: 'center' }}>
+                        <img
+                          src={userInfo.imageSrc}
+                          alt="logo"
+                          style={{
+                            objectFit: 'cover',
+                            width: '200px',
+                            height: '200px',
+                            borderRadius: '50%',
+                            marginTop: '20px',
+                          }}
+                        />
+                      </Box>
+                      {touched.image && errors.image && (
+                        <Typography variant={'caption'} color={'red'}>
+                          {errors.image}
+                        </Typography>
+                      )}
                     </Box>
-                    {touched.image && errors.image && (
-                      <Typography variant={'caption'} color={'red'}>
-                        {errors.image}
-                      </Typography>
-                    )}
+                    <Box>
+                      <CustomFormLabel htmlFor="banner">{t('Banner')}</CustomFormLabel>
+                      <CustomTextField
+                        id="bannerImageField"
+                        name="bannerImageField"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={values.banner!.name || ''}
+                        InputProps={{
+                          startAdornment: (
+                            <Button
+                              component="label"
+                              variant="contained"
+                              size="small"
+                              style={{ marginRight: '1rem' }}
+                            >
+                              <DriveFileMoveOutlinedIcon fontSize="small" />
+                              <input
+                                id="banner"
+                                style={{ display: 'none' }}
+                                type="file"
+                                name="banner"
+                                onChange={(event: React.ChangeEvent<HTMLInputElement | null>) => {
+                                  setFieldValue('banner', event!.currentTarget!.files[0]);
+                                  encodeFileToBase64(event.currentTarget.files[0], 'banner');
+                                }}
+                              />
+                            </Button>
+                          ),
+                        }}
+                      />
+                      <Box sx={{ width: '100%', textAlign: 'center' }}>
+                        <img
+                          src={userInfo.bannerSrc}
+                          alt="banner"
+                          style={{
+                            objectFit: 'cover',
+                            width: '200px',
+                            height: '200px',
+                            borderRadius: '50%',
+                            marginTop: '20px',
+                          }}
+                        />
+                      </Box>
+                      {touched.banner && errors.banner && (
+                        <Typography variant={'caption'} color={'red'}>
+                          {errors.banner}
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
                   <Box sx={{ flex: 0.6 }}>
                     <Box>

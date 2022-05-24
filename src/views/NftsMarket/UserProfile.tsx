@@ -57,6 +57,7 @@ const UserProfile = () => {
   }, [image]);
 
   useEffect(() => {
+    console.log(banner);
     if (banner === undefined || banner === null || banner === '') {
       setBannerimg(bannerImage);
     } else {
