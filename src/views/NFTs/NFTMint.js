@@ -48,6 +48,9 @@ import { setSerialsActive } from '../../services/serials.service';
 import { useItems } from '../../solana/hooks/useItems';
 import { ArtworkViewState } from '../../solana/hooks/types';
 import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
+import { getChainId } from '../../utils/commonUtils';
+import { targetNetworkMsg } from '../../config';
+import { setupNetwork } from '../../utils/wallet';
 
 const Container = styled(Paper)(({ theme }) => ({
   padding: '20px',
@@ -79,7 +82,7 @@ const NFTMint = () => {
   // TODO : change for mainnet 1001 -> 8217
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
   const [contractType, setContractType] = useState('KIP17');
-  const { account, activate, library } = useWeb3React();
+  const { account, activate, library, chainId } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
   const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(
@@ -110,7 +113,7 @@ const NFTMint = () => {
   let connection, wallet, userAccounts, accountByMint, art;
   let isLoading, update, pullUserMetadata, artMintTokenAccount;
   let userItems, walletPubKey;
-  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
+  const { ethereum, klaytn, solana, binance } = useSelector((state) => state.wallets);
   if (process.env.REACT_APP_USE_SOLANA === 'true') {
     connection = useConnection();
     wallet = useWallet();
@@ -334,9 +337,27 @@ const NFTMint = () => {
                   })
                   .catch((error) => console.log(error));
               } else {
+                console.log(ethereum, klaytn, solana, binance);
+                if (
+                  (targetNetwork === 'binance' && binance.address === undefined) ||
+                  (targetNetwork === 'klaytn' && klaytn.address === undefined) ||
+                  (targetNetwork === 'ethereum' && ethereum.address === undefined)
+                ) {
+                  // todo 지갑연결 창을 targetNetowrk 선택 상태로 띄워 준다.
+                  console.log('지갑을 연결하시오.');
+                }
+                const targetChainId = getChainId(targetNetwork);
+                if (chainId !== targetChainId) {
+                  if (targetNetwork === 'klaytn' && klaytn.wallet === 'kaikas') {
+                    setErrorMessage(targetNetworkMsg);
+                    setSuccessRegister(false);
+                  } else
+                    await setupNetwork(targetChainId);
+                }
                 // check minter
                 const isKaikas =
                   library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+
                 let test;
                 if (!isKaikas) test = await kipContract.isMinter(account);
                 else test = await kasContract.methods.isMinter(account).call();
@@ -468,21 +489,17 @@ const NFTMint = () => {
                     onChange={(event) => {
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
-                          if (collection.network === 'solana' && solana.address === undefined) {
+                          if (
+                            (collection.network === 'solana' && solana.address === undefined)
+                          ) {
                             setErrorMessage('connect phantom wallet');
                             return;
                           } else if (
-                            collection.network === 'klaytn' &&
-                            klaytn.address === undefined &&
-                            !useKAS
+                            (collection.network === 'klaytn' & klaytn.address === undefined && useKAS === 'false') ||
+                            (collection.network === 'ethereum' && ethereum.address === undefined) ||
+                            (collection.network === 'binance' && binance.address === undefined)
                           ) {
-                            setErrorMessage('connect wallet for klaytn');
-                            return;
-                          } else if (
-                            collection.network === 'ethereum' &&
-                            ethereum.address === undefined
-                          ) {
-                            setErrorMessage('connect wallet for ethereum');
+                            setErrorMessage('connect wallet for ' + collection.network);
                             return;
                           }
                           console.log(useKAS, collection.contract_type);
