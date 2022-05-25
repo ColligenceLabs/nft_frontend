@@ -52,12 +52,12 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
         {NetworkList.map((network) => (
-          <Grid item key={network.id} lg={4} md={4} sm={12} xs={12}>
+          <Grid item key={network.id} lg={3} md={3} sm={12} xs={12}>
             <Box
               aria-owns={open ? 'mouse-over-popover' : undefined}
               style={{
                 display: 'flex',
-                justifyContent: 'flex-start',
+                justifyContent: 'center',
                 alignItems: 'center',
                 margin: '8px',
                 padding: '16px',
@@ -72,7 +72,7 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
                 }`,
 
                 borderRadius: '5px',
-                gap: '0.5rem',
+                gap: '0.35rem',
                 cursor: network.id === 1 || network.id === 3 ? 'pointer' : 'default',
               }}
               onClick={() => {
