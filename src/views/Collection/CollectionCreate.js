@@ -55,6 +55,8 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { MintLayout } from '@solana/spl-token';
 import CustomTextarea from '../../components/forms/custom-elements/CustomTextarea';
 import { COLLECTION_CATEGORY } from './catetories';
+import { setupNetwork } from '../../utils/wallet';
+import { bnbTargetNetwork, targetNetwork, targetNetworkMsg } from '../../config';
 
 const Container = styled(Paper)(() => ({
   padding: '20px',
@@ -72,7 +74,7 @@ const WarningBox = styled(Box)(({ theme }) => ({
 }));
 
 const CollectionCreate = () => {
-  const { library, account, activate } = useWeb3React();
+  const { library, account, activate, chainId } = useWeb3React();
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
@@ -95,6 +97,7 @@ const CollectionCreate = () => {
   };
 
   const activateNetwork = async (name, setFieldValue) => {
+    console.log('??');
     if (name === 'ethereum') {
       if (!ethereum.wallet && !ethereum.address) {
         alert('지갑연결 필요');
@@ -111,20 +114,30 @@ const CollectionCreate = () => {
         alert('지갑연결 필요');
         return;
       }
+      const network = parseInt(targetNetwork);
       if (klaytn.wallet === 'metamask') {
+        if (chainId !== network)
+          await setupNetwork(network);
         await activate(injected, null, true);
       } else if (klaytn.wallet === 'walletConnector') {
         const wc = walletconnect(true);
         await activate(wc, undefined, true);
       } else if (klaytn.wallet === 'kaikas') {
+        if (chainId !== network) {
+          alert(targetNetworkMsg);
+          return;
+        }
         await activate(kaikas, null, true);
       }
     } else if (name === 'binance') {
-      if (!binance.wallet && !vinance.address) {
+      if (!binance.wallet && !binance.address) {
         alert('지갑연결 필요');
         return;
       }
       if (binance.wallet === 'metamask') {
+        const network = parseInt(bnbTargetNetwork);
+        if (chainId !== network)
+          await setupNetwork(network);
         await activate(injected, null, true);
       } else if (binance.wallet === 'walletConnector') {
         const wc = walletconnect(true);
@@ -419,10 +432,10 @@ const CollectionCreate = () => {
                     name="network"
                     value={values.network}
                     disabled={isSubmitting}
-                    onChange={(event) => {
-                      // console.log(event.target);
-                      if (!useKAS || event.target.value !== 'klaytn')
-                        activateNetwork(event.target.value, setFieldValue);
+                    onChange={async (event) => {
+                      console.log(event.target);
+                      if (useKAS === 'false')
+                        await activateNetwork(event.target.value, setFieldValue);
                       else setFieldValue('network', event.target.value);
                     }}
                     fullWidth
