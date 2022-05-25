@@ -80,7 +80,7 @@ const CollectionCreate = () => {
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
-  const { ethereum, klaytn, solana } = useSelector((state) => state.wallets);
+  const { ethereum, klaytn, solana, binance } = useSelector((state) => state.wallets);
 
   const wallet = useWallet();
   const connection = useConnection();
@@ -118,6 +118,17 @@ const CollectionCreate = () => {
         await activate(wc, undefined, true);
       } else if (klaytn.wallet === 'kaikas') {
         await activate(kaikas, null, true);
+      }
+    } else if (name === 'binance') {
+      if (!binance.wallet && !vinance.address) {
+        alert('지갑연결 필요');
+        return;
+      }
+      if (binance.wallet === 'metamask') {
+        await activate(injected, null, true);
+      } else if (binance.wallet === 'walletConnector') {
+        const wc = walletconnect(true);
+        await activate(wc, undefined, true);
       }
     } else if (name === 'solana') {
       if (!solana.wallet && !solana.address) {
