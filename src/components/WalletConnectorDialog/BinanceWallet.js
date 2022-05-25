@@ -5,9 +5,9 @@ import WalletCard from './WalletCard';
 import { injected } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
 import { setBinance } from '../../redux/slices/wallets';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
-import { setupNetwork } from '../../utils/wallet';
+import { loginWithAddress } from '../../redux/slices/auth';
 
 const BinanceWalletList = [
   {
@@ -21,6 +21,7 @@ const BinanceWalletList = [
 const BinanceWallet = ({ binance }) => {
   const dispatch = useDispatch();
   const context = useWeb3React();
+  const { user } = useSelector((state) => state.auth);
   const { activate, account, chainId } = context;
   const [walletName, setWalletName] = useState('');
 
@@ -33,7 +34,7 @@ const BinanceWallet = ({ binance }) => {
     setWalletName(wallet.name);
     try {
       // Todo change bsc target network chain id to config
-      await setupNetwork(97);
+      // await setupNetwork(97);
       await activate(injected, null, true);
       await dispatch(setActivatingConnector(injected));
       console.log(wallet);
@@ -41,7 +42,14 @@ const BinanceWallet = ({ binance }) => {
       console.log('connect wallet error', e);
     }
   };
-
+  useEffect(() => {
+    if (account !== undefined) {
+      if (user?.infor?.level !== 'administrator') {
+        dispatch(loginWithAddress({ address: account, chainId }));
+      }
+      // dispatch(loginWithAddress({ address: account, chainId }));
+    }
+  }, [account]);
   return (
     <Box style={{ backgroundColor: '#f2f2f2', borderRadius: '5px' }}>
       <Grid container>
