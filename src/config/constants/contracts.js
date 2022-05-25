@@ -40,6 +40,8 @@ export default {
     4: '',
     8217: '',
     1001: '0xd5ed88ccC09a43d884618C5E3ee1935ad8a8ca93',
+    56: '',
+    97: '0x7dcA6d76dD8f8c72229111C2e8999F6Dd7452d49',
   },
   quoteToken: {
     1: '',
@@ -47,5 +49,7 @@ export default {
     4: '',
     8217: '',
     1001: '0xEA1C081fF20476574A5fD036A3057493471C34bd', // TALK
+    56: '',
+    97: '0x6bCC3E09FcfeF0D03e26B0f9b179455213d6Af48',
   },
 };
