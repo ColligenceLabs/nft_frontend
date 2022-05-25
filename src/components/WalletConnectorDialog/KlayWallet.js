@@ -10,8 +10,7 @@ import { useWeb3React } from '@web3-react/core';
 import { injected, kaikas, walletconnect } from '../../connectors';
 import { setActivatingConnector } from '../../redux/slices/wallet';
 import { setKlaytn } from '../../redux/slices/wallets';
-import { signMessage } from '../../utils/signMessage';
-import { login, loginWithAddress } from '../../redux/slices/auth';
+import { loginWithAddress } from '../../redux/slices/auth';
 
 const KlayWalletList = [
   {
@@ -72,25 +71,6 @@ const KlayWallet = ({ klaytn }) => {
     } catch (e) {
       console.log('connect wallet error', e);
     }
-
-    // setWalletName(wallet.name);
-    // try {
-    //   if (wallet.name === 'metamask') {
-    //     await activate(injected, null, true);
-    //     dispatch(setActivatingConnector(injected));
-    //   } else if (wallet.name === 'walletConnector') {
-    //     const wc = walletconnect(true);
-    //     await activate(wc, undefined, true);
-    //   } else if (wallet.name === 'kaikas') {
-    //     await activate(kaikas, null, true);
-    //     dispatch(setActivatingConnector(kaikas));
-    //   }
-    //
-    //   const sign = await signMessage(library, account, wallet.name);
-    //   console.log('== Signed Message ==>', sign);
-    // } catch (e) {
-    //   console.log('connect wallet error', e);
-    // }
   };
 
   useEffect(() => {
