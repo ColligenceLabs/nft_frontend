@@ -70,6 +70,7 @@ const QUOTE_TOKEN = [
     ],
   },
   { value: 'solana', types: ['SOL'] },
+  { value: 'binance', types: [{ value: 'bnb', caption: 'BNB' }] },
 ];
 
 const NFTMint = () => {
