@@ -42,7 +42,7 @@ const WalletConnectorDialog = ({
   return (
     <React.Fragment>
       <Dialog
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
         open={isOpenConnectModal}
         onClose={handleCloseModal}
