@@ -10,6 +10,7 @@ export async function deployKIP17(name, symbol, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
+  const chainId = library._network.chainId;
   const factory = new ContractFactory(
     kip17Data.abi,
     kip17Data.bytecode,
@@ -18,15 +19,16 @@ export async function deployKIP17(name, symbol, account, library) {
 
   const ret = {};
   const gasPrice = parseUnits('250', 'gwei').toNumber();
-  const contract = await factory
-    .deploy(name, symbol, {
-      gasPrice,
-      gasLimit: 7000000,
-    })
-    .catch(function (err) {
-      console.log(err);
-      ret.err = err;
-    });
+  let options;
+  if (chainId > 1000) {
+    options = { gasPrice, gasLimit: 7000000 };
+  } else {
+    options = { gasLimit: 7000000 };
+  }
+  const contract = await factory.deploy(name, symbol, options).catch(function (err) {
+    console.log(err);
+    ret.err = err;
+  });
 
   if (!!ret.err) return ret;
 
@@ -53,8 +55,7 @@ export async function deployKIP37(name, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
-  console.log('222--------->', name);
-
+  const chainId = library._network.chainId;
   const factory = new ContractFactory(
     kip37Data.abi,
     kip37Data.bytecode,
@@ -75,15 +76,16 @@ export async function deployKIP37(name, account, library) {
 
   const ret = {};
   const gasPrice = parseUnits('250', 'gwei').toNumber();
-  const contract = await factory
-    .deploy(tokenUri, name, {
-      gasPrice,
-      gasLimit: 7000000,
-    })
-    .catch(function (err) {
-      console.log(err);
-      ret.err = err;
-    });
+  let options;
+  if (chainId > 1000) {
+    options = { gasPrice, gasLimit: 7000000 };
+  } else {
+    options = { gasLimit: 7000000 };
+  }
+  const contract = await factory.deploy(tokenUri, name, options).catch(function (err) {
+    console.log(err);
+    ret.err = err;
+  });
 
   if (!!ret.err) return ret;
 

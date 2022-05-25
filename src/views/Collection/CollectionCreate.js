@@ -120,7 +120,7 @@ const CollectionCreate = () => {
         await activate(kaikas, null, true);
       }
     } else if (name === 'binance') {
-      if (!binance.wallet && !vinance.address) {
+      if (!binance.wallet && !binance.address) {
         alert('지갑연결 필요');
         return;
       }
