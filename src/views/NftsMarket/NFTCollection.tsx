@@ -36,7 +36,7 @@ const NFTCollection = () => {
               alignItems: 'center',
             }}
           >
-            <Box sx={{ width: 1, height: '250px' }}>
+            <Box sx={{ width: 1, height: '350px' }}>
               <img
                 src={data?.image_link}
                 alt={data?.name}

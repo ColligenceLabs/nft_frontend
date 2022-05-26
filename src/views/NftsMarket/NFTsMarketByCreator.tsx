@@ -64,7 +64,7 @@ const NFTsMarketByCreator = () => {
       {data && !error && creatorInfo.full_name !== undefined && (
         <>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Box sx={{ width: 1, height: '250px' }}>
+            <Box sx={{ width: 1, height: '350px' }}>
               <img
                 src={creatorInfo.image}
                 alt={creatorInfo.full_name}

@@ -104,7 +104,7 @@ const UserProfile = () => {
   return (
     <MarketLayout>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Box sx={{ width: 1, height: '250px' }}>
+        <Box sx={{ width: 1, height: '350px' }}>
           <img
             src={bannerimg}
             alt={userInfor.full_name}
