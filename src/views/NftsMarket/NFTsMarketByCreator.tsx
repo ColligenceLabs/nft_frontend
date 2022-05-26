@@ -89,6 +89,8 @@ const NFTsMarketByCreator = () => {
                   height: '150px',
                   objectFit: 'cover',
                   borderRadius: '100%',
+                  border: '5px solid white',
+                  boxSizing: 'border-box',
                 }}
               />
             </Box>
