@@ -24,6 +24,7 @@ import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { nftDetail } from '../../services/market.service';
 import { getNftContract } from '../../utils/contract';
 import { FAILURE, SUCCESS } from '../../config/constants/consts';
+import { getChainId } from '../../utils/commonUtils';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -126,6 +127,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
       // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
 
+      console.log('1112123123', getChainId(nftInfo.data.collection_id.network))
       await sellNFT(
         nftContract,
         nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
@@ -136,6 +138,7 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
         nftInfo.data.quote,
         nftInfo.data.collection_id.fee_payout,
         nftInfo.data.collection_id.fee_percentage,
+        getChainId(nftInfo.data.collection_id.network)
       );
       return SUCCESS;
     } catch (e) {

@@ -11,7 +11,6 @@ const caver = new Caver(rpcUrl);
 import quoteTokens from '../config/constants/quoteTokens';
 // import contracts from '../config/constants/contracts';
 import tokenAbi from '../config/abi/erc20.json';
-import { targetNetwork } from '../config';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -36,12 +35,11 @@ const useMarket = () => {
   const sellNFT = useCallback(
     // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
     // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
-    async (nftContract, nftType, tokenId, quantity, price, quote, payout, rate) => {
+    async (nftContract, nftType, tokenId, quantity, price, quote, payout, rate, targetNetwork) => {
       // TODO. kas 를 사용하는 경우 api 호출 로직 분리 필요
       console.log('sell!', nftType);
       const gasPrice = await caver.klay.getGasPrice();
-      console.log('gasPrice', gasPrice);
-      const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
+      const quoteToken = quoteTokens[quote][targetNetwork];
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
       let tx;
@@ -102,10 +100,12 @@ const useMarket = () => {
         try {
           if (!isKaikas) {
             if (nftType === 721) {
-              tx = await nftContract.approve(marketContract.address, tokenId, {
-                gasPrice,
-                gasLimit: calculateGasMargin(gasLimit),
-              });
+              let options;
+              if (targetNetwork > 1000)
+                options = {gasPrice, gasLimit: calculateGasMargin(gasLimit)};
+              else
+                options = {gasLimit: calculateGasMargin(gasLimit)};
+              tx = await nftContract.approve(marketContract.address, tokenId, options);
             } else if (nftType === 1155) {
               tx = await nftContract.setApprovalForAll(marketContract.address, 'true', {
                 gasPrice,
@@ -183,6 +183,11 @@ const useMarket = () => {
 
       try {
         if (!isKaikas) {
+          let options;
+          if (targetNetwork > 1000)
+            options = {from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit)};
+          else
+            options = {from: account, gasLimit: calculateGasMargin(gasLimit)};
           tx = await marketContract.readyToSellToken(
             nftContract.address,
             nftType,
@@ -192,11 +197,7 @@ const useMarket = () => {
             quoteToken,
             payout,
             rate,
-            {
-              from: account,
-              gasPrice,
-              gasLimit: calculateGasMargin(gasLimit),
-            },
+            options,
           );
           const receipt = await tx.wait();
           console.log(receipt);
@@ -232,7 +233,7 @@ const useMarket = () => {
   const buyNFT = useCallback(
     // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
     // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _amount, uint256 _maximumPrice, address _quote) external;
-    async (nftContract, tokenId, seller, quantity, amount, price, quote) => {
+    async (nftContract, tokenId, seller, quantity, amount, price, quote, targetNetwork) => {
       console.log('buy!', tokenId);
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
@@ -241,7 +242,7 @@ const useMarket = () => {
       let gasLimit;
       // approve
       console.log('===>', price, quote, quoteTokens[quote]);
-      const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
+      const quoteToken = quoteTokens[quote][targetNetwork];
       const tokenContract = getTokenContract(quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
       const ethPrice = ethers.utils.parseEther(price.toString());
@@ -270,10 +271,12 @@ const useMarket = () => {
         try {
           let receipt;
           if (!isKaikas) {
-            tx = await tokenContract.approve(marketContract.address, approvePrice, {
-              gasPrice,
-              gasLimit: calculateGasMargin(gasLimit),
-            });
+            let options;
+            if (targetNetwork > 1000)
+              options = {gasPrice, gasLimit: calculateGasMargin(gasLimit)};
+            else
+              options = {gasLimit: calculateGasMargin(gasLimit)};
+            tx = await tokenContract.approve(marketContract.address, approvePrice, options);
             receipt = await tx.wait();
           } else {
             receipt = await tokenContract.methods
@@ -346,6 +349,11 @@ const useMarket = () => {
         try {
           let receipt;
           if (!isKaikas) {
+            let options;
+            if (targetNetwork > 1000)
+              options = {from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit)};
+            else
+              options = {from: account, gasLimit: calculateGasMargin(gasLimit)};
             tx = await marketContract.buyToken(
               nftContract.address,
               tokenId,
@@ -354,11 +362,7 @@ const useMarket = () => {
               amount,
               parsedPrice,
               quoteToken,
-              {
-                from: account,
-                gasPrice,
-                gasLimit: calculateGasMargin(gasLimit),
-              },
+              options
             );
             receipt = await tx.wait();
           } else {
@@ -416,6 +420,11 @@ const useMarket = () => {
         try {
           let receipt;
           if (!isKaikas) {
+            let options;
+            if (targetNetwork > 1000)
+              options = {value: approvePrice, from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit)};
+            else
+              options = {value: approvePrice, from: account, gasLimit: calculateGasMargin(gasLimit)};
             tx = await marketContract.buyTokenETH(
               nftContract.address,
               tokenId,
@@ -423,12 +432,7 @@ const useMarket = () => {
               quantity,
               amount,
               parsedPrice,
-              {
-                value: approvePrice,
-                from: account,
-                gasPrice,
-                gasLimit: calculateGasMargin(gasLimit),
-              },
+              options
             );
             receipt = await tx.wait();
           } else {
@@ -456,15 +460,15 @@ const useMarket = () => {
 
   const stopSelling = useCallback(
     // V4 : function cancelSellToken(address _nft, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
-    async (nftContract, tokenId, quantity, price, quote) => {
+    async (nftContract, tokenId, quantity, price, quote, targetNetwork) => {
       console.log('cancel!', tokenId);
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
       let tx;
       let gasLimit;
-      console.log('----->', quote, parseInt(targetNetwork, 16));
-      const quoteToken = quoteTokens[quote][parseInt(targetNetwork, 16)];
+      console.log('----->', quote, targetNetwork);
+      const quoteToken = quoteTokens[quote][targetNetwork];
       console.log('----->', quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
 
@@ -495,17 +499,18 @@ const useMarket = () => {
       try {
         let receipt;
         if (!isKaikas) {
+          let options;
+          if (targetNetwork > 1000)
+            options = {from: account, gasPrice, gasLimit: calculateGasMargin(gasLimit)};
+          else
+            options = {from: account, gasLimit: calculateGasMargin(gasLimit)};
           tx = await marketContract.cancelSellToken(
             nftContract.address,
             tokenId,
             quantity,
             parsedPrice,
             quoteToken,
-            {
-              from: account,
-              gasPrice,
-              gasLimit: calculateGasMargin(gasLimit),
-            },
+            options
           );
           receipt = await tx.wait();
         } else {
