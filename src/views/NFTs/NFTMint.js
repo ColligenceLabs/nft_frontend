@@ -73,7 +73,13 @@ const QUOTE_TOKEN = [
     ],
   },
   { value: 'solana', types: ['SOL'] },
-  { value: 'binance', types: [{ value: 'bnb', caption: 'BNB' }] },
+  {
+    value: 'binance',
+    types: [
+      { value: 'talk', caption: 'TALK' },
+      { value: 'bnb', caption: 'BNB' },
+    ],
+  },
 ];
 
 const NFTMint = () => {
@@ -351,8 +357,7 @@ const NFTMint = () => {
                   if (targetNetwork === 'klaytn' && klaytn.wallet === 'kaikas') {
                     setErrorMessage(targetNetworkMsg);
                     setSuccessRegister(false);
-                  } else
-                    await setupNetwork(targetChainId);
+                  } else await setupNetwork(targetChainId);
                 }
                 // check minter
                 const isKaikas =
@@ -489,13 +494,12 @@ const NFTMint = () => {
                     onChange={(event) => {
                       collectionList.filter((collection) => {
                         if (collection._id === event.target.value) {
-                          if (
-                            (collection.network === 'solana' && solana.address === undefined)
-                          ) {
+                          if (collection.network === 'solana' && solana.address === undefined) {
                             setErrorMessage('connect phantom wallet');
                             return;
                           } else if (
-                            (collection.network === 'klaytn' & klaytn.address === undefined && useKAS === 'false') ||
+                            ((collection.network === 'klaytn') & (klaytn.address === undefined) &&
+                              useKAS === 'false') ||
                             (collection.network === 'ethereum' && ethereum.address === undefined) ||
                             (collection.network === 'binance' && binance.address === undefined)
                           ) {
