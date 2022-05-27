@@ -24,6 +24,8 @@ import SectionWrapper from '../DetailComponents/SectionWrapper';
 import useSWR from 'swr';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../assets/images/logos/talken_icon.png';
+import bnbLogo from '../../../../assets/images/network_icon/binance-bnb-logo.png';
+
 import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
 import splitAddress from '../../../../utils/splitAddress';
 
@@ -277,6 +279,7 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
                               {row.quote === 'talk' && (
                                 <img src={talkLogo} alt="talk" height="16px" />
                               )}
+                              {row.quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="16px" />}
                               <Typography color="textSecondary" variant="h6">
                                 {`${sliceFloatNumber(row.price.toString())}`}
                               </Typography>

@@ -5,6 +5,8 @@ import { useTheme } from '@mui/material/styles';
 import { NFTType } from '../../types';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../assets/images/logos/talken_icon.png';
+import bnbLogo from '../../../../assets/images/network_icon/binance-bnb-logo.png';
+
 // @ts-ignore
 import FeatherIcon from 'feather-icons-react';
 import ImageViewer from '../../../../components/ImageViewer';
@@ -133,6 +135,7 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
                 >
                   {item?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
                   {item?.floor_quote === 'talk' && <img src={talkLogo} alt="talk" height="16px" />}
+                  {item?.floor_quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="16px" />}
                   <Typography variant="h6">
                     {getNftPrice(
                       item?.price,

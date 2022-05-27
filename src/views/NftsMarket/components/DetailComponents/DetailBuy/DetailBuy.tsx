@@ -3,6 +3,8 @@ import SectionWrapper from '../SectionWrapper';
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import klayLogo from '../../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../../assets/images/logos/talken_icon.png';
+import bnbLogo from '../../../../../assets/images/network_icon/binance-bnb-logo.png';
+
 import CustomTextField from '../../../../../components/forms/custom-elements/CustomTextField';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -153,7 +155,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
         amount,
         price,
         quote,
-        getChainId(data?.data?.collection_id?.network)
+        getChainId(data?.data?.collection_id?.network),
       );
     } catch (e) {
       // 실패인 경우 원복.
@@ -218,6 +220,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
           <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={'0.5rem'}>
             {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
             {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
+            {data?.data?.quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="24px" />}
             <Typography variant={'h1'}>
               {sellingQuantity === 0 && !buyFlag
                 ? getNftPrice(

@@ -16,6 +16,8 @@ import useSWR from 'swr';
 import splitAddress from '../../../../utils/splitAddress';
 import klayLogo from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../assets/images/logos/talken_icon.png';
+import bnbLogo from '../../../../assets/images/network_icon/binance-bnb-logo.png';
+
 import { useWeb3React } from '@web3-react/core';
 import { NFTType } from '../../types';
 import { getNftContract } from '../../../../utils/contract';
@@ -117,7 +119,7 @@ const Listings: React.FC<ListingsProps> = ({
         row.quantity,
         row.price,
         row.quote,
-        getChainId(nft.collection_id.network)
+        getChainId(nft.collection_id.network),
       );
       // console.log(result);
       if (result === 1) {
@@ -151,7 +153,7 @@ const Listings: React.FC<ListingsProps> = ({
         row.quantity,
         row.price,
         row.quote,
-        getChainId(nft.collection_id.network)
+        getChainId(nft.collection_id.network),
       );
       // console.log(stopResult);
       // sale collection 에서 삭제.
@@ -243,6 +245,7 @@ const Listings: React.FC<ListingsProps> = ({
                         >
                           {row?.quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
                           {row?.quote === 'talk' && <img src={talkLogo} alt="klay" height="16px" />}
+                          {row?.quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="16px" />}
 
                           <Typography color="textSecondary" variant={'h6'}>
                             {row.price}
