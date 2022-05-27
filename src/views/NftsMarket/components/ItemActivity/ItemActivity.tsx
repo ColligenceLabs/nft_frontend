@@ -152,8 +152,6 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
         ...activity,
       }));
 
-      console.log(result);
-
       setActivityList(result);
       setRowCount(data?.data?.headers.x_total_count);
     }
