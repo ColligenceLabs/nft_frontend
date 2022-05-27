@@ -112,7 +112,6 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
 
   //todo eth, solana tx url 주소 수정 필요
   const handleViewExplorerByTx = (chain: string, tx: string) => {
-    console.log(chain);
     let url = '';
     switch (chain) {
       case '1':
