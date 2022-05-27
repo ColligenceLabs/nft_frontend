@@ -112,6 +112,7 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
 
   //todo eth, solana tx url 주소 수정 필요
   const handleViewExplorerByTx = (chain: string, tx: string) => {
+    console.log(chain);
     let url = '';
     switch (chain) {
       case '1':
@@ -128,6 +129,13 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
             ? `https://scope.klaytn.com/tx/${tx}?tabId=txList`
             : `https://baobab.scope.klaytn.com/tx/${tx}?tabId=txList`;
         break;
+      case '56':
+      case '97':
+        url =
+          process.env.REACT_APP_MAINNET === 'true'
+            ? `https://bscscan.com/tx/${tx}`
+            : `https://testnet.bscscan.com/tx/${tx}`;
+
       // case 'solana':
       //   url =
       //     process.env.REACT_APP_MAINNET === 'true'
@@ -144,6 +152,8 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
       const result = data?.data?.items.map((activity: ActivityTypes) => ({
         ...activity,
       }));
+
+      console.log(result);
 
       setActivityList(result);
       setRowCount(data?.data?.headers.x_total_count);
