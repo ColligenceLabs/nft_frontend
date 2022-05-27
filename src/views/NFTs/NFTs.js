@@ -41,6 +41,7 @@ import kip17Abi from '../../config/abi/kip17.json';
 import { ethers } from 'ethers';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useMarket from '../../hooks/useMarket';
+import { getChainId } from '../../utils/commonUtils';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -172,6 +173,7 @@ const NFTs = () => {
             row.sell_amount,
             row.price,
             row.quote,
+            getChainId(row.collection_id.network)
           );
         }
 

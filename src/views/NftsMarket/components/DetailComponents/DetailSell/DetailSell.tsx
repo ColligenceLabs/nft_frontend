@@ -11,6 +11,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import SectionWrapper from '../SectionWrapper';
 import useMarket from '../../../../../hooks/useMarket';
 import { getNftContract } from '../../../../../utils/contract';
+import { getChainId } from '../../../../../utils/commonUtils';
 
 interface DetailSellProps {
   id: string;
@@ -98,6 +99,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
         myNftData.data[0].quote,
         payout,
         rate,
+        getChainId(data.data.collection_id.network)
       );
 
       const sellSerials = myNftData.data.slice(0, sellAmount);

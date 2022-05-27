@@ -36,30 +36,30 @@ export const useKipContractWithKaikas = (contract, type) => {
 };
 
 export const useMarketContract = () => {
-  const { library } = useActiveWeb3React();
+  const { library, chainId } = useActiveWeb3React();
   // const contract = contracts.market[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
-  const contract = contracts.marketV5[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
   return useMemo(() => {
     if (!library) return;
+    const contract = contracts.marketV5[chainId];
     if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:') {
       return new ethers.Contract(contract, marketAbi, library?.getSigner());
     } else {
       const caver = new Caver(window.klaytn);
       return new caver.klay.Contract(marketAbi, contract);
     }
-  }, [library]);
+  }, [library, chainId]);
 };
 
 export const useTokenContract = () => {
-  const { library } = useActiveWeb3React();
-  const tokenAddress = contracts.quoteToken[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
+  const { library, chainId } = useActiveWeb3React();
   return useMemo(() => {
     if (!library) return;
+    const tokenAddress = contracts.quoteToken[chainId];
     if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:')
       return new ethers.Contract(tokenAddress, tokenAbi, library?.getSigner());
     else {
       const caver = new Caver(window.klaytn);
       return new caver.klay.Contract(tokenAbi, tokenAddress);
     }
-  }, [library]);
+  }, [library, chainId]);
 };

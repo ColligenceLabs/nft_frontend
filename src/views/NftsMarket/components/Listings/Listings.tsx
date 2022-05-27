@@ -27,6 +27,7 @@ import {
 } from '../../../../services/market.service';
 import { LoadingButton } from '@mui/lab';
 import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
+import { getChainId } from '../../../../utils/commonUtils';
 
 interface SaleItemTypes {
   _id: string;
@@ -116,6 +117,7 @@ const Listings: React.FC<ListingsProps> = ({
         row.quantity,
         row.price,
         row.quote,
+        getChainId(nft.collection_id.network)
       );
       // console.log(result);
       if (result === 1) {
@@ -149,6 +151,7 @@ const Listings: React.FC<ListingsProps> = ({
         row.quantity,
         row.price,
         row.quote,
+        getChainId(nft.collection_id.network)
       );
       // console.log(stopResult);
       // sale collection 에서 삭제.

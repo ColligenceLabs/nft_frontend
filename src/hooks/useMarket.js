@@ -8,6 +8,7 @@ import { RPC_URLS } from '../connectors';
 import Caver from 'caver-js';
 const rpcUrl = RPC_URLS[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
 const caver = new Caver(rpcUrl);
+import { setupNetwork } from '../utils/wallet';
 import quoteTokens from '../config/constants/quoteTokens';
 // import contracts from '../config/constants/contracts';
 import tokenAbi from '../config/abi/erc20.json';
@@ -20,7 +21,7 @@ export function calculateGasMargin(value) {
 const useMarket = () => {
   const marketContract = useMarketContract();
   // const tokenContract = useTokenContract();
-  const { library, account } = useActiveWeb3React();
+  const { library, account, chainId } = useActiveWeb3React();
 
   const getTokenContract = (tokenAddress) => {
     if (!library) return;
@@ -42,6 +43,10 @@ const useMarket = () => {
       const quoteToken = quoteTokens[quote][targetNetwork];
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+      if (chainId !== targetNetwork) {
+        await setupNetwork(targetNetwork);
+        return;
+      }
       let tx;
       let gasLimit;
       let test;
@@ -238,6 +243,10 @@ const useMarket = () => {
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+      if (chainId !== targetNetwork) {
+        await setupNetwork(targetNetwork);
+        return;
+      }
       let tx;
       let gasLimit;
       // approve
@@ -465,6 +474,10 @@ const useMarket = () => {
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
         library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+      if (chainId !== targetNetwork) {
+        await setupNetwork(targetNetwork);
+        return;
+      }
       let tx;
       let gasLimit;
       console.log('----->', quote, targetNetwork);
