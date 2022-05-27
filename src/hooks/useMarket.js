@@ -248,7 +248,7 @@ const useMarket = () => {
       const ethPrice = ethers.utils.parseEther(price.toString());
       const approvePrice = ethPrice.mul(BigNumber.from(amount.toString())).toString();
 
-      if (quote !== 'eth' && quote !== 'klay') {
+      if (quote !== 'eth' && quote !== 'klay' && quote !== 'bnb') {
         try {
           console.log(marketContract);
           if (!isKaikas) {
@@ -304,7 +304,7 @@ const useMarket = () => {
       }
 
       // buy
-      if (quote !== 'eth' && quote !== 'klay') {
+      if (quote !== 'eth' && quote !== 'klay' && quote !== 'bnb') {
         try {
           if (!isKaikas) {
             gasLimit = await marketContract.estimateGas.buyToken(

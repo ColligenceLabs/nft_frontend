@@ -22,6 +22,7 @@ import SellingClock from '../SellingClock';
 import getNftPrice from '../../../../../utils/getNftPrice';
 import { useSelector } from 'react-redux';
 import WalletConnectorDialog from '../../../../../components/WalletConnectorDialog';
+import { getChainId } from '../../../../../utils/commonUtils';
 
 interface DetailBuyProps {
   id: string;
@@ -140,6 +141,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
       // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
       // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
 
+      console.log('network....', data?.data?.collection_id?.network);
       const result = await buyNFT(
         isKaikas ? nftContractWithKaikas : nftContract,
         parseInt(serials.data[0].token_id, 16),
@@ -151,6 +153,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
         amount,
         price,
         quote,
+        getChainId(data?.data?.collection_id?.network)
       );
     } catch (e) {
       // 실패인 경우 원복.
