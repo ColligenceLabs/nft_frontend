@@ -78,6 +78,7 @@ const QUOTE_TOKEN = [
     types: [
       { value: 'talk', caption: 'TALK' },
       { value: 'bnb', caption: 'BNB' },
+      { value: 'kwr', caption: 'KRW' },
     ],
   },
 ];
