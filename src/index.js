@@ -27,6 +27,12 @@ import {
 //   return library;
 // }
 
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {};
+  console.error = () => {};
+  console.debug = () => {};
+}
+
 const getLibrary = (provider) => {
   const library = new ethers.providers.Web3Provider(provider);
   library.pollingInterval = 12000;
