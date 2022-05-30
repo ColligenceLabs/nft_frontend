@@ -127,7 +127,6 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
       // V3 : function readyToSellToken(address _nft, uint256 _tokenId, uint256 _price, address _quote) external;
       // V4 : function readyToSellToken(address _nft, uint _nftType, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
 
-      console.log('1112123123', getChainId(nftInfo.data.collection_id.network))
       await sellNFT(
         nftContract,
         nftInfo.data.collection_id.contract_type === 'KIP17' ? 721 : 1155,
@@ -161,9 +160,12 @@ const ScheduleDialog = ({ open, handleCloseModal, selected }) => {
 
     try {
       let result = SUCCESS;
-      if (useKAS !== 'true') {
-        // 선택된 nft들을 market contract readyToSell 호출
-        result = await handleSellNFTs();
+      if (useKAS !== 'true' ) {
+        const nftInfo = await nftDetail(selected);
+        if (nftInfo.data.quote !== 'krw') {
+          // 선택된 nft들을 market contract readyToSell 호출
+          result = await handleSellNFTs();
+        }
       }
       let res;
       if (result === SUCCESS) {

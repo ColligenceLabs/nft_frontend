@@ -165,7 +165,7 @@ const NFTs = () => {
     if (row.status === 'inactive') return;
     if (row.selling === true) {
       try {
-        if (useKAS !== 'true') {
+        if (useKAS !== 'true' && row.quote !== 'krw') {
           const nftContract = getNftContract(row.collection_id.contract_address);
           await stopSelling(
             nftContract,
