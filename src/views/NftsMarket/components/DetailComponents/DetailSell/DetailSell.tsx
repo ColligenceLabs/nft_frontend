@@ -99,7 +99,7 @@ const DetailSell: React.FC<DetailSellProps> = ({
         myNftData.data[0].quote,
         payout,
         rate,
-        getChainId(data.data.collection_id.network)
+        getChainId(data.data.collection_id.network),
       );
 
       const sellSerials = myNftData.data.slice(0, sellAmount);
@@ -237,7 +237,12 @@ const DetailSell: React.FC<DetailSellProps> = ({
             </Box>
             <Box sx={{ flex: 1, width: smDown ? '50px' : '100px' }}>
               <LoadingButton
-                disabled={totalPrice === 0 || isNaN(totalPrice) || myNFTCount < sellAmount}
+                disabled={
+                  totalPrice === 0 ||
+                  isNaN(totalPrice) ||
+                  myNFTCount < sellAmount ||
+                  data?.data?.quote === 'krw'
+                }
                 loading={sellStatus}
                 onClick={sell}
                 fullWidth
