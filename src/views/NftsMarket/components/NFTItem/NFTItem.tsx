@@ -13,6 +13,7 @@ import ImageViewer from '../../../../components/ImageViewer';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import getNftPrice from '../../../../utils/getNftPrice';
 import ReactPlayer from 'react-player';
+import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
 
 interface NFTItemProp {
   item: NFTType;
@@ -136,13 +137,20 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
                   {item?.floor_quote === 'klay' && <img src={klayLogo} alt="klay" height="16px" />}
                   {item?.floor_quote === 'talk' && <img src={talkLogo} alt="talk" height="16px" />}
                   {item?.floor_quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="16px" />}
+                  {item?.floor_quote === 'krw' && (
+                    <Typography variant={'subtitle2'} color={'text.primary'} sx={{ mr: -0.7 }}>
+                      ￦
+                    </Typography>
+                  )}
                   <Typography variant="h6">
-                    {getNftPrice(
-                      item?.price,
-                      item?.floor_price,
-                      item?.user_quantity_selling,
-                      item?.quantity_selling,
-                      item?.last_price,
+                    {sliceFloatNumber(
+                      getNftPrice(
+                        item?.price,
+                        item?.floor_price,
+                        item?.user_quantity_selling,
+                        item?.quantity_selling,
+                        item?.last_price,
+                      ).toString(),
                     )}
                   </Typography>
                 </Box>

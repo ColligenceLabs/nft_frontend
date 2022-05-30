@@ -287,6 +287,11 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
                                 <img src={talkLogo} alt="talk" height="16px" />
                               )}
                               {row.quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="16px" />}
+                              {row.quote === 'krw' && (
+                                <Typography variant={'h6'} color={'text.primary'} sx={{ mr: -0.3 }}>
+                                  ￦
+                                </Typography>
+                              )}
                               <Typography color="textSecondary" variant="h6">
                                 {`${sliceFloatNumber(row.price.toString())}`}
                               </Typography>

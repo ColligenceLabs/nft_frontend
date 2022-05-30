@@ -25,6 +25,7 @@ import getNftPrice from '../../../../../utils/getNftPrice';
 import { useSelector } from 'react-redux';
 import WalletConnectorDialog from '../../../../../components/WalletConnectorDialog';
 import { getChainId } from '../../../../../utils/commonUtils';
+import sliceFloatNumber from '../../../../../utils/sliceFloatNumber';
 
 interface DetailBuyProps {
   id: string;
@@ -221,6 +222,11 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
             {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
             {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
             {data?.data?.quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="24px" />}
+            {data?.data?.quote === 'krw' && (
+              <Typography variant={'h1'} color={'text.primary'}>
+                ￦
+              </Typography>
+            )}
             <Typography variant={'h1'}>
               {sellingQuantity === 0 && !buyFlag
                 ? getNftPrice(
@@ -230,7 +236,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                     data?.data?.quantity_selling,
                     data?.data?.last_price,
                   )
-                : data?.data?.price}
+                : sliceFloatNumber(data?.data?.price.toString())}
             </Typography>
           </Box>
 

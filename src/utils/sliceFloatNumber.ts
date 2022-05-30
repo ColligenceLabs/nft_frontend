@@ -17,7 +17,9 @@ const sliceFloatNumber = (flotNumber: string) => {
     });
   }
 
-  return spliceFloatArray.length === 0 ? `${array[0]}` : `${array[0]}.${spliceFloatArray.join('')}`;
+  return spliceFloatArray.length === 0
+    ? `${array[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+    : `${array[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${spliceFloatArray.join('')}`;
 };
 
 export default sliceFloatNumber;
