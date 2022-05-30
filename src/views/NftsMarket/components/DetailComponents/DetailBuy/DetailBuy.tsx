@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SectionWrapper from '../SectionWrapper';
-import { Box, Button, Typography, useTheme } from '@mui/material';
+import { Box, Button, Snackbar, Typography, useTheme } from '@mui/material';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import klayLogo from '../../../../../assets/images/network_icon/klaytn-klay-logo.png';
 import talkLogo from '../../../../../assets/images/logos/talken_icon.png';
 import bnbLogo from '../../../../../assets/images/network_icon/binance-bnb-logo.png';
@@ -54,6 +55,10 @@ interface WalletsTypes {
     };
   };
 }
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const TitleBox = ({
   title,
@@ -122,8 +127,21 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
   const [buyFlag, setBuyFlag] = useState(false);
   const [amount, setAmount] = useState('1');
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [krwMessage, setKrwMessage] = useState({
+    open: false,
+    vertical: 'top',
+    horizontal: 'right',
+  });
+
+  const { vertical, horizontal, open } = krwMessage;
 
   const buy = async () => {
+    console.log(data?.data?.quote);
+    if (data?.data?.quote === 'krw') {
+      setKrwMessage({ ...krwMessage, open: true });
+      return;
+    }
+
     setBuyFlag(true);
     setSellingQuantity((curr: number) => curr - parseInt(amount));
     const isKaikas =
@@ -346,6 +364,18 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
         solana={solana}
         binance={binance}
       />
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={open}
+        onClose={() => setKrwMessage({ ...krwMessage, open: false })}
+        // message="Payment in KRW is currently only possible through bank transfer. Please contact nftsales@taal.fi"
+        key={vertical + horizontal}
+      >
+        <Alert severity="error">
+          Payment in KRW is currently only possible through bank transfer. Please contact
+          nftsales@taal.fi
+        </Alert>
+      </Snackbar>
 
       {/*<WalletDialog*/}
       {/*  isOpenConnectModal={isOpenConnectModal}*/}
