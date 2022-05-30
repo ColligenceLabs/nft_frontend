@@ -8,7 +8,7 @@ import { TrendingCategoryItem, TrendingCategoryResponse } from '../../types';
 import taal_logo from '../../../../assets/images/landing_icon/introduction_taal.svg';
 import talk_icon from '../../../../assets/images/logos/talken_icon.png';
 import klay_icon from '../../../../assets/images/network_icon/klaytn-klay-logo.png';
-
+import bnbLogo from '../../../../assets/images/network_icon/binance-bnb-logo.png';
 import { Link } from 'react-router-dom';
 import sliceFloatNumber from '../../../../utils/sliceFloatNumber';
 
@@ -197,19 +197,20 @@ const TopCollections = () => {
                       Floor price :
                     </Typography>
                     {item?.floorPrice?._id === 'talk' && (
-                      <img
-                        alt="Remy Sharp"
-                        style={{ width: '12px', height: '12px' }}
-                        src={talk_icon}
-                      />
+                      <img alt="talk" style={{ width: '12px', height: '12px' }} src={talk_icon} />
                     )}
 
                     {item?.floorPrice?._id === 'klay' && (
-                      <img
-                        alt="Remy Sharp"
-                        style={{ width: '12px', height: '12px' }}
-                        src={klay_icon}
-                      />
+                      <img alt="klay" style={{ width: '12px', height: '12px' }} src={klay_icon} />
+                    )}
+
+                    {item?.floorPrice?._id === 'bnb' && (
+                      <img src={bnbLogo} alt="bnb" height="24px" />
+                    )}
+                    {item?.floorPrice?._id === 'krw' && (
+                      <Typography fontSize={'12px'} color={'text.secondary'}>
+                        ￦
+                      </Typography>
                     )}
 
                     <Typography fontSize={'12px'} color={'text.secondary'}>
