@@ -93,9 +93,9 @@ const CollectionItem: React.FC<CollectionItemType> = ({
             </Box>
 
             {!smDown && (
-              <Typography variant="body2" color="text.secondary">
-                {description && description.length > 100
-                  ? `${description.slice(0, 100)}...`
+              <Typography variant="body2" color="text.secondary" sx={{ minHeight: '61px' }}>
+                {description && description.length > 90
+                  ? `${description.slice(0, 90)}...`
                   : description}
               </Typography>
             )}

@@ -117,8 +117,8 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
             >
               <Box>
                 <Typography variant="h6" color="text.secondary">
-                  {item?.collection_id?.name.length > 30
-                    ? `${item?.collection_id?.name.slice(0, 27)}...`
+                  {item?.collection_id?.name.length > 20
+                    ? `${item?.collection_id?.name.slice(0, 18)}...`
                     : item?.collection_id?.name}
                 </Typography>
                 <Typography variant="h6">{item?.metadata?.name}</Typography>
