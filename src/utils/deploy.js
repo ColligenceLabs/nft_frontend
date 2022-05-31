@@ -51,7 +51,7 @@ export async function deployKIP17(name, symbol, account, library) {
   return ret;
 }
 
-export async function deployKIP37(name, account, library) {
+export async function deployKIP37(name, directory, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
@@ -71,7 +71,7 @@ export async function deployKIP37(name, account, library) {
   // TODO : 403 forbidden why ?
   // const tokenUri = `${IPFS_URL}${hash}/{id}.json`;
   // const tokenUri = `${IPFS_URL}talken-nft/{id}.json`;
-  const tokenUri = `${ALT_URL}/${name}/{id}.json`;
+  const tokenUri = `${ALT_URL}/${directory}/{id}.json`;
   // TODO : 백엔드에 디렉토리 생성 API 호출 필요함.
 
   const ret = {};

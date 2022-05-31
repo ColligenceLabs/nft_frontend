@@ -365,8 +365,8 @@ const CollectionCreate = () => {
                     ) {
                       result = await deployKIP37WithKaikas(directory, account, library);
                     } else {
-                      // result = await deployKIP37(directory, account, library);
-                      result = await deployKIP37(values.name, account, library);
+                      result = await deployKIP37(values.name, directory, account, library);
+                      // result = await deployKIP37(values.name, account, library);
                     }
                   }
                 }
