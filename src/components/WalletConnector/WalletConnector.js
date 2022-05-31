@@ -47,7 +47,7 @@ const WalletConnector = ({ activate }) => {
 
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
   const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
-  const [selectedNetworkId, setSelectedNetworkId] = useState(0);
+  const [selectedNetworkIndex, setSelectedNetworkIndex] = useState(0);
   const [connectedWallet, setConnectedWallet] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -74,7 +74,7 @@ const WalletConnector = ({ activate }) => {
     setIsOpenConnectModal(true);
   };
   const onClickWalletIcon = (id, chain, wallet) => {
-    setSelectedNetworkId(id);
+    setSelectedNetworkIndex(id);
     if (wallet.address === undefined) {
       setIsOpenConnectModal(true);
     } else {
@@ -120,7 +120,7 @@ const WalletConnector = ({ activate }) => {
         </StyledWalletIcon>
       </WalletIconWrapper>
       <WalletConnectorDialog
-        selectedNetworkId={selectedNetworkId}
+        selectedNetworkIndex={selectedNetworkIndex}
         isOpenConnectModal={isOpenConnectModal}
         handleCloseModal={handleCloseConnectModal}
         activate={activate}
