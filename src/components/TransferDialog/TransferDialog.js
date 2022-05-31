@@ -48,7 +48,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
       if (item && item.collection_id) {
         setContractAddr(item.collection_id.contract_address);
         setContractType(type);
-        setMaxAmount(item.quantity_selling - item.transfered);
+        setMaxAmount(item.sell_amount - item.transfered);
       }
     }
     return () => setMaxAmount(0);
