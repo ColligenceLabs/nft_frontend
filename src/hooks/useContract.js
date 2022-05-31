@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import contracts from '../config/constants/contracts';
 import kip17Abi from '../config/abi/kip17.json';
 import kip37Abi from '../config/abi/kip37.json';
+import erc1155Abi from '../config/abi/erc1155.json';
 // import marketAbi from '../config/abi/market.json';
 import marketAbi from '../config/abi/marketV5.json';
 import tokenAbi from '../config/abi/erc20.json';
@@ -11,11 +12,12 @@ import Caver from 'caver-js';
 import { kip17Data } from '../contracts';
 
 export const useKipContract = (contract, type) => {
-  const { library } = useActiveWeb3React();
+  const { library, chainId } = useActiveWeb3React();
   // TODO: mint 할 collection 정보로 부터 contract address 를 보내줌.
   // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
   // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
-  const abi = type === 'KIP17' ? kip17Abi : kip37Abi;
+  const abi =
+    type === 'KIP17' ? kip17Abi : chainId === 1001 || chainId === 8217 ? kip37Abi : erc1155Abi;
   return useMemo(() => {
     if (type === 'SPLToken' || !contract) return;
     return new ethers.Contract(contract, abi, library?.getSigner());

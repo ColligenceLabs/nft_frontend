@@ -1,5 +1,5 @@
 import { ContractFactory } from '@ethersproject/contracts';
-import { kip17Data, kip37Data } from '../contracts';
+import { kip17Data, kip37Data, erc1155Data } from '../contracts';
 import Caver from 'caver-js';
 // import { useWeb3React } from '@web3-react/core';
 import { mkDirIPFS } from '../hooks/useNFT';
@@ -56,11 +56,16 @@ export async function deployKIP37(name, directory, account, library) {
   // const { account, library } = useWeb3React();
 
   const chainId = library._network.chainId;
-  const factory = new ContractFactory(
-    kip37Data.abi,
-    kip37Data.bytecode,
-    library.getSigner(account),
-  );
+  let factory;
+  if (chainId === 8217 || chainId === 1001) {
+    factory = new ContractFactory(kip37Data.abi, kip37Data.bytecode, library.getSigner(account));
+  } else {
+    factory = new ContractFactory(
+      erc1155Data.abi,
+      erc1155Data.bytecode,
+      library.getSigner(account),
+    );
+  }
 
   // TODO : ipfs mkdir
   // try {
