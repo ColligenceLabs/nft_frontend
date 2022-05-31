@@ -236,11 +236,11 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
                   <TableCell align={'left'} padding={'normal'}>
                     Price
                   </TableCell>
-                  {contractType === 'KIP37' && (
-                    <TableCell align={'left'} padding={'normal'}>
-                      Amount
-                    </TableCell>
-                  )}
+                  {/*{contractType === 'KIP37' && (*/}
+                  {/*  <TableCell align={'left'} padding={'normal'}>*/}
+                  {/*    Amount*/}
+                  {/*  </TableCell>*/}
+                  {/*)}*/}
                   <TableCell align={'left'} padding={'normal'}>
                     From
                   </TableCell>
@@ -309,13 +309,13 @@ const ItemActivity: React.FC<ItemActivityProps> = ({
                             </Typography>
                           )}
                         </TableCell>
-                        {contractType === 'KIP37' && (
-                          <TableCell>
-                            <Typography color="textSecondary" variant="h6">
-                              {row.quantity}
-                            </Typography>
-                          </TableCell>
-                        )}
+                        {/*{contractType === 'KIP37' && (*/}
+                        {/*  <TableCell>*/}
+                        {/*    <Typography color="textSecondary" variant="h6">*/}
+                        {/*      {row.quantity}*/}
+                        {/*    </Typography>*/}
+                        {/*  </TableCell>*/}
+                        {/*)}*/}
                         <TableCell>
                           <Typography color="textSecondary" variant="h6">
                             {row.type === 1 ? splitAddress(row.to) : splitAddress(row.from)}
