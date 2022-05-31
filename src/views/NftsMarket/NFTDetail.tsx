@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Container from './components/Container';
 import MarketLayout from '../../layouts/market-layout/MarketLayout';
@@ -23,6 +23,7 @@ const NFTDetail = () => {
   const [listingMutateHandler, setListingMutateHandler] = useState(false);
   const [myNftMutateHandler, setMyNftMutateHandler] = useState(false);
   const [itemActivityMutateHandler, setItemActivityMutateHandler] = useState(false);
+  const [contractType, setContractType] = useState('KIP17');
 
   const theme = useTheme();
   const mdDown = useMediaQuery(theme.breakpoints.down('md'), {
@@ -42,6 +43,12 @@ const NFTDetail = () => {
   }
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
+
+  useEffect(() => {
+    if (data?.data) {
+      setContractType(data?.data?.collection_id?.contract_type);
+    }
+  }, [data]);
 
   return (
     <MarketLayout>
@@ -77,6 +84,7 @@ const NFTDetail = () => {
 
               <ItemActivity
                 id={id!}
+                contractType={contractType}
                 itemActivityMutateHandler={itemActivityMutateHandler}
                 setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
               />
@@ -119,6 +127,7 @@ const NFTDetail = () => {
               </Box>
               <ItemActivity
                 id={id!}
+                contractType={contractType}
                 itemActivityMutateHandler={itemActivityMutateHandler}
                 setItemActivityMutateHandler={(result) => setItemActivityMutateHandler(result)}
               />
