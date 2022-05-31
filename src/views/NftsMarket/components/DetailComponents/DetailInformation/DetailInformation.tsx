@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import SectionWrapper from '../SectionWrapper';
 import { CollectionDetailResponse, NFTType } from '../../../types';
@@ -10,6 +10,20 @@ interface DetailInformationProps {
   nft: NFTType;
 }
 const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }) => {
+  const [contractType, setContractType] = useState('');
+
+  useEffect(() => {
+    switch (collection.network) {
+      case 'ethereum':
+      case 'binance':
+        if (collection.contract_type === 'KIP17') setContractType('ERC721');
+        else setContractType('ERC1155');
+        break;
+      default:
+        setContractType(collection.contract_type);
+    }
+  }, [collection]);
+
   const handleViewExplorer = (chain: string, address: string) => {
     let url = '';
     switch (chain) {
@@ -107,7 +121,8 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
           )}
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Token Standard</Typography>
-            <Typography variant={'body2'}>{collection.contract_type}</Typography>
+            {/*<Typography variant={'body2'}>{collection.contract_type}</Typography>*/}
+            <Typography variant={'body2'}>{contractType}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant={'body2'}>Blockchain</Typography>
@@ -117,10 +132,12 @@ const DetailInformation: React.FC<DetailInformationProps> = ({ nft, collection }
             <Typography variant={'body2'}>Creator Earnings</Typography>
             <Typography variant={'body2'}>{`${collection.fee_percentage / 10}%`}</Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography variant={'body2'}>Brokerage fee</Typography>
-            <Typography variant={'body2'}>{`${process.env.REACT_APP_CREATOR_FEE}%`}</Typography>
-          </Box>
+          {nft?.quote !== 'krw' && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography variant={'body2'}>Brokerage fee</Typography>
+              <Typography variant={'body2'}>{`${process.env.REACT_APP_CREATOR_FEE}%`}</Typography>
+            </Box>
+          )}
         </Box>
       </SectionWrapper>
     </>
