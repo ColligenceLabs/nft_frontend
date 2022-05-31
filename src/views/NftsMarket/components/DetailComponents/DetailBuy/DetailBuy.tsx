@@ -212,7 +212,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
       title={
         <TitleBox
           title={
-            listingData && listingData?.data?.items.length !== 0
+            (listingData && listingData?.data?.items.length !== 0) || sellingQuantity > 0
               ? `Sale ends ${new Date(data?.data?.end_date).toLocaleString()}`
               : 'Sold out'
           }
