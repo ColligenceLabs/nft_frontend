@@ -24,6 +24,7 @@ import PageContainer from '../../components/container/PageContainer';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import AlbumOutlinedIcon from '@mui/icons-material/AlbumOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import EnhancedTableToolbar from '../../components/EnhancedTableToolbar';
 import EnhancedTableHead from '../../components/EnhancedTableHead';
 import { stableSort, getComparator } from '../../utils/tableUtils';
@@ -173,7 +174,7 @@ const NFTs = () => {
             row.sell_amount,
             row.price,
             row.quote,
-            getChainId(row.collection_id.network)
+            getChainId(row.collection_id.network),
           );
         }
 
@@ -416,6 +417,16 @@ const NFTs = () => {
                         >
                           <DeleteOutlinedIcon />
                         </IconButton>
+                        {row.collection_id.contract_type === 'KIP37' && (
+                          <IconButton
+                            size={'small'}
+                            onClick={() => {
+                              console.log(row);
+                            }}
+                          >
+                            <AddBoxOutlinedIcon />
+                          </IconButton>
+                        )}
                         {/*</Box>*/}
                       </TableCell>
                     </TableRow>
