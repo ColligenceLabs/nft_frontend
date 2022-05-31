@@ -236,7 +236,12 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
           <Typography variant={'subtitle2'} color={'primary'}>
             {sellingQuantity === 0 ? 'Current Price' : 'Price'}
           </Typography>
-          <Box display={'flex'} justifyContent={'flex-start'} alignItems={'center'} gap={'0.5rem'}>
+          <Box
+            display={'flex'}
+            justifyContent={'flex-start'}
+            alignItems={'flex-end'}
+            gap={'0.5rem'}
+          >
             {data?.data?.quote === 'klay' && <img src={klayLogo} alt="klay" height="24px" />}
             {data?.data?.quote === 'talk' && <img src={talkLogo} alt="talk" height="24px" />}
             {data?.data?.quote === 'bnb' && <img src={bnbLogo} alt="bnb" height="24px" />}
@@ -256,6 +261,11 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                   )
                 : sliceFloatNumber(data?.data?.price.toString())}
             </Typography>
+            {data?.data?.quote === 'krw' && (
+              <Typography variant={'caption'} color={'text.primary'} pb={1}>
+                (Included 10% VAT)
+              </Typography>
+            )}
           </Box>
 
           <Box sx={{ display: 'flex', flex: 1 }}>
