@@ -74,6 +74,7 @@ const WalletConnector = ({ activate }) => {
     setIsOpenConnectModal(true);
   };
   const onClickWalletIcon = (id, chain, wallet) => {
+    console.log(id);
     setSelectedNetworkIndex(id);
     if (wallet.address === undefined) {
       setIsOpenConnectModal(true);

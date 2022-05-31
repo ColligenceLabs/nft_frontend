@@ -11,22 +11,22 @@ const WalletConnectorDialog = ({
   isOpenConnectModal,
   handleCloseModal,
   activate,
-  selectedNetworkId,
+  selectedNetworkIndex,
   ethereum,
   klaytn,
   solana,
   binance,
 }) => {
   const { t } = useTranslation();
-  const [selectedNetwork, setSelectedNetwork] = useState(selectedNetworkId);
+  const [selectedNetwork, setSelectedNetwork] = useState(selectedNetworkIndex);
   const [connectedNetwork, setConnectedNetwork] = useState([]);
   const changeNetwork = (id) => {
     setSelectedNetwork(id);
   };
   useEffect(() => {
-    setSelectedNetwork(selectedNetworkId);
+    setSelectedNetwork(selectedNetworkIndex);
     // return () => setSelectedNetwork(0);
-  }, [selectedNetworkId]);
+  }, [selectedNetworkIndex]);
 
   useEffect(() => {
     const array = [
