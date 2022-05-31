@@ -23,7 +23,7 @@ export const RPC_URLS = {
   1: RPC_URL_1,
   3: RPC_URL_3,
   4: RPC_URL_4,
-  56: 'https://bsc-dataseed1.ninicoin.io',
+  56: 'https://bsc-dataseed.binance.org',
   97: 'https://data-seed-prebsc-1-s1.binance.org:8545',
   1001: 'https://api.baobab.klaytn.net:8651',
   8217: 'https://klaytn.taalswap.info:8651',
