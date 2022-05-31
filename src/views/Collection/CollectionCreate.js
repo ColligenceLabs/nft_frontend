@@ -37,7 +37,6 @@ import collectionCreateSchema from '../../config/schema/collectionCreateSchema';
 import useCreator from '../../hooks/useCreator';
 import { deployNFT17 } from '../../services/nft.service';
 import useUserInfo from '../../hooks/useUserInfo';
-import WalletDialog from '../../components/WalletDialog';
 import NETWORKS from '../../components/NetworkSelector/networks';
 import { useSelector } from 'react-redux';
 import { injected, kaikas, walletconnect } from '../../connectors';
@@ -57,6 +56,7 @@ import CustomTextarea from '../../components/forms/custom-elements/CustomTextare
 import { COLLECTION_CATEGORY } from './catetories';
 import { setupNetwork } from '../../utils/wallet';
 import { bnbTargetNetwork, targetNetwork, targetNetworkMsg } from '../../config';
+import WalletConnectorDialog from '../../components/WalletConnectorDialog';
 
 const Container = styled(Paper)(() => ({
   padding: '20px',
@@ -79,6 +79,7 @@ const CollectionCreate = () => {
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
   const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
+  const [selectedNetworkIndex, setSelectedNetworkIndex] = useState(0);
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
   const useKAS = process.env.REACT_APP_USE_KAS ?? 'false';
@@ -111,13 +112,13 @@ const CollectionCreate = () => {
       }
     } else if (name === 'klaytn') {
       if (!klaytn.wallet && !klaytn.address) {
-        alert('지갑연결 필요');
+        setSelectedNetworkIndex(1);
+        setIsOpenConnectModal(true);
         return;
       }
       const network = parseInt(targetNetwork);
       if (klaytn.wallet === 'metamask') {
-        if (chainId !== network)
-          await setupNetwork(network);
+        if (chainId !== network) await setupNetwork(network);
         await activate(injected, null, true);
       } else if (klaytn.wallet === 'walletConnector') {
         const wc = walletconnect(true);
@@ -131,13 +132,13 @@ const CollectionCreate = () => {
       }
     } else if (name === 'binance') {
       if (!binance.wallet && !binance.address) {
-        alert('지갑연결 필요');
+        setSelectedNetworkIndex(3);
+        setIsOpenConnectModal(true);
         return;
       }
       if (binance.wallet === 'metamask') {
         const network = parseInt(bnbTargetNetwork);
-        if (chainId !== network)
-          await setupNetwork(network);
+        if (chainId !== network) await setupNetwork(network);
         await activate(injected, null, true);
       } else if (binance.wallet === 'walletConnector') {
         const wc = walletconnect(true);
@@ -443,7 +444,9 @@ const CollectionCreate = () => {
                   >
                     {(process.env.REACT_APP_USE_SOLANA === 'true'
                       ? NETWORKS
-                      : NETWORKS.filter((item) => item.label !== 'Solana')
+                      : NETWORKS.filter(
+                          (item) => item.label !== 'Solana' && item.label !== 'Ethereum',
+                        )
                     ).map((network) => (
                       <MenuItem key={network.id} value={network.value}>
                         {network.label}
@@ -848,10 +851,20 @@ const CollectionCreate = () => {
             </form>
           )}
         </Formik>
-        <WalletDialog
+        {/*<WalletDialog*/}
+        {/*  isOpenConnectModal={isOpenConnectModal}*/}
+        {/*  handleCloseModal={handleCloseModal}*/}
+        {/*  activate={activate}*/}
+        {/*/>*/}
+        <WalletConnectorDialog
+          selectedNetworkId={selectedNetworkIndex}
           isOpenConnectModal={isOpenConnectModal}
           handleCloseModal={handleCloseModal}
           activate={activate}
+          ethereum={ethereum}
+          klaytn={klaytn}
+          solana={solana}
+          binance={binance}
         />
       </Container>
     </PageContainer>
