@@ -43,6 +43,7 @@ import { ethers } from 'ethers';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import useMarket from '../../hooks/useMarket';
 import { getChainId } from '../../utils/commonUtils';
+import MintDialog from '../../components/MintDialog/MintDialog';
 
 const NFTs = () => {
   const { t } = useTranslation();
@@ -61,6 +62,7 @@ const NFTs = () => {
   const [openDetailModal, setOpenDetailModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [sendModal, setSendModal] = useState(false);
+  const [mintModal, setMintModal] = useState(false);
   const [selectedNft, setSelectedNft] = useState({});
   const [deleteInAction, setDeleteInAction] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -146,9 +148,18 @@ const NFTs = () => {
     setSendModal(true);
   };
 
+  const handleMintModal = (row) => {
+    setSelectedNft(row);
+    setMintModal(true);
+  };
+
   const handleCloseSendModal = async () => {
     setSendModal(false);
     await fetchNFTs();
+  };
+
+  const handleCloseMintModal = () => {
+    setMintModal(false);
   };
 
   const getNftContract = (contract) => {
@@ -418,12 +429,7 @@ const NFTs = () => {
                           <DeleteOutlinedIcon />
                         </IconButton>
                         {row.collection_id.contract_type === 'KIP37' && (
-                          <IconButton
-                            size={'small'}
-                            onClick={() => {
-                              console.log(row);
-                            }}
-                          >
+                          <IconButton size={'small'} onClick={() => handleMintModal(row)}>
                             <AddBoxOutlinedIcon />
                           </IconButton>
                         )}
@@ -476,6 +482,7 @@ const NFTs = () => {
         item={selectedNft}
         type={selectedNft.collection_id?.contract_type}
       />
+      <MintDialog open={mintModal} handleCloseMintModal={handleCloseMintModal} item={selectedNft} />
       <NFTsDetailModal
         open={openDetailModal}
         handleCloseDetailModal={handleCloseDetailModal}
