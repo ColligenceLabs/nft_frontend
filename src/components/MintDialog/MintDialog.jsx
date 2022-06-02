@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
 import {
   Alert,
   Button,
@@ -19,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 const MintDialog = ({ open, handleCloseMintModal, item }) => {
   const theme = useTheme();
   const { t } = useTranslation();
+  const { account } = useWeb3React();
 
   const [amount, setAmount] = useState(1);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -35,6 +37,9 @@ const MintDialog = ({ open, handleCloseMintModal, item }) => {
 
     console.log(item);
     console.log(`amount : ${amount}`);
+
+    // TODO : function mint(uint256 _id, address _to, uint256 _value)
+    console.log(item.collection_id.contract_address, item.metadata.tokenId, account, amount);
 
     let result = 'success';
     if (result === 'success') setSuccessFlag(true);
