@@ -51,7 +51,7 @@ export async function deployKIP17(name, symbol, account, library) {
   return ret;
 }
 
-export async function deployKIP37(name, directory, account, library) {
+export async function deployKIP37(symbol, name, directory, account, library) {
   // hooks can not be called from inside a function
   // const { account, library } = useWeb3React();
 
@@ -87,10 +87,18 @@ export async function deployKIP37(name, directory, account, library) {
   } else {
     options = { gasLimit: 7000000 };
   }
-  const contract = await factory.deploy(tokenUri, name, options).catch(function (err) {
-    console.log(err);
-    ret.err = err;
-  });
+  let contract;
+  if (symbol && symbol !== '' && symbol !== undefined) {
+    contract = await factory.deploy(tokenUri, name, symbol, options).catch(function (err) {
+      console.log(err);
+      ret.err = err;
+    });
+  } else {
+    contract = await factory.deploy(tokenUri, name, options).catch(function (err) {
+      console.log(err);
+      ret.err = err;
+    });
+  }
 
   if (!!ret.err) return ret;
 

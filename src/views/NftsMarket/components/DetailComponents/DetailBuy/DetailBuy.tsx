@@ -261,11 +261,11 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                   )
                 : sliceFloatNumber(data?.data?.price.toString())}
             </Typography>
-            {data?.data?.quote === 'krw' && (
-              <Typography variant={'caption'} color={'text.primary'} pb={1}>
-                (Included 10% VAT)
-              </Typography>
-            )}
+            {/*{data?.data?.quote === 'krw' && (*/}
+            {/*  <Typography variant={'caption'} color={'text.primary'} pb={1}>*/}
+            {/*    (Included 10% VAT)*/}
+            {/*  </Typography>*/}
+            {/*)}*/}
           </Box>
 
           <Box sx={{ display: 'flex', flex: 1 }}>
