@@ -404,6 +404,10 @@ const CollectionCreate = () => {
             formData.append('contract_address', newContract);
             formData.append('network', values.network);
 
+            for (var pair of formData.entries()) {
+              console.log(pair[0] + ', ' + pair[1]);
+            }
+
             await createCollection(formData)
               .then((res) => {
                 if (res.data.status === 1) {
@@ -440,7 +444,6 @@ const CollectionCreate = () => {
                     value={values.network}
                     disabled={isSubmitting}
                     onChange={async (event) => {
-                      console.log(event.target);
                       if (useKAS === 'false')
                         await activateNetwork(event.target.value, setFieldValue);
                       else setFieldValue('network', event.target.value);
@@ -709,7 +712,7 @@ const CollectionCreate = () => {
                       </RadioGroup>
                     </Grid>
 
-                    {values.type === 'KIP17' && (
+                    {(values.type === 'KIP17' || values.network === 'binance') && (
                       <Grid item lg={6} md={12} sm={12} xs={12}>
                         <CustomFormLabel htmlFor="symbol">{t('Symbol')}</CustomFormLabel>
                         <CustomTextField
@@ -746,6 +749,7 @@ const CollectionCreate = () => {
                         />
                       </Grid>
                     )}
+
                     <Grid item lg={6} md={12} sm={12} xs={12}>
                       <CustomFormLabel htmlFor="contractAddress">
                         {t('Contract Address')}
