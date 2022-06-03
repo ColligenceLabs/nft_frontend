@@ -365,7 +365,13 @@ const CollectionCreate = () => {
                     ) {
                       result = await deployKIP37WithKaikas(directory, account, library);
                     } else {
-                      result = await deployKIP37(values.name, directory, account, library);
+                      result = await deployKIP37(
+                        values.name,
+                        directory,
+                        account,
+                        library,
+                        values.symbol, // TODO : ERC-1155 for Binance
+                      );
                       // result = await deployKIP37(values.name, account, library);
                     }
                   }

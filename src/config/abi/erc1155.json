@@ -8,6 +8,11 @@
       "internalType": "string",
       "name": "name",
       "type": "string"
+    },
+    {
+      "internalType": "string",
+      "name": "symbol",
+      "type": "string"
     }
   ],
   "stateMutability": "nonpayable",
@@ -590,6 +595,17 @@
       "internalType": "bool",
       "name": "",
       "type": "bool"
+    }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [{
+      "internalType": "string",
+      "name": "",
+      "type": "string"
     }],
     "stateMutability": "view",
     "type": "function"
