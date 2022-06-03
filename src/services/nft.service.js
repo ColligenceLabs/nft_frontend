@@ -121,6 +121,15 @@ export const deleteNft = (nfts) => {
   }
 };
 
+export const setMintNFT37 = (nftId, amount) => {
+  return axios
+    .get(`${API_URL}/mint/${nftId}?amount=${amount}` , { headers: authHeader() })
+    .then((res) => {
+      return res;
+    })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const setSchedule = (id, start_date, end_date, use_kas, seller) => {
   return axios.put(
     `${API_URL}/update-schedule`,
