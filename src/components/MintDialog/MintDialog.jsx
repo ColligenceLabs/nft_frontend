@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import {
   Alert,
@@ -24,32 +24,34 @@ import { targetNetworkMsg } from '../../config';
 import { setupNetwork } from '../../utils/wallet';
 import { useSelector } from 'react-redux';
 import { setMintNFT37 } from '../../services/nft.service';
+import WalletConnectorDialog from '../WalletConnectorDialog';
 
 const MintDialog = ({ open, handleCloseMintModal, item }) => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId, activate } = useWeb3React();
   const { ethereum, klaytn, solana, binance } = useSelector((state) => state.wallets);
   const contractType = 'KIP37';
   const kipContract = useKipContract(item.collection_id?.contract_address, contractType);
   const kasContract = useKipContractWithKaikas(item.collection_id?.contract_address, contractType);
-  const { mintNFT37 } = useNFT(
-    kipContract,
-    kasContract,
-    account,
-  );
+  const { mintNFT37 } = useNFT(kipContract, kasContract, account);
   const [amount, setAmount] = useState(1);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isMintLoading, setIsMintLoading] = useState(false);
   const [successFlag, setSuccessFlag] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
+  const [selectedNetworkIndex, setSelectedNetworkIndex] = useState(1);
+  const [isOpenConnectModal, setIsOpenConnectModal] = useState(false);
 
   const handleChangeAmount = (e) => {
     setAmount(e.target.value);
   };
 
+  const handleCloseModal = async () => {
+    setIsOpenConnectModal(false);
+  };
+
   const mintNft = async () => {
-    setIsMintLoading(true);
     try {
       const targetNetwork = item.collection_id.network;
       if (
@@ -58,8 +60,10 @@ const MintDialog = ({ open, handleCloseMintModal, item }) => {
         (targetNetwork === 'ethereum' && ethereum.address === undefined)
       ) {
         // todo 지갑연결 창을 targetNetowrk 선택 상태로 띄워 준다.
-        console.log('지갑을 연결하시오.');
+        setIsOpenConnectModal(true);
+        return;
       }
+      setIsMintLoading(true);
       const targetChainId = getChainId(targetNetwork);
       if (chainId !== targetChainId) {
         if (targetNetwork === 'klaytn' && klaytn.wallet === 'kaikas') {
@@ -72,21 +76,39 @@ const MintDialog = ({ open, handleCloseMintModal, item }) => {
       if (result === SUCCESS) {
         const nft = await setMintNFT37(item._id, amount);
         setSuccessFlag(true);
+        setOpenSnackbar(true);
+        handleClose();
         // 정상종료 모달 창 종료
-
-      }
-      else setErrorMessage('error');
+      } else setErrorMessage('error');
     } catch (e) {
       console.log(e);
       setErrorMessage(e.message);
+    } finally {
+      setIsMintLoading(false);
     }
-    setIsMintLoading(false);
   };
 
   const handleClose = () => {
     setAmount(1);
     handleCloseMintModal();
   };
+
+  useEffect(() => {
+    switch (item?.collection_id?.network) {
+      case 'ethereum':
+        setSelectedNetworkIndex(0);
+        break;
+      case 'klaytn':
+        setSelectedNetworkIndex(1);
+        break;
+      case 'solana':
+        setSelectedNetworkIndex(2);
+        break;
+      case 'binance':
+        setSelectedNetworkIndex(3);
+        break;
+    }
+  }, [item]);
 
   return (
     <React.Fragment>
@@ -128,6 +150,16 @@ const MintDialog = ({ open, handleCloseMintModal, item }) => {
           </LoadingButton>
         </DialogActions>
       </Dialog>
+      <WalletConnectorDialog
+        selectedNetworkIndex={selectedNetworkIndex}
+        isOpenConnectModal={isOpenConnectModal}
+        handleCloseModal={handleCloseModal}
+        activate={activate}
+        ethereum={ethereum}
+        klaytn={klaytn}
+        solana={solana}
+        binance={binance}
+      />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={openSnackbar}

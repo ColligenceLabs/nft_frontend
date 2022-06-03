@@ -158,8 +158,9 @@ const NFTs = () => {
     await fetchNFTs();
   };
 
-  const handleCloseMintModal = () => {
+  const handleCloseMintModal = async () => {
     setMintModal(false);
+    await fetchNFTs();
   };
 
   const getNftContract = (contract) => {
