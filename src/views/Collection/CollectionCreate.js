@@ -867,7 +867,7 @@ const CollectionCreate = () => {
         {/*  activate={activate}*/}
         {/*/>*/}
         <WalletConnectorDialog
-          selectedNetworkId={selectedNetworkIndex}
+          selectedNetworkIndex={selectedNetworkIndex}
           isOpenConnectModal={isOpenConnectModal}
           handleCloseModal={handleCloseModal}
           activate={activate}

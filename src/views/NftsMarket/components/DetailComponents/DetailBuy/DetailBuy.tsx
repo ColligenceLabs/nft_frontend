@@ -136,7 +136,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
   const { vertical, horizontal, open } = krwMessage;
 
   const buy = async () => {
-    console.log(data?.data?.quote);
     if (data?.data?.quote === 'krw') {
       setKrwMessage({ ...krwMessage, open: true });
       return;
@@ -365,7 +364,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
         </Box>
       </>
       <WalletConnectorDialog
-        selectedNetworkId={selectedNetworkId}
+        selectedNetworkIndex={selectedNetworkId}
         isOpenConnectModal={isOpenConnectModal}
         handleCloseModal={handleCloseModal}
         activate={activate}
