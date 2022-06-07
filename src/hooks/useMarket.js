@@ -469,7 +469,7 @@ const useMarket = () => {
 
   const stopSelling = useCallback(
     // V4 : function cancelSellToken(address _nft, uint256 _tokenId, uint256 _quantity, uint256 _price, address _quote) external;
-    async (nftContract, tokenId, quantity, price, quote, targetNetwork) => {
+    async (contractAddress, tokenId, quantity, price, quote, targetNetwork) => {
       console.log('cancel!', tokenId);
       const gasPrice = await caver.klay.getGasPrice();
       const isKaikas =
@@ -485,12 +485,12 @@ const useMarket = () => {
       console.log('----->', quoteToken);
       const parsedPrice = parseUnits(price.toString(), 'ether').toString();
 
-      console.log('---', nftContract.address, tokenId, quantity, parsedPrice, quoteToken);
+      console.log('---', contractAddress, tokenId, quantity, parsedPrice, quoteToken);
       // buy
       try {
         if (!isKaikas) {
           gasLimit = await marketContract.estimateGas.cancelSellToken(
-            nftContract.address,
+            contractAddress,
             tokenId,
             quantity,
             parsedPrice,
@@ -498,7 +498,7 @@ const useMarket = () => {
           );
         } else {
           gasLimit = await marketContract.methods
-            .cancelSellToken(nftContract._address, tokenId, quantity, parsedPrice, quoteToken)
+            .cancelSellToken(contractAddress, tokenId, quantity, parsedPrice, quoteToken)
             .estimateGas({ from: account });
         }
 
@@ -518,7 +518,7 @@ const useMarket = () => {
           else
             options = {from: account, gasLimit: calculateGasMargin(gasLimit)};
           tx = await marketContract.cancelSellToken(
-            nftContract.address,
+            contractAddress,
             tokenId,
             quantity,
             parsedPrice,
@@ -528,7 +528,7 @@ const useMarket = () => {
           receipt = await tx.wait();
         } else {
           receipt = await marketContract.methods
-            .cancelSellToken(nftContract._address, tokenId, quantity, parsedPrice, quoteToken)
+            .cancelSellToken(contractAddress, tokenId, quantity, parsedPrice, quoteToken)
             .send({
               from: account,
               gasPrice,
