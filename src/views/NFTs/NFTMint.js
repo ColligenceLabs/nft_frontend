@@ -12,6 +12,8 @@ import {
   CircularProgress,
   Box,
   Select,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import CustomTextField from '../../components/forms/custom-elements/CustomTextField';
@@ -88,7 +90,7 @@ const NFTMint = () => {
   const theme = useTheme();
   // TODO : change for mainnet 1001 -> 8217
   const [contractAddr, setContractAddr] = useState(contracts.kip17[1001]);
-  const [contractType, setContractType] = useState('KIP17');
+  const [contractType, setContractType] = useState('');
   const { account, activate, library, chainId } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
@@ -109,6 +111,8 @@ const NFTMint = () => {
   const [tokenId, setTokenId] = useState('');
   const [openBackdrop, setOpenBackdrop] = useState(false);
   const [priceTypes, setPriceTypes] = useState([]);
+
+  const [isBatchMint, setIsBatch] = useState(false);
 
   const creatorList = useCreator();
   const { level, id, full_name } = useUserInfo();
@@ -258,6 +262,7 @@ const NFTMint = () => {
             contract_type: '',
             auto: 'false',
             type: '0',
+            batch: '',
           }}
           onSubmit={async (values, { setSubmitting }) => {
             if (account === undefined) {
@@ -268,9 +273,16 @@ const NFTMint = () => {
             let formData = new FormData();
             for (let value in values) {
               if (
-                ['name', 'price', 'contract_type', 'auto', 'type', 'description', 'quote'].includes(
-                  value,
-                )
+                [
+                  'name',
+                  'price',
+                  'contract_type',
+                  'auto',
+                  'type',
+                  'description',
+                  'quote',
+                  'batch',
+                ].includes(value)
               ) {
                 formData.append(value, values[value]);
               }
@@ -371,6 +383,13 @@ const NFTMint = () => {
                   setErrorMessage(account + ' is not a Minter');
                   setSuccessRegister(false);
                   return;
+                }
+
+                if (isBatchMint) {
+                  console.log(`batch count :  ${values.batch}`);
+                  for (var pair of formData.entries()) {
+                    console.log(pair[0] + ', ' + pair[1]);
+                  }
                 }
 
                 await registerNFT(formData)
@@ -804,14 +823,53 @@ const NFTMint = () => {
                   </Grid>
                 )}
                 <Grid item lg={12} md={12} sm={12} xs={12} textAlign="right" gap="1rem">
-                  <LoadingButton
-                    type="submit"
-                    loading={isSubmitting || isMinting}
-                    variant="contained"
-                    sx={{ mt: 2 }}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: contractType === 'KIP37' ? 'space-between' : 'flex-end',
+                      alignItems: 'center',
+                    }}
                   >
-                    {t('Confirm')}
-                  </LoadingButton>
+                    {contractType === 'KIP37' && (
+                      <Box
+                        sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+                      >
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              value={isBatchMint}
+                              onChange={() => {
+                                setIsBatch((cur) => !cur);
+                                setFieldValue('batch', '');
+                              }}
+                            />
+                          }
+                          label="Use Batch Mint"
+                        />
+
+                        <CustomTextField
+                          id="batch"
+                          name="batch"
+                          variant="outlined"
+                          // fullWidth
+                          disabled={!isBatchMint}
+                          size="small"
+                          value={values.batch}
+                          onChange={handleChange}
+                          sx={{ width: '80px' }}
+                        />
+                      </Box>
+                    )}
+
+                    <LoadingButton
+                      type="submit"
+                      loading={isSubmitting || isMinting}
+                      variant="contained"
+                      sx={{ mt: 2 }}
+                    >
+                      {t('Confirm')}
+                    </LoadingButton>
+                  </Box>
                 </Grid>
               </Grid>
             </form>
