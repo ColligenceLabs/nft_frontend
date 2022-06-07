@@ -13,6 +13,7 @@ import {
   Box,
   Select,
   FormControlLabel,
+  Typography,
   Checkbox,
 } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
@@ -834,19 +835,28 @@ const NFTMint = () => {
                       <Box
                         sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                       >
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              value={isBatchMint}
-                              onChange={() => {
-                                setIsBatch((cur) => !cur);
-                                setFieldValue('batch', '');
-                              }}
-                            />
-                          }
-                          label="Use Batch Mint"
+                        {/*<FormControlLabel*/}
+                        {/*  control={*/}
+                        {/*    <Checkbox*/}
+                        {/*      value={isBatchMint}*/}
+                        {/*      onChange={() => {*/}
+                        {/*        setIsBatch((cur) => !cur);*/}
+                        {/*        setFieldValue('batch', '');*/}
+                        {/*      }}*/}
+                        {/*    />*/}
+                        {/*  }*/}
+                        {/*  label="Use Batch Mint"*/}
+                        {/*/>*/}
+                        <Checkbox
+                          value={isBatchMint}
+                          onChange={() => {
+                            setIsBatch((cur) => !cur);
+                            setFieldValue('batch', '');
+                          }}
                         />
-
+                        <Typography variant="h6" sx={{ marginRight: '20px' }}>
+                          Use Batch Mint
+                        </Typography>
                         <CustomTextField
                           id="batch"
                           name="batch"
