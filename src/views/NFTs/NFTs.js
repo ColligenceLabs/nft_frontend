@@ -163,25 +163,14 @@ const NFTs = () => {
     await fetchNFTs();
   };
 
-  const getNftContract = (contract) => {
-    const isKaikas =
-      library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
-    if (isKaikas) {
-      const caver = new Caver(window.klaytn);
-      return new caver.klay.Contract(kip17Abi, contract);
-    } else {
-      return new ethers.Contract(contract, kip17Abi, library?.getSigner());
-    }
-  };
-
   const handleSelling = async (row) => {
     if (row.status === 'inactive') return;
     if (row.selling === true) {
       try {
         if (useKAS !== 'true' && row.quote !== 'krw') {
-          const nftContract = getNftContract(row.collection_id.contract_address);
+          // const nftContract = getNftContract(row.collection_id.contract_address);
           await stopSelling(
-            nftContract,
+            row.collection_id.contract_address,
             parseInt(row.metadata.tokenId, 10),
             row.sell_amount,
             row.price,
