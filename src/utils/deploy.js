@@ -1,5 +1,5 @@
 import { ContractFactory } from '@ethersproject/contracts';
-import { kip17Data, kip37Data, erc1155Data } from '../contracts';
+import { kip17Data, kip37Data, erc721Data, erc1155Data } from '../contracts';
 import Caver from 'caver-js';
 // import { useWeb3React } from '@web3-react/core';
 import { mkDirIPFS } from '../hooks/useNFT';
@@ -11,11 +11,12 @@ export async function deployKIP17(name, symbol, account, library) {
   // const { account, library } = useWeb3React();
 
   const chainId = library._network.chainId;
-  const factory = new ContractFactory(
-    kip17Data.abi,
-    kip17Data.bytecode,
-    library.getSigner(account),
-  );
+  let factory;
+  if (chainId === 8217 || chainId === 1001) {
+    factory = new ContractFactory(kip17Data.abi, kip17Data.bytecode, library.getSigner(account));
+  } else {
+    factory = new ContractFactory(erc721Data.abi, erc721Data.bytecode, library.getSigner(account));
+  }
 
   const ret = {};
   const gasPrice = parseUnits('250', 'gwei').toNumber();
