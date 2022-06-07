@@ -38,6 +38,7 @@ import {
   registerSolanaNFT,
   setNftOnchain,
   cancelCreateNft,
+  cancelCreateNfts,
 } from '../../services/nft.service';
 import { useSelector } from 'react-redux';
 import useUserInfo from '../../hooks/useUserInfo';
@@ -95,7 +96,7 @@ const NFTMint = () => {
   const { account, activate, library, chainId } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
-  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting } = useNFT(
+  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting, mintNFTBatch } = useNFT(
     kipContract,
     kasContract,
     account,
@@ -396,33 +397,65 @@ const NFTMint = () => {
                 await registerNFT(formData)
                   .then(async (res) => {
                     if (res.data.status === 1) {
-                      const nftId = res.data.data._id;
-                      const tokenId = res.data.data.metadata.tokenId;
-                      const tokenUri = res.data.data.ipfs_link;
-                      const quantity = res.data.data.quantity;
+                      if (isBatchMint) {
+                        // const count = parseInt(values.batch);
+                        const data = res.data.data;
+                        // const nftIds = [];
+                        // const tokenIds = [];
+                        // const tokenUris = [];
+                        // const quantities = [];
+                        // for (let i = 0; i < count; i++) {
+                        //   nftIds.push(nfts[i]._id);
+                        //   tokenIds.push(nfts[i].metadata.tokenId);
+                        //   tokenUris.push(nfts[i].ipfs_link);
+                        //   quantities.push(nfts[i].quantity);
+                        // }
+                        console.log('000', data);
+                        console.log('111', data.nftIds);
+                        console.log('222', data.tokenIds);
+                        console.log('333', data.tokenUris);
+                        console.log('444', data.quantities);
+                        // const result = FAILURE;
+                        // // TODO : Actual NFT Minting here
+                        const result = await mintNFTBatch(data.tokenIds, data.tokenUris, data.quantities, data.nftIds, contractType, isKaikas);
+                        if (result === FAILURE) {
+                          // delete nft and serials
+                          await cancelCreateNfts(data.nftIds);
+                          setErrorMessage('Transaction failed or cancelled.');
+                          setSuccessRegister(false);
+                        } else {
+                          setErrorMessage(null);
+                          setSuccessRegister(true);
+                        }
+                      } else {
+                        const nftId = res.data.data._id;
+                        const tokenId = res.data.data.metadata.tokenId;
+                        const tokenUri = res.data.data.ipfs_link;
+                        const quantity = res.data.data.quantity;
 
-                      // TODO : Actual NFT Minting here
-                      if (contractType === 'KIP17') {
-                        if (isKaikas) {
-                          result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                        // Actual NFT Minting here
+                        if (contractType === 'KIP17') {
+                          if (isKaikas) {
+                            result = await mintNFT17WithKaikas(tokenId, tokenUri, nftId);
+                          } else {
+                            result = await mintNFT17(tokenId, tokenUri, nftId);
+                          }
                         } else {
-                          result = await mintNFT17(tokenId, tokenUri, nftId);
+                          if (isKaikas) {
+                            result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                          } else {
+                            result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                          }
                         }
-                      } else {
-                        if (isKaikas) {
-                          result = await mintNFT37WithKaikas(tokenId, quantity, tokenUri, nftId);
+                        if (result === FAILURE) {
+                          // delete nft and serials
+                          await cancelCreateNft(nftId);
+                          setErrorMessage('Transaction failed or cancelled.');
+                          setSuccessRegister(false);
                         } else {
-                          result = await mintNFT37(tokenId, quantity, tokenUri, nftId);
+                          setErrorMessage(null);
+                          setSuccessRegister(true);
                         }
-                      }
-                      if (result === FAILURE) {
-                        // delete nft and serials
-                        await cancelCreateNft(nftId);
-                        setErrorMessage('Transaction failed or cancelled.');
-                        setSuccessRegister(false);
-                      } else {
-                        setErrorMessage(null);
-                        setSuccessRegister(true);
                       }
                     } else {
                       setErrorMessage(res.data.message);
@@ -827,11 +860,11 @@ const NFTMint = () => {
                   <Box
                     sx={{
                       display: 'flex',
-                      justifyContent: contractType === 'KIP37' ? 'space-between' : 'flex-end',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
                     }}
                   >
-                    {contractType === 'KIP37' && (
+                    {/*{contractType === 'KIP37' && (*/}
                       <Box
                         sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                       >
@@ -869,7 +902,7 @@ const NFTMint = () => {
                           sx={{ width: '80px' }}
                         />
                       </Box>
-                    )}
+                    {/*)}*/}
 
                     <LoadingButton
                       type="submit"

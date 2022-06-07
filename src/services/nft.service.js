@@ -75,6 +75,12 @@ export const setNftOnchain = (id) => {
     .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
 };
 
+export const setNftOnchains = (ids) => {
+  return axios
+    .put(`${API_URL}/update-onchains`, { nftIds: ids, onchain: 'true' }, { headers: authHeader() })
+    .catch((error) => (error.response.status === 401 ? authService.logout() : console.log(error)));
+};
+
 export const setNftTransfered = (id, amount) => {
   return axios
     .put(`${API_URL}/update-transfered/${id}`, { transfered: amount }, { headers: authHeader() })
@@ -97,6 +103,14 @@ export const cancelCreateNft = (nftId) => {
       .catch((error) =>
         error.response.status === 401 ? authService.logout() : console.log(error),
       );
+};
+
+export const cancelCreateNfts = (nftIds) => {
+  return axios
+    .put(`${API_URL}/cancel-creates`, {nftIds}, { headers: authHeader() })
+    .catch((error) =>
+      error.response.status === 401 ? authService.logout() : console.log(error),
+    );
 };
 
 export const deleteNft = (nfts) => {
