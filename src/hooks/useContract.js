@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { ethers } from 'ethers';
 import contracts from '../config/constants/contracts';
 import kip17Abi from '../config/abi/kip17.json';
+import erc721Abi from '../config/abi/erc721.json';
 import kip37Abi from '../config/abi/kip37.json';
 import erc1155Abi from '../config/abi/erc1155.json';
 // import marketAbi from '../config/abi/market.json';
@@ -17,7 +18,13 @@ export const useKipContract = (contract, type) => {
   // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
   // return useMemo(() => new ethers.Contract(contracts.kip17[1001], kip17Abi, library?.getSigner()), [library]);
   const abi =
-    type === 'KIP17' ? kip17Abi : chainId === 1001 || chainId === 8217 ? kip37Abi : erc1155Abi;
+    type === 'KIP17'
+      ? chainId === 1001 || chainId === 8217
+        ? kip17Abi
+        : erc721Abi
+      : chainId === 1001 || chainId === 8217
+      ? kip37Abi
+      : erc1155Abi;
   return useMemo(() => {
     if (type === 'SPLToken' || !contract) return;
     return new ethers.Contract(contract, abi, library?.getSigner());
