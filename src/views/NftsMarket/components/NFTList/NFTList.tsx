@@ -16,7 +16,6 @@ interface FilterSetType {
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-const PAGE_SIZE = 20;
 
 const NFTList = () => {
   const { id } = useParams();
@@ -30,7 +29,7 @@ const NFTList = () => {
     minPrice: '',
     maxPrice: '',
   });
-
+  const PAGE_SIZE = showLarge ? 20 : 30;
   const { data, size, setSize, error, isValidating } = useSWRInfinite<NFTResponse>(
     (index) =>
       `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsM?type=0&page=${
