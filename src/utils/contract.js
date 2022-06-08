@@ -1,5 +1,6 @@
 import Caver from 'caver-js';
 import kip17Abi from '../config/abi/kip17.json';
+import erc721Abi from '../config/abi/erc721.json';
 import kip37Abi from '../config/abi/kip37.json';
 import erc1155Abi from '../config/abi/erc1155.json';
 import { ethers } from 'ethers';
@@ -15,7 +16,13 @@ export const getNftContract = (library, contract, type) => {
   } else {
     return new ethers.Contract(
       contract,
-      type === 'KIP17' ? kip17Abi : chainId === 1001 || chainId === 8217 ? kip37Abi : erc1155Abi,
+      type === 'KIP17'
+        ? chainId === 1001 || chainId === 8217
+          ? kip17Abi
+          : erc721Abi
+        : chainId === 1001 || chainId === 8217
+        ? kip37Abi
+        : erc1155Abi,
       library?.getSigner(),
     );
   }

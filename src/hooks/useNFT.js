@@ -7,7 +7,12 @@ import useActiveWeb3React from './useActiveWeb3React';
 import fs from 'fs';
 import { IPFS_URL, ALT_URL, FAILURE, SUCCESS } from '../config/constants/consts';
 import { create } from 'ipfs-http-client';
-import { setNftOnchain, setNftTransferData, setNftTransfered } from '../services/nft.service';
+import {
+  setNftOnchain,
+  setNftOnchains,
+  setNftTransferData,
+  setNftTransfered,
+} from '../services/nft.service';
 
 // add 10%
 export function calculateGasMargin(value) {
@@ -60,7 +65,7 @@ const useNFT = (contract, kasContract, account) => {
   const [isMinting, setIsMinting] = useState();
   const [isTransfering, setIsTransfering] = useState();
 
-  const { library } = useActiveWeb3React();
+  const { library, chainId } = useActiveWeb3React();
 
   // const createNFT = useCallback(
   //   async (mintData) => {
@@ -138,6 +143,113 @@ const useNFT = (contract, kasContract, account) => {
   //   },
   //   [library, account, mintData],
   // );
+
+  const mintNFTBatch = useCallback(
+    async (tokenIds, tokenUris, quantities, nftIds, contractType, isKaikas) => {
+      setIsMinting(true);
+      // todo gasPrice 계산식 변경 필요.
+      const gasPrice = parseUnits('250', 'gwei').toString();
+      if (isKaikas) {
+        let tx;
+        if (contractType === 'KIP17') {
+          // gasLimit 계산
+          const gasLimit = await kasContract.methods
+            .batchMintWithTokenURI(account, tokenIds, tokenUris)
+            .estimateGas({
+              from: account,
+            });
+
+          // mint 요청
+          tx = await kasContract.methods
+            .batchMintWithTokenURI(account, tokenIds, tokenUris)
+            .send({
+              from: account,
+              gasPrice,
+              gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+            })
+            .catch(async (err) => {
+              console.log('batchMintWithTokenURI error', err);
+              await setIsMinting(false);
+              return FAILURE;
+            });
+        } else {
+          // gasLimit 계산
+          const gasLimit = await kasContract.methods
+            .createBatch(tokenIds, quantities, tokenUris)
+            .estimateGas({
+              from: account,
+            });
+
+          // mint 요청
+          tx = await kasContract.methods
+            .createBatch(tokenIds, quantities, tokenUris)
+            .send({
+              from: account,
+              gasPrice,
+              gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+            })
+            .catch(async (err) => {
+              console.log('createBatch error', err);
+              await setIsMinting(false);
+              return FAILURE;
+            });
+        }
+        // receipt 대기
+        try {
+          if (tx?.status) {
+            await setNftOnchains(nftIds);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+        await setIsMinting(false);
+        return SUCCESS;
+      } else {
+        try {
+          let tx;
+          if (contractType === 'KIP17') {
+            console.log('요기로 왔냥~~~?', account, tokenIds, tokenUris);
+            console.log(contract);
+            // gasLimit 계산
+            const gasLimit = await contract.estimateGas.batchMintWithTokenURI(
+              account,
+              tokenIds,
+              tokenUris,
+            );
+            const options = { from: account, gasLimit: calculateGasMargin(gasLimit) };
+            if (chainId > 1000) options.gasPrice = gasPrice;
+            tx = await contract.batchMintWithTokenURI(account, tokenIds, tokenUris, options);
+            console.log('요기로 왔냥~~~?222');
+          } else {
+            const gasLimit = await contract.estimateGas.createBatch(
+              tokenIds,
+              quantities,
+              tokenUris,
+            );
+            const options = { from: account, gasLimit: calculateGasMargin(gasLimit) };
+            if (chainId > 1000) options.gasPrice = gasPrice;
+            tx = await contract.createBatch(tokenIds, quantities, tokenUris, options);
+          }
+          // receipt 대기
+          let receipt;
+          try {
+            receipt = await tx.wait();
+            if (receipt.status === 1) {
+              await setNftOnchains(nftIds);
+            }
+          } catch (e) {
+            return FAILURE;
+          }
+          await setIsMinting(false);
+          return SUCCESS;
+        } catch (e) {
+          await setIsMinting(false);
+          return FAILURE;
+        }
+      }
+    },
+    [library, account, contract],
+  );
 
   const mintNFT17WithKaikas = useCallback(
     async (tokenId, tokenUri, nftId) => {
@@ -549,6 +661,7 @@ const useNFT = (contract, kasContract, account) => {
 
   // return { createNFT, mintNFT };
   return {
+    mintNFTBatch,
     mintNFT17,
     mintNFT17WithKaikas,
     mintNFT37,

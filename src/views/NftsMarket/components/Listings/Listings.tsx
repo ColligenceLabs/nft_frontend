@@ -142,13 +142,13 @@ const Listings: React.FC<ListingsProps> = ({
     setIsCancelLoading(true);
     try {
       // nftContract, tokenId, quantity, price, quote
-      const nftContract = getNftContract(
-        library,
-        nft.collection_id.contract_address,
-        nft.collection_id.contract_type,
-      );
+      // const nftContract = getNftContract(
+      //   library,
+      //   nft.collection_id.contract_address,
+      //   nft.collection_id.contract_type,
+      // );
       const stopResult = await stopSelling(
-        nftContract,
+        nft.collection_id.contract_address,
         parseInt(row.token_id, 16),
         row.quantity,
         row.price,
