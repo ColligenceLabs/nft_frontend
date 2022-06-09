@@ -80,7 +80,6 @@ const QUOTE_TOKEN = [
   {
     value: 'binance',
     types: [
-      { value: 'talk', caption: 'TALK' },
       { value: 'bnb', caption: 'BNB' },
       { value: 'krw', caption: 'KRW' },
     ],
@@ -96,11 +95,14 @@ const NFTMint = () => {
   const { account, activate, library, chainId } = useWeb3React();
   const kipContract = useKipContract(contractAddr, contractType);
   const kasContract = useKipContractWithKaikas(contractAddr, contractType);
-  const { mintNFT17, mintNFT17WithKaikas, mintNFT37, mintNFT37WithKaikas, isMinting, mintNFTBatch } = useNFT(
-    kipContract,
-    kasContract,
-    account,
-  );
+  const {
+    mintNFT17,
+    mintNFT17WithKaikas,
+    mintNFT37,
+    mintNFT37WithKaikas,
+    isMinting,
+    mintNFTBatch,
+  } = useNFT(kipContract, kasContract, account);
   const [collectionList, setCollectionList] = useState([]);
   const [errorMessage, setErrorMessage] = useState();
   const [successRegister, setSuccessRegister] = useState(false);
@@ -417,7 +419,14 @@ const NFTMint = () => {
                         console.log('444', data.quantities);
                         // const result = FAILURE;
                         // // TODO : Actual NFT Minting here
-                        const result = await mintNFTBatch(data.tokenIds, data.tokenUris, data.quantities, data.nftIds, contractType, isKaikas);
+                        const result = await mintNFTBatch(
+                          data.tokenIds,
+                          data.tokenUris,
+                          data.quantities,
+                          data.nftIds,
+                          contractType,
+                          isKaikas,
+                        );
                         if (result === FAILURE) {
                           // delete nft and serials
                           await cancelCreateNfts(data.nftIds);
@@ -865,43 +874,43 @@ const NFTMint = () => {
                     }}
                   >
                     {/*{contractType === 'KIP37' && (*/}
-                      <Box
-                        sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
-                      >
-                        {/*<FormControlLabel*/}
-                        {/*  control={*/}
-                        {/*    <Checkbox*/}
-                        {/*      value={isBatchMint}*/}
-                        {/*      onChange={() => {*/}
-                        {/*        setIsBatch((cur) => !cur);*/}
-                        {/*        setFieldValue('batch', '');*/}
-                        {/*      }}*/}
-                        {/*    />*/}
-                        {/*  }*/}
-                        {/*  label="Use Batch Mint"*/}
-                        {/*/>*/}
-                        <Checkbox
-                          value={isBatchMint}
-                          onChange={() => {
-                            setIsBatch((cur) => !cur);
-                            setFieldValue('batch', '');
-                          }}
-                        />
-                        <Typography variant="h6" sx={{ marginRight: '20px' }}>
-                          Use Batch Mint
-                        </Typography>
-                        <CustomTextField
-                          id="batch"
-                          name="batch"
-                          variant="outlined"
-                          // fullWidth
-                          disabled={!isBatchMint}
-                          size="small"
-                          value={values.batch}
-                          onChange={handleChange}
-                          sx={{ width: '80px' }}
-                        />
-                      </Box>
+                    <Box
+                      sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+                    >
+                      {/*<FormControlLabel*/}
+                      {/*  control={*/}
+                      {/*    <Checkbox*/}
+                      {/*      value={isBatchMint}*/}
+                      {/*      onChange={() => {*/}
+                      {/*        setIsBatch((cur) => !cur);*/}
+                      {/*        setFieldValue('batch', '');*/}
+                      {/*      }}*/}
+                      {/*    />*/}
+                      {/*  }*/}
+                      {/*  label="Use Batch Mint"*/}
+                      {/*/>*/}
+                      <Checkbox
+                        value={isBatchMint}
+                        onChange={() => {
+                          setIsBatch((cur) => !cur);
+                          setFieldValue('batch', '');
+                        }}
+                      />
+                      <Typography variant="h6" sx={{ marginRight: '20px' }}>
+                        Use Batch Mint
+                      </Typography>
+                      <CustomTextField
+                        id="batch"
+                        name="batch"
+                        variant="outlined"
+                        // fullWidth
+                        disabled={!isBatchMint}
+                        size="small"
+                        value={values.batch}
+                        onChange={handleChange}
+                        sx={{ width: '80px' }}
+                      />
+                    </Box>
                     {/*)}*/}
 
                     <LoadingButton
