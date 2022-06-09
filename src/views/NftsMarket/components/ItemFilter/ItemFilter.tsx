@@ -45,7 +45,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
     defaultMatches: true,
   });
 
-  const [sorting, setSoting] = useState(SORTING_CATEGORY[0].value);
+  const [sorting, setSoting] = useState(SORTING_CATEGORY[5].value);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [createAt, setCreateAt] = useState('-1');
   const [price, setPrice] = useState('0');
