@@ -77,7 +77,7 @@ const NFTList = () => {
             px: '15px',
           }}
           color={'primary'}
-          onClick={() => setShowLarge((curr) => !curr)}
+          // onClick={() => setShowLarge((curr) => !curr)}
         >{`${itemCount} items`}</Typography>
       </Grid>
       {!error &&

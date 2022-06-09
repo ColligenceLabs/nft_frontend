@@ -45,11 +45,11 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
     defaultMatches: true,
   });
 
-  const [sorting, setSoting] = useState(SORTING_CATEGORY[5].value);
+  const [sorting, setSorting] = useState(SORTING_CATEGORY[5].value);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [createAt, setCreateAt] = useState('-1');
+  const [createAt, setCreateAt] = useState('0');
   const [price, setPrice] = useState('0');
-  const [tokenId, setTokenId] = useState('0');
+  const [tokenId, setTokenId] = useState('1');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [disableButton, setDisableButton] = useState(true);
@@ -68,6 +68,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
 
   const onSelectSortingCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedSortingType = e.target.value;
+
     if (selectedSortingType === 'recent' || selectedSortingType === 'oldest') {
       if (selectedSortingType === 'recent') setCreateAt('-1');
       if (selectedSortingType === 'oldest') setCreateAt('1');
@@ -80,7 +81,7 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
       setCreateAt('0');
       setTokenId('0');
     }
-    setSoting(selectedSortingType);
+    setSorting(selectedSortingType);
 
     if (selectedSortingType === 'tokenIdLowToHigh' || selectedSortingType === 'tokenIdHighToLow') {
       if (selectedSortingType === 'tokenIdLowToHigh') setTokenId('1');
@@ -88,12 +89,12 @@ const ItemFilter: React.FC<ItemFilterProp> = ({
       setCreateAt('0');
       setPrice('0');
     }
-    setSoting(selectedSortingType);
+    setSorting(selectedSortingType);
   };
 
   const clearFilter = () => {
     setSearchKeyword('');
-    setSoting(SORTING_CATEGORY[0].value);
+    setSorting(SORTING_CATEGORY[0].value);
     setCreateAt('-1');
     setTokenId('-1');
     setPrice('0');

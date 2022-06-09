@@ -112,19 +112,28 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'top',
-                flexDirection: smDown ? 'column' : 'row',
+                flexDirection: 'column',
               }}
             >
               <Box>
-                <Typography variant="h6" color="text.secondary">
-                  {item?.collection_id?.name.length > 20
-                    ? `${item?.collection_id?.name.slice(0, 18)}...`
-                    : item?.collection_id?.name}
+                <Typography variant={'caption'} color="text.secondary">
+                  {/*{item?.collection_id?.name.length > 20*/}
+                  {/*  ? `${item?.collection_id?.name.slice(0, 18)}...`*/}
+                  {/*  : item?.collection_id?.name}*/}
+                  {item?.collection_id?.name}
                 </Typography>
                 <Typography variant="h6">{item?.metadata?.name}</Typography>
               </Box>
-              <Box>
-                <Typography variant="h6" color="text.secondary">
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexDirection: smDown || !showLarge ? 'column' : 'row',
+                  // alignItems: 'center',
+                  mt: '10px',
+                }}
+              >
+                <Typography variant="caption" color="text.secondary">
                   Price
                 </Typography>
                 <Box
