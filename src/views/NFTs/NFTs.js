@@ -165,6 +165,11 @@ const NFTs = () => {
 
   const handleSelling = async (row) => {
     if (row.status === 'inactive') return;
+    if (useKAS !== 'true' && !library) {
+      // 지갑 연결 확인 필요.
+      alert('지갑을 연결하세요.');
+      return;
+    }
     if (row.selling === true) {
       try {
         if (useKAS !== 'true' && row.quote !== 'krw') {
