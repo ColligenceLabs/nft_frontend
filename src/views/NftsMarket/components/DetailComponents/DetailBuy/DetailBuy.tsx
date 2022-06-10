@@ -137,7 +137,8 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
 
   const buy = async () => {
     if (data?.data?.quote === 'krw') {
-      setKrwMessage({ ...krwMessage, open: true });
+      // setKrwMessage({ ...krwMessage, open: true });
+      window.open('https://forms.gle/oFfSPSnWYR1xVoxD6');
       return;
     }
 
