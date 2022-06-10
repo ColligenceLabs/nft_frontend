@@ -73,16 +73,17 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
 
                 borderRadius: '5px',
                 gap: '0.35rem',
-                cursor: network.id === 1 || network.id === 3 ? 'pointer' : 'default',
+                cursor: network.id === 3 ? 'pointer' : 'default',
               }}
               onClick={() => {
-                if (network.id === 1 || network.id === 3) changeNetwork(network.id);
+                if (network.id === 3) changeNetwork(network.id);
               }}
               onMouseOver={(event) => {
-                if (network.id === 0 || network.id === 2) handlePopoverOpen(event);
+                if (network.id === 0 || network.id === 1 || network.id === 2)
+                  handlePopoverOpen(event);
               }}
               onMouseLeave={() => {
-                if (network.id === 0 || network.id === 2) handlePopoverClose();
+                if (network.id === 0 || network.id === 1 || network.id === 2) handlePopoverClose();
               }}
             >
               <img src={network.icon} alt={network.name} width="16px" />
@@ -111,7 +112,7 @@ const NetworkTab = ({ selectedNetwork, changeNetwork, connectedNetwork }) => {
       >
         <Box sx={{ backgroundColor: 'primary.main', color: 'white' }}>
           <Typography variant={'subtitle2'} sx={{ p: 1 }}>
-            Comming soon
+            Coming soon
           </Typography>
         </Box>
       </Popover>

@@ -98,8 +98,10 @@ const WalletConnector = ({ activate }) => {
         </StyledWalletIcon>
         <StyledWalletIcon
           address={klaytn.address}
-          onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
-          cursor_pointer={'true'}
+          onMouseOver={handlePopoverOpen}
+          onMouseLeave={handlePopoverClose}
+          // onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
+          // cursor_pointer={'true'}
         >
           <img src={klay_icon} alt={'klay_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>
@@ -156,7 +158,7 @@ const WalletConnector = ({ activate }) => {
       >
         <Box sx={{ backgroundColor: 'primary.main', color: 'white' }}>
           <Typography variant={'subtitle2'} sx={{ p: 1 }}>
-            Comming soon
+            Coming soon
           </Typography>
         </Box>
       </Popover>
