@@ -161,7 +161,6 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
       // V3 : function buyToken(address _nft, uint256 _tokenId, uint256 _maximumPrice) external;
       // V4 : function buyToken(address _nft, uint256 _tokenId, address _seller, uint256 _quantity, uint256 _maximumPrice, address _quote) external;
 
-      console.log('network....', data?.data?.collection_id?.network);
       const result = await buyNFT(
         isKaikas ? nftContractWithKaikas : nftContract,
         parseInt(serials.data[0].token_id, 16),
@@ -308,15 +307,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                     sx={{ flex: 5 }}
                   />
 
-                  {account === undefined ? (
-                    <Button
-                      variant="contained"
-                      onClick={() => setIsOpenConnectModal(true)}
-                      sx={{ flex: 1, fontSize: '14px' }}
-                    >
-                      Connect Wallet
-                    </Button>
-                  ) : (
+                  {account === undefined || data?.data?.quote === 'krw' ? (
                     <Box>
                       <LoadingButton
                         onClick={buy}
@@ -333,16 +324,20 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                         {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                       </LoadingButton>
                     </Box>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      onClick={() => setIsOpenConnectModal(true)}
+                      sx={{ flex: 1, fontSize: '14px' }}
+                    >
+                      Connect Wallet
+                    </Button>
                   )}
                 </Box>
               </Box>
             ) : (
               <Box sx={{ flex: 1 }}>
-                {account === undefined ? (
-                  <Button fullWidth variant="contained" onClick={() => setIsOpenConnectModal(true)}>
-                    Connect Wallet
-                  </Button>
-                ) : (
+                {account === undefined || data?.data?.quote === 'krw' ? (
                   <LoadingButton
                     fullWidth
                     onClick={buy}
@@ -352,6 +347,10 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                   >
                     {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                   </LoadingButton>
+                ) : (
+                  <Button fullWidth variant="contained" onClick={() => setIsOpenConnectModal(true)}>
+                    Connect Wallet
+                  </Button>
                 )}
               </Box>
             )}
