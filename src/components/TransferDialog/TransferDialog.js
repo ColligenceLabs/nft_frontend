@@ -36,6 +36,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
     account,
   );
 
+  console.log(item);
   const [errorMessage, setErrorMessage] = useState();
   const [successFlag, setSuccessFlag] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -121,7 +122,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   return (
     <React.Fragment>
       <Dialog
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
         open={open}
         onClose={handleCloseModal}
@@ -130,7 +131,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
       >
         <DialogTitle style={{ background: `${theme.palette.primary.main}` }}>
           <Typography variant="title" color="white">
-            {`Transfer ${item.type === 0 ? 'NFT' : 'AirDrop'}`}
+            {`Transfer ${item.type === 0 ? 'NFT' : 'AirDrop'} : ${item.metadata.name}`}
           </Typography>
         </DialogTitle>
         <DialogContent>
