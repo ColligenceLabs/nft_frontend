@@ -113,6 +113,11 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
       }
     }
     setOpenSnackbar(true);
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setToAddress('');
     handleCloseModal();
   };
 
@@ -121,16 +126,16 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
   return (
     <React.Fragment>
       <Dialog
-        maxWidth="xs"
+        maxWidth="sm"
         fullWidth
         open={open}
-        onClose={handleCloseModal}
+        // onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle style={{ background: `${theme.palette.primary.main}` }}>
           <Typography variant="title" color="white">
-            {`Transfer ${item.type === 0 ? 'NFT' : 'AirDrop'}`}
+            {`Transfer ${item.type === 0 ? 'NFT' : 'AirDrop'} : ${item?.metadata?.name}`}
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -170,7 +175,7 @@ const TransferDialog = ({ open, handleCloseModal, item, type }) => {
 
         <Divider />
         <DialogActions style={{ marginRight: '20px', padding: '10px' }}>
-          <Button variant="outlined" onClick={handleCloseModal}>
+          <Button variant="outlined" onClick={handleClose}>
             {t('Cancel')}
           </Button>
           <LoadingButton onClick={handleTransfer} loading={isTransfering} variant="contained">
