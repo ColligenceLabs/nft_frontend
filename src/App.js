@@ -6,6 +6,7 @@ import ThemeSettings from './layouts/full-layout/customizer/ThemeSettings';
 import Router from './routes/Router';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import useUserInfo from './hooks/useUserInfo';
+import ScrollTop from './components/ScrollTop/ScrollTop';
 
 const App = () => {
   const theme = ThemeSettings();
@@ -15,6 +16,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ScrollTop />
       {routing}
     </ThemeProvider>
   );
