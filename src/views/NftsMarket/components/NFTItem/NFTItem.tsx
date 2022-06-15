@@ -96,7 +96,7 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
           ) : (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <ImageViewer
-                src={item?.metadata?.thumbnail}
+                src={item?.metadata?.thumbnail ? item?.metadata?.thumbnail : item?.metadata?.image}
                 alt={item?.metadata?.name}
                 style={{
                   marginTop: '-52px',

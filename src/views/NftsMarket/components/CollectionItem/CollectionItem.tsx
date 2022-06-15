@@ -13,6 +13,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
   description,
   creator_image,
   creator_fullName,
+  onSale,
 }) => {
   const theme = useTheme();
 
@@ -26,7 +27,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
 
   return (
     <>
-      <Link to={`/market/collection/${id}`} style={{ textDecoration: 'none' }}>
+      <Link to={`/market/collection/${id}/${onSale}`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
             p: 0,

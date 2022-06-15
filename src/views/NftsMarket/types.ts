@@ -78,6 +78,7 @@ export interface CollectionItemType {
   cover_image: string;
   creator_image: string;
   creator_fullName: string;
+  onSale: boolean;
 }
 
 export interface NFTResponse {

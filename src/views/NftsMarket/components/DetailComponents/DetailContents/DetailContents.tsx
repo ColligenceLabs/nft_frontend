@@ -11,6 +11,7 @@ interface DetailContentsProps {
 }
 
 const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
+  console.log(nft);
   const [toggled, setToggled] = useState(false);
   return (
     <>
@@ -36,7 +37,10 @@ const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
         </Card>
       ) : (
         <Card sx={{ p: 0, m: 0 }} onClick={() => setToggled(!toggled)}>
-          <ImageViewer src={nft.metadata.alt_url} alt={nft.metadata.name} />
+          <ImageViewer
+            src={nft.metadata.alt_url ? nft.metadata.alt_url : nft.metadata.image}
+            alt={nft.metadata.name}
+          />
         </Card>
       )}
       <FsLightbox toggler={toggled} sources={[nft.metadata.alt_url]} type="image" />

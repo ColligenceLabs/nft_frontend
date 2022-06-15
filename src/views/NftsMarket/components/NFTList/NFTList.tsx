@@ -15,9 +15,12 @@ interface FilterSetType {
   maxPrice: string;
 }
 
+interface NFTListProps {
+  onSale: boolean;
+}
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const NFTList = () => {
+const NFTList: React.FC<NFTListProps> = ({ onSale }) => {
   const { id } = useParams();
   const [itemCount, setItemCount] = useState(0);
   const [showLarge, setShowLarge] = useState(true);
@@ -34,7 +37,7 @@ const NFTList = () => {
     (index) =>
       `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsM?type=0&page=${
         index + 1
-      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=true&keyword=${
+      }&perPage=${PAGE_SIZE}&onchain=true&collection_id=${id}&onSale=${onSale}&keyword=${
         filterSet.searchKeyword
       }&createdAt=${filterSet.createAt}&price=${filterSet.price}&tokenId=${filterSet.tokenId}&low=${
         filterSet.minPrice === '' ? '0' : filterSet.minPrice
@@ -58,6 +61,7 @@ const NFTList = () => {
   };
 
   useEffect(() => {
+    console.log(data);
     data !== undefined && setItemCount(data[0].data.headers.x_total_count);
   }, [data]);
 

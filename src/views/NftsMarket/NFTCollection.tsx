@@ -15,7 +15,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 const NFTCollection = () => {
   const [showAll, setShowAll] = useState(false);
 
-  const { id } = useParams();
+  const { id, onSale } = useParams();
+
+  console.log(onSale);
   const { data, error } = useSWR<CollectionDetailResponse>(
     `/admin-api/collection/detail/${id}`,
     () => getNFTsByCollectionId(id),
@@ -133,7 +135,7 @@ const NFTCollection = () => {
         />
 
         <Container>
-          <NFTList />
+          <NFTList onSale={onSale} />
         </Container>
       </MarketLayout>
     </>

@@ -54,6 +54,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
                   cover_image={item.image_link}
                   creator_image={item?.creator_id?.image}
                   creator_fullName={item?.creator_id?.full_name}
+                  onSale={true}
                 />
               </Grid>
             ));
