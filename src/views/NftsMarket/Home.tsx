@@ -7,6 +7,7 @@ import TrendingAllCategory from './components/TrendingAllCategory/TrendingAllCat
 import TopCollections from './components/TopCollections';
 import Introduction from './components/Introduction';
 import Footer from '../../layouts/market-layout/components/Footer';
+import AllCollectionList from './components/AllCollectionList';
 
 const Home = (): JSX.Element => {
   return (
@@ -17,6 +18,11 @@ const Home = (): JSX.Element => {
       <Box bgcolor={'alternate.main'}>
         <Container>
           <TrendingAllCategory />
+        </Container>
+      </Box>
+      <Box bgcolor={'alternate.main'}>
+        <Container>
+          <AllCollectionList />
         </Container>
       </Box>
       <Box bgcolor={'alternate.main'}>
