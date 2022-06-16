@@ -21,8 +21,20 @@
     {
       "indexed": false,
       "internalType": "uint256",
+      "name": "quantity",
+      "type": "uint256"
+    },
+    {
+      "indexed": false,
+      "internalType": "uint256",
       "name": "price",
       "type": "uint256"
+    },
+    {
+      "indexed": false,
+      "internalType": "address",
+      "name": "quote",
+      "type": "address"
     }
   ],
   "name": "Ask",
@@ -51,8 +63,20 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "price",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quote",
+        "type": "address"
       }
     ],
     "name": "Bid",
@@ -77,6 +101,24 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quote",
+        "type": "address"
       }
     ],
     "name": "CancelBidToken",
@@ -101,6 +143,24 @@
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "price",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "quote",
+        "type": "address"
       }
     ],
     "name": "CancelSellToken",
@@ -164,6 +224,18 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "quantity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "price",
         "type": "uint256"
       },
@@ -196,16 +268,110 @@
     },
       {
         "internalType": "uint256",
+        "name": "_nftType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
       }
     ],
     "name": "bidToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_nft",
+      "type": "address"
+    },
+      {
+        "internalType": "uint256",
+        "name": "_nftType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
+      }
+    ],
+    "name": "bidTokenETH",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_nft",
+      "type": "address"
+    },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maximumPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
+      }
+    ],
+    "name": "buyToken",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -222,12 +388,74 @@
         "type": "uint256"
       },
       {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
-        "name": "_maximumPrice",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
         "type": "uint256"
       }
     ],
-    "name": "buyToken",
+    "name": "buyTokenETH",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "_nft",
+      "type": "address"
+    },
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_maximumPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
+      }
+    ],
+    "name": "buyTokenTo",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -249,14 +477,34 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "_seller",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
         "internalType": "uint256",
         "name": "_maximumPrice",
         "type": "uint256"
       }
     ],
-    "name": "buyTokenTo",
+    "name": "buyTokenToETH",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -269,6 +517,21 @@
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
       }
     ],
     "name": "cancelBidToken",
@@ -286,6 +549,21 @@
         "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
       }
     ],
     "name": "cancelSellToken",
@@ -327,102 +605,58 @@
       "internalType": "address",
       "name": "_nft",
       "type": "address"
-    },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getAskPrice",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_nft",
-      "type": "address"
-    },
-      {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getBids",
-    "outputs": [{
-      "components": [{
-        "internalType": "address",
-        "name": "bidder",
-        "type": "address"
-      },
-        {
-          "internalType": "uint256",
-          "name": "price",
-          "type": "uint256"
-        }
-      ],
-      "internalType": "struct Market2.BidEntry[]",
-      "name": "",
-      "type": "tuple[]"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_nft",
-      "type": "address"
     }],
     "name": "getNftAllAsks",
     "outputs": [{
       "components": [{
         "internalType": "uint256",
-        "name": "tokenId",
+        "name": "nftType",
         "type": "uint256"
       },
         {
           "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "seller",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "quantity",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "price",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "quote",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "sold",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "creator",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "rate",
           "type": "uint256"
         }
       ],
-      "internalType": "struct Market2.AskEntry[]",
+      "internalType": "struct Market6.AsksMap[]",
       "name": "",
       "type": "tuple[]"
-    }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{
-      "internalType": "address",
-      "name": "_nft",
-      "type": "address"
-    },
-      {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getUserBidPrice",
-    "outputs": [{
-      "internalType": "uint256",
-      "name": "",
-      "type": "uint256"
     }],
     "stateMutability": "view",
     "type": "function"
@@ -446,6 +680,42 @@
     ],
     "name": "initialize",
     "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{
+      "internalType": "address",
+      "name": "operator",
+      "type": "address"
+    },
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC1155Received",
+    "outputs": [{
+      "internalType": "bytes4",
+      "name": "",
+      "type": "bytes4"
+    }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -528,12 +798,37 @@
     },
       {
         "internalType": "uint256",
+        "name": "_nftType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_rate",
         "type": "uint256"
       }
     ],
@@ -550,7 +845,17 @@
     },
       {
         "internalType": "uint256",
+        "name": "_nftType",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quantity",
         "type": "uint256"
       },
       {
@@ -560,8 +865,23 @@
       },
       {
         "internalType": "address",
+        "name": "_quote",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_rate",
+        "type": "uint256"
       }
     ],
     "name": "readyToSellTokenTo",
@@ -589,12 +909,32 @@
       },
       {
         "internalType": "address",
-        "name": "_to",
+        "name": "_bidder",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_minimumPrice",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_creator",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_rate",
         "type": "uint256"
       }
     ],
@@ -616,8 +956,28 @@
       },
       {
         "internalType": "uint256",
-        "name": "_price",
+        "name": "_quantity",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_oldPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_oldQuote",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_newPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_newQuote",
+        "type": "address"
       }
     ],
     "name": "setCurrentPrice",
@@ -678,8 +1038,23 @@
       },
       {
         "internalType": "uint256",
+        "name": "_quantity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_newPrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_quote",
+        "type": "address"
       }
     ],
     "name": "updateBidPrice",
