@@ -16,7 +16,6 @@ const CollectionItem: React.FC<CollectionItemType> = ({
   onSale,
 }) => {
   const theme = useTheme();
-
   const smDown = useMediaQuery(theme.breakpoints.down('sm'), {
     defaultMatches: true,
   });

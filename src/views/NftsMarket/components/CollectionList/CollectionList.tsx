@@ -18,7 +18,7 @@ const PAGE_SIZE = 20;
 const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) => {
   const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<CollectionResponse>(
     (index) =>
-      `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs?page=${
+      `${process.env.REACT_APP_API_SERVER}/admin-api/home/indexs?page=${
         index + 1
       }&perPage=${PAGE_SIZE}&category=${
         selectedCategory.value === 'all' ? '' : selectedCategory.value
@@ -54,7 +54,7 @@ const CollectionList: React.FC<SelectedCategoryProp> = ({ selectedCategory }) =>
                   cover_image={item.image_link}
                   creator_image={item?.creator_id?.image}
                   creator_fullName={item?.creator_id?.full_name}
-                  onSale={true}
+                  onSale={false}
                 />
               </Grid>
             ));

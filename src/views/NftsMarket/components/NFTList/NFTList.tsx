@@ -16,7 +16,7 @@ interface FilterSetType {
 }
 
 interface NFTListProps {
-  onSale: boolean;
+  onSale: boolean | string | undefined;
 }
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -61,7 +61,6 @@ const NFTList: React.FC<NFTListProps> = ({ onSale }) => {
   };
 
   useEffect(() => {
-    console.log(data);
     data !== undefined && setItemCount(data[0].data.headers.x_total_count);
   }, [data]);
 

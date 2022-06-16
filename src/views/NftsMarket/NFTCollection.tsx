@@ -17,7 +17,6 @@ const NFTCollection = () => {
 
   const { id, onSale } = useParams();
 
-  console.log(onSale);
   const { data, error } = useSWR<CollectionDetailResponse>(
     `/admin-api/collection/detail/${id}`,
     () => getNFTsByCollectionId(id),
