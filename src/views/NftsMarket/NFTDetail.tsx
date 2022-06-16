@@ -18,6 +18,7 @@ import DetailTitle from './components/DetailComponents/DetailTitle';
 import DetailInformation from './components/DetailComponents/DetailInformation';
 import DetailBuy from './components/DetailComponents/DetailBuy';
 import DetailSell from './components/DetailComponents/DetailSell';
+import OfferDialog from './components/OfferDialog';
 
 const NFTDetail = () => {
   const [listingMutateHandler, setListingMutateHandler] = useState(false);
@@ -43,6 +44,8 @@ const NFTDetail = () => {
   }
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
+
+  console.log(data?.data);
 
   useEffect(() => {
     if (data?.data) {
