@@ -11,7 +11,6 @@ interface DetailContentsProps {
 }
 
 const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
-  console.log(nft);
   const [toggled, setToggled] = useState(false);
   return (
     <>

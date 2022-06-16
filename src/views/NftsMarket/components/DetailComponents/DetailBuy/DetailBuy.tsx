@@ -27,6 +27,7 @@ import { useSelector } from 'react-redux';
 import WalletConnectorDialog from '../../../../../components/WalletConnectorDialog';
 import { getChainId } from '../../../../../utils/commonUtils';
 import sliceFloatNumber from '../../../../../utils/sliceFloatNumber';
+import OfferDialog from '../../OfferDialog';
 
 interface DetailBuyProps {
   id: string;
@@ -93,6 +94,9 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
   );
 
   const [selectedNetworkId, setSelectedNetworkId] = useState(1);
+
+  const [openOffer, setOpenOffer] = useState(false);
+
   const { buyNFT, sellNFT, listNFT } = useMarket();
   const params = useLocation();
 
@@ -192,6 +196,14 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
     setIsOpenConnectModal(false);
   };
 
+  const handleOpenOffer = () => {
+    setOpenOffer(true);
+  };
+
+  const handleCloseOffer = () => {
+    setOpenOffer(false);
+  };
+
   useEffect(() => {
     setSellingQuantity(data?.data?.quantity_selling);
     myNftMutate();
@@ -255,61 +267,60 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                   )
                 : sliceFloatNumber(data?.data?.price.toString())}
             </Typography>
-            {/*{data?.data?.quote === 'krw' && (*/}
-            {/*  <Typography variant={'caption'} color={'text.primary'} pb={1}>*/}
-            {/*    (Included 10% VAT)*/}
-            {/*  </Typography>*/}
-            {/*)}*/}
           </Box>
 
-          <Box sx={{ display: 'flex', flex: 1 }}>
-            {data?.data?.collection_id?.contract_type === 'KIP37' ? (
-              // <Box sx={{ display: 'flex' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                }}
-              >
-                <Typography variant={'subtitle2'} color={'primary'} sx={{ flex: 1 }}>
-                  Amount
-                </Typography>
+          {account !== undefined || data?.data?.quote === 'krw' ? (
+            <Box sx={{ display: 'flex', flex: 1, alignItems: 'flex-end', gap: 2 }}>
+              {data?.data?.collection_id?.contract_type === 'KIP37' ? (
                 <Box
                   sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    gap: '1rem',
-
+                    flexDirection: 'column',
                     flex: 1,
                   }}
                 >
-                  <CustomTextField
-                    id="amount"
-                    name="amount"
-                    variant="outlined"
-                    type="number"
-                    size="small"
-                    value={amount}
-                    inputProps={{ min: 1, step: 1 }}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      const validated = e.target.value.match(/^(\s*|\d+)$/);
-                      if (validated && parseInt(e.target.value) <= 0) {
-                        setAmount('0');
-                      } else {
-                        setAmount(parseInt(e.target.value).toString());
-                      }
-                    }}
-                    onBlur={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      parseInt(e.target.value) <= 0
-                        ? '1'
-                        : setAmount(parseInt(e.target.value).toString())
-                    }
-                    sx={{ flex: 5 }}
-                  />
+                  <Typography variant={'subtitle2'} color={'primary'} sx={{ flex: 1 }}>
+                    Amount
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: '1rem',
 
-                  {account === undefined || data?.data?.quote === 'krw' ? (
-                    <Box>
+                      flex: 1,
+                    }}
+                  >
+                    <CustomTextField
+                      id="amount"
+                      name="amount"
+                      variant="outlined"
+                      type="number"
+                      size="small"
+                      value={amount}
+                      inputProps={{ min: 1, step: 1 }}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const validated = e.target.value.match(/^(\s*|\d+)$/);
+                        if (validated && parseInt(e.target.value) <= 0) {
+                          setAmount('0');
+                        } else {
+                          setAmount(parseInt(e.target.value).toString());
+                        }
+                      }}
+                      onBlur={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        parseInt(e.target.value) <= 0
+                          ? '1'
+                          : setAmount(parseInt(e.target.value).toString())
+                      }
+                      sx={{ flex: 5 }}
+                    />
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        flexDirection: smDown ? 'column' : 'row',
+                      }}
+                    >
                       <LoadingButton
                         onClick={buy}
                         disabled={
@@ -320,25 +331,15 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                         }
                         loading={buyFlag}
                         variant="contained"
-                        sx={{ flex: 1, width: smDown ? '50px' : '100px' }}
+                        sx={{ flex: 1, width: smDown ? '50px' : '120px' }}
                       >
                         {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                       </LoadingButton>
                     </Box>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      onClick={() => setIsOpenConnectModal(true)}
-                      sx={{ flex: 1, fontSize: '14px' }}
-                    >
-                      Connect Wallet
-                    </Button>
-                  )}
+                  </Box>
                 </Box>
-              </Box>
-            ) : (
-              <Box sx={{ flex: 1 }}>
-                {account === undefined || data?.data?.quote === 'krw' ? (
+              ) : (
+                <Box sx={{ flex: 1 }}>
                   <LoadingButton
                     fullWidth
                     onClick={buy}
@@ -348,14 +349,22 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                   >
                     {sellingQuantity === 0 ? 'Sold out' : 'Buy'}
                   </LoadingButton>
-                ) : (
-                  <Button fullWidth variant="contained" onClick={() => setIsOpenConnectModal(true)}>
-                    Connect Wallet
-                  </Button>
-                )}
-              </Box>
-            )}
-          </Box>
+                </Box>
+              )}
+              <LoadingButton
+                onClick={handleOpenOffer}
+                // loading={buyFlag}
+                variant="contained"
+                sx={{ width: smDown ? '50px' : '120px', height: '40px' }}
+              >
+                {sellingQuantity === 0 ? 'Sold out' : 'Offer'}
+              </LoadingButton>
+            </Box>
+          ) : (
+            <Button variant="contained" onClick={() => setIsOpenConnectModal(true)} fullWidth>
+              Connect Wallet
+            </Button>
+          )}
         </Box>
       </>
       <WalletConnectorDialog
@@ -368,6 +377,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
         solana={solana}
         binance={binance}
       />
+      <OfferDialog open={openOffer} handleCloseOffer={handleCloseOffer} nft={data?.data} />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
