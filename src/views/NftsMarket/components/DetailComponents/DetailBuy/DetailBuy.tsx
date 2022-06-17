@@ -357,7 +357,7 @@ const DetailBuy: React.FC<DetailBuyProps> = ({
                 variant="contained"
                 sx={{ width: smDown ? '50px' : '120px', height: '40px' }}
               >
-                {sellingQuantity === 0 ? 'Sold out' : 'Offer'}
+                Offer
               </LoadingButton>
             </Box>
           ) : (

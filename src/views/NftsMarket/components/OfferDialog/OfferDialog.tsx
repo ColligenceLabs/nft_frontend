@@ -129,7 +129,7 @@ const OfferDialog: React.FC<OfferDialogProps> = ({ open, handleCloseOffer, nft }
       </DialogContent>
       <DialogActions>
         <Button variant={'outlined'} onClick={handleCloseOffer}>
-          Cancel
+          Close
         </Button>
         <Button variant={'contained'} onClick={makeOffer} autoFocus>
           Make Offer
