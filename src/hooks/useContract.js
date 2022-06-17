@@ -6,7 +6,7 @@ import erc721Abi from '../config/abi/erc721.json';
 import kip37Abi from '../config/abi/kip37.json';
 import erc1155Abi from '../config/abi/erc1155.json';
 // import marketAbi from '../config/abi/market.json';
-import marketAbi from '../config/abi/marketV5.json';
+import marketAbi from '../config/abi/market.json';
 import tokenAbi from '../config/abi/erc20.json';
 import useActiveWeb3React from './useActiveWeb3React';
 import Caver from 'caver-js';
@@ -49,7 +49,7 @@ export const useMarketContract = () => {
   // const contract = contracts.market[process.env.REACT_APP_MAINNET === 'true' ? 8217 : 1001];
   return useMemo(() => {
     if (!library) return;
-    const contract = contracts.marketV5[chainId];
+    const contract = contracts.market[chainId];
     if (library.connection.url === 'metamask' || library.connection.url === 'eip-1193:') {
       return new ethers.Contract(contract, marketAbi, library?.getSigner());
     } else {
