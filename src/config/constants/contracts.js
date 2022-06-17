@@ -15,7 +15,7 @@ export default {
   },
   market: {
     1: '',
-    3: '0xDEc671445dADe45d5633fAbc6e895DA4903B7CeF',
+    3: '0x9e51E09C94bDe64bF6A476213E416d86dCA2eeae',
     4: '',
     56: '',
     97: '',
