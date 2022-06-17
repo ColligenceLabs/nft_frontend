@@ -154,21 +154,24 @@ const useNFT = (contract, kasContract, account) => {
         if (contractType === 'KIP17') {
           // gasLimit 계산
           const gasLimit = await kasContract.methods
-            .batchMintWithTokenURI(account, tokenIds, tokenUris)
+            // .batchMintWithTokenURI(account, tokenIds, tokenUris)
+            .batchMintWithTokenUriLight(account, tokenIds, tokenUris[0])
             .estimateGas({
               from: account,
             });
 
           // mint 요청
           tx = await kasContract.methods
-            .batchMintWithTokenURI(account, tokenIds, tokenUris)
+            // .batchMintWithTokenURI(account, tokenIds, tokenUris)
+            .batchMintWithTokenUriLight(account, tokenIds, tokenUris[0])
             .send({
               from: account,
               gasPrice,
               gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
             })
             .catch(async (err) => {
-              console.log('batchMintWithTokenURI error', err);
+              // console.log('batchMintWithTokenURI error', err);
+              console.log('batchMintWithTokenUriLight error', err);
               await setIsMinting(false);
               return FAILURE;
             });
@@ -211,14 +214,25 @@ const useNFT = (contract, kasContract, account) => {
             console.log('요기로 왔냥~~~?', account, tokenIds, tokenUris);
             console.log(contract);
             // gasLimit 계산
-            const gasLimit = await contract.estimateGas.batchMintWithTokenURI(
+            // const gasLimit = await contract.estimateGas.batchMintWithTokenURI(
+            //   account,
+            //     tokenIds,
+            //     tokenUris,
+            // );
+            const gasLimit = await contract.estimateGas.batchMintWithTokenUriLight(
               account,
               tokenIds,
-              tokenUris,
+              tokenUris[0],
             );
             const options = { from: account, gasLimit: calculateGasMargin(gasLimit) };
             if (chainId > 1000) options.gasPrice = gasPrice;
-            tx = await contract.batchMintWithTokenURI(account, tokenIds, tokenUris, options);
+            // tx = await contract.batchMintWithTokenURI(account, tokenIds, tokenUris, options);
+            tx = await contract.batchMintWithTokenUriLight(
+              account,
+              tokenIds,
+              tokenUris[0],
+              options,
+            );
             console.log('요기로 왔냥~~~?222');
           } else {
             const gasLimit = await contract.estimateGas.createBatch(
