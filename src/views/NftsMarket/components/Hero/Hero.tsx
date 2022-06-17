@@ -30,9 +30,10 @@ const Hero = (): JSX.Element => {
   });
 
   function navigateToPage() {
-    navigate('/market/detail', {
-      state: { contract_address: '0x92b3f5bd683a5f0b1bcd2160043d08a73d938fbb', token_id: '0x9' },
-    });
+    // navigate('/market/detail', {
+    //   state: { contract_address: '0x92b3f5bd683a5f0b1bcd2160043d08a73d938fbb', token_id: '0x9' },
+    // });
+    navigate('/market');
   }
 
   return (
@@ -75,21 +76,22 @@ const Hero = (): JSX.Element => {
               color="primary"
               size="large"
               fullWidth={isMd ? false : true}
+              onClick={navigateToPage}
             >
               Start now
             </Button>
-            <Box
-              component={Button}
-              variant="outlined"
-              color="primary"
-              size="large"
-              marginTop={{ xs: 2, sm: 0 }}
-              marginLeft={{ sm: 2 }}
-              fullWidth={isMd ? false : true}
-              onClick={navigateToPage}
-            >
-              Learn more
-            </Box>
+            {/*<Box*/}
+            {/*  component={Button}*/}
+            {/*  variant="outlined"*/}
+            {/*  color="primary"*/}
+            {/*  size="large"*/}
+            {/*  marginTop={{ xs: 2, sm: 0 }}*/}
+            {/*  marginLeft={{ sm: 2 }}*/}
+            {/*  fullWidth={isMd ? false : true}*/}
+            {/*  onClick={navigateToPage}*/}
+            {/*>*/}
+            {/*  Learn more*/}
+            {/*</Box>*/}
           </Box>
         </Box>
       </Grid>
