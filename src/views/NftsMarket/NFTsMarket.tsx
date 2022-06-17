@@ -7,7 +7,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categories = [
   { id: 0, value: 'all', category: 'All' },
-  { id: 1, value: 'talken', category: 'Talken' },
+  // { id: 1, value: 'talken', category: 'Talken' },
   { id: 2, value: 'art', category: 'Art' },
   { id: 3, value: 'collectibles', category: 'Collectibles' },
   { id: 4, value: 'membership', category: 'Membership' },
