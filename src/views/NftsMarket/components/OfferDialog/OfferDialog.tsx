@@ -25,6 +25,7 @@ import { useWeb3React } from '@web3-react/core';
 import { useKipContract, useKipContractWithKaikas } from '../../../../hooks/useContract';
 import { getChainId } from '../../../../utils/commonUtils';
 import { offerNft } from '../../../../services/market.service';
+import { LoadingButton } from '@mui/lab';
 
 interface OfferInfo {
   quantity: string;
@@ -54,6 +55,8 @@ const OfferDialog: React.FC<OfferDialogProps> = ({ open, handleCloseOffer, nft }
   const [expiration, setExpiration] = useState(new Date());
   const [agree, setAgree] = useState(false);
 
+  const [isOffering, setIsOffering] = useState();
+
   const makeOffer = async () => {
     console.log(`quantity: ${quantity}`);
     console.log(`quote: ${quote}`);
@@ -62,37 +65,47 @@ const OfferDialog: React.FC<OfferDialogProps> = ({ open, handleCloseOffer, nft }
 
     console.log(nft);
 
+    setIsOffering(true);
+
     const isKaikas =
       library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
 
-    await offerNFT(
-      isKaikas ? nftContractWithKaikas : nftContract,
-      nft.collection_id.contract_type === 'KIP17' ? 721 : 1155,
-      nft.metadata.tokenId,
-      quantity,
-      amount,
-      quote,
-      getChainId(nft.collection_id?.network),
-    );
-
-    const result = await offerNft(
-      account,
-      quantity,
-      amount,
-      quote,
-      nft.collection_id?._id,
-      nft._id,
-      nft.metadata.tokenId,
-    );
-    // console.log(result);
-    if (result.status === 0) {
-      // error
-      console.log(result.message);
-      // setErrorMessage(result.message);
+    try {
+      await offerNFT(
+        isKaikas ? nftContractWithKaikas : nftContract,
+        nft.collection_id.contract_type === 'KIP17' ? 721 : 1155,
+        nft.metadata.tokenId,
+        quantity,
+        amount,
+        quote,
+        getChainId(nft.collection_id?.network),
+      );
+    } catch (e) {
+      console.log('Request cancelled...');
+      setIsOffering(false);
     }
-    // await myNftMutate();
-    // setListingMutateHandler(true);
-    // setItemActivityMutateHandler(true);
+
+    try {
+      const result = await offerNft(
+        account,
+        quantity,
+        amount,
+        quote,
+        nft.collection_id?._id,
+        nft._id,
+        nft.metadata.tokenId,
+      );
+      // console.log(result);
+      if (result.status === 0) {
+        // error
+        console.log(result.message);
+      }
+      setIsOffering(false);
+      handleCloseOffer();
+    } catch (e) {
+      console.log('Request cancelled...');
+      setIsOffering(false);
+    }
   };
 
   useEffect(() => {
@@ -177,9 +190,12 @@ const OfferDialog: React.FC<OfferDialogProps> = ({ open, handleCloseOffer, nft }
         <Button variant={'outlined'} onClick={handleCloseOffer}>
           Close
         </Button>
-        <Button variant={'contained'} onClick={makeOffer} autoFocus>
+        <LoadingButton onClick={makeOffer} loading={isOffering} variant="contained">
           Make Offer
-        </Button>
+        </LoadingButton>
+        {/*<Button variant={'contained'} onClick={makeOffer} autoFocus>*/}
+        {/*  Make Offer*/}
+        {/*</Button>*/}
       </DialogActions>
     </Dialog>
   );
