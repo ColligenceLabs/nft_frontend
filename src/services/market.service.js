@@ -105,7 +105,16 @@ export const sellUserNft = (
     });
 };
 
-export const offerNft = (bidder, quantity, price, quote, collectionId, nftId, tokenId) => {
+export const offerUserNft = (
+  bidder,
+  quantity,
+  price,
+  quote,
+  collectionId,
+  nftId,
+  tokenId,
+  expiration,
+) => {
   const data = {
     bidder,
     quantity,
@@ -114,6 +123,7 @@ export const offerNft = (bidder, quantity, price, quote, collectionId, nftId, to
     collectionId,
     nftId,
     tokenId,
+    expiration,
   };
   console.log(data);
   return axios
@@ -201,6 +211,7 @@ const marketService = {
   saleList,
   selectUserSerials,
   cancelBuyUserNft,
+  offerUserNft,
 };
 
 export default marketService;
