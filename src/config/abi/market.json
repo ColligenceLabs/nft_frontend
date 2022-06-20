@@ -322,11 +322,6 @@
         "internalType": "uint256",
         "name": "_price",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_quote",
-        "type": "address"
       }
     ],
     "name": "bidTokenETH",

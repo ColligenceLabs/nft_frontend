@@ -18,9 +18,9 @@ export default {
     3: '0x9e51E09C94bDe64bF6A476213E416d86dCA2eeae',
     4: '',
     56: '',
-    97: '',
+    97: '0x11e6c6ca0290e5342DFCB055ae515A667d675547',
     8217: '',
-    1001: '0x67cf6074cf2b96c85a66112d7fa845e0f0b63eed',
+    1001: '0x033C82e33190267DE25c5d897c862Ad842FA6E72',
   },
   marketV5: {
     1: '',
