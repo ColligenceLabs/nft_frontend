@@ -24,7 +24,7 @@ import { getNftContract } from '../../../../utils/contract';
 import { useWeb3React } from '@web3-react/core';
 import { useKipContract, useKipContractWithKaikas } from '../../../../hooks/useContract';
 import { getChainId } from '../../../../utils/commonUtils';
-import { offerNft } from '../../../../services/market.service';
+import { offerUserNft } from '../../../../services/market.service';
 import { LoadingButton } from '@mui/lab';
 
 interface OfferInfo {
@@ -80,29 +80,31 @@ const OfferDialog: React.FC<OfferDialogProps> = ({ open, handleCloseOffer, nft }
         quote,
         getChainId(nft.collection_id?.network),
       );
-    } catch (e) {
-      console.log('Request cancelled...');
-      setIsOffering(false);
-    }
-
-    try {
-      const result = await offerNft(
-        account,
-        quantity,
-        amount,
-        quote,
-        nft.collection_id?._id,
-        nft._id,
-        nft.metadata.tokenId,
-      );
-      // console.log(result);
-      if (result.status === 0) {
-        // error
-        console.log(result.message);
+      // Tx success
+      try {
+        const result = await offerUserNft(
+          account,
+          quantity,
+          amount,
+          quote,
+          nft.collection_id?._id,
+          nft._id,
+          nft.metadata.tokenId,
+          expiration,
+        );
+        // console.log(result);
+        if (result.status === 0) {
+          // error
+          console.log(result.message);
+        }
+        setIsOffering(false);
+        handleCloseOffer();
+      } catch (e) {
+        console.log('Request cancelled...');
+        setIsOffering(false);
       }
-      setIsOffering(false);
-      handleCloseOffer();
     } catch (e) {
+      // Tx failed
       console.log('Request cancelled...');
       setIsOffering(false);
     }
