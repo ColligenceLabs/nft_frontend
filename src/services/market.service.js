@@ -105,6 +105,27 @@ export const sellUserNft = (
     });
 };
 
+export const offerNft = (bidder, quantity, price, quote, collectionId, nftId, tokenId) => {
+  const data = {
+    bidder,
+    quantity,
+    price,
+    quote,
+    collectionId,
+    nftId,
+    tokenId,
+  };
+  console.log(data);
+  return axios
+    .post(`${API_URL}/offerNft`, data, { headers: authHeader() })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      error.response?.status === 401 ? authService.logout() : console.log(error);
+    });
+};
+
 export const getMarketNFTData = (
   type,
   page,

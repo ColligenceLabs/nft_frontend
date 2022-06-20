@@ -19,6 +19,12 @@ import CustomSelect from '../../../../components/forms/custom-elements/CustomSel
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { NFTType } from '../../types';
+import useMarket from '../../../../hooks/useMarket';
+import { getNftContract } from '../../../../utils/contract';
+import { useWeb3React } from '@web3-react/core';
+import { useKipContract, useKipContractWithKaikas } from '../../../../hooks/useContract';
+import { getChainId } from '../../../../utils/commonUtils';
+import { offerNft } from '../../../../services/market.service';
 
 interface OfferInfo {
   quantity: string;
@@ -34,21 +40,61 @@ interface OfferDialogProps {
 }
 
 const OfferDialog: React.FC<OfferDialogProps> = ({ open, handleCloseOffer, nft }) => {
+  const context = useWeb3React();
+  const { account, library } = context;
+  const contractAddress = nft.collection_id.contract_address;
+  const nftContract = useKipContract(contractAddress, 'KIP17');
+  const nftContractWithKaikas = useKipContractWithKaikas(contractAddress, 'KIP17');
+
   const theme = useTheme();
+  const { offerNFT } = useMarket();
   const [quantity, setQuantity] = useState('');
   const [quote, setQuote] = useState('');
   const [amount, setAmount] = useState('');
   const [expiration, setExpiration] = useState(new Date());
   const [agree, setAgree] = useState(false);
 
-  const makeOffer = () => {
+  const makeOffer = async () => {
     console.log(`quantity: ${quantity}`);
     console.log(`quote: ${quote}`);
     console.log(`amount: ${amount}`);
     console.log(`expiration: ${expiration}`);
 
-    // handleCloseModal();
+    console.log(nft);
+
+    const isKaikas =
+      library.connection.url !== 'metamask' && library.connection.url !== 'eip-1193:';
+
+    await offerNFT(
+      isKaikas ? nftContractWithKaikas : nftContract,
+      nft.collection_id.contract_type === 'KIP17' ? 721 : 1155,
+      nft.metadata.tokenId,
+      quantity,
+      amount,
+      quote,
+      getChainId(nft.collection_id?.network),
+    );
+
+    const result = await offerNft(
+      account,
+      quantity,
+      amount,
+      quote,
+      nft.collection_id?._id,
+      nft._id,
+      nft.metadata.tokenId,
+    );
+    // console.log(result);
+    if (result.status === 0) {
+      // error
+      console.log(result.message);
+      // setErrorMessage(result.message);
+    }
+    // await myNftMutate();
+    // setListingMutateHandler(true);
+    // setItemActivityMutateHandler(true);
   };
+
   useEffect(() => {
     setQuote(nft.quote);
   }, [nft]);
