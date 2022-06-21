@@ -54,6 +54,8 @@ const TrendingAllCategory = () => {
     fetcher,
   );
 
+  console.log(data);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -114,7 +116,7 @@ const TrendingAllCategory = () => {
                   }}
                 >
                   <Typography color={'white'} fontSize={'x-large'} fontWeight={800}>
-                    {item.name.length > 20 ? item.name.slice(0, 20) : item.name}
+                    {item.name.length > 20 ? `${item.name.slice(0, 17)}...` : item.name}
                   </Typography>
                 </Box>
               </Box>
