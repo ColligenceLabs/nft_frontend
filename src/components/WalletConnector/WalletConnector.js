@@ -98,10 +98,10 @@ const WalletConnector = ({ activate }) => {
         </StyledWalletIcon>
         <StyledWalletIcon
           address={klaytn.address}
-          onMouseOver={handlePopoverOpen}
-          onMouseLeave={handlePopoverClose}
-          // onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
-          // cursor_pointer={'true'}
+          // onMouseOver={handlePopoverOpen}
+          // onMouseLeave={handlePopoverClose}
+          onClick={() => onClickWalletIcon(1, 'klaytn', klaytn)}
+          cursor_pointer={'true'}
         >
           <img src={klay_icon} alt={'klay_icon'} width={smDown ? '14px' : '20px'} />
         </StyledWalletIcon>

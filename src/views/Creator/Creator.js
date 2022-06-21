@@ -179,7 +179,7 @@ const Creator = () => {
     await getCreatorData(page, rowsPerPage, searchName, searchStatus).then(({ data }) => {
       const rowWithoutSuspendUser = data.items.filter((row) => row.status !== 'suspend');
       setRows(rowWithoutSuspendUser);
-      setTotalCount(rowWithoutSuspendUser.length);
+      setTotalCount(data.headers.x_total_count);
     });
   };
 
