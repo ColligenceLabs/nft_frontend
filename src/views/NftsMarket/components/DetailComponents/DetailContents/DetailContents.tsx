@@ -15,9 +15,9 @@ const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
   console.log(nft);
   return (
     <>
-      {(nft?.metadata?.alt_url !== undefined && nft?.metadata?.alt_url.indexOf('.mp4')) ||
-      (nft?.metadata?.image.indexOf('.mp4') !== undefined &&
-        nft?.metadata?.image.indexOf('.mp4')) ? (
+      {(nft?.metadata?.alt_url !== undefined && nft?.metadata?.alt_url.indexOf('.mp4')) > 0 ||
+      (nft?.metadata?.image.indexOf('.mp4') !== undefined && nft?.metadata?.image.indexOf('.mp4')) >
+        0 ? (
         <Card
           sx={{
             display: 'flex',

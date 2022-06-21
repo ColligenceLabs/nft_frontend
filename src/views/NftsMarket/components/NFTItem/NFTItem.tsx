@@ -74,9 +74,10 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
             </Box>
           </Box>
 
-          {(item?.metadata?.thumbnail !== undefined && item?.metadata?.thumbnail.indexOf('.mp4')) ||
+          {(item?.metadata?.thumbnail !== undefined && item?.metadata?.thumbnail.indexOf('.mp4')) >
+            0 ||
           (item?.metadata?.image.indexOf('.mp4') !== undefined &&
-            item?.metadata?.image.indexOf('.mp4')) ? (
+            item?.metadata?.image.indexOf('.mp4')) > 0 ? (
             <Box
               className={'player-wrapper'}
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
