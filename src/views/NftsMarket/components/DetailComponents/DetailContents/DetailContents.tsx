@@ -45,7 +45,11 @@ const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
           />
         </Card>
       )}
-      <FsLightbox toggler={toggled} sources={[nft.metadata.alt_url]} type="image" />
+      <FsLightbox
+        toggler={toggled}
+        sources={nft.metadata.alt_url ? [nft.metadata.alt_url] : [nft.metadata.image]}
+        type="image"
+      />
     </>
   );
 };

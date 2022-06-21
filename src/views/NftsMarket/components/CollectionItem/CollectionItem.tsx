@@ -73,16 +73,18 @@ const CollectionItem: React.FC<CollectionItemType> = ({
               />
             </Box>
           </Box>
-          <CardContent sx={{ textAlign: smDown ? 'left' : 'center', p: 2 }}>
+          <CardContent sx={{ textAlign: 'center', p: 2 }}>
             <Typography variant={smDown ? 'caption' : 'h4'}>
               {name.length > 20 ? `${name.slice(0, 20)}...` : name}
             </Typography>
             <Box
               sx={{
                 display: 'flex',
-                justifyContent: smDown ? 'flex-start' : 'center',
+
+                flexDirection: 'column',
+                justifyContent: 'center',
                 alignItems: 'center',
-                gap: '0.5rem',
+                // gap: '0.2rem',
                 mb: smDown ? '0px' : '10px',
               }}
             >
@@ -94,8 +96,8 @@ const CollectionItem: React.FC<CollectionItemType> = ({
 
             {!smDown && (
               <Typography variant="body2" color="text.secondary" sx={{ minHeight: '61px' }}>
-                {description && description.length > 90
-                  ? `${description.slice(0, 90)}...`
+                {description && description.length > 70
+                  ? `${description.slice(0, 67)}...`
                   : description}
               </Typography>
             )}
