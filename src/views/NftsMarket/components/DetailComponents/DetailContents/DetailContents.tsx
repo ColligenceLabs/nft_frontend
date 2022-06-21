@@ -12,9 +12,12 @@ interface DetailContentsProps {
 
 const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
   const [toggled, setToggled] = useState(false);
+  console.log(nft);
   return (
     <>
-      {nft.metadata.content_Type === 'mp4' ? (
+      {(nft?.metadata?.alt_url !== undefined && nft?.metadata?.alt_url.indexOf('.mp4')) ||
+      (nft?.metadata?.image.indexOf('.mp4') !== undefined &&
+        nft?.metadata?.image.indexOf('.mp4')) ? (
         <Card
           sx={{
             display: 'flex',
@@ -25,7 +28,7 @@ const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
         >
           <ReactPlayer
             config={{ file: { attributes: { controlsList: 'nodownload' } } }}
-            url={nft.metadata.alt_url}
+            url={nft.metadata.alt_url || nft?.metadata?.image}
             width="100%"
             height="100%"
             controls={true}

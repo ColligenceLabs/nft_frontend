@@ -74,8 +74,9 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
             </Box>
           </Box>
 
-          {item?.metadata?.content_Type === 'mp4' &&
-          item?.metadata?.thumbnail.indexOf('.mp4') > 0 ? (
+          {(item?.metadata?.thumbnail !== undefined && item?.metadata?.thumbnail.indexOf('.mp4')) ||
+          (item?.metadata?.image.indexOf('.mp4') !== undefined &&
+            item?.metadata?.image.indexOf('.mp4')) ? (
             <Box
               className={'player-wrapper'}
               sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}
@@ -83,7 +84,7 @@ const NFTItem: React.FC<NFTItemProp> = ({ item, showLarge }) => {
               <ReactPlayer
                 className="react-player"
                 config={{ file: { attributes: { controlsList: 'nodownload' } } }}
-                url={item?.metadata?.thumbnail}
+                url={item?.metadata?.thumbnail || item?.metadata?.image}
                 width="100%"
                 // height="100%"
                 height={mdDown ? (showLarge ? '218px' : '170px') : showLarge ? '218px' : '118px'}
