@@ -26,7 +26,7 @@ const CollectionItem: React.FC<CollectionItemType> = ({
 
   return (
     <>
-      <Link to={`/market/collection/${id}/${onSale}`} style={{ textDecoration: 'none' }}>
+      <Link to={`/market/collection/${id}`} style={{ textDecoration: 'none' }}>
         <Card
           sx={{
             p: 0,

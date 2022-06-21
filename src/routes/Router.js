@@ -54,7 +54,7 @@ const Router = (isLoggedIn, level) => [
       { path: '/', element: <NftMarketHome /> },
       { path: '/market', element: <NftMarket /> },
       { path: '/market/collection/:id', element: <NftCollection /> },
-      { path: '/market/collection/:id/:onSale', element: <NftCollection /> },
+      // { path: '/market/collection/:id/:onSale', element: <NftCollection /> },
       { path: '/market/detail/:id', element: <NftDetail /> },
       { path: '/market/detail', element: <NftDetail /> },
       { path: '/market/creator/:id', element: <NftMarketByCreator /> },
