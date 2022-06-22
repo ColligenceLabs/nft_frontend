@@ -45,8 +45,6 @@ const NFTDetail = () => {
 
   const { data, error } = useSWR(API_URL, () => nftDetail(id));
 
-  console.log(data?.data);
-
   useEffect(() => {
     if (data?.data) {
       setContractType(data?.data?.collection_id?.contract_type);
