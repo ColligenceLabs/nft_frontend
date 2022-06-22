@@ -22,7 +22,7 @@ const MoreNFTs: React.FC<MoreNFTsProps> = ({ collection_id, name, nft_id }) => {
     defaultMatches: true,
   });
   const { data, error, mutate } = useSWR<NFTResponse>(
-    `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsR?onchain=true&onSale=true&collection_id=${collection_id}&nft_id=${nft_id}&type=0&status=active`,
+    `${process.env.REACT_APP_API_SERVER}/admin-api/nft/indexsR?onchain=true&collection_id=${collection_id}&nft_id=${nft_id}&type=0&status=active`,
     fetcher,
   );
 
