@@ -12,7 +12,7 @@ interface DetailContentsProps {
 
 const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
   const [toggled, setToggled] = useState(false);
-  console.log(nft);
+
   return (
     <>
       {(nft?.metadata?.alt_url !== undefined && nft?.metadata?.alt_url.indexOf('.mp4')) > 0 ||
