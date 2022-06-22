@@ -10,6 +10,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import useSWR from 'swr';
 
 interface CreatorInfoType {
   full_name: string;
@@ -32,9 +33,14 @@ const NFTsMarketByCreator = () => {
     description: '',
   });
 
+  const { data: creatorData, error: creatorDataError } = useSWR(
+    `${process.env.REACT_APP_API_SERVER}/admin-api/admin/detail/${id}`,
+    fetcher,
+  );
+
   const { data, size, setSize, mutate, error, isValidating } = useSWRInfinite<CollectionResponse>(
     (index) =>
-      `${process.env.REACT_APP_API_SERVER}/admin-api/market/indexs?page=${
+      `${process.env.REACT_APP_API_SERVER}/admin-api/home/indexs?page=${
         index + 1
       }&perPage=${PAGE_SIZE}&creator_id=${id}`,
     fetcher,
@@ -49,25 +55,15 @@ const NFTsMarketByCreator = () => {
     isEmpty || (data && data[data.length - 1]?.data?.headers?.x_pages_count <= size);
   const isRefreshing = isValidating && data && data.length === size;
 
-  useEffect(() => {
-    if (data && data[0] !== null) {
-      setCreatorInfo({
-        full_name: data[0]?.data?.items[0]?.creator_id?.full_name,
-        image: data[0]?.data?.items[0]?.creator_id.image,
-        description: data[0]?.data?.items[0]?.creator_id.description,
-      });
-    }
-  }, [data]);
-
   return (
     <MarketLayout>
-      {data && !error && creatorInfo.full_name !== undefined && (
+      {creatorData && !creatorDataError && (
         <>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Box sx={{ width: 1, height: '350px' }}>
               <img
-                src={creatorInfo.image}
-                alt={creatorInfo.full_name}
+                src={creatorData?.data?.image}
+                alt={creatorData?.data?.full_name}
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </Box>
@@ -82,8 +78,8 @@ const NFTsMarketByCreator = () => {
               }}
             >
               <img
-                src={creatorInfo.image}
-                alt={creatorInfo.full_name}
+                src={creatorData?.data?.image}
+                alt={creatorData?.data?.full_name}
                 style={{
                   width: '150px',
                   height: '150px',
@@ -106,7 +102,7 @@ const NFTsMarketByCreator = () => {
             >
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 1 }}>
                 <Typography variant={'h1'} color={'primary'}>
-                  {creatorInfo.full_name}
+                  {creatorData?.data?.full_name}
                 </Typography>
               </Box>
 
@@ -124,8 +120,8 @@ const NFTsMarketByCreator = () => {
                 color="text.secondary"
               >
                 {showAll
-                  ? creatorInfo.description
-                  : `${creatorInfo.description.slice(0, smDown ? 150 : 300)}`}
+                  ? creatorData?.data?.description
+                  : `${creatorData?.data?.description.slice(0, smDown ? 150 : 300)}`}
               </Typography>
               <IconButton onClick={() => setShowAll((curr) => !curr)}>
                 {showAll ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
