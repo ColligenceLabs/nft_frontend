@@ -5,6 +5,7 @@ import ReactPlayer from 'react-player';
 import FsLightbox from 'fslightbox-react';
 import ImageViewer from '../../../../../components/ImageViewer';
 import { NFTType } from '../../../types';
+import FilePlayer from 'react-player/file';
 
 interface DetailContentsProps {
   nft: NFTType;
@@ -16,8 +17,9 @@ const DetailContents: React.FC<DetailContentsProps> = ({ nft }) => {
   return (
     <>
       {(nft?.metadata?.alt_url !== undefined && nft?.metadata?.alt_url.indexOf('.mp4')) > 0 ||
-      (nft?.metadata?.image.indexOf('.mp4') !== undefined && nft?.metadata?.image.indexOf('.mp4')) >
-        0 ? (
+      (nft?.metadata?.image.indexOf('.mp4') !== undefined &&
+        nft?.metadata?.image.indexOf('.mp4') > 0) ||
+      nft?.collection_id._id === '62b274452fb89e40a2bca0bc' ? (
         <Card
           sx={{
             display: 'flex',
